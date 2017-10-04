@@ -98,18 +98,25 @@ Sidebar.prototype.init = function()
 	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
 	this.addUmlPalette(false);
-	this.addBpmnPalette(dir, false);
-	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml',
-		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-	this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
-		['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
-		 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
-		 'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
-		 'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
-		 'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
-		 {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
-		  'Router_Icon': 'router switch'});
-};
+//	this.addBpmnPalette(dir, false); 
+	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+//	this.addStencilPalette('bowtieStencil', 'Bowtie Stencil', dir + '/bowtie.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+	this.addImagePalette('bowtie', mxResources.get('bowtie'), dir + '/elements/', '.svg',
+		['barrier', 'barrier1', 'blank_risk', 'high-threat', 'low-medium-threat', 'low-threat', 'medium-high-threat', 'medium-threat'], null,
+		 null); 
+/*	this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
+['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
+	 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
+	 'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
+	 'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
+	 'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
+	 {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
+	  'Router_Icon': 'router switch'}); */
+}; 
+
+// Sidebar.prototype.addStencilPalette = function(id, title, stencilFile, style, ignore, onInit, scale, tags, customFns)
+
+// Sidebar.prototype.addImagePalette = function(id, title, prefix, postfix, items, titles, tags)
 
 /**
  * Sets the default font size.
@@ -1579,7 +1586,7 @@ Sidebar.prototype.addUmlPalette = function(expand)
 /**
  * Adds the BPMN library to the sidebar.
  */
-Sidebar.prototype.addBpmnPalette = function(dir, expand)
+/*Sidebar.prototype.addBpmnPalette = function(dir, expand)
 {
 	// Avoids having to bind all functions to "this"
 	var sb = this;
@@ -1755,7 +1762,7 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 	];
 	
 	this.addPaletteFunctions('bpmn', 'BPMN ' + mxResources.get('general'), false, fns);
-};
+};*/
 
 /**
  * Creates and returns the given title element.
@@ -3374,6 +3381,18 @@ Sidebar.prototype.removePalette = function(id)
 	return false;
 };
 
+
+
+/* 'Bowtie', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
+['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
+	 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
+	 'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
+	 'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
+	 'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
+	 {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
+	  'Router_Icon': 'router switch'} */
+
+
 /**
  * Adds the given image palette.
  */
@@ -3422,6 +3441,11 @@ Sidebar.prototype.getTagsForStencil = function(packageName, stencilName, moreTag
 	
 	return tags.slice(1, tags.length);
 };
+
+
+
+
+//this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2'); */
 
 /**
  * Adds the given stencil palette.

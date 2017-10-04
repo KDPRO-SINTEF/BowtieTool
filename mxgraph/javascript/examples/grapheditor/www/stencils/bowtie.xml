@@ -1,0 +1,27 @@
+<shapes name="mxGraph.bowtie">
+<shape name="Barrier" h="120" w="100" aspect="variable" strokewidth="inherit">
+<connections>
+<constraint x="0.5" y="0" perimeter="0" name="N"/>
+<constraint x="0.5" y="1" perimeter="0" name="S"/>
+<constraint x="0" y="0.5" perimeter="0" name="W"/>
+<constraint x="1" y="0.5" perimeter="0" name="E"/>
+</connections>
+<background>
+<roundrect x="0" y="20" w="100" h="100" arcsize="6"/>
+</background>
+<foreground>
+<fillstroke/>
+<path>
+<move x="15" y="0"/>
+<line x="15" y="40"/>
+<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="15" y="40"/>
+<line x="35" y="40"/>
+<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="35" y="40"/>
+<line x="35" y="0"/>
+<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="35" y="0"/>
+<line x="15" y="0"/>
+</path>
+<stroke/>
+</foreground>
+</shape>
+</shapes>
