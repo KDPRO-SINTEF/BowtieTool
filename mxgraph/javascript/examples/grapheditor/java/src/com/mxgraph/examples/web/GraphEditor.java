@@ -7,6 +7,11 @@ import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
+import repository.IUserRepository;
+import repository.MySQLAccess;
+import repository.UserRepositoryImpl;
+import sun.security.pkcs11.Secmod.DbMode;
+
 /**
  * The save servlet is used to echo XML to the client, eg. for SVG export and saving
  * (see Dialogs.js:SaveDialog and ExportDialog). The export servlet is used to
@@ -36,15 +41,20 @@ public class GraphEditor
 	public static void main(String[] args) throws Exception
 	{
 		Server server = new Server(PORT);
-
+		MySQLAccess mySQLAccess = new MySQLAccess("kpro2017gr13", "morten");
+		IUserRepository userRepo = new UserRepositoryImpl(mySQLAccess);
 		// Servlets
 		Context context = new Context(server, "/");
 		context.addServlet(new ServletHolder(new EchoServlet()), "/save");
 		context.addServlet(new ServletHolder(new ExportServlet()), "/export");
 		context.addServlet(new ServletHolder(new OpenServlet()), "/open");
+		context.addServlet(new ServletHolder(new ValidateUserServlet(userRepo)), "/adrian");
+
 
 		ResourceHandler fileHandler = new ResourceHandler();
 		fileHandler.setResourceBase(".");
+		System.out.println(fileHandler.getResourceBase());
+		
 
 		HandlerList handlers = new HandlerList();
 		handlers.setHandlers(new Handler[] { fileHandler, context });
