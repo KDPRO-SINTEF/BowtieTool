@@ -10,6 +10,6 @@
 	<classpathentry kind="lib" path="java/jars/junit-4.7.jar"/>
 	<classpathentry kind="lib" path="java/jars/mxPdf.jar"/>
 	<classpathentry kind="lib" path="java/jars/servlet-api-2.5-6.1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/morte/Downloads/mysql-connector-java-5.1.44/mysql-connector-java-5.1.44/mysql-connector-java-5.1.44-bin.jar"/>
+	<classpathentry kind="lib" path="java/jars/mysql-connector-java-5.1.44-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
