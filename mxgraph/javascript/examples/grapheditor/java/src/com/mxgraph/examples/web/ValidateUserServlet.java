@@ -11,6 +11,7 @@ import javax.sound.midi.Soundbank;
 
 import com.mysql.fabric.Response;
 
+import models.User;
 import repository.IUserRepository;
 
 public class ValidateUserServlet extends HttpServlet{
@@ -29,11 +30,14 @@ public class ValidateUserServlet extends HttpServlet{
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String id = req.getParameter("id");
-		if (id!=null) {
-			System.out.println(id);
+		int id = Integer.parseInt(req.getParameter("id"));
+		User user = userRepo.getUserById(id);
+		System.out.println(id);
+		if(user!=null) {
+			System.out.println("User in DB, name"+ user.getUsername() );
 		}
-		
+	
+
 	  }
 	
 	

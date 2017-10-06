@@ -36,11 +36,13 @@ public class UserRepositoryImpl implements IUserRepository{
 	@Override
 	public User getUserById(int id) {
 		   User user = null;
-		   String query = "select distinct id " +
-		                   "from " + "User " + "where" + "id="+id;
+		  
+		   String query = "select * " +
+		                   "from " + "User " + "where" + "id="+id + ";";
 		    try {
 		    	ResultSet rs = access.query(query);
 		        while (rs.next()) {
+		        	System.out.println("+");
 		            int user_id = rs.getInt("id");
 		            String username = rs.getString("username");
 		            String hash_pw = rs.getString("hash_pw");
@@ -48,7 +50,7 @@ public class UserRepositoryImpl implements IUserRepository{
 		            user = new User(id,username,hash_pw);
 		        }
 		    } catch (SQLException e ) {
-		        System.out.println(e);
+		        System.out.println("Quering form db failed");
 		    }
 		   return user;
 	}
