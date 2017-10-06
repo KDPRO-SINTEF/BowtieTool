@@ -37,7 +37,6 @@ public class MySQLAccess {
 		connection = DriverManager.getConnection(
 				"jdbc:" + "mysql" + "://" + this.serverName + ":" + this.portNumber + "?useSSL=false", username,
 				password);
-
 		if (connection != null) {
 			System.out.println("You made it, take control your database now!");
 		} else {
@@ -72,7 +71,7 @@ public class MySQLAccess {
 			getConnection();
 			cachedRowSet = new CachedRowSetImpl();
 			stmt = connection.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM User;");
+			rs = stmt.executeQuery(query);
 			cachedRowSet.populate(rs);
 		} catch (SQLException e) {
 

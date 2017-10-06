@@ -38,15 +38,13 @@ public class UserRepositoryImpl implements IUserRepository{
 		   User user = null;
 		  
 		   String query = "select * " +
-		                   "from " + "User " + "where" + "id="+id + ";";
+		                   "from " + "KPRO.User " + "where " + "id="+id + ";";
 		    try {
 		    	ResultSet rs = access.query(query);
 		        while (rs.next()) {
-		        	System.out.println("+");
 		            int user_id = rs.getInt("id");
 		            String username = rs.getString("username");
 		            String hash_pw = rs.getString("hash_pw");
-		            System.out.println(user_id+"\t" + username+ "\t" + hash_pw);
 		            user = new User(id,username,hash_pw);
 		        }
 		    } catch (SQLException e ) {

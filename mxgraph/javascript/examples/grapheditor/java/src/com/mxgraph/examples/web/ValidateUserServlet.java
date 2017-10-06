@@ -32,9 +32,8 @@ public class ValidateUserServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		int id = Integer.parseInt(req.getParameter("id"));
 		User user = userRepo.getUserById(id);
-		System.out.println(id);
 		if(user!=null) {
-			System.out.println("User in DB, name"+ user.getUsername() );
+			System.out.println("User in DB, name "+ user.getUsername() );
 		}
 	
 
