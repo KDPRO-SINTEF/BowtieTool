@@ -95,15 +95,17 @@ Sidebar.prototype.init = function()
 	this.addMiscPalette(false);
 	this.addAdvancedPalette(false);
 	this.addBasicPalette(dir);
-	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
-		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+//	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
+//		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
 	this.addUmlPalette(false);
-//	this.addBpmnPalette(dir, false); 
-	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-//	this.addStencilPalette('bowtieStencil', 'Bowtie Stencil', dir + '/bowtie.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-	this.addImagePalette('bowtie', mxResources.get('bowtie'), dir + '/elements/', '.svg',
-		['barrier', 'barrier1', 'blank_risk', 'high-threat', 'low-medium-threat', 'low-threat', 'medium-high-threat', 'medium-threat'], null,
-		 null); 
+	this.addBpmnPalette(dir, false); 
+	this.addBowtiePalette(dir, false);
+//	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+	this.addStencilPalette('bowtieStencil', 'Bowtie Stencil', dir + '/bowtie.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+/*	this.addImagePalette('bowtie', mxResources.get('bowtie'), dir + '/elements/', '.svg',
+	['barrier', 'barrier1', 'blank_risk', 'high-threat', 'low-medium-threat', 'low-threat', 'medium-high-threat', 'medium-threat'], null,
+		 null);  */
+
 /*	this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
 ['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
 	 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
@@ -1583,10 +1585,29 @@ Sidebar.prototype.addUmlPalette = function(expand)
 	this.addPaletteFunctions('uml', mxResources.get('uml'), expand || false, fns);
 };
 
+Sidebar.prototype.addBowtiePalette = function(dir, expand)
+{
+	// Avoids having to bind all functions to "this"
+	var sb = this;
+
+	var fns =
+	[
+		
+		this.createVertexTemplateEntry('shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom', 120, 80, '', 'Barrier', null, null, 'bowtie barrier'),
+	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;', 120, 80, 'Task', 'Process', null, null, 'bpmn task process'),
+	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;double=1;', 120, 80, 'Transaction', 'Transaction', null, null, 'bpmn transaction'),
+	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;dashed=1;dashPattern=1 4;', 120, 80, 'Event\nSub-Process', 'Event Sub-Process', null, null, 'bpmn event subprocess sub process sub-process'),
+	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;strokeWidth=3;', 120, 80, 'Call Activity', 'Call Activity', null, null, 'bpmn call activity'),
+		
+	];
+	
+	this.addPaletteFunctions('bowtie', mxResources.get('bowtie'), false, fns);
+};
+
 /**
  * Adds the BPMN library to the sidebar.
  */
-/*Sidebar.prototype.addBpmnPalette = function(dir, expand)
+Sidebar.prototype.addBpmnPalette = function(dir, expand)
 {
 	// Avoids having to bind all functions to "this"
 	var sb = this;
@@ -1762,7 +1783,7 @@ Sidebar.prototype.addUmlPalette = function(expand)
 	];
 	
 	this.addPaletteFunctions('bpmn', 'BPMN ' + mxResources.get('general'), false, fns);
-};*/
+};
 
 /**
  * Creates and returns the given title element.
