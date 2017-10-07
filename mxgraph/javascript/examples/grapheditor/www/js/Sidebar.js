@@ -995,7 +995,7 @@ Sidebar.prototype.addMiscPalette = function(expand)
 	 	this.createVertexTemplateEntry('text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;', 100, 80,
  			'<ol><li>Value 1</li><li>Value 2</li><li>Value 3</li></ol>', 'Ordered List'),
 	 	this.createVertexTemplateEntry('text;html=1;strokeColor=#c0c0c0;fillColor=#ffffff;overflow=fill;rounded=0;', 280, 160,
- 			'<table border="1" width="100%" height="100%" cellpadding="4" style="width:100%;height:100%;border-collapse:collapse;">' +
+ 			'<table border="1" width="100%" height="100%" cellpadding="4" style="width:100%;height:100%;border-collapse:;">' +
  			'<tr style="background-color:#A7C942;color:#ffffff;border:1px solid #98bf21;"><th align="left">Title 1</th><th align="left">Title 2</th><th align="left">Title 3</th></tr>' +
  			'<tr style="border:1px solid #98bf21;"><td>Value 1</td><td>Value 2</td><td>Value 3</td></tr>' +
  			'<tr style="background-color:#EAF2D3;border:1px solid #98bf21;"><td>Value 4</td><td>Value 5</td><td>Value 6</td></tr>' +
@@ -1585,6 +1585,8 @@ Sidebar.prototype.addUmlPalette = function(expand)
 	this.addPaletteFunctions('uml', mxResources.get('uml'), expand || false, fns);
 };
 
+/* Adds the bowtie library to the sidebar. */
+
 Sidebar.prototype.addBowtiePalette = function(dir, expand)
 {
 	// Avoids having to bind all functions to "this"
@@ -1594,7 +1596,7 @@ Sidebar.prototype.addBowtiePalette = function(dir, expand)
 	[
 		
 		this.createVertexTemplateEntry('shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom', 120, 80, '', 'Barrier', null, null, 'bowtie barrier'),
-	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;', 120, 80, 'Task', 'Process', null, null, 'bpmn task process'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
 	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;double=1;', 120, 80, 'Transaction', 'Transaction', null, null, 'bpmn transaction'),
 	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;dashed=1;dashPattern=1 4;', 120, 80, 'Event\nSub-Process', 'Event Sub-Process', null, null, 'bpmn event subprocess sub process sub-process'),
 	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;strokeWidth=3;', 120, 80, 'Call Activity', 'Call Activity', null, null, 'bpmn call activity'),

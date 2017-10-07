@@ -17,11 +17,26 @@
 <arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="40"/>
 <line x="70" y="0"/>
 <arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="0"/>
-<line x="50" y="0"/>
+<line x="50" y="0"></line>
 </path>
 <fillstroke></fillstroke><stroke/>
 	
-	<fillstroke></fillstroke>
 	</foreground>
 </shape>
+<shape name="hazard" h="80" w="120" aspect="variable" strokewidth="inherit">
+		<connections>
+		</connections>
+		<background>
+			<rect x="0" y="0" h="80" w="120">
+			</rect>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<rect x="10" y="10" h="60" w="100"></rect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
 </shapes>
