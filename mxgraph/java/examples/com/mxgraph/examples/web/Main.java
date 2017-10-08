@@ -21,7 +21,7 @@ import com.mxgraph.util.mxUtils;
 public class Main
 {
 
-	public static int PORT = 8080;
+	public static int PORT = 8070;
 
 	public static void main(String[] args) throws Exception
 	{
@@ -30,7 +30,7 @@ public class Main
 		// Static file handler
 		Context fileContext = new Context(server, "/mxgraph", Context.SESSIONS);
 		ResourceHandler fileHandler = new ResourceHandler();
-		fileHandler.setResourceBase(".");
+		fileHandler.setResourceBase("/Users/jonasdammen/Projects/Bowtie/mxgraph");
 		fileContext.setHandler(fileHandler);
 
 		// Servlets
