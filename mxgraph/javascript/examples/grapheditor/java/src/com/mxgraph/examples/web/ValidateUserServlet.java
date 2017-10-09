@@ -12,7 +12,11 @@ import repository.IUserRepository;
 
 public class ValidateUserServlet extends HttpServlet{
 	
-	private IUserRepository userRepo;
+	/**
+     * 
+     */
+    private static final long serialVersionUID = -1983280837215922034L;
+    private IUserRepository userRepo;
 	
 	public ValidateUserServlet(IUserRepository userRepo) {
 		this.userRepo = userRepo;

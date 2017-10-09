@@ -1,53 +1,70 @@
 package com.mxgraph.examples.web;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.StringReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Hashtable;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParserFactory;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
+import models.Graph;
+import models.Role;
+import models.User;
+import repository.IGraphRepository;
+import repository.IRoleRepository;
 import repository.IUserRepository;
 
 /**
  * Servlet implementation class ImageServlet.
  */
-public class SaveGraphServlet extends HttpServlet
+public class GraphServlet extends HttpServlet
 {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -5040708166131034516L;
-
-    /**
-     * 
-     */
-    private transient SAXParserFactory parserFactory = SAXParserFactory.newInstance();
     private IUserRepository userRepo;
+    private IGraphRepository graphRepo;
+    private IRoleRepository roleRepo;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SaveGraphServlet(IUserRepository userRepo)
+    public GraphServlet(IUserRepository userRepo, IGraphRepository graphRepo, IRoleRepository roleRepo)
     {
         super();
         this.userRepo = userRepo;
+        this.graphRepo = graphRepo;
+        this.roleRepo = roleRepo;
+    }
+    
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        String graphid = request.getParameter("id");
+        String logintoken = request.getParameter("token");
+
+        if (graphid == null) {
+            // User must provide graphid
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            return;
+        }
+        
+        User user = userRepo.getUserByToken(logintoken);
+        if (user == null) {
+            // User isn't authorized
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            return;
+        }
+        
+        Graph graph = graphRepo.getUserGraph(user, Integer.parseInt(graphid));
+        OutputStream out = response.getOutputStream();
+        out.write(graph.getGraph_data().getBytes("UTF-8"));
+        out.close();
     }
 
     /**
@@ -98,23 +115,48 @@ public class SaveGraphServlet extends HttpServlet
     /**
      * Gets the parameters and logs the request.
      * 
-     * @throws ParserConfigurationException 
-     * @throws SAXException 
-     * @throws DocumentException 
      */
     protected void handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception
     {
         // Parses parameters
-        String format = request.getParameter("format");
-        String token = request.getParameter("token");
+        String graphid = request.getParameter("id");
+        String logintoken = request.getParameter("token");
         String xml = getRequestXml(request);
-        /*
-         * From here
-         * 
-         * INSERT INTO KPRO.Graph(user_id, graph_data) VALUES ( (SELECT id FROM KPRO.User WHERE KPRO.User.token = {token}), xml);
-         * INSERT INTO KPRO.Roles(id, user_id) VALUES (LAST_INSERT_ID(), (SELECT id FROM KPRO.User WHERE KPRO.User.token = {token}));
-         */
         
+        User user = userRepo.getUserByToken(logintoken);
+        if (user == null) {
+            // User isn't authorized
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            return;
+        }
+        
+        if (graphid == null) {
+            // Graph doesn't exist yet, we need to create it.
+            graphRepo.insertGraph(user, xml);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            return;
+        }
+        
+        // Graph already exists in db, we need to check if we're allowed to change it.
+        Graph g = new Graph(Integer.parseInt(graphid), user, xml);
+        Role r = roleRepo.getUserRoleForGraph(g, user);
+        
+        if (r.getRole() != 0) {
+            // This isn't User's graph, we cannot update.
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+            return;
+        }
+        
+        graphRepo.updateGraph(g);
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getOutputStream().flush();
+        response.getOutputStream().close();  
     }
 
     /**

@@ -30,7 +30,4 @@ public class Role {
 	public void setRole(int role) {
 		this.role = role;
 	}
-	
-	
-
 }

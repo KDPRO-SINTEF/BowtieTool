@@ -1,9 +1,13 @@
 package repository;
 
+import java.util.List;
+
 import models.Graph;
+import models.User;
 
 public interface IGraphRepository {
-    public void createGraph(String user_token, String xml_data);
-    public Graph getGraphById(int id);
-    public Graph getGraphsByUserToken(int id);
+    public void insertGraph(User u, String graph_data);
+    public void updateGraph(Graph g);
+    public List<Graph> getUserGraphs(User u);
+    public Graph getUserGraph(User u, int id);
 }

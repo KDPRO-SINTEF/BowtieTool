@@ -9,7 +9,7 @@ import org.mortbay.jetty.servlet.ServletHolder;
 
 import repository.IUserRepository;
 import repository.MySQLAccess;
-import repository.UserRepositoryImpl;
+import repository.impl.UserRepositoryImpl;
 import sun.security.pkcs11.Secmod.DbMode;
 
 /**
