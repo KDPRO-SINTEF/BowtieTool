@@ -30,8 +30,8 @@ public class GraphEditor
 	 */
 	static
 	{
-//		mxGraphicsCanvas2D.HTML_SCALE = 0.75;
-//		mxGraphicsCanvas2D.HTML_UNIT = "px";
+		//		mxGraphicsCanvas2D.HTML_SCALE = 0.75;
+		//		mxGraphicsCanvas2D.HTML_UNIT = "px";
 	}
 
 	/**
@@ -40,10 +40,10 @@ public class GraphEditor
 	public static void main(String[] args) throws Exception
 	{
 		Server server = new Server(PORT);
-		
+
 		MySQLAccess mySQLAccess = new MySQLAccess();
 		IUserRepository userRepo = new UserRepositoryImpl(mySQLAccess);
-		
+
 		// Servlets
 		Context context = new Context(server, "/");
 		context.addServlet(new ServletHolder(new EchoServlet()), "/save");
@@ -55,17 +55,17 @@ public class GraphEditor
 		ResourceHandler fileHandler = new ResourceHandler();
 		fileHandler.setResourceBase(".");
 		System.out.println(fileHandler.getResourceBase());
-		
+
 
 		HandlerList handlers = new HandlerList();
 		handlers.setHandlers(new Handler[] { fileHandler, context });
 		server.setHandler(handlers);
 
 		System.out.println("Go to http://localhost:" + PORT + "/javascript/examples/grapheditor/www/index.html");
-		
+
 		server.start();
 		server.join();
 	}
-	
-	
+
+
 }

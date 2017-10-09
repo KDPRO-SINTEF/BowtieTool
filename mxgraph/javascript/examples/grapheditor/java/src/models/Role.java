@@ -4,7 +4,7 @@ public class Role {
 	private User user;
 	private Graph graph; 
 	private int role;
-	
+
 	public Role(User user, Graph graph, int role) {
 		this.user = user;
 		this.graph = graph;
@@ -14,7 +14,7 @@ public class Role {
 	public User getUser() {
 		return user;
 	}
-	
+
 	public void setUser(User user) {
 		this.user = user;
 	}

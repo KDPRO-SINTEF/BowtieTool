@@ -11,13 +11,13 @@ import models.User;
 import repository.IUserRepository;
 
 public class UserLoginServlet extends HttpServlet{
-	
+
 	/**
-     * 
-     */
-    private static final long serialVersionUID = -1983280837215922034L;
-    private IUserRepository userRepo;
-	
+	 * 
+	 */
+	private static final long serialVersionUID = -1983280837215922034L;
+	private IUserRepository userRepo;
+
 	public UserLoginServlet(IUserRepository userRepo) {
 		this.userRepo = userRepo;
 	}
@@ -25,41 +25,41 @@ public class UserLoginServlet extends HttpServlet{
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
 
-	      
+
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
 		String username = req.getParameter("username");
 		String password = req.getParameter("password");
-		
+
 		if (username == null || password == null) {
-            // User isn't authorized
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getOutputStream().flush();
-            response.getOutputStream().close();
-            return;
+			// User isn't authorized
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			return;
 		}
-		
+
 		User user = userRepo.validateUser(username, password);
-		
+
 		if (user == null) {
-		    // User isn't authorized
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getOutputStream().flush();
-            response.getOutputStream().close();
-            return;
+			// User isn't authorized
+			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			return;
 		}
-		
-        response.setContentType("text/plain");
-        response.setStatus(HttpServletResponse.SC_OK);
-        OutputStream out = response.getOutputStream();
-        out.write(user.getToken().getBytes());
-	    
+
+		response.setContentType("text/plain");
+		response.setStatus(HttpServletResponse.SC_OK);
+		OutputStream out = response.getOutputStream();
+		out.write(user.getToken().getBytes());
+
 		out.flush();
-        out.close();
-        
-        /*
+		out.close();
+
+		/*
         int id = Integer.parseInt(req.getParameter("id"));
         User user = userRepo.getUserById(id);
         response.setContentType("text/plain");
@@ -71,6 +71,6 @@ public class UserLoginServlet extends HttpServlet{
         } else {
             out.write("No such user exist".getBytes("UTF-8"));
         }
-        */
+		 */
 	}
 }

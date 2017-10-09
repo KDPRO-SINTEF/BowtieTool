@@ -19,7 +19,7 @@ public class MySQLAccess {
 	private String username;
 	private int portNumber = 3306;
 	private Connection connection;
-	
+
 	public MySQLAccess() {
 		readConfig();
 	}
@@ -34,10 +34,10 @@ public class MySQLAccess {
 
 
 		connection = DriverManager.getConnection(
-		        "jdbc:mysql://" + this.serverName + ":" + this.portNumber + "?useSSL=false",
+				"jdbc:mysql://" + this.serverName + ":" + this.portNumber + "?useSSL=false",
 				this.username,
 				this.password
-		);
+				);
 		if (connection != null) {
 			System.out.println("Database connection opened");
 		} else {
@@ -45,58 +45,58 @@ public class MySQLAccess {
 		}
 	}
 
-    private void close()  {
-        try {
-            if (connection != null) {
-            	connection.close();
-            }
-            System.out.println("Database connection closed");
-        } catch (Exception e) {
-            System.err.println("Database error: " + e.getMessage());
-        }
-    }
-    
-    public void readConfig() {
-    	Properties prop = new Properties();
-    	InputStream input = null;
-
-    	try {
-
-    		//String filename = "G:\\git\\BowtieTool\\mxgraph\\javascript\\examples\\grapheditor\\java\\src\\repository\\config.properties";
-    		//input = new FileInputStream(new File(filename));
-    		String filename = "config.properties";
-    	    input = MySQLAccess.class.getClassLoader().getResourceAsStream(filename);
-    		if (input == null) {
-    	        System.out.println("Sorry, unable to find " + filename);
-    		    return;
-    		}
-
-    		// load a properties file
-    		prop.load(input);
-
-    		serverName = prop.getProperty("database");
-    		password = prop.getProperty("dbpassword");
-    		username = prop.getProperty("dbuser");
-
-    	} catch (IOException ex) {
-    		ex.printStackTrace();
-    	} finally {
-    		if (input != null) {
-    			try {
-    				input.close();
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			}
-    		}
-    	}
+	private void close()  {
+		try {
+			if (connection != null) {
+				connection.close();
+			}
+			System.out.println("Database connection closed");
+		} catch (Exception e) {
+			System.err.println("Database error: " + e.getMessage());
+		}
 	}
 
-    public static void setValues(PreparedStatement preparedStatement, Object... values) throws SQLException {
-        for (int i = 0; i < values.length; i++) {
-            preparedStatement.setObject(i + 1, values[i]);
-        }
-    }
-    
+	public void readConfig() {
+		Properties prop = new Properties();
+		InputStream input = null;
+
+		try {
+
+			//String filename = "G:\\git\\BowtieTool\\mxgraph\\javascript\\examples\\grapheditor\\java\\src\\repository\\config.properties";
+			//input = new FileInputStream(new File(filename));
+			String filename = "config.properties";
+			input = MySQLAccess.class.getClassLoader().getResourceAsStream(filename);
+			if (input == null) {
+				System.out.println("Sorry, unable to find " + filename);
+				return;
+			}
+
+			// load a properties file
+			prop.load(input);
+
+			serverName = prop.getProperty("database");
+			password = prop.getProperty("dbpassword");
+			username = prop.getProperty("dbuser");
+
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void setValues(PreparedStatement preparedStatement, Object... values) throws SQLException {
+		for (int i = 0; i < values.length; i++) {
+			preparedStatement.setObject(i + 1, values[i]);
+		}
+	}
+
 	public CachedRowSet query(String query, Object... values) {
 		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
@@ -108,11 +108,11 @@ public class MySQLAccess {
 			setValues(preparedStatement, values);
 
 			if(preparedStatement.execute()) {
-			    rs = preparedStatement.getResultSet();
-			    cachedRowSet.populate(rs);
+				rs = preparedStatement.getResultSet();
+				cachedRowSet.populate(rs);
 			}
 		} catch (SQLException e) {
-		    System.err.println("SQL error: " + e.getMessage());
+			System.err.println("SQL error: " + e.getMessage());
 		} finally {
 			close();
 		}

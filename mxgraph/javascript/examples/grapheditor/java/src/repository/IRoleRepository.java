@@ -5,5 +5,5 @@ import models.Role;
 import models.User;
 
 public interface IRoleRepository {
-    public Role getUserRoleForGraph(Graph g, User u);
+	public Role getUserRoleForGraph(Graph g, User u);
 }
