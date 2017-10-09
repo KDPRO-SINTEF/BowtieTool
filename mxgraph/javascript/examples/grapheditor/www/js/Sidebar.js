@@ -98,11 +98,11 @@ Sidebar.prototype.init = function()
 //	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 //		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
 	this.addBowtiePalette(dir, false);
-	this.addUmlPalette(false);
-	this.addBpmnPalette(dir, false); 
+//	this.addUmlPalette(false);
+//	this.addBpmnPalette(dir, false); 
 
 //	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-	this.addStencilPalette('bowtieStencil', 'Bowtie Stencil', dir + '/bowtie.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+//	this.addStencilPalette('bowtieStencil', 'Bowtie Stencil', dir + '/bowtie.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
 /*	this.addImagePalette('bowtie', mxResources.get('bowtie'), dir + '/elements/', '.svg',
 	['barrier', 'barrier1', 'blank_risk', 'high-threat', 'low-medium-threat', 'low-threat', 'medium-high-threat', 'medium-threat'], null,
 		 null);  */
@@ -1158,7 +1158,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 
 /* Adds the bowtie library to the sidebar. */
 
-Sidebar.prototype.addBowtiePalette = function(dir, expand)
+ Sidebar.prototype.addBowtiePalette = function(dir, expand)
 {
 	// Avoids having to bind all functions to "this"
 	var sb = this;
@@ -1171,12 +1171,13 @@ Sidebar.prototype.addBowtiePalette = function(dir, expand)
 		
 		this.createVertexTemplateEntry('shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
 	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.event;rounded=1;html=1;whiteSpace=wrap;double=1;', 120, 80, 'Event', 'Event', null, null, 'bowtie event'),
-	
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;', 120, 80, 'Asset', 'Asset', null, null, 'bowtie asset'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.threatconsequence;html=1;whiteSpace=wrap;', 120, 80, 'Threat/Consequence', 'Threat/Consequence', null, null, 'bowtie threatconsequence'),
 	];
 	
 	this.addPaletteFunctions('bowtie', mxResources.get('bowtie'), false, fns);
-};
+}; 
 
 /**
  * Adds the general palette to the sidebar.
