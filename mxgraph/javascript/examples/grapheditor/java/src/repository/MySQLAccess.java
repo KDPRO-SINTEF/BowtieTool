@@ -2,10 +2,12 @@ package repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import javax.sql.rowset.CachedRowSet;
+
 import com.sun.rowset.CachedRowSetImpl;
 
 public class MySQLAccess {
@@ -52,15 +54,23 @@ public class MySQLAccess {
         }
     }
 
-	public CachedRowSet query(String query) {
-		Statement stmt = null;
+    public static void setValues(PreparedStatement preparedStatement, Object... values) throws SQLException {
+        for (int i = 0; i < values.length; i++) {
+            preparedStatement.setObject(i + 1, values[i]);
+        }
+    }
+    
+	public CachedRowSet query(String query, Object... values) {
+		PreparedStatement preparedStatement = null;
 		ResultSet rs = null;
 		CachedRowSet cachedRowSet = null;
 		try {
 			getConnection();
 			cachedRowSet = new CachedRowSetImpl();
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery(query);
+			preparedStatement = connection.prepareStatement(query);
+			setValues(preparedStatement, values);
+
+			rs = preparedStatement.executeQuery(query);
 			cachedRowSet.populate(rs);
 		} catch (SQLException e) {
 
