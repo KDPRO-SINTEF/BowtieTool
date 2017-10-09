@@ -4,3 +4,4 @@ javascript/dist
 javascript/examples/**/dist
 /bin/
 
+config.properties

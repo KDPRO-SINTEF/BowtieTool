@@ -35,7 +35,7 @@ public class UserRepositoryImpl implements IUserRepository{
 	@Override
 	public User getUserById(int id) {
 		   User user = null;
-		   String query = "select * from  KPRO.User where id = ?;";
+		   String query = "SELECT * FROM KPRO.User WHERE id=?";
 		    try {
 		    	ResultSet rs = access.query(query,id);
 		        while (rs.next()) {

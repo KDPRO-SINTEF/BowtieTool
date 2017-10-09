@@ -42,7 +42,7 @@ public class GraphEditor
 	{
 		Server server = new Server(PORT);
 		
-		MySQLAccess mySQLAccess = new MySQLAccess("kpro2017gr13", "morten");
+		MySQLAccess mySQLAccess = new MySQLAccess();
 		IUserRepository userRepo = new UserRepositoryImpl(mySQLAccess);
 		
 		// Servlets
@@ -67,4 +67,6 @@ public class GraphEditor
 		server.start();
 		server.join();
 	}
+	
+	
 }

@@ -1,25 +1,29 @@
 package repository;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
+
 import javax.sql.rowset.CachedRowSet;
 
 import com.sun.rowset.CachedRowSetImpl;
 
 public class MySQLAccess {
-	private String serverName = "kprodb.cy5oybncucgm.us-east-1.rds.amazonaws.com";
+	private String serverName;
 	private String password;
 	private String username;
 	private int portNumber = 3306;
 	private Connection connection;
 	
-	public MySQLAccess(String password, String username) {
-		this.password = password;
-		this.username = username;
+	public MySQLAccess() {
+		readConfig();
 	}
 
 	public void getConnection() throws SQLException {
@@ -53,6 +57,39 @@ public class MySQLAccess {
 
         }
     }
+    
+    public void readConfig() {
+    	Properties prop = new Properties();
+    	InputStream input = null;
+
+    	try {
+
+    		String filename = "config.properties";
+    		input = MySQLAccess.class.getClassLoader().getResourceAsStream(filename);
+    		if(input==null){
+    	            System.out.println("Sorry, unable to find " + filename);
+    		    return;
+    		}
+
+    		// load a properties file
+    		prop.load(input);
+
+    		serverName = prop.getProperty("database");
+    		password = prop.getProperty("dbpassword");
+    		username = prop.getProperty("dbuser");
+
+    	} catch (IOException ex) {
+    		ex.printStackTrace();
+    	} finally {
+    		if (input != null) {
+    			try {
+    				input.close();
+    			} catch (IOException e) {
+    				e.printStackTrace();
+    			}
+    		}
+    	}
+	}
 
     public static void setValues(PreparedStatement preparedStatement, Object... values) throws SQLException {
         for (int i = 0; i < values.length; i++) {
@@ -70,7 +107,7 @@ public class MySQLAccess {
 			preparedStatement = connection.prepareStatement(query);
 			setValues(preparedStatement, values);
 
-			rs = preparedStatement.executeQuery(query);
+			rs = preparedStatement.executeQuery();
 			cachedRowSet.populate(rs);
 		} catch (SQLException e) {
 
