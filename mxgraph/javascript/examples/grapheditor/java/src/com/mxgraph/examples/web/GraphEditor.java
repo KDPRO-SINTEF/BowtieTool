@@ -10,7 +10,6 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import repository.IUserRepository;
 import repository.MySQLAccess;
 import repository.impl.UserRepositoryImpl;
-import sun.security.pkcs11.Secmod.DbMode;
 
 /**
  * The save servlet is used to echo XML to the client, eg. for SVG export and saving
@@ -50,8 +49,8 @@ public class GraphEditor
 		context.addServlet(new ServletHolder(new EchoServlet()), "/save");
 		context.addServlet(new ServletHolder(new ExportServlet()), "/export");
 		context.addServlet(new ServletHolder(new OpenServlet()), "/open");
-		context.addServlet(new ServletHolder(new ValidateUserServlet(userRepo)), "/test");
-
+		context.addServlet(new ServletHolder(new UserLoginServlet(userRepo)), "/login");
+		context.addServlet(new ServletHolder(new UserCreateServlet(userRepo)), "/create");
 
 		ResourceHandler fileHandler = new ResourceHandler();
 		fileHandler.setResourceBase(".");

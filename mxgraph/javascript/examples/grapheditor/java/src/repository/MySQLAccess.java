@@ -35,11 +35,11 @@ public class MySQLAccess {
 
 		connection = DriverManager.getConnection(
 		        "jdbc:mysql://" + this.serverName + ":" + this.portNumber + "?useSSL=false",
-				username,
-				password
+				this.username,
+				this.password
 		);
 		if (connection != null) {
-			System.out.println("You made it, take control your database now!");
+			System.out.println("Database connection opened");
 		} else {
 			System.out.println("Failed to make connection!");
 		}
@@ -50,9 +50,9 @@ public class MySQLAccess {
             if (connection != null) {
             	connection.close();
             }
-            System.out.println("Closed all connections");
+            System.out.println("Database connection closed");
         } catch (Exception e) {
-
+            System.err.println("Database error: " + e.getMessage());
         }
     }
     
@@ -62,10 +62,12 @@ public class MySQLAccess {
 
     	try {
 
+    		//String filename = "G:\\git\\BowtieTool\\mxgraph\\javascript\\examples\\grapheditor\\java\\src\\repository\\config.properties";
+    		//input = new FileInputStream(new File(filename));
     		String filename = "config.properties";
-    		input = MySQLAccess.class.getClassLoader().getResourceAsStream(filename);
-    		if(input==null){
-    	            System.out.println("Sorry, unable to find " + filename);
+    	    input = MySQLAccess.class.getClassLoader().getResourceAsStream(filename);
+    		if (input == null) {
+    	        System.out.println("Sorry, unable to find " + filename);
     		    return;
     		}
 
@@ -105,15 +107,15 @@ public class MySQLAccess {
 			preparedStatement = connection.prepareStatement(query);
 			setValues(preparedStatement, values);
 
-			rs = preparedStatement.executeQuery();
-			cachedRowSet.populate(rs);
+			if(preparedStatement.execute()) {
+			    rs = preparedStatement.getResultSet();
+			    cachedRowSet.populate(rs);
+			}
 		} catch (SQLException e) {
-
+		    System.err.println("SQL error: " + e.getMessage());
 		} finally {
 			close();
 		}
 		return cachedRowSet;
-
 	}
-
 }

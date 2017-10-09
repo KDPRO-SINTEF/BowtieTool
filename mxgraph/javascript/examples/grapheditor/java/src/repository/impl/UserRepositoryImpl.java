@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.UUID;
 
 import models.User;
 import repository.IUserRepository;
@@ -94,6 +95,49 @@ public class UserRepositoryImpl implements IUserRepository{
             }
         } catch (SQLException e ) {
             System.out.println("Quering form db failed");
+        }
+        return user;
+    }
+
+    @Override
+    public User validateUser(String username, String password) {
+        User user = null;
+        String query = "SELECT id, hash_pw FROM KPRO.User WHERE username = ?";
+        try {
+            ResultSet rs = access.query(query, username);
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String hash_pw = rs.getString("hash_pw");
+                byte[] bytes = Base64.getDecoder().decode(hash_pw);
+                
+                byte[] stored_salt = new byte[SALT_SIZE];
+                byte[] stored_hash = new byte[bytes.length - stored_salt.length];
+                System.arraycopy(bytes, 0, stored_salt, 0, stored_salt.length);
+                System.arraycopy(bytes, stored_salt.length, stored_hash, 0, stored_hash.length);
+                
+                MessageDigest d = MessageDigest.getInstance("SHA-256");
+                d.update(stored_salt);
+                d.update(password.getBytes());
+                byte[] calculated_hash = d.digest();
+                
+                if (stored_hash.length != calculated_hash.length) {
+                    return null;
+                }
+                
+                for (int i = 0; i < stored_hash.length; i++) {
+                    if (stored_hash[i] != calculated_hash[i]) {
+                        return null;
+                    }
+                }
+                String token = UUID.randomUUID().toString();
+                String update_token = "UPDATE KPRO.User SET token = ? WHERE id = ?";
+                access.query(update_token, token, id);
+                user = this.getUserById(id);
+            }
+        } catch (SQLException e ) {
+            System.out.println("Quering form db failed");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
         }
         return user;
     }
