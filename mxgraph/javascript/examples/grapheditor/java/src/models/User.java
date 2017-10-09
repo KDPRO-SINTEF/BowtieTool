@@ -8,7 +8,6 @@ public class User {
 	
 	
 	public User(int id, String username, String hash_pw) {
-		super();
 		this.id = id;
 		this.username = username;
 		this.hash_pw = hash_pw;

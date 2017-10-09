@@ -1,7 +1,5 @@
 package repository;
 
-import java.sql.SQLException;
-
 import models.User;
 
 public interface IUserRepository {

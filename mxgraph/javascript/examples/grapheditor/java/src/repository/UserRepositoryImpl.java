@@ -11,7 +11,6 @@ public class UserRepositoryImpl implements IUserRepository{
 	private MySQLAccess access;
 
 	public UserRepositoryImpl(MySQLAccess access) {
-		super();
 		this.access = access;
 	}
 
@@ -38,14 +37,14 @@ public class UserRepositoryImpl implements IUserRepository{
 		   User user = null;
 		  
 		   String query = "select * " +
-		                   "from " + "KPRO.User " + "where " + "id="+id + ";";
+		                   "from " + "KPRO.User " + "where " + "id=" + id + ";";
 		    try {
 		    	ResultSet rs = access.query(query);
 		        while (rs.next()) {
 		            int user_id = rs.getInt("id");
 		            String username = rs.getString("username");
 		            String hash_pw = rs.getString("hash_pw");
-		            user = new User(id,username,hash_pw);
+		            user = new User(id, username, hash_pw);
 		        }
 		    } catch (SQLException e ) {
 		        System.out.println("Quering form db failed");

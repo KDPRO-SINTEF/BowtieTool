@@ -41,8 +41,10 @@ public class GraphEditor
 	public static void main(String[] args) throws Exception
 	{
 		Server server = new Server(PORT);
+		
 		MySQLAccess mySQLAccess = new MySQLAccess("kpro2017gr13", "morten");
 		IUserRepository userRepo = new UserRepositoryImpl(mySQLAccess);
+		
 		// Servlets
 		Context context = new Context(server, "/");
 		context.addServlet(new ServletHolder(new EchoServlet()), "/save");
