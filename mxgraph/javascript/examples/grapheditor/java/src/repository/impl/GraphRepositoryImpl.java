@@ -20,7 +20,7 @@ public class GraphRepositoryImpl implements IGraphRepository {
 	@Override
 	public void insertGraph(User u, String graph_data) {
 		String insert_graph = "INSERT INTO Graph(user_id, graph_data) VALUES (?, ?)";
-		String insert_role = "INSERT INTO Roles(id, user_id) VALUES (LAST_INSERT_ID(), ?)";
+		String insert_role = "INSERT INTO Role(id, user_id, role) VALUES (LAST_INSERT_ID(), ?, 0)";
 		try {
 			access.getConnection();
 			access.manual_query(insert_graph, u.getId(), graph_data);
@@ -75,7 +75,7 @@ public class GraphRepositoryImpl implements IGraphRepository {
 				graph = new Graph(id, u, graph_data);
 			}
 		} catch (SQLException e) {
-			System.out.println("Quering form db failed");
+			System.out.println("SQL error: " + e.getMessage());
 		}
 		return graph;
 	}

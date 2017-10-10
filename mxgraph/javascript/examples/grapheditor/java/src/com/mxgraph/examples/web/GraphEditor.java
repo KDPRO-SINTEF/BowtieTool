@@ -7,8 +7,12 @@ import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
+import repository.IGraphRepository;
+import repository.IRoleRepository;
 import repository.IUserRepository;
 import repository.MySQLAccess;
+import repository.impl.GraphRepositoryImpl;
+import repository.impl.RoleRepositoryImpl;
 import repository.impl.UserRepositoryImpl;
 
 /**
@@ -41,8 +45,10 @@ public class GraphEditor
 	{
 		Server server = new Server(PORT);
 
-		MySQLAccess mySQLAccess = new MySQLAccess();
-		IUserRepository userRepo = new UserRepositoryImpl(mySQLAccess);
+		MySQLAccess access = new MySQLAccess();
+		IUserRepository userRepo = new UserRepositoryImpl(access);
+		IGraphRepository graphRepo = new GraphRepositoryImpl(access);
+		IRoleRepository roleRepo = new RoleRepositoryImpl(access);
 
 		// Servlets
 		Context context = new Context(server, "/");
@@ -51,6 +57,8 @@ public class GraphEditor
 		context.addServlet(new ServletHolder(new OpenServlet()), "/open");
 		context.addServlet(new ServletHolder(new UserLoginServlet(userRepo)), "/login");
 		context.addServlet(new ServletHolder(new UserCreateServlet(userRepo)), "/create");
+		context.addServlet(new ServletHolder(new GraphServlet(userRepo, graphRepo, roleRepo)), "/graph");
+
 
 		ResourceHandler fileHandler = new ResourceHandler();
 		fileHandler.setResourceBase(".");

@@ -1,8 +1,6 @@
 package com.mxgraph.examples.web;
 
 import java.io.IOException;
-import java.io.OutputStream;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,13 +42,12 @@ public class UserCreateServlet extends HttpServlet{
 		// Needs more checks here, username *must* be unique, and createUser will error out somehow
 		// if this isn't the case.
 		userRepo.createUser(username, fullname, password);
-
-		response.setContentType("text/plain");
+		
+		// This isn't really good, as we don't know for certain wether the user was created or not.
+		// The MySQLAccess swallows the exception, and we can't know at this level if an error
+		// actually occured.
 		response.setStatus(HttpServletResponse.SC_OK);
-		OutputStream out = response.getOutputStream();
-		out.write("User created".getBytes());
-
-		out.flush();
-		out.close();
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
 	}
 }

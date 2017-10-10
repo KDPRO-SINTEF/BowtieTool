@@ -5,7 +5,6 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
@@ -28,7 +27,6 @@ public class MySQLAccess {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 		connection = DriverManager.getConnection(dburi);
 		if (connection != null) {
@@ -93,7 +91,7 @@ public class MySQLAccess {
 			getConnection();
 			cachedRowSet = manual_query(query, values);
 		} catch (SQLException e) {
-			System.err.println("SQL error: " + e.getMessage());
+			System.err.println("SQL error: Query: " + query + " failed with message " + e.getMessage());
 		} finally {
 			close();
 		}
@@ -105,17 +103,12 @@ public class MySQLAccess {
 			throw new IllegalStateException();
 		}
 		
-		PreparedStatement preparedStatement = null;
-		ResultSet rs = null;
-		CachedRowSet cachedRowSet = null;
+		PreparedStatement preparedStatement = connection.prepareStatement(query);
+		CachedRowSet cachedRowSet = new CachedRowSetImpl();
 		
-		cachedRowSet = new CachedRowSetImpl();
-		preparedStatement = connection.prepareStatement(query);
 		setValues(preparedStatement, values);
-
 		if (preparedStatement.execute()) {
-			rs = preparedStatement.getResultSet();
-			cachedRowSet.populate(rs);
+			cachedRowSet.populate(preparedStatement.getResultSet());
 		}
 
 		return cachedRowSet;

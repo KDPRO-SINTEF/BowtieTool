@@ -44,8 +44,8 @@ public class GraphServlet extends HttpServlet
 		String graphid = request.getParameter("id");
 		String logintoken = request.getParameter("token");
 
-		if (graphid == null) {
-			// User must provide graphid
+		if (graphid == null || logintoken == null) {
+			// User must provide graphid and token
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
