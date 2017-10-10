@@ -51,10 +51,15 @@ public class UserLoginServlet extends HttpServlet{
 			return;
 		}
 
-		response.setContentType("text/plain");
+		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_OK);
 		OutputStream out = response.getOutputStream();
-		out.write(user.getToken().getBytes());
+		out.write((
+				"  {"
+				+ "     \"loginToken\": \"" + user.getToken() + "\","
+				+ "     \"status\": \"success\""
+				+ "}"
+				).getBytes());
 
 		out.flush();
 		out.close();

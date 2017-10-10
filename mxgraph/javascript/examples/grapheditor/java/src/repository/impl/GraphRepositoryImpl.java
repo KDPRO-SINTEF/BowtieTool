@@ -3,6 +3,7 @@ package repository.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import models.Graph;
@@ -18,12 +19,14 @@ public class GraphRepositoryImpl implements IGraphRepository {
 	}
 
 	@Override
-	public void insertGraph(User u, String graph_data) {
-		String insert_graph = "INSERT INTO Graph(user_id, graph_data) VALUES (?, ?)";
+	public void insertGraph(User u, String graph_data, String title, String description) {
+		String insert_graph = "INSERT INTO Graph(user_id, graph_data, title, description,"
+				+ "                            created, last_modified)"
+				+ "                 VALUES (?, ?, ?, ?, NOW(), NOW())";
 		String insert_role = "INSERT INTO Role(id, user_id, role) VALUES (LAST_INSERT_ID(), ?, 0)";
 		try {
 			access.getConnection();
-			access.manual_query(insert_graph, u.getId(), graph_data);
+			access.manual_query(insert_graph, u.getId(), graph_data, title, description);
 			access.manual_query(insert_role, u.getId());
 		} catch (SQLException e) {
 			System.err.println("SQL error " + e.getMessage());
@@ -34,14 +37,19 @@ public class GraphRepositoryImpl implements IGraphRepository {
 
 	@Override
 	public void updateGraph(Graph g) {
-		String update_graph = "UPDATE Graph SET graph_data = ? WHERE id = ?";
-		access.query(update_graph, g.getId());
+		String update_graph = "UPDATE Graph"
+				+ "               SET graph_data = ?,"
+				+ "               SET title = ?,"
+				+ "               SET description = ?,"
+				+ "               SET last_modified = NOW()"
+				+ "             WHERE id = ?";
+		access.query(update_graph, g.getGraph_data(), g.getTitle(), g.getDescription(), g.getId());
 	}
 
 	@Override
 	public List<Graph> getUserGraphs(User u) {
 		List<Graph> graphs = new ArrayList<Graph>();
-		String query = "SELECT Graph.graph_data, Graph.id"
+		String query = "SELECT graph_data, id, title, description, created, last_modified"
 				+ "       FROM Graph"
 				+ "            LEFT JOIN Role"
 				+ "            ON Graph.id = Role.id AND Graph.user_id = Role.user_id"
@@ -51,7 +59,11 @@ public class GraphRepositoryImpl implements IGraphRepository {
 			while (rs.next()) {
 				int id = rs.getInt("id");
 				String graph_data = rs.getString("graph_data");
-				graphs.add(new Graph(id, u, graph_data));
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				Date created = rs.getDate("created");
+				Date last_modified = rs.getDate("last_modified");
+				graphs.add(new Graph(id, u, graph_data, title, description, created, last_modified));
 			}
 		} catch (SQLException e ) {
 			System.out.println("Quering form db failed");
@@ -62,7 +74,7 @@ public class GraphRepositoryImpl implements IGraphRepository {
 	@Override
 	public Graph getUserGraph(User u, int id) {
 		Graph graph = null;
-		String query = "SELECT Graph.graph_data"
+		String query = "SELECT graph_data, title, description, created, last_modified"
 				+ "       FROM Graph"
 				+ "            LEFT JOIN Role"
 				+ "            ON Graph.id = Role.id AND Graph.user_id = Role.user_id"
@@ -72,7 +84,11 @@ public class GraphRepositoryImpl implements IGraphRepository {
 			ResultSet rs = access.query(query, u.getId(), id);
 			while (rs.next()) {
 				String graph_data = rs.getString("graph_data");
-				graph = new Graph(id, u, graph_data);
+				String title = rs.getString("title");
+				String description = rs.getString("description");
+				Date created = rs.getDate("created");
+				Date last_modified = rs.getDate("last_modified");
+				graph = new Graph(id, u, graph_data, title, description, created, last_modified);
 			}
 		} catch (SQLException e) {
 			System.out.println("SQL error: " + e.getMessage());

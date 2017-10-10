@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -63,7 +64,18 @@ public class GraphServlet extends HttpServlet
 
 		Graph graph = graphRepo.getUserGraph(user, Integer.parseInt(graphid));
 		OutputStream out = response.getOutputStream();
-		out.write(graph.getGraph_data().getBytes("UTF-8"));
+		/*out.write((
+				"  {"
+				+ "     \"status\": \"success\",
+				+ "     \"data\": \"" + graph.getGraph_data() + "\", "
+				+ "     \"title\": \"" + graph.getTitle() + "\", "
+				+ "     \"description\": \"" + graph.getDescription() +"\", "
+				+ "     \"created\": \"" + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getCreated()) + "\", "
+				+ "     \"last_modified\": \"" + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getLast_modified()) + "\""
+				+ "}"
+				).getBytes("UTF-8"));
+		*/
+		out.write(graph.getGraph_data().getBytes());
 		out.close();
 	}
 
@@ -121,8 +133,18 @@ public class GraphServlet extends HttpServlet
 		// Parses parameters
 		String graphid = request.getParameter("id");
 		String logintoken = request.getParameter("token");
+		String title = request.getParameter("title");
+		String description = request.getParameter("description");
 		String xml = getRequestXml(request);
-
+		
+		if (logintoken == null || title == null || xml == null) {
+			// User must specify these fields
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			return;
+		}
+		
 		User user = userRepo.getUserByToken(logintoken);
 		if (user == null) {
 			// User isn't authorized
@@ -134,7 +156,7 @@ public class GraphServlet extends HttpServlet
 
 		if (graphid == null) {
 			// Graph doesn't exist yet, we need to create it.
-			graphRepo.insertGraph(user, xml);
+			graphRepo.insertGraph(user, xml, title, description);
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
@@ -142,7 +164,7 @@ public class GraphServlet extends HttpServlet
 		}
 
 		// Graph already exists in db, we need to check if we're allowed to change it.
-		Graph g = new Graph(Integer.parseInt(graphid), user, xml);
+		Graph g = new Graph(Integer.parseInt(graphid), user, xml, title, description);
 		Role r = roleRepo.getUserRoleForGraph(g, user);
 
 		if (r.getRole() != 0) {
