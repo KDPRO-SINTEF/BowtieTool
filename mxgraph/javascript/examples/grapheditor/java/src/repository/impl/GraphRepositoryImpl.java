@@ -19,26 +19,26 @@ public class GraphRepositoryImpl implements IGraphRepository {
 
 	@Override
 	public void insertGraph(User u, String graph_data) {
-		String insert_graph = "INSERT INTO KPRO.Graph(user_id, graph_data) VALUES (?, ?)";
-		String insert_role = "INSERT INTO KPRO.Roles(id, user_id) VALUES (LAST_INSERT_ID(), ?)";
+		String insert_graph = "INSERT INTO Graph(user_id, graph_data) VALUES (?, ?)";
+		String insert_role = "INSERT INTO Roles(id, user_id) VALUES (LAST_INSERT_ID(), ?)";
 		access.query(insert_graph, u.getId(), graph_data);
 		access.query(insert_role, u.getId());
 	}
 
 	@Override
 	public void updateGraph(Graph g) {
-		String update_graph = "UPDATE KPRO.Graph SET graph_data = ? WHERE id = ?";
+		String update_graph = "UPDATE Graph SET graph_data = ? WHERE id = ?";
 		access.query(update_graph, g.getId());
 	}
 
 	@Override
 	public List<Graph> getUserGraphs(User u) {
 		List<Graph> graphs = new ArrayList<Graph>();
-		String query = "SELECT KPRO.Graph.graph_data, KPRO.Graph.id"
-				+ "       FROM KPRO.Graph"
-				+ "            LEFT JOIN KPRO.Role"
-				+ "            ON KPRO.Graph.id = KPRO.Role.id AND KPRO.Graph.user_id = KPRO.Role.user_id"
-				+ "      WHERE KPRO.Graph.user_id = ?";
+		String query = "SELECT Graph.graph_data, Graph.id"
+				+ "       FROM Graph"
+				+ "            LEFT JOIN Role"
+				+ "            ON Graph.id = Role.id AND Graph.user_id = Role.user_id"
+				+ "      WHERE Graph.user_id = ?";
 		try {
 			ResultSet rs = access.query(query, u.getId());
 			while (rs.next()) {
@@ -55,12 +55,12 @@ public class GraphRepositoryImpl implements IGraphRepository {
 	@Override
 	public Graph getUserGraph(User u, int id) {
 		Graph graph = null;
-		String query = "SELECT KPRO.Graph.graph_data"
-				+ "       FROM KPRO.Graph"
-				+ "            LEFT JOIN KPRO.Role"
-				+ "            ON KPRO.Graph.id = KPRO.Role.id AND KPRO.Graph.user_id = KPRO.Role.user_id"
-				+ "      WHERE KPRO.Graph.user_id = ?"
-				+ "            AND KPRO.Graph.id = ?";
+		String query = "SELECT Graph.graph_data"
+				+ "       FROM Graph"
+				+ "            LEFT JOIN Role"
+				+ "            ON Graph.id = Role.id AND Graph.user_id = Role.user_id"
+				+ "      WHERE Graph.user_id = ?"
+				+ "            AND Graph.id = ?";
 		try {
 			ResultSet rs = access.query(query, u.getId(), id);
 			while (rs.next()) {

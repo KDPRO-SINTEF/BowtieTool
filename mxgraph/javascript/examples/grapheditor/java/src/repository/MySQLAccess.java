@@ -14,10 +14,7 @@ import javax.sql.rowset.CachedRowSet;
 import com.sun.rowset.CachedRowSetImpl;
 
 public class MySQLAccess {
-	private String serverName;
-	private String password;
-	private String username;
-	private int portNumber = 3306;
+	private String dburi;
 	private Connection connection;
 
 	public MySQLAccess() {
@@ -33,11 +30,7 @@ public class MySQLAccess {
 		}
 
 
-		connection = DriverManager.getConnection(
-				"jdbc:mysql://" + this.serverName + ":" + this.portNumber + "?useSSL=false",
-				this.username,
-				this.password
-				);
+		connection = DriverManager.getConnection(dburi);
 		if (connection != null) {
 			System.out.println("Database connection opened");
 		} else {
@@ -73,10 +66,7 @@ public class MySQLAccess {
 
 			// load a properties file
 			prop.load(input);
-
-			serverName = prop.getProperty("database");
-			password = prop.getProperty("dbpassword");
-			username = prop.getProperty("dbuser");
+			dburi = prop.getProperty("dburi");
 
 		} catch (IOException ex) {
 			ex.printStackTrace();

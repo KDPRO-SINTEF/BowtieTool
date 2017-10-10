@@ -19,7 +19,7 @@ public class RoleRepositoryImpl implements IRoleRepository {
 	@Override
 	public Role getUserRoleForGraph(Graph g, User u) {
 		Role role = null;
-		String query = "SELECT * FROM KPRO.Role WHERE id=? AND user_id=?;";
+		String query = "SELECT * FROM Role WHERE id=? AND user_id=?;";
 		try {
 			ResultSet rs = access.query(query, g.getId(), u.getId());
 			while (rs.next()) {

@@ -45,28 +45,28 @@ public class UserRepositoryImpl implements IUserRepository{
 
 	@Override
 	public void createUser(String username, String password) {
-		String insert_user = "INSERT KPRO.User(username, hash_pw) VALUES (?, ?);";
+		String insert_user = "INSERT User(username, hash_pw) VALUES (?, ?);";
 		access.query(insert_user, username, hash_pw(password));
 	}
 
 	@Override
 	public void deleteUser(User user) {
 		//XXX: Vi trenger noen constraints i skjemaet for dette, cascade osv.
-		String insert_user = "DELETE FROM KPRO.User WHERE id = ?;";
+		String insert_user = "DELETE FROM User WHERE id = ?;";
 		access.query(insert_user, user.getId());
 	}
 
 	@Override
 	public void updateUser(int id, String username, String password) {
 		// TODO Auto-generated method stub
-		String update_user = "UPDATE KPRO.User SET username = ?, hash_pw = ? WHERE id = ?;";
+		String update_user = "UPDATE User SET username = ?, hash_pw = ? WHERE id = ?;";
 		access.query(update_user, username, hash_pw(password), id);
 	}
 
 	@Override
 	public User getUserById(int id) {
 		User user = null;
-		String query = "SELECT * FROM KPRO.User WHERE id=?";
+		String query = "SELECT * FROM User WHERE id=?";
 		try {
 			ResultSet rs = access.query(query, id);
 			while (rs.next()) {
@@ -84,7 +84,7 @@ public class UserRepositoryImpl implements IUserRepository{
 	@Override
 	public User getUserByToken(String token) {
 		User user = null;
-		String query = "SELECT * FROM KPRO.User WHERE token=?";
+		String query = "SELECT * FROM User WHERE token=?";
 		try {
 			ResultSet rs = access.query(query, token);
 			while (rs.next()) {
@@ -102,7 +102,7 @@ public class UserRepositoryImpl implements IUserRepository{
 	@Override
 	public User validateUser(String username, String password) {
 		User user = null;
-		String query = "SELECT id, hash_pw FROM KPRO.User WHERE username = ?";
+		String query = "SELECT id, hash_pw FROM User WHERE username = ?";
 		try {
 			ResultSet rs = access.query(query, username);
 			while (rs.next()) {
@@ -130,7 +130,7 @@ public class UserRepositoryImpl implements IUserRepository{
 					}
 				}
 				String token = UUID.randomUUID().toString();
-				String update_token = "UPDATE KPRO.User SET token = ? WHERE id = ?";
+				String update_token = "UPDATE User SET token = ? WHERE id = ?";
 				access.query(update_token, token, id);
 				user = this.getUserById(id);
 			}
