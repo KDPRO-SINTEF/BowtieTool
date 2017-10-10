@@ -38,7 +38,7 @@ public class MySQLAccess {
 		}
 	}
 
-	private void close()  {
+	public void close()  {
 		try {
 			if (connection != null) {
 				connection.close();
@@ -49,7 +49,7 @@ public class MySQLAccess {
 		}
 	}
 
-	public void readConfig() {
+	private void readConfig() {
 		Properties prop = new Properties();
 		InputStream input = null;
 
@@ -81,31 +81,43 @@ public class MySQLAccess {
 		}
 	}
 
-	public static void setValues(PreparedStatement preparedStatement, Object... values) throws SQLException {
+	private static void setValues(PreparedStatement preparedStatement, Object... values) throws SQLException {
 		for (int i = 0; i < values.length; i++) {
 			preparedStatement.setObject(i + 1, values[i]);
 		}
 	}
 
 	public CachedRowSet query(String query, Object... values) {
-		PreparedStatement preparedStatement = null;
-		ResultSet rs = null;
 		CachedRowSet cachedRowSet = null;
 		try {
 			getConnection();
-			cachedRowSet = new CachedRowSetImpl();
-			preparedStatement = connection.prepareStatement(query);
-			setValues(preparedStatement, values);
-
-			if(preparedStatement.execute()) {
-				rs = preparedStatement.getResultSet();
-				cachedRowSet.populate(rs);
-			}
+			cachedRowSet = manual_query(query, values);
 		} catch (SQLException e) {
 			System.err.println("SQL error: " + e.getMessage());
 		} finally {
 			close();
 		}
+		return cachedRowSet;
+	}
+	
+	public CachedRowSet manual_query(String query, Object...values) throws SQLException {
+		if (connection == null) {
+			throw new IllegalStateException();
+		}
+		
+		PreparedStatement preparedStatement = null;
+		ResultSet rs = null;
+		CachedRowSet cachedRowSet = null;
+		
+		cachedRowSet = new CachedRowSetImpl();
+		preparedStatement = connection.prepareStatement(query);
+		setValues(preparedStatement, values);
+
+		if (preparedStatement.execute()) {
+			rs = preparedStatement.getResultSet();
+			cachedRowSet.populate(rs);
+		}
+
 		return cachedRowSet;
 	}
 }

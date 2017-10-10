@@ -3,19 +3,22 @@ package models;
 public class User {
 	private int id;
 	private String username;
+	private String fullname;
 	private String hash_pw;
 	private String token = null;
 
 
-	public User(int id, String username, String hash_pw) {
+	public User(int id, String username, String fullname, String hash_pw) {
 		this.id = id;
 		this.username = username;
+		this.fullname = fullname;
 		this.hash_pw = hash_pw;
 	}
 
-	public User(int id, String username, String hash_pw, String token) {
+	public User(int id, String username, String fullname, String hash_pw, String token) {
 		this.id = id;
 		this.username = username;
+		this.fullname = fullname;
 		this.hash_pw = hash_pw;
 		this.token = token;
 	}
@@ -34,6 +37,14 @@ public class User {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public String getFullname() {
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
 	}
 
 	public String getHash_pw() {

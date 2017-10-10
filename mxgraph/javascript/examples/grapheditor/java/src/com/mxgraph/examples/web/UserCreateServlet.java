@@ -30,9 +30,10 @@ public class UserCreateServlet extends HttpServlet{
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
 		String username = req.getParameter("username");
+		String fullname = req.getParameter("fullname");
 		String password = req.getParameter("password");
 
-		if (username == null || password == null) {
+		if (username == null || fullname == null || password == null) {
 			// User isn't authorized
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.getOutputStream().flush();
@@ -42,7 +43,7 @@ public class UserCreateServlet extends HttpServlet{
 
 		// Needs more checks here, username *must* be unique, and createUser will error out somehow
 		// if this isn't the case.
-		userRepo.createUser(username, password);
+		userRepo.createUser(username, fullname, password);
 
 		response.setContentType("text/plain");
 		response.setStatus(HttpServletResponse.SC_OK);

@@ -21,8 +21,15 @@ public class GraphRepositoryImpl implements IGraphRepository {
 	public void insertGraph(User u, String graph_data) {
 		String insert_graph = "INSERT INTO Graph(user_id, graph_data) VALUES (?, ?)";
 		String insert_role = "INSERT INTO Roles(id, user_id) VALUES (LAST_INSERT_ID(), ?)";
-		access.query(insert_graph, u.getId(), graph_data);
-		access.query(insert_role, u.getId());
+		try {
+			access.getConnection();
+			access.manual_query(insert_graph, u.getId(), graph_data);
+			access.manual_query(insert_role, u.getId());
+		} catch (SQLException e) {
+			System.err.println("SQL error " + e.getMessage());
+		} finally {
+			access.close();
+		}
 	}
 
 	@Override
