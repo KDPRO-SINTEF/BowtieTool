@@ -2,6 +2,7 @@ package com.mxgraph.examples.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -56,26 +57,14 @@ public class UserLoginServlet extends HttpServlet{
 		OutputStream out = response.getOutputStream();
 		out.write((
 				"  {"
-				+ "     \"loginToken\": \"" + user.getToken() + "\","
+				+ "     \"username\": " + URLEncoder.encode(user.getUsername()) + "\", "
+				+ "     \"fullname\": " + URLEncoder.encode(user.getFullname()) + "\", "
+				+ "     \"token\": \"" + URLEncoder.encode(user.getToken()) + "\", "
 				+ "     \"status\": \"success\""
 				+ "}"
 				).getBytes());
 
 		out.flush();
 		out.close();
-
-		/*
-        int id = Integer.parseInt(req.getParameter("id"));
-        User user = userRepo.getUserById(id);
-        response.setContentType("text/plain");
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        OutputStream out = response.getOutputStream();
-        if(user != null) {          
-            out.write(("User in DB, name "+ user.getUsername()).getBytes("UTF-8"));
-        } else {
-            out.write("No such user exist".getBytes("UTF-8"));
-        }
-		 */
 	}
 }

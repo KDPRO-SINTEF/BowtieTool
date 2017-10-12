@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
@@ -64,18 +65,17 @@ public class GraphServlet extends HttpServlet
 
 		Graph graph = graphRepo.getUserGraph(user, Integer.parseInt(graphid));
 		OutputStream out = response.getOutputStream();
-		/*out.write((
+		out.write((
 				"  {"
-				+ "     \"status\": \"success\",
-				+ "     \"data\": \"" + graph.getGraph_data() + "\", "
-				+ "     \"title\": \"" + graph.getTitle() + "\", "
-				+ "     \"description\": \"" + graph.getDescription() +"\", "
-				+ "     \"created\": \"" + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getCreated()) + "\", "
-				+ "     \"last_modified\": \"" + new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getLast_modified()) + "\""
+				+ "     \"status\": \"success\", "
+				+ "     \"data\": \"" + URLEncoder.encode(graph.getGraph_data()) + "\", "
+				+ "     \"title\": \"" + URLEncoder.encode(graph.getTitle()) + "\", "
+				+ "     \"description\": \"" + URLEncoder.encode(graph.getDescription()) +"\", "
+				+ "     \"created\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getCreated())) + "\", "
+				+ "     \"last_modified\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getLast_modified())) + "\""
 				+ "}"
 				).getBytes("UTF-8"));
-		*/
-		out.write(graph.getGraph_data().getBytes());
+		
 		out.close();
 	}
 

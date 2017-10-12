@@ -32,8 +32,8 @@ public class UserCreateServlet extends HttpServlet{
 		String password = req.getParameter("password");
 
 		if (username == null || fullname == null || password == null) {
-			// User isn't authorized
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			// These fields must be specified
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
 			return;
