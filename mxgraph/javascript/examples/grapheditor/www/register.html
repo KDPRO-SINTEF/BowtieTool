@@ -8,7 +8,7 @@
 
     <!-- Sets the basepath for the library if not in same directory -->
     <script type="text/javascript">
-        mxBasePath = '../';
+        mxBasePath = '../src';
     </script>
 
     <script type="text/javascript" src="../../../src/js/mxClient.js"></script>
@@ -23,9 +23,6 @@
             var confirmPassword = document.getElementById('confirm_password');
             var emailInput = document.getElementById('email');
             if (usernameInput.checkValidity() && passwordInput.checkValidity() && emailInput.checkValidity() && confirmPassword.checkValidity() && name.checkValidity()) {
-                 if (passwordInput.value !== confirmPassword.value) {
-                     console.log("The passwords ")
-                 }
                 var params = 'username=' + usernameInput.value + '&password=' + passwordInput.value + '&email=' + emailInput.value + '&fullname=' + name.value;
 
                 // TODO Replace http://httpbin.org/post with the url of the server
