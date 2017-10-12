@@ -56,9 +56,9 @@ public class UserLoginServlet extends HttpServlet{
 		OutputStream out = response.getOutputStream();
 		out.write((
 				"  {"
-				+ "     \"username\": " + URLEncoder.encode(user.getUsername()) + "\", "
-				+ "     \"fullname\": " + URLEncoder.encode(user.getFullname()) + "\", "
-				+ "     \"token\": \"" + URLEncoder.encode(user.getToken()) + "\", "
+				+ "     \"username\": " + URLEncoder.encode(user.getUsername(), "UTF-8") + "\", "
+				+ "     \"fullname\": " + URLEncoder.encode(user.getFullname(), "UTF-8") + "\", "
+				+ "     \"token\": \"" + URLEncoder.encode(user.getToken(), "UTF-8") + "\", "
 				+ "     \"status\": \"success\""
 				+ "}"
 				).getBytes());

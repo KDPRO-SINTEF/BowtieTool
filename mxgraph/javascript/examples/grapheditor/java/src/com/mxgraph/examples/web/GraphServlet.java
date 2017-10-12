@@ -68,11 +68,11 @@ public class GraphServlet extends HttpServlet
 		out.write((
 				"  {"
 				+ "     \"status\": \"success\", "
-				+ "     \"data\": \"" + URLEncoder.encode(graph.getGraph_data()) + "\", "
-				+ "     \"title\": \"" + URLEncoder.encode(graph.getTitle()) + "\", "
-				+ "     \"description\": \"" + URLEncoder.encode(graph.getDescription()) +"\", "
-				+ "     \"created\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getCreated())) + "\", "
-				+ "     \"last_modified\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getLast_modified())) + "\""
+				+ "     \"data\": \"" + URLEncoder.encode(graph.getGraph_data(), "UTF-8") + "\", "
+				+ "     \"title\": \"" + URLEncoder.encode(graph.getTitle(), "UTF-8") + "\", "
+				+ "     \"description\": \"" + URLEncoder.encode(graph.getDescription(), "UTF-8") +"\", "
+				+ "     \"created\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getCreated()), "UTF-8") + "\", "
+				+ "     \"last_modified\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getLast_modified()), "UTF-8") + "\""
 				+ "}"
 				).getBytes("UTF-8"));
 		
