@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../../../src/css/login.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">    <meta charset="UTF-8">
     <title>Login</title>
 
@@ -10,7 +10,7 @@
         mxBasePath = '../';
     </script>
 
-    <script type="text/javascript" src="../js/mxClient.js"></script>
+    <script type="text/javascript" src="../../../src/js/mxClient.js"></script>
     <script type="text/javascript">
 
 
@@ -23,8 +23,8 @@
                 // TODO Replace http://httpbin.org/post with the url of the server
                 mxUtils.post('http://httpbin.org/post', params, function () {
 
-                    // TODO Change the url below so that it directs to correct home page
-                    window.location.href = "http://localhost:8080/javascript/examples/grapheditor/www/index.html";
+                // TODO Change the url below so that it directs to correct home page
+                window.location.href = "index.html";
 
                 }, function () {
                     alert("Communication failure!");
