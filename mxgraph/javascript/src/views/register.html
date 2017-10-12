@@ -17,11 +17,16 @@
 
         function sendData() {
 
+            var name = document.getElementById('full_name');
             var usernameInput = document.getElementById('username');
             var passwordInput = document.getElementById('password');
+            var confirmPassword = document.getElementById('confirm_password');
             var emailInput = document.getElementById('email');
-            if (usernameInput.checkValidity() && passwordInput.checkValidity() && emailInput.checkValidity()) {
-                var params = 'username=' + usernameInput.value + '&password=' + passwordInput.value + '&email=' + emailInput.value;
+            if (usernameInput.checkValidity() && passwordInput.checkValidity() && emailInput.checkValidity() && confirmPassword.checkValidity() && name.checkValidity()) {
+                 if (passwordInput.value !== confirmPassword.value) {
+                     console.log("The passwords ")
+                 }
+                var params = 'username=' + usernameInput.value + '&password=' + passwordInput.value + '&email=' + emailInput.value + '&fullname=' + name.value;
 
                 // TODO Replace http://httpbin.org/post with the url of the server
                 mxUtils.post('http://httpbin.org/post', params, function () {
@@ -47,6 +52,12 @@
         <div class="col-md-4 login-form">
             <h1>Register</h1>
             <form onsubmit="return false">
+
+                <div class="form-group">
+                    <label>Full name:</label>
+                    <input type="text" class="form-control" id="full_name" placeholder="Enter name" required>
+                </div>
+
                 <div class="form-group">
                     <label>Username:</label>
                     <input type="text" class="form-control" id="username" placeholder="Enter username" required>
@@ -54,12 +65,16 @@
 
                 <div class="form-group">
                     <label>Email:</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter email address" data-error="Invalid email address" required>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email address" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Password:</label>
-                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                    <label for="password" class="control-label">Password:</label>
+                    <input type="password" data-minlength="6" class="form-control" id="password" placeholder="Enter password" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" data-match="password" required>
                 </div>
 
                 <div class="form-group">
