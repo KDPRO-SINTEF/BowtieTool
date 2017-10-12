@@ -35,15 +35,14 @@ public class UserLoginServlet extends HttpServlet{
 		String password = req.getParameter("password");
 
 		if (username == null || password == null) {
-			// User isn't authorized
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+			// User must specify these fields.
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
 			return;
 		}
 
 		User user = userRepo.validateUser(username, password);
-
 		if (user == null) {
 			// User isn't authorized
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
