@@ -2,7 +2,6 @@ package com.mxgraph.examples.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -70,7 +69,7 @@ public class GraphServlet extends HttpServlet
 				+ "     \"status\": \"success\", "
 				+ "     \"data\": \"" + URLEncoder.encode(graph.getGraph_data(), "UTF-8") + "\", "
 				+ "     \"title\": \"" + URLEncoder.encode(graph.getTitle(), "UTF-8") + "\", "
-				+ "     \"description\": \"" + URLEncoder.encode(graph.getDescription(), "UTF-8") +"\", "
+				+ "     \"description\": \"" + URLEncoder.encode((graph.getDescription() == null) ? "" : graph.getDescription(), "UTF-8") +"\", "
 				+ "     \"created\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getCreated()), "UTF-8") + "\", "
 				+ "     \"last_modified\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getLast_modified()), "UTF-8") + "\""
 				+ "}"
@@ -135,7 +134,18 @@ public class GraphServlet extends HttpServlet
 		String logintoken = request.getParameter("token");
 		String title = request.getParameter("title");
 		String description = request.getParameter("description");
-		String xml = getRequestXml(request);
+		String xml = request.getParameter("xml");
+		
+		if (graphid != null)
+			graphid = URLDecoder.decode(graphid, "UTF-8");
+		if (logintoken != null)
+			logintoken = URLDecoder.decode(logintoken, "UTF-8");
+		if (title != null)
+			title = URLDecoder.decode(title, "UTF-8");
+		if (description != null)
+			description = URLDecoder.decode(description, "UTF-8");
+		if (xml != null)
+			xml = URLDecoder.decode(xml, "UTF-8");
 		
 		if (logintoken == null || title == null || xml == null) {
 			// User must specify these fields
@@ -156,10 +166,17 @@ public class GraphServlet extends HttpServlet
 
 		if (graphid == null) {
 			// Graph doesn't exist yet, we need to create it.
-			graphRepo.insertGraph(user, xml, title, description);
+			int id = graphRepo.insertGraph(user, xml, title, description);
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.getOutputStream().flush();
-			response.getOutputStream().close();
+			OutputStream out = response.getOutputStream();
+			out.write((
+					"  {"
+					+ "     \"status\": \"success\", "
+					+ "     \"id\": " + URLEncoder.encode(Integer.toString(id), "UTF-8")
+					+ "}"
+					).getBytes("UTF-8"));
+			out.flush();
+			out.close();
 			return;
 		}
 
@@ -179,21 +196,5 @@ public class GraphServlet extends HttpServlet
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.getOutputStream().flush();
 		response.getOutputStream().close();  
-	}
-
-	/**
-	 * Gets the XML request parameter.
-	 */
-	protected String getRequestXml(HttpServletRequest request) throws IOException, UnsupportedEncodingException
-	{
-		String xml = request.getParameter("xml");
-
-		// Decoding is optional (no plain text values allowed)
-		if (xml != null && xml.startsWith("%3C"))
-		{
-			xml = URLDecoder.decode(xml, "UTF-8");
-		}
-
-		return xml;
 	}
 }

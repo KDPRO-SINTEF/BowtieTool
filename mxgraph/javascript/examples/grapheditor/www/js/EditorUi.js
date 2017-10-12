@@ -3324,8 +3324,25 @@ EditorUi.prototype.save = function(name)
 			{
 				if (xml.length < MAX_REQUEST_SIZE)
 				{
-					new mxXmlRequest(SAVE_URL, 'filename=' + encodeURIComponent(name) +
-						'&xml=' + encodeURIComponent(xml)).simulate(document, '_blank');
+					var token = localStorage.getItem('token');
+					if (!token) {
+						mxUtils.alert(mxResources.get('notLoggedIn'));
+						return;
+					}
+
+					if (!this.editor.getGraphId()) {
+						mxUtils.post(SAVE_URL, 'title=' + encodeURIComponent(name) + '&token=' + encodeURIComponent(token) +
+							'&xml=' + encodeURIComponent(xml), mxUtils.bind(this, function(req) {
+								var id = JSON.parse(req.getText()).id;
+								this.editor.setGraphId(id);
+								console.log('Inserted with id', id, "and", this.editor.getGraphId());
+
+						}));
+					} else {
+						console.log('Existing with id', this.editor.getGraphId());
+						new mxXmlRequest(SAVE_URL, 'title=' + encodeURIComponent(name) + '&token=' + encodeURIComponent(token) +
+							'&xml=' + encodeURIComponent(xml) + '&id=' + encodeURIComponent(this.editor.getGraphId()));
+					}
 				}
 				else
 				{

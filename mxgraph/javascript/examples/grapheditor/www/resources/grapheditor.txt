@@ -202,6 +202,7 @@ none=None
 noResultsFor=No results for '{1}'
 normal=Normal
 north=North
+notLoggedIn=Not logged in.
 numberedList=Numbered List
 opacity=Opacity
 open=Open

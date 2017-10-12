@@ -22,6 +22,11 @@ Editor = function(chromeless, themes, model, graph)
 	{
 		return this.filename;
 	};
+
+	this.getGraphId = function()
+	{
+		return this.graphId;
+	};
 	
 	// Sets the status and fires a statusChanged event
 	this.setStatus = function(value)
@@ -235,6 +240,11 @@ Editor.prototype.enabled = true;
  * Contains the name which was used for the last save. Default value is null.
  */
 Editor.prototype.filename = null;
+
+/**
+ * Specifies the Graph's id. Default value is null.
+ */
+Editor.prototype.graphId = null;
 
 /**
  * Contains the current modified state of the diagram. This is false for
@@ -566,6 +576,14 @@ Editor.prototype.setModified = function(value)
 Editor.prototype.setFilename = function(value)
 {
 	this.filename = value;
+};
+
+/**
+ * Sets the graph id.
+ */
+Editor.prototype.setGraphId = function(value)
+{
+	this.graphId = value;
 };
 
 /**

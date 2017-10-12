@@ -333,30 +333,58 @@ var AboutDialog = function(editorUi)
 {
 	var div = document.createElement('div');
 	div.setAttribute('align', 'center');
+	
 	var h3 = document.createElement('h3');
-	mxUtils.write(h3, mxResources.get('about') + ' GraphEditor');
+	mxUtils.write(h3, mxResources.get('about') + ' BowTie');
 	div.appendChild(h3);
+	
 	var img = document.createElement('img');
 	img.style.border = '0px';
 	img.setAttribute('width', '176');
 	img.setAttribute('width', '151');
 	img.setAttribute('src', IMAGE_PATH + '/logo.png');
 	div.appendChild(img);
+	
+	localStorage.setItem("token", "50f0fd79-fa52-47c4-bb5e-2d755c649200");
+	localStorage.setItem("username", "tronds@abc.com");
+	localStorage.setItem("fullname", "Trond Humborstad");
+
+	var user = {
+		"username": localStorage.getItem("username"),
+		"fullname": localStorage.getItem("fullname"),
+		"token": localStorage.getItem("token")
+	};
+	
 	mxUtils.br(div);
-	mxUtils.write(div, 'Powered by mxGraph ' + mxClient.VERSION);
+	//mxUtils.write(div, 'Powered by mxGraph ' + mxClient.VERSION);
+	if (user.token) {
+		mxUtils.write(div, 'Logged in.');
+		mxUtils.br(div);
+		mxUtils.write(div, 'Username: ' + user.username);
+		mxUtils.br(div);
+		mxUtils.write(div, 'Fullname: ' + user.fullname);
+		mxUtils.br(div);
+		mxUtils.write(div, 'Token: ' + user.token);
+	} else {
+		mxUtils.write(div, 'Currently not logged in');
+	}
 	mxUtils.br(div);
+	
 	var link = document.createElement('a');
 	link.setAttribute('href', 'http://www.jgraph.com/');
 	link.setAttribute('target', '_blank');
 	mxUtils.write(link, 'www.jgraph.com');
 	div.appendChild(link);
+	
 	mxUtils.br(div);
 	mxUtils.br(div);
+	
 	var closeBtn = mxUtils.button(mxResources.get('close'), function()
 	{
 		editorUi.hideDialog();
 	});
 	closeBtn.className = 'geBtn gePrimaryBtn';
+	
 	div.appendChild(closeBtn);
 	
 	this.container = div;

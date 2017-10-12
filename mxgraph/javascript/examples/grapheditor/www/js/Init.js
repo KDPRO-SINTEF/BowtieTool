@@ -7,7 +7,7 @@ window.MAX_AREA = window.MAX_AREA || 15000 * 15000;
 
 // URLs for save and export
 window.EXPORT_URL = window.EXPORT_URL || '/export';
-window.SAVE_URL = window.SAVE_URL || '/save';
+window.SAVE_URL = window.SAVE_URL || '/graph';
 window.OPEN_URL = window.OPEN_URL || '/open';
 window.RESOURCES_PATH = window.RESOURCES_PATH || 'resources';
 window.RESOURCE_BASE = window.RESOURCE_BASE || window.RESOURCES_PATH + '/grapheditor';
