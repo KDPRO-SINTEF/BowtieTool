@@ -3263,6 +3263,48 @@ EditorUi.prototype.isCompatibleString = function(data)
 	return false;
 };
 
+EditorUi.prototype.openFromDb = function()
+{
+	var token = localStorage.getItem('token');
+	if (!token) {
+		mxUtils.alert(mxResources.get('notLoggedIn'));
+		return;
+	}
+
+	var dlg = new FilenameDialog(this, '0', mxResources.get('open'), mxUtils.bind(this, function(graphid)
+	{
+		mxUtils.get(SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function(req)
+		{
+			var obj = JSON.parse(req.getText());
+			var xml = decodeURIComponent(obj.data.replace(/\+/g, ' '));
+			var title = decodeURIComponent(obj.title.replace(/\+/g, ' '));
+			var description = decodeURIComponent((obj.description || '').replace(/\+/g, ' '));
+
+			var doc = mxUtils.parseXml(xml); 
+			this.editor.setGraphXml(doc.documentElement);
+			this.editor.setModified(false);
+			this.editor.undoManager.clear();
+			
+			this.editor.setFilename(title);
+			this.updateDocumentTitle();
+			this.editor.setGraphId(parseInt(graphid));
+
+		}));
+	}), null, mxUtils.bind(this, function(name)
+	{
+		if (name != null && name.length > 0)
+		{
+			return true;
+		}
+		
+		mxUtils.confirm(mxResources.get('invalidName'));
+		
+		return false;
+	}));
+	this.showDialog(dlg.container, 300, 100, true, true);
+	dlg.init();
+}
+
 /**
  * Adds the label menu items to the given menu and parent.
  */

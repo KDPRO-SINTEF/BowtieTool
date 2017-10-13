@@ -28,10 +28,12 @@ Actions.prototype.init = function()
 	this.addAction('new...', function() { window.open(ui.getUrl()); });
 	this.addAction('open...', function()
 	{
-		window.openNew = true;
+		/*window.openNew = true;
 		window.openKey = 'open';
 		
-		ui.openFile();
+		ui.openFile();*/
+		ui.openFromDb();
+
 	});
 	this.addAction('import...', function()
 	{
