@@ -1,30 +1,60 @@
 <shapes name="mxGraph.bowtie">
-<shape name="barrier" h="80" w="120" aspect="variable" strokewidth="inherit">
-<connections>
-<constraint x="0.4" y="0.25" perimeter="0" name="W"></constraint>
-<constraint x="0.6" y="0.25" perimeter="0" name="E"></constraint>
-</connections>
-<background>
-<roundrect x="0" y="40" w="120" h="40" arcsize="6"></roundrect>
-</background>
-<foreground>
-<stroke></stroke><fillcolor color="#000000"></fillcolor><path>
-<move x="50" y="0"/>
-<line x="50" y="40"/>
-<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="50" y="40"></arc>
-<line x="70" y="40"/>
-<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="40"/>
-<line x="70" y="0"/>
-<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="0"/>
-<line x="50" y="0"></line>
-</path>
-<fillstroke></fillstroke><stroke/>
+	<shape name="barrier" h="80" w="120" aspect="variable" strokewidth="inherit">
+		<connections>
+			<constraint x="0.4" y="0.25" perimeter="0" name="W"></constraint>
+			<constraint x="0.6" y="0.25" perimeter="0" name="E"></constraint>
+		</connections>
+	<background>
+		<roundrect x="0" y="40" w="120" h="40" arcsize="6"></roundrect>
+	</background>
+	<foreground>
+		<stroke>
+		</stroke>
+		<fillcolor color="#8badae"></fillcolor>
+		<path>
+		<move x="50" y="0"/>
+		<line x="50" y="40"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="50" y="40"></arc>
+		<line x="70" y="40"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="40"/>
+		<line x="70" y="0"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="0"/>
+		<line x="50" y="0"></line>
+		</path>
+		<fillstroke>
+		</fillstroke>
+		<stroke/>
 	</foreground>
-</shape>
+	</shape>
+	<shape name="control" h="80" w="120" aspect="variable" strokewidth="inherit">
+		<connections>
+			<constraint x="0.4" y="0.25" perimeter="0" name="W"></constraint>
+			<constraint x="0.6" y="0.25" perimeter="0" name="E"></constraint>
+		</connections>
+	<background>
+		<roundrect x="0" y="40" w="120" h="40" arcsize="6"></roundrect>
+	</background>
+	<foreground>
+		<stroke>
+		</stroke>
+		<fillcolor color="#f6c3b3"></fillcolor>
+		<path>
+		<move x="50" y="0"/>
+		<line x="50" y="40"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="50" y="40"></arc>
+		<line x="70" y="40"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="40"/>
+		<line x="70" y="0"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="0"/>
+		<line x="50" y="0"></line>
+		</path>
+		<fillstroke></fillstroke><stroke/>
+	</foreground>
+	</shape>
 	<shape name="hazard" h="80" w="120" aspect="variable" strokewidth="inherit">
-	<connections>
-		<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
-	</connections>
+		<connections>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
 	<background>
 		<rect x="0" y="0" h="80" w="120">
 		</rect>
@@ -44,7 +74,13 @@
 			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
 		</connections>
 		<background>
+			<stroke>
+			</stroke>
+			<fillcolor color="#ffce00"></fillcolor>
 			<ellipse x="0" y="0" w="120" h="80"/>
+			<fillstroke>
+			</fillstroke>
+			<stroke/>
 		</background>
 		<foreground>
 			<stroke></stroke>
@@ -57,6 +93,9 @@
 		<connections>
 		</connections>
 		<background>
+			<stroke>
+			</stroke>
+			<fillcolor color="#7fefad"></fillcolor>
 			<path>
 				<move x="0" y="20"/>
 				<line x="40" y="20"/>
@@ -72,6 +111,7 @@
 				<line x="20" y="40"/>
 				<close/>
 				</path>
+				<fillstroke></fillstroke><stroke/>
 		</background>
 		<foreground>
 		<fillstroke/>
