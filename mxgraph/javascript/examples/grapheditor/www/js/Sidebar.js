@@ -1172,6 +1172,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 		this.createVertexTemplateEntry('shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
 		this.createVertexTemplateEntry('shape=mxgraph.bowtie.control;whiteSpace=wrap;html=1;verticalAlign=bottom', 120, 80, 'Security Control', 'Security Control', null, null, 'bowtie security control'),
 	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard2;whiteSpace=wrap;html=1;', 120, 120, 'Hazard', 'Hazard', null, null, 'bowtie hazard 2'),
 	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;', 120, 80, 'Asset', 'Asset', null, null, 'bowtie asset'),
 	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
 	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.threatconsequence;html=1;whiteSpace=wrap;', 120, 80, 'Threat/Consequence', 'Threat/Consequence', null, null, 'bowtie threatconsequence'),

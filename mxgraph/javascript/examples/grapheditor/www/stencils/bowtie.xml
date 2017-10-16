@@ -132,4 +132,24 @@
 			<stroke></stroke>
 		</foreground>
 	</shape>
+	<shape aspect="variable" h="120" name="hazard22z" strokewidth="1" w="120">
+    <connections>
+      <constraint name="N" perimeter="0" x="0.5" y="0"/>
+      <constraint name="S" perimeter="0" x="0.5" y="1"/>
+    </connections>
+    <foreground>
+      <rect h="120" w="120" x="0" y="0"/>
+      <fillstroke/>
+    </foreground>
+  	</shape>
+  	<shape aspect="variable" h="120" name="hazard2" strokewidth="1" w="120">
+    <connections>
+      <constraint name="S" perimeter="0" x="0.5" y="1"/>
+    </connections>
+    <foreground>
+      <rect h="120" w="120" x="0" y="0"/>
+      <fillstroke/>
+       <image src="Images/hazard_128x128.svg" x="0" y="0" w="120" h="120" flipH="0"/>
+    </foreground>
+  </shape>
 </shapes>
