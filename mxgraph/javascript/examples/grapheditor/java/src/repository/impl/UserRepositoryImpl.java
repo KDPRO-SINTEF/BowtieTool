@@ -45,6 +45,7 @@ public class UserRepositoryImpl implements IUserRepository{
 
 	@Override
 	public void createUser(String username, String fullname, String password) {
+		
 		String insert_user = "INSERT User(username, fullname, hash_pw) VALUES (?, ?, ?);";
 		access.query(insert_user, username, fullname, hash_pw(password));
 	}
@@ -140,6 +141,26 @@ public class UserRepositoryImpl implements IUserRepository{
 			System.out.println("Quering form db failed");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
+		}
+		return user;
+	}
+
+	@Override
+	public User getUserByUsername(String username) {
+		User user = null;
+		String query = "SELECT * FROM User WHERE username=?";
+		try {
+			ResultSet rs = access.query(query, username);
+			while (rs.next()) {
+				String user_name = rs.getString("username");
+				String fullname = rs.getString("fullname");
+				String hash_pw = rs.getString("hash_pw");
+				String token = rs.getString("token");
+				int user_id = rs.getInt("id");
+				user = new User(user_id, user_name, fullname, hash_pw, token);
+			}
+		} catch (SQLException e ) {
+			System.out.println("Quering form db failed");
 		}
 		return user;
 	}
