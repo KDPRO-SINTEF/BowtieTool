@@ -2,12 +2,14 @@ package com.mxgraph.examples.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+
 import models.User;
 import repository.IUserRepository;
 
@@ -54,15 +56,11 @@ public class UserLoginServlet extends HttpServlet{
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_OK);
 		OutputStream out = response.getOutputStream();
-		out.write((
-				"  {"
-				+ "     \"username\": " + URLEncoder.encode(user.getUsername(), "UTF-8") + "\", "
-				+ "     \"fullname\": " + URLEncoder.encode(user.getFullname(), "UTF-8") + "\", "
-				+ "     \"token\": \"" + URLEncoder.encode(user.getToken(), "UTF-8") + "\", "
-				+ "     \"status\": \"success\""
-				+ "}"
-				).getBytes());
-
+		out.write(new Gson()
+				.toJsonTree(user)
+				.getAsJsonObject()
+				.toString().getBytes("UTF-8")
+		);
 		out.flush();
 		out.close();
 	}

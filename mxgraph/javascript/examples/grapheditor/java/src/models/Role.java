@@ -1,8 +1,8 @@
 package models;
 
 public class Role {
-	private User user;
-	private Graph graph; 
+	private transient User user;
+	private transient Graph graph; 
 	private int role;
 
 	public Role(User user, Graph graph, int role) {

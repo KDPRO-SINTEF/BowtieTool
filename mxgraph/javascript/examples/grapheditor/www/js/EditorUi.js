@@ -3276,9 +3276,9 @@ EditorUi.prototype.openFromDb = function()
 		mxUtils.get(SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function(req)
 		{
 			var obj = JSON.parse(req.getText());
-			var xml = decodeURIComponent(obj.data.replace(/\+/g, ' '));
-			var title = decodeURIComponent(obj.title.replace(/\+/g, ' '));
-			var description = decodeURIComponent((obj.description || '').replace(/\+/g, ' '));
+			var xml = obj.graph_data;
+			var title = obj.title;
+			var description = obj.description || '';
 
 			var doc = mxUtils.parseXml(xml); 
 			this.editor.setGraphXml(doc.documentElement);

@@ -3,13 +3,14 @@ package com.mxgraph.examples.web;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import models.Graph;
 import models.Role;
@@ -66,16 +67,11 @@ public class GraphServlet extends HttpServlet
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_OK);
 		OutputStream out = response.getOutputStream();
-		out.write((
-				"  {"
-				+ "     \"status\": \"success\", "
-				+ "     \"data\": \"" + URLEncoder.encode(graph.getGraph_data(), "UTF-8") + "\", "
-				+ "     \"title\": \"" + URLEncoder.encode(graph.getTitle(), "UTF-8") + "\", "
-				+ "     \"description\": \"" + URLEncoder.encode((graph.getDescription() == null) ? "" : graph.getDescription(), "UTF-8") +"\", "
-				+ "     \"created\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getCreated()), "UTF-8") + "\", "
-				+ "     \"last_modified\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getLast_modified()), "UTF-8") + "\""
-				+ "}"
-				).getBytes("UTF-8"));
+		out.write(new Gson()
+				.toJsonTree(graph)
+				.getAsJsonObject()
+				.toString().getBytes("UTF-8")
+		);
 		out.flush();
 		out.close();
 	}
@@ -172,12 +168,9 @@ public class GraphServlet extends HttpServlet
 			response.setContentType("application/json");
 			response.setStatus(HttpServletResponse.SC_OK);
 			OutputStream out = response.getOutputStream();
-			out.write((
-					"  {"
-					+ "     \"status\": \"success\", "
-					+ "     \"id\": " + URLEncoder.encode(Integer.toString(id), "UTF-8")
-					+ "}"
-					).getBytes("UTF-8"));
+			JsonObject a = new JsonObject();
+			a.addProperty("id", id);
+			out.write(a.toString().getBytes("UTF-8"));
 			out.flush();
 			out.close();
 			return;

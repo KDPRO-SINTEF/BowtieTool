@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Graph {
 	private int id;
-	private User user;
+	private transient User user;
 	private String graph_data;
 	private String title;
 	private String description;

@@ -4,7 +4,7 @@ public class User {
 	private int id;
 	private String username;
 	private String fullname;
-	private String hash_pw;
+	private transient String hash_pw;
 	private String token = null;
 
 
