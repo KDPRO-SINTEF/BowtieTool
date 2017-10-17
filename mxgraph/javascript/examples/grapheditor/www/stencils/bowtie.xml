@@ -149,7 +149,57 @@
     <foreground>
       <rect h="120" w="120" x="0" y="0"/>
       <fillstroke/>
-       <image src="Images/hazard_128x128.svg" x="0" y="0" w="120" h="120" flipH="0"/>
+       <image src="stencils/elements/hazard_128x128.svg" x="0" y="0" w="120" h="120" flipH="0"/>
     </foreground>
   </shape>
+	<shape aspect="variable" h="20" name="lowthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/lowthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="variable" h="20" name="lowmediumthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/lowmediumthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="variable" h="20" name="mediumthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/mediumthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="variable" h="20" name="mediumhighthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/mediumhighthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="variable" h="20" name="highthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/highthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
 </shapes>
