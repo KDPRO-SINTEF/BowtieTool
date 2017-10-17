@@ -63,6 +63,8 @@ public class GraphServlet extends HttpServlet
 		}
 
 		Graph graph = graphRepo.getUserGraph(user, Integer.parseInt(graphid));
+		response.setContentType("application/json");
+		response.setStatus(HttpServletResponse.SC_OK);
 		OutputStream out = response.getOutputStream();
 		out.write((
 				"  {"
@@ -74,7 +76,7 @@ public class GraphServlet extends HttpServlet
 				+ "     \"last_modified\": \"" + URLEncoder.encode(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'").format(graph.getLast_modified()), "UTF-8") + "\""
 				+ "}"
 				).getBytes("UTF-8"));
-		
+		out.flush();
 		out.close();
 	}
 
@@ -167,6 +169,7 @@ public class GraphServlet extends HttpServlet
 		if (graphid == null) {
 			// Graph doesn't exist yet, we need to create it.
 			int id = graphRepo.insertGraph(user, xml, title, description);
+			response.setContentType("application/json");
 			response.setStatus(HttpServletResponse.SC_OK);
 			OutputStream out = response.getOutputStream();
 			out.write((
@@ -184,7 +187,7 @@ public class GraphServlet extends HttpServlet
 		Graph g = new Graph(Integer.parseInt(graphid), user, xml, title, description);
 		Role r = roleRepo.getUserRoleForGraph(g, user);
 
-		if (r.getRole() != 0) {
+		if (r == null || r.getRole() != 0) {
 			// This isn't User's graph, we cannot update.
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			response.getOutputStream().flush();
@@ -195,6 +198,6 @@ public class GraphServlet extends HttpServlet
 		graphRepo.updateGraph(g);
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.getOutputStream().flush();
-		response.getOutputStream().close();  
+		response.getOutputStream().close();
 	}
 }

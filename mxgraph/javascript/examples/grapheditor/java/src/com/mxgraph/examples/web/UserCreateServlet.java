@@ -41,10 +41,7 @@ public class UserCreateServlet extends HttpServlet{
 
 		// Needs more checks here, username *must* be unique, and createUser will error out somehow
 		// if this isn't the case.
-		if(userRepo.getUserByUsername(username) == null) {
-			userRepo.createUser(username, fullname, password);
-		}
-		else {
+		if(userRepo.getUserByUsername(username) != null) {
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
@@ -54,6 +51,7 @@ public class UserCreateServlet extends HttpServlet{
 		// This isn't really good, as we don't know for certain wether the user was created or not.
 		// The MySQLAccess swallows the exception, and we can't know at this level if an error
 		// actually occured.
+		userRepo.createUser(username, fullname, password);
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.getOutputStream().flush();
 		response.getOutputStream().close();
