@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../../../src/css/login.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <!-- Sets the basepath for the library if not in same directory -->
+    <script type="text/javascript">
+        mxBasePath = '../../../src';
+    </script>
+
+    <script type="text/javascript" src="../../../src/js/mxClient.js"></script>
+    <script type="text/javascript">
+
+
+        function sendData() {
+            var usernameInput = document.getElementById('username');
+            var passwordInput = document.getElementById('password');
+            if (usernameInput.checkValidity() && passwordInput.checkValidity()) {
+                var params = 'username=' + usernameInput.value + '&password=' + passwordInput.value;
+
+                // TODO Replace http://httpbin.org/post with the url of the server
+                mxUtils.post('http://httpbin.org/post', params, function () {
+
+                // TODO Change the url below so that it directs to correct home page
+                window.location.href = "index.html";
+
+                }, function () {
+                    alert("Communication failure!");
+                });
+            }
+
+        }
+
+    </script>
+
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 login-form">
+        <h1>Login</h1>
+            <form onsubmit="return false">
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block" onclick="sendData()">Login</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Don't have an account? </label>
+                    <a href="register.html">Register</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
