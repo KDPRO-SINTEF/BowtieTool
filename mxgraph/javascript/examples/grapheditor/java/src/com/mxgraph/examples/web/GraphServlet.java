@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import models.Graph;
@@ -129,12 +130,56 @@ public class GraphServlet extends HttpServlet
 		// Parses parameters
 		JsonObject json = new Gson().fromJson(request.getReader(), JsonObject.class);
 		
-		String graphid = json.get("id") == null ? null : json.get("id").getAsString();
-		String logintoken = json.get("token") == null ? null : json.get("token").getAsString();;
-		String title = json.get("title") == null ? null : json.get("title").getAsString();
-		String description = json.get("description") == null ? null : json.get("description").getAsString();
-		String xml = json.get("graph_data") == null ? null : json.get("graph_data").getAsString();
+		int graphid = -1;
+		try {
+			JsonElement j = json.get("id");
+			if (j != null) {
+				graphid = j.getAsInt();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
 		
+		String logintoken = null;
+		try {
+			JsonElement j = json.get("token");
+			if (j != null) {
+				logintoken = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+		
+		String title = null;
+		try {
+			JsonElement j = json.get("title");
+			if (j != null) {
+				title = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+		
+		String description = null;
+		try {
+			JsonElement j = json.get("description");
+			if (j != null) {
+				description = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+		
+		String xml = null;
+		try {
+			JsonElement j = json.get("graph_data");
+			if (j != null) {
+				xml = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+
 		System.out.println("Graph id " + graphid + " Token " + logintoken  + " Title " + title + " Description "+ description + " Graph data " + xml);
 		
 		if (logintoken == null || title == null || xml == null) {
@@ -154,7 +199,7 @@ public class GraphServlet extends HttpServlet
 			return;
 		}
 
-		if (graphid == null) {
+		if (graphid == -1) {
 			// Graph doesn't exist yet, we need to create it.
 			int id = graphRepo.insertGraph(user, xml, title, description);
 			response.setContentType("application/json");
@@ -169,7 +214,7 @@ public class GraphServlet extends HttpServlet
 		}
 
 		// Graph already exists in db, we need to check if we're allowed to change it.
-		Graph g = new Graph(Integer.parseInt(graphid), user, xml, title, description);
+		Graph g = new Graph(graphid, user, xml, title, description);
 		Role r = roleRepo.getUserRoleForGraph(g, user);
 
 		if (r == null || r.getRole() != 0) {

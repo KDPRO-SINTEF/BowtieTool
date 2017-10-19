@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import models.User;
 import repository.IUserRepository;
@@ -33,9 +35,28 @@ public class UserLoginServlet extends HttpServlet{
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
-		String username = req.getParameter("username");
-		String password = req.getParameter("password");
-
+		JsonObject json = new Gson().fromJson(req.getReader(), JsonObject.class);
+		
+		String username = null;
+		try {
+			JsonElement j = json.get("username");
+			if (j != null) {
+				username = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+		
+		String password = null;
+		try {
+			JsonElement j = json.get("password");
+			if (j != null) {
+				password = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+		
 		if (username == null || password == null) {
 			// User must specify these fields.
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

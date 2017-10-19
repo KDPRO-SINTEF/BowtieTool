@@ -56,7 +56,7 @@ public class GraphRepositoryImpl implements IGraphRepository {
 	@Override
 	public List<Graph> getUserGraphs(User u) {
 		List<Graph> graphs = new ArrayList<Graph>();
-		String query = "SELECT graph_data, id, title, description, created, last_modified"
+		String query = "SELECT graph_data, Graph.id, title, description, created, last_modified"
 				+ "       FROM Graph"
 				+ "            LEFT JOIN Role"
 				+ "            ON Graph.id = Role.id AND Graph.user_id = Role.user_id"

@@ -393,6 +393,117 @@ var AboutDialog = function(editorUi)
 /**
  * Constructs a new filename dialog.
  */
+var OpenFromDBDialog = function(editorUi, fn, cancelFn)
+{
+	var row, td;
+	
+	var table = document.createElement('table');
+	var tbody = document.createElement('tbody');
+	table.style.marginTop = '8px';
+	
+	row = document.createElement('tr');
+	td = document.createElement('td');
+	td.style.whiteSpace = 'nowrap';
+	td.style.fontSize = '10pt';
+	td.style.width = '120px';
+	mxUtils.write(td, mxResources.get('loading'));
+	row.appendChild(td);
+	tbody.appendChild(row);
+	
+	var form = document.createElement('form');
+	form.id = 'graphlist';
+	
+	this.init = function()
+	{
+		var token = localStorage.getItem('token');
+		if (!token) {
+			mxUtils.alert(mxResources.get('notLoggedIn'));
+		}
+		
+		mxUtils.get(window.USER_GRAPHS + '?token=' + encodeURIComponent(token), mxUtils.bind(this, function(req) {
+			tbody.innerHTML = '';
+
+			row = document.createElement('tr');
+			td = document.createElement('td');
+			td.style.whiteSpace = 'nowrap';
+			td.style.fontSize = '10pt';
+			td.style.width = '120px';
+			mxUtils.write(td, mxResources.get('open'));
+			row.appendChild(td);
+			tbody.appendChild(row);
+
+
+			var obj = JSON.parse(req.getText());
+			for (var i = 0, len = obj.length; i < len; i++) {
+				var div = document.createElement('div');
+				var input = document.createElement('input');
+				input.type = 'radio';
+				input.name = 'graphs';
+				input.value = obj[i]['id'];
+				input.checked = true;
+				div.appendChild(input);
+
+				var name = document.createElement('label');
+				mxUtils.write(name, obj[i]['id'] + ' ' + obj[i]['title']);
+				div.appendChild(name);
+				form.appendChild(div);
+			}
+			tbody.appendChild(form);
+
+			row = document.createElement('tr');
+			td = document.createElement('td');
+
+			var cancelBtn = mxUtils.button(mxResources.get('cancel'), function()
+			{
+				editorUi.hideDialog();
+				
+				if (cancelFn != null)
+				{
+					cancelFn();
+				}
+			});
+			cancelBtn.className = 'geBtn';
+			
+			if (editorUi.editor.cancelFirst)
+			{
+				td.appendChild(cancelBtn);
+			}
+
+			mxEvent.addListener(form, 'keypress', function(e)
+			{
+				if (e.keyCode == 13)
+				{
+					genericBtn.click();
+				}
+			});
+			
+			var genericBtn = mxUtils.button(mxResources.get('open'), function()
+			{
+				editorUi.hideDialog();
+				console.log('form', form, form.graphs.value);
+				fn(form.graphs.value);
+			});
+			genericBtn.className = 'geBtn gePrimaryBtn';
+			td.appendChild(genericBtn);
+			
+			if (!editorUi.editor.cancelFirst)
+			{
+				td.appendChild(cancelBtn);
+			}
+
+			row.appendChild(td);
+			tbody.appendChild(row);
+
+		}));
+	};
+	table.appendChild(tbody);
+	
+	this.container = table;
+};
+
+/**
+ * Constructs a new filename dialog.
+ */
 var FilenameDialog = function(editorUi, filename, buttonText, fn, label, validateFn, content, helpLink, closeOnBtn, cancelFn)
 {
 	closeOnBtn = (closeOnBtn != null) ? closeOnBtn : true;

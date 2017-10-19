@@ -3270,10 +3270,10 @@ EditorUi.prototype.openFromDb = function()
 		mxUtils.alert(mxResources.get('notLoggedIn'));
 		return;
 	}
-
-	var dlg = new FilenameDialog(this, '0', mxResources.get('open'), mxUtils.bind(this, function(graphid)
+	
+	var dlg = new OpenFromDBDialog(this, mxUtils.bind(this, function(graphid)
 	{
-		mxUtils.get(SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function(req)
+		mxUtils.get(window.SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function(req)
 		{
 			var obj = JSON.parse(req.getText());
 
@@ -3287,18 +3287,8 @@ EditorUi.prototype.openFromDb = function()
 			this.editor.setGraphId(parseInt(graphid));
 
 		}));
-	}), null, mxUtils.bind(this, function(name)
-	{
-		if (name != null && name.length > 0)
-		{
-			return true;
-		}
-		
-		mxUtils.confirm(mxResources.get('invalidName'));
-		
-		return false;
-	}));
-	this.showDialog(dlg.container, 300, 100, true, true);
+	}), null);
+	this.showDialog(dlg.container, 300, 400, true, true);
 	dlg.init();
 }
 

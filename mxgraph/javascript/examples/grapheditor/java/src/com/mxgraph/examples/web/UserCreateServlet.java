@@ -5,6 +5,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import repository.IUserRepository;
 
 public class UserCreateServlet extends HttpServlet{
@@ -27,9 +32,37 @@ public class UserCreateServlet extends HttpServlet{
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
-		String username = req.getParameter("username");
-		String fullname = req.getParameter("fullname");
-		String password = req.getParameter("password");
+		JsonObject json = new Gson().fromJson(req.getReader(), JsonObject.class);
+		
+		String username = null;
+		try {
+			JsonElement j = json.get("username");
+			if (j != null) {
+				username = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+		
+		String fullname = null;
+		try {
+			JsonElement j = json.get("fullname");
+			if (j != null) {
+				fullname = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+		
+		String password = null;
+		try {
+			JsonElement j = json.get("password");
+			if (j != null) {
+				password = j.getAsString();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
 
 		if (username == null || fullname == null || password == null) {
 			// These fields must be specified
