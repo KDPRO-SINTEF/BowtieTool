@@ -78,7 +78,7 @@ public class UserRepositoryImpl implements IUserRepository{
 				user = new User(id, username, fullname, hash_pw, token);
 			}
 		} catch (SQLException e ) {
-			System.out.println("Quering form db failed");
+			System.out.println("SQL error: " + e.getMessage());
 		}
 		return user;
 	}
@@ -97,7 +97,7 @@ public class UserRepositoryImpl implements IUserRepository{
 				user = new User(user_id, username, fullname, hash_pw, token);
 			}
 		} catch (SQLException e ) {
-			System.out.println("Quering form db failed");
+			System.out.println("SQL error: " + e.getMessage());
 		}
 		return user;
 	}
@@ -138,7 +138,7 @@ public class UserRepositoryImpl implements IUserRepository{
 				user = this.getUserById(id);
 			}
 		} catch (SQLException e ) {
-			System.out.println("Quering form db failed");
+			System.out.println("SQL error: " + e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -160,7 +160,7 @@ public class UserRepositoryImpl implements IUserRepository{
 				user = new User(user_id, user_name, fullname, hash_pw, token);
 			}
 		} catch (SQLException e ) {
-			System.out.println("Quering form db failed");
+			System.out.println("SQL error: " + e.getMessage());
 		}
 		return user;
 	}

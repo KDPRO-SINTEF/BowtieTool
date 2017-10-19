@@ -2,7 +2,6 @@ package com.mxgraph.examples.web;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -128,22 +127,15 @@ public class GraphServlet extends HttpServlet
 	protected void handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception
 	{
 		// Parses parameters
-		String graphid = request.getParameter("id");
-		String logintoken = request.getParameter("token");
-		String title = request.getParameter("title");
-		String description = request.getParameter("description");
-		String xml = request.getParameter("xml");
+		JsonObject json = new Gson().fromJson(request.getReader(), JsonObject.class);
 		
-		if (graphid != null)
-			graphid = URLDecoder.decode(graphid, "UTF-8");
-		if (logintoken != null)
-			logintoken = URLDecoder.decode(logintoken, "UTF-8");
-		if (title != null)
-			title = URLDecoder.decode(title, "UTF-8");
-		if (description != null)
-			description = URLDecoder.decode(description, "UTF-8");
-		if (xml != null)
-			xml = URLDecoder.decode(xml, "UTF-8");
+		String graphid = json.get("id") == null ? null : json.get("id").getAsString();
+		String logintoken = json.get("token") == null ? null : json.get("token").getAsString();;
+		String title = json.get("title") == null ? null : json.get("title").getAsString();
+		String description = json.get("description") == null ? null : json.get("description").getAsString();
+		String xml = json.get("graph_data") == null ? null : json.get("graph_data").getAsString();
+		
+		System.out.println("Graph id " + graphid + " Token " + logintoken  + " Title " + title + " Description "+ description + " Graph data " + xml);
 		
 		if (logintoken == null || title == null || xml == null) {
 			// User must specify these fields

@@ -3276,16 +3276,13 @@ EditorUi.prototype.openFromDb = function()
 		mxUtils.get(SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function(req)
 		{
 			var obj = JSON.parse(req.getText());
-			var xml = obj.graph_data;
-			var title = obj.title;
-			var description = obj.description || '';
 
-			var doc = mxUtils.parseXml(xml); 
+			var doc = mxUtils.parseXml(obj.graph_data);
 			this.editor.setGraphXml(doc.documentElement);
 			this.editor.setModified(false);
 			this.editor.undoManager.clear();
 			
-			this.editor.setFilename(title);
+			this.editor.setFilename(obj.title);
 			this.updateDocumentTitle();
 			this.editor.setGraphId(parseInt(graphid));
 
@@ -3373,17 +3370,19 @@ EditorUi.prototype.save = function(name)
 					}
 
 					if (!this.editor.getGraphId()) {
-						mxUtils.post(SAVE_URL, 'title=' + encodeURIComponent(name) + '&token=' + encodeURIComponent(token) +
-							'&xml=' + encodeURIComponent(xml), mxUtils.bind(this, function(req) {
-								var id = JSON.parse(req.getText()).id;
-								this.editor.setGraphId(id);
-								console.log('Inserted with id', id, "and", this.editor.getGraphId());
+						var data = JSON.stringify({"title": name, "token": token, "graph_data": xml});
+						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
+							var id = JSON.parse(req.getText()).id;
+							this.editor.setGraphId(id);
+							console.log('Inserted with id', id, "and", this.editor.getGraphId());
 
 						}));
 					} else {
 						console.log('Existing with id', this.editor.getGraphId());
-						new mxXmlRequest(SAVE_URL, 'title=' + encodeURIComponent(name) + '&token=' + encodeURIComponent(token) +
-							'&xml=' + encodeURIComponent(xml) + '&id=' + encodeURIComponent(this.editor.getGraphId()));
+						var data = JSON.stringify({"id": this.editor.getGraphId(), "title": name, "token": token, "graph_data": xml});
+						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
+							console.log("Updated with response", req.getText());
+						}));
 					}
 				}
 				else

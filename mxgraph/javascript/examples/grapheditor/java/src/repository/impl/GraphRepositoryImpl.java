@@ -33,7 +33,6 @@ public class GraphRepositoryImpl implements IGraphRepository {
 			while (rs.next()) {
 				id = rs.getInt("id");
 				access.manual_query(insert_role, id, u.getId());
-				
 			}
 		} catch (SQLException e) {
 			System.err.println("SQL error " + e.getMessage());
@@ -47,9 +46,9 @@ public class GraphRepositoryImpl implements IGraphRepository {
 	public void updateGraph(Graph g) {
 		String update_graph = "UPDATE Graph"
 				+ "               SET graph_data = ?,"
-				+ "               SET title = ?,"
-				+ "               SET description = ?,"
-				+ "               SET last_modified = NOW()"
+				+ "                   title = ?,"
+				+ "                   description = ?,"
+				+ "                   last_modified = NOW()"
 				+ "             WHERE id = ?";
 		access.query(update_graph, g.getGraph_data(), g.getTitle(), g.getDescription(), g.getId());
 	}
@@ -74,7 +73,7 @@ public class GraphRepositoryImpl implements IGraphRepository {
 				graphs.add(new Graph(id, u, graph_data, title, description, created, last_modified));
 			}
 		} catch (SQLException e ) {
-			System.out.println("Quering form db failed");
+			System.out.println("SQL error: " + e.getMessage());
 		}
 		return graphs;
 	}

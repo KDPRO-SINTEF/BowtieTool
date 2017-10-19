@@ -27,7 +27,7 @@ public class RoleRepositoryImpl implements IRoleRepository {
 				role = new Role(u, g, r);
 			}
 		} catch (SQLException e) {
-			System.out.println("Quering form db failed");
+			System.out.println("SQL error: " + e.getMessage());
 		}
 		return role;
 	}
