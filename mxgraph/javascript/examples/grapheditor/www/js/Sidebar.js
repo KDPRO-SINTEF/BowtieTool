@@ -1181,6 +1181,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.mediumthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator mediumthreat'),
 	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.mediumhighthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator mediumhighthreat'),
 	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.highthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator highthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.blankrisk;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator blankrisk'),
 	];
 	
 	this.addPaletteFunctions('bowtie', mxResources.get('bowtie'), false, fns);

@@ -202,4 +202,14 @@
 			<image src="stencils/elements/highthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
 		</foreground>
 	</shape>
+	<shape aspect="variable" h="20" name="blankrisk" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/blankrisk.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
 </shapes>
