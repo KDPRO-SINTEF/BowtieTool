@@ -48,10 +48,6 @@
 				graph.getModel().beginUpdate();
 				try
 				{
-                    var v = graph.insertVertex(parent, null, 'Container', 20, 20, 200, 200,
-                        'shape=swimlane;startSize=20;');
-                    v.geometry.alternateBounds = new mxRectangle(0, 0, 110, 70);
-
 					var v1 = graph.insertVertex(v, null, 'Hello,', 20, 20, 80, 30);
 					var v2 = graph.insertVertex(v, null, 'World!', 200, 150, 80, 30);
 					var e1 = graph.insertEdge(v, null, '', v1, v2);
