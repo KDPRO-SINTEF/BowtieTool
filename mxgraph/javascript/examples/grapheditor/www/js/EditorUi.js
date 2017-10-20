@@ -3263,6 +3263,35 @@ EditorUi.prototype.isCompatibleString = function(data)
 	return false;
 };
 
+EditorUi.prototype.openFromDb = function()
+{
+	var token = localStorage.getItem('token');
+	if (!token) {
+		mxUtils.alert(mxResources.get('notLoggedIn'));
+		return;
+	}
+	
+	var dlg = new OpenFromDBDialog(this, mxUtils.bind(this, function(graphid)
+	{
+		mxUtils.get(window.SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function(req)
+		{
+			var obj = JSON.parse(req.getText());
+
+			var doc = mxUtils.parseXml(obj.graph_data);
+			this.editor.setGraphXml(doc.documentElement);
+			this.editor.setModified(false);
+			this.editor.undoManager.clear();
+			
+			this.editor.setFilename(obj.title);
+			this.updateDocumentTitle();
+			this.editor.setGraphId(parseInt(graphid));
+
+		}));
+	}), null);
+	this.showDialog(dlg.container, 300, 400, true, true);
+	dlg.init();
+}
+
 /**
  * Adds the label menu items to the given menu and parent.
  */
@@ -3324,8 +3353,27 @@ EditorUi.prototype.save = function(name)
 			{
 				if (xml.length < MAX_REQUEST_SIZE)
 				{
-					new mxXmlRequest(SAVE_URL, 'filename=' + encodeURIComponent(name) +
-						'&xml=' + encodeURIComponent(xml)).simulate(document, '_blank');
+					var token = localStorage.getItem('token');
+					if (!token) {
+						mxUtils.alert(mxResources.get('notLoggedIn'));
+						return;
+					}
+
+					if (!this.editor.getGraphId()) {
+						var data = JSON.stringify({"title": name, "token": token, "graph_data": xml});
+						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
+							var id = JSON.parse(req.getText()).id;
+							this.editor.setGraphId(id);
+							console.log('Inserted with id', id, "and", this.editor.getGraphId());
+
+						}));
+					} else {
+						console.log('Existing with id', this.editor.getGraphId());
+						var data = JSON.stringify({"id": this.editor.getGraphId(), "title": name, "token": token, "graph_data": xml});
+						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
+							console.log("Updated with response", req.getText());
+						}));
+					}
 				}
 				else
 				{
