@@ -418,6 +418,7 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 		var token = localStorage.getItem('token');
 		if (!token) {
 			mxUtils.alert(mxResources.get('notLoggedIn'));
+			return;
 		}
 		
 		mxUtils.get(window.USER_GRAPHS + '?token=' + encodeURIComponent(token), mxUtils.bind(this, function(req) {
@@ -497,7 +498,6 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 		}));
 	};
 	table.appendChild(tbody);
-	
 	this.container = table;
 };
 
