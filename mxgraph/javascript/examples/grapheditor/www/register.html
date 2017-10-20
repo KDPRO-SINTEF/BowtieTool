@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <title>Register</title>
+
+    <!-- Sets the basepath for the library if not in same directory -->
+    <script type="text/javascript">
+        mxBasePath = '../../../src';
+    </script>
+
+    <script type="text/javascript" src="../../../src/js/mxClient.js"></script>
+    <script type="text/javascript">
+
+
+        function sendData() {
+
+            var name = document.getElementById('full_name');
+            var usernameInput = document.getElementById('username');
+            var passwordInput = document.getElementById('password');
+            var confirmPassword = document.getElementById('confirm_password');
+            var emailInput = document.getElementById('email');
+            if (usernameInput.checkValidity() && passwordInput.checkValidity() && emailInput.checkValidity() && confirmPassword.checkValidity() && name.checkValidity()) {
+                if (passwordInput.value === confirmPassword.value) {
+                    var params = 'username=' + usernameInput.value + '&password=' + passwordInput.value + '&email=' + emailInput.value + '&fullname=' + name.value;
+
+                    // TODO Replace http://httpbin.org/post with the url of the server
+                    mxUtils.post('http://httpbin.org/post', params, function () {
+
+                        // TODO: window.localStorage.setItem(token, token);
+                        window.location.href = "index.html";
+
+                    }, function () {
+                        alert("Communication failure!");
+                    });
+                } else {
+                    alert("Passwords don't match!!!"); //TODO: Alert the user in same way as for the other fields
+                }
+            }
+        }
+
+    </script>
+
+
+
+</head>
+<body>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-4 login-form">
+            <h1>Register</h1>
+            <form onsubmit="return false"> <!--Avoid refresh on submit-->
+
+                <div class="form-group">
+                    <label>Full name:</label>
+                    <input type="text" class="form-control" id="full_name" placeholder="Enter name" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Username:</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email address" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password:</label>
+                    <input type="password" class="form-control" id="password" placeholder="Enter password" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" class="form-control" id="confirm_password" placeholder="Confirm password" required>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success btn-block" onclick="sendData()">Register</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Already have an account? </label>
+                    <a href="login.html">Login</a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
