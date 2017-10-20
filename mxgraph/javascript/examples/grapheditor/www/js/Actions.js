@@ -712,7 +712,7 @@ Actions.prototype.init = function()
 		
 		window.open(RESOURCES_PATH + '/help' + ext + '.html');
 	});
-	this.put('about', new Action(mxResources.get('about') + ' Graph Editor...', function()
+	this.put('about', new Action('User control', function()
 	{
 		ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
 	}, null, null, 'F1'));

@@ -27,9 +27,11 @@
                     var params = JSON.stringify({'username': usernameInput.value, 'password': passwordInput.value, 'fullname': name.value});
                     mxUtils.post(window.parent.REGISTER, params, function (req) {
                         if (req.getStatus() == 200) {
-                            document.getElementById('mainbody').innerHTML = "<a href='login.html'>User created successfully!</a>";
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.LOGIN_FORM + '\'>User created successfully!</a>';
+                        } else if (req.getStatus() == 403) {
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.REGISTER_FORM + '\'>The username is already taken!</a>';
                         } else {
-                            document.getElementById('mainbody').innerHTML = "<a href='register.html'>An error occured! Try again!</a>";
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.REGISTER_FORM + '\'>An error occured!</a>';
                         }
 
                     }, function () {
