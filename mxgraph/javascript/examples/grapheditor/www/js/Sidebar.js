@@ -91,25 +91,35 @@ Sidebar.prototype.init = function()
 	var dir = STENCIL_PATH;
 	
 	this.addSearchPalette(true);
-	this.addGeneralPalette(true);
-	this.addMiscPalette(false);
-	this.addAdvancedPalette(false);
-	this.addBasicPalette(dir);
-	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
-		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+//	this.addGeneralPalette(true);
+//	this.addMiscPalette(false);
+//	this.addAdvancedPalette(false);
+//	this.addBasicPalette(dir);
+//	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
+//		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+	this.addBowtiePalette(dir, false);
 	this.addUmlPalette(false);
-	this.addBpmnPalette(dir, false);
-	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml',
-		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-	this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
-		['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
-		 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
-		 'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
-		 'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
-		 'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
-		 {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
-		  'Router_Icon': 'router switch'});
-};
+//	this.addBpmnPalette(dir, false); 
+
+//	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+//	this.addStencilPalette('bowtieStencil', 'Bowtie Stencil', dir + '/bowtie.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+/*	this.addImagePalette('bowtie', mxResources.get('bowtie'), dir + '/elements/', '.svg',
+	['barrier', 'barrier1', 'blank_risk', 'high-threat', 'low-medium-threat', 'low-threat', 'medium-high-threat', 'medium-threat'], null,
+		 null);  */
+
+/*	this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
+['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
+	 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
+	 'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
+	 'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
+	 'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
+	 {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
+	  'Router_Icon': 'router switch'}); */
+}; 
+
+// Sidebar.prototype.addStencilPalette = function(id, title, stencilFile, style, ignore, onInit, scale, tags, customFns)
+
+// Sidebar.prototype.addImagePalette = function(id, title, prefix, postfix, items, titles, tags)
 
 /**
  * Sets the default font size.
@@ -986,7 +996,7 @@ Sidebar.prototype.addMiscPalette = function(expand)
 	 	this.createVertexTemplateEntry('text;strokeColor=none;fillColor=none;html=1;whiteSpace=wrap;verticalAlign=middle;overflow=hidden;', 100, 80,
  			'<ol><li>Value 1</li><li>Value 2</li><li>Value 3</li></ol>', 'Ordered List'),
 	 	this.createVertexTemplateEntry('text;html=1;strokeColor=#c0c0c0;fillColor=#ffffff;overflow=fill;rounded=0;', 280, 160,
- 			'<table border="1" width="100%" height="100%" cellpadding="4" style="width:100%;height:100%;border-collapse:collapse;">' +
+ 			'<table border="1" width="100%" height="100%" cellpadding="4" style="width:100%;height:100%;border-collapse:;">' +
  			'<tr style="background-color:#A7C942;color:#ffffff;border:1px solid #98bf21;"><th align="left">Title 1</th><th align="left">Title 2</th><th align="left">Title 3</th></tr>' +
  			'<tr style="border:1px solid #98bf21;"><td>Value 1</td><td>Value 2</td><td>Value 3</td></tr>' +
  			'<tr style="background-color:#EAF2D3;border:1px solid #98bf21;"><td>Value 4</td><td>Value 5</td><td>Value 6</td></tr>' +
@@ -1145,6 +1155,37 @@ Sidebar.prototype.createAdvancedShapes = function()
 		})
 	];
 };
+
+/* Adds the bowtie library to the sidebar. */
+
+ Sidebar.prototype.addBowtiePalette = function(dir, expand)
+{
+	// Avoids having to bind all functions to "this"
+	var sb = this;
+
+	
+	/* All relevant bowtie elements are made here using createVertexTemplateEntry using shape defined within resources/bowtie.xml. */
+	/* It might be necessary to use addEntry directly to make them collapseable. Take a look at the UML library below.*/
+	var fns =
+	[
+		
+		this.createVertexTemplateEntry('shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
+		this.createVertexTemplateEntry('shape=mxgraph.bowtie.control;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16', 120, 80, 'Security Control', 'Security Control', null, null, 'bowtie security control'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard2;whiteSpace=wrap;html=1;fontSize=16', 120, 120, 'Hazard', 'Hazard', null, null, 'bowtie hazard 2'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16', 120, 80, 'Asset', 'Asset', null, null, 'bowtie asset'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.threatconsequence;html=1;whiteSpace=wrap;fontSize=16', 120, 80, 'Threat/Consequence', 'Threat/Consequence', null, null, 'bowtie threatconsequence'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.lowthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator lowthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.lowmediumthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator lowmediumthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.mediumthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator mediumthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.mediumhighthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator mediumhighthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.highthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator highthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.blankrisk;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator blankrisk'),
+	];
+	
+	this.addPaletteFunctions('bowtie', mxResources.get('bowtie'), false, fns);
+}; 
 
 /**
  * Adds the general palette to the sidebar.
@@ -3374,6 +3415,18 @@ Sidebar.prototype.removePalette = function(id)
 	return false;
 };
 
+
+
+/* 'Bowtie', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
+['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
+	 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
+	 'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
+	 'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
+	 'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
+	 {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
+	  'Router_Icon': 'router switch'} */
+
+
 /**
  * Adds the given image palette.
  */
@@ -3422,6 +3475,11 @@ Sidebar.prototype.getTagsForStencil = function(packageName, stencilName, moreTag
 	
 	return tags.slice(1, tags.length);
 };
+
+
+
+
+//this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2'); */
 
 /**
  * Adds the given stencil palette.
