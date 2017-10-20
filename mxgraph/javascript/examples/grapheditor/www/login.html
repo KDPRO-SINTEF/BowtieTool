@@ -18,16 +18,23 @@
             var usernameInput = document.getElementById('username');
             var passwordInput = document.getElementById('password');
             if (usernameInput.checkValidity() && passwordInput.checkValidity()) {
-                var params = 'username=' + usernameInput.value + '&password=' + passwordInput.value;
+                var params = JSON.stringify({'username': usernameInput.value, 'password': passwordInput.value});
+                //var params = 'username=' + usernameInput.value + '&password=' + passwordInput.value;
 
                 // TODO Replace http://httpbin.org/post with the url of the server
-                mxUtils.post('http://httpbin.org/post', params, function () {
-
-                // TODO Change the url below so that it directs to correct home page
-                window.location.href = "index.html";
+                mxUtils.post(window.parent.LOGIN, params, function (req) {
+                    if (req.getStatus() == 200) {
+                        var data = JSON.parse(req.getText());
+                        localStorage.setItem('fullname', data.fullname);
+                        localStorage.setItem('username', data.username);
+                        localStorage.setItem('token', data.token);
+                        document.getElementById('mainbody').innerHTML = "Logged in successfully!";
+                    } else {
+                        document.getElementById('mainbody').innerHTML = "Invalid combination!";
+                    }
 
                 }, function () {
-                    alert("Communication failure!");
+                    alert('Communication failure!');
                 });
             }
 
@@ -38,7 +45,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="mainbody">
     <div class="row justify-content-center">
         <div class="col-md-4 login-form">
         <h1>Login</h1>

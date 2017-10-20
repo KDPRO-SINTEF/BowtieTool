@@ -17,6 +17,11 @@ window.IMAGE_PATH = window.IMAGE_PATH || 'images';
 window.STYLE_PATH = window.STYLE_PATH || 'styles';
 window.CSS_PATH = window.CSS_PATH || 'styles';
 window.OPEN_FORM = window.OPEN_FORM || 'open.html';
+window.LOGIN_FORM = window.LOGIN_FORM || 'login.html';
+window.REGISTER_FORM = window.REGISTER_FORM || 'register.html';
+window.LOGIN = window.LOGIN || '/user/login';
+window.REGISTER = window.REGISTER || '/user/register';
+
 
 // Sets the base path, the UI language via URL param and configures the
 // supported languages to avoid 404s. The loading of all core language

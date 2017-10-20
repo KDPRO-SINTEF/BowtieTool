@@ -714,7 +714,7 @@ Actions.prototype.init = function()
 	});
 	this.put('about', new Action(mxResources.get('about') + ' Graph Editor...', function()
 	{
-		ui.showDialog(new AboutDialog(ui).container, 320, 280, true, true);
+		ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
 	}, null, null, 'F1'));
 	
 	// Font style actions

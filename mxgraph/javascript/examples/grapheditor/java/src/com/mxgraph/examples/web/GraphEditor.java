@@ -56,7 +56,7 @@ public class GraphEditor
 		context.addServlet(new ServletHolder(new ExportServlet()), "/export");
 		context.addServlet(new ServletHolder(new OpenServlet()), "/open");
 		context.addServlet(new ServletHolder(new UserLoginServlet(userRepo)), "/user/login");
-		context.addServlet(new ServletHolder(new UserCreateServlet(userRepo)), "/user/create");
+		context.addServlet(new ServletHolder(new UserCreateServlet(userRepo)), "/user/register");
 		context.addServlet(new ServletHolder(new UserGraphServlet(userRepo, graphRepo)), "/user/graph"); 
 		context.addServlet(new ServletHolder(new GraphServlet(userRepo, graphRepo, roleRepo)), "/graph");
 

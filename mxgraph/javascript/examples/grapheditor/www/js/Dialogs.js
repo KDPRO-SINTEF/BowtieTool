@@ -24,6 +24,26 @@ var OpenDialog = function()
 	this.container = iframe;
 };
 
+var LoginDialog = function()
+{
+	var iframe = document.createElement('iframe');
+	iframe.style.backgroundColor = 'transparent';
+	iframe.allowTransparency = 'true';
+	iframe.style.borderStyle = 'none';
+	iframe.style.borderWidth = '0px';
+	iframe.style.overflow = 'hidden';
+	iframe.frameBorder = '0';
+	
+	// Adds padding as a workaround for box model in older IE versions
+	var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
+	
+	iframe.setAttribute('width', ((320 + dx) + 'px'));
+	iframe.setAttribute('height', ((480 + dx) + 'px'));
+	iframe.setAttribute('src', LOGIN_FORM);
+	
+	this.container = iframe;
+};
+
 /**
  * Constructs a new color dialog.
  */
