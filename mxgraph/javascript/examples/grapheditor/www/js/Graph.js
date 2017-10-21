@@ -1593,16 +1593,279 @@ Graph.prototype.selectCellsForConnectVertex = function(cells, evt, hoverIcons)
 };
 
 /**
- * Adds a connection to the given vertex.
+ * Alternate connectVertex for Bowtie purposes
  */
-Graph.prototype.connectVertex = function(source, direction, length, evt, forceClone, ignoreCellAt)
+
+Graph.prototype.connectBowtieVertex = function(source, direction, length, evt, forceClone, ignoreCellAt)
 {
-	ignoreCellAt = (ignoreCellAt) ? ignoreCellAt : false;
+	ignoreCellAt = (ignoreCellAt) ? ignoreCellAt : false;	// variablename = (condition) ? value1:value2
 	
 	var pt = (source.geometry.relative && source.parent.geometry != null) ?
 			new mxPoint(source.parent.geometry.width * source.geometry.x, source.parent.geometry.height * source.geometry.y) :
 			new mxPoint(source.geometry.x, source.geometry.y);
+	
+	console.log(source.geometry.x+", "+source.geometry.y);
+	console.log("Initial pt.x: " + pt.x + " pt.y: " + pt.y);
+	
+	if (direction == mxConstants.DIRECTION_NORTH)
+	{
+		pt.x += source.geometry.width / 2;
+		pt.y -= length ;
+	}
+	else if (direction == mxConstants.DIRECTION_SOUTH)
+	{
+		pt.x += source.geometry.width / 2;
+		pt.y += source.geometry.height + length;
+	}
+	else if (direction == mxConstants.DIRECTION_WEST)
+	{
+		pt.x -= length;
+		pt.y += source.geometry.height / 2;
+	}
+	else
+	{
+		pt.x += source.geometry.width + length;
+		pt.y += source.geometry.height / 2;
+	}
+
+	console.log("After direction pt.x: " + pt.x + " pt.y: " + pt.y);
+	
+/*	var parentState = this.view.getState(this.model.getParent(source));
+	console.log(parentState);
+	var s = this.view.scale;
+	var t = this.view.translate;
+	var dx = t.x * s;
+	var dy = t.y * s; 
+	
+	
+	console.log("dx: " + dx + " dy: " + dy);
+	
+	if (this.model.isVertex(parentState.cell))
+	{
+		dx = parentState.x;
+		dy = parentState.y;
+	}
+	*/
+	
+	/*
+	// Workaround for relative child cells
+	if (this.model.isVertex(source.parent) && source.geometry.relative)
+	{
+		pt.x += source.parent.geometry.x;
+		pt.y += source.parent.geometry.y;
+	}
+	
+	// Checks actual end point of edge for target cell
+	var target = (ignoreCellAt || (mxEvent.isControlDown(evt) && !forceClone)) ?
+		null : this.getCellAt(dx + pt.x * s, dy + pt.y * s);
+	
+	if (this.model.isAncestor(target, source))
+	{
+		target = null;
+	}
+	
+	// Checks if target or ancestor is locked
+	var temp = target;
+	
+	while (temp != null)
+	{
+		if (this.isCellLocked(temp))
+		{
+			target = null;
+			break;
+		}
 		
+		temp = this.model.getParent(temp);
+	}
+	
+	// Checks if source and target intersect
+	if (target != null)
+	{
+		var sourceState = this.view.getState(source);
+		var targetState = this.view.getState(target);
+		
+		if (sourceState != null && targetState != null && mxUtils.intersects(sourceState, targetState))
+		{
+			target = null;
+		}
+	} */
+	
+	// var duplicate = !mxEvent.isShiftDown(evt) || forceClone;
+	
+	if (!mxEvent.isShiftDown(evt))
+	{
+		if (direction == mxConstants.DIRECTION_NORTH)
+		{
+			pt.y -= source.geometry.height / 2;
+		}
+		else if (direction == mxConstants.DIRECTION_SOUTH)
+		{
+			pt.y += source.geometry.height / 2;
+		}
+		else if (direction == mxConstants.DIRECTION_WEST)
+		{
+			pt.x -= source.geometry.width / 2;
+		}
+		else
+		{
+			pt.x += source.geometry.width / 2;
+		}
+	}
+	
+	console.log("After duplicate pt.x: " + pt.x + " pt.y: " + pt.y);
+
+	// Uses connectable parent vertex if one exists
+	if (target != null && !this.isCellConnectable(target))
+	{
+		var parent = this.getModel().getParent(target);
+		
+		if (this.getModel().isVertex(parent) && this.isCellConnectable(parent))
+		{
+			target = parent;
+		}
+	}
+	
+	if (target == source || this.model.isEdge(target) || !this.isCellConnectable(target))
+	{
+		target = null;
+	}
+	
+	var result = [];
+	
+	this.model.beginUpdate();
+	try
+	{
+		// var v1 = this.graph.insertVertex(parent, id, value, x, y, width, height, style)
+		var v1 = this.insertVertex(parent, null, 'Consequence', pt.x, pt.y, 120, 80, 'shape=mxgraph.bowtie.threatconsequence;html=1;whiteSpace=wrap;fontSize=16');
+		
+		var realTarget = v1;
+		
+		
+		
+		
+/*		if (realTarget == null && duplicate)
+		{
+			console.log(realTarget);
+			// Handles relative children
+			var cellToClone = source;
+			var geo = this.getCellGeometry(source);
+			
+			while (geo != null && geo.relative)
+			{
+				cellToClone = this.getModel().getParent(cellToClone);
+				geo = this.getCellGeometry(cellToClone);
+			}
+			
+			// Handle consistuents for cloning
+			var state = this.view.getState(cellToClone);
+			var style = (state != null) ? state.style : this.getCellStyle(cellToClone);
+	    	
+			if (mxUtils.getValue(style, 'part', false))
+			{
+		        var tmpParent = this.model.getParent(cellToClone);
+
+		        if (this.model.isVertex(tmpParent))
+		        {
+		        	cellToClone = tmpParent;
+		        }
+			}
+			
+			realTarget = this.duplicateCells([cellToClone], false)[0];
+			
+			var geo = this.getCellGeometry(realTarget);
+			
+			if (geo != null)
+			{
+				geo.x = pt.x - geo.width / 2;
+				geo.y = pt.y - geo.height / 2;
+			}
+		} */
+		
+		// Never connects children in stack layouts
+		var layout = null;
+
+		if (this.layoutManager != null)
+		{
+			layout = this.layoutManager.getLayout(this.model.getParent(source));
+		}
+		
+		var edge = ((mxEvent.isControlDown(evt) && duplicate) || (target == null && layout != null && layout.constructor == mxStackLayout)) ? null :
+			this.insertEdge(this.model.getParent(source), null, '', source, realTarget, this.createCurrentEdgeStyle());
+
+		// Inserts edge before source
+		if (edge != null && this.connectionHandler.insertBeforeSource)
+		{
+			var index = null;
+			var tmp = source;
+			
+			while (tmp.parent != null && tmp.geometry != null &&
+				tmp.geometry.relative && tmp.parent != edge.parent)
+			{
+				tmp = this.model.getParent(tmp);
+			}
+		
+			if (tmp != null && tmp.parent != null && tmp.parent == edge.parent)
+			{
+				var index = tmp.parent.getIndex(tmp);
+				tmp.parent.insert(edge, index);
+			}
+		}
+		
+		// Special case: Click on west icon puts clone before cell
+		if (target == null && realTarget != null && layout != null && source.parent != null &&
+			layout.constructor == mxStackLayout && direction == mxConstants.DIRECTION_WEST)
+		{
+			var index = source.parent.getIndex(source);
+			source.parent.insert(realTarget, index);
+		}
+		
+		if (edge != null)
+		{
+			// Uses elbow edges with vertical or horizontal direction
+//			var elbowValue = (direction == mxConstants.DIRECTION_NORTH || direction == mxConstants.DIRECTION_SOUTH) ? 'vertical' : 'horizontal';
+//			edge.style = mxUtils.setStyle(edge.style, 'edgeStyle', 'elbowEdgeStyle');
+//			edge.style = mxUtils.setStyle(edge.style, 'elbow', elbowValue);
+			result.push(edge);
+		}
+		
+		if (target == null && realTarget != null)
+		{
+			result.push(realTarget);
+		}
+		
+		if (realTarget == null && edge != null)
+		{
+			edge.geometry.setTerminalPoint(pt, false);
+		}
+		
+		if (edge != null)
+		{
+			this.fireEvent(new mxEventObject('cellsInserted', 'cells', [edge]));
+		}
+	}
+	finally
+	{
+		this.model.endUpdate();
+	}
+	
+	return result;
+};
+
+
+/**
+ * Adds a connection to the given vertex.
+ */
+Graph.prototype.connectVertex = function(source, direction, length, evt, forceClone, ignoreCellAt)
+{
+	ignoreCellAt = (ignoreCellAt) ? ignoreCellAt : false;	// variablename = (condition) ? value1:value2
+	
+	var pt = (source.geometry.relative && source.parent.geometry != null) ?
+			new mxPoint(source.parent.geometry.width * source.geometry.x, source.parent.geometry.height * source.geometry.y) :
+			new mxPoint(source.geometry.x, source.geometry.y);
+	
+	console.log(source.geometry.x+", "+source.geometry.y);
+	console.log("Initial pt.x: " + pt.x + " pt.y: " + pt.y);
+	
 	if (direction == mxConstants.DIRECTION_NORTH)
 	{
 		pt.x += source.geometry.width / 2;
@@ -1629,6 +1892,9 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 	var t = this.view.translate;
 	var dx = t.x * s;
 	var dy = t.y * s;
+	
+	console.log("After direction pt.x: " + pt.x + " pt.y: " + pt.y);
+	console.log("dx: " + dx + " dy: " + dy);
 	
 	if (this.model.isVertex(parentState.cell))
 	{
@@ -1699,6 +1965,8 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 			pt.x += source.geometry.width / 2;
 		}
 	}
+	
+	console.log("After duplicate pt.x: " + pt.x + " pt.y: " + pt.y);
 
 	// Uses connectable parent vertex if one exists
 	if (target != null && !this.isCellConnectable(target))
@@ -1721,10 +1989,14 @@ Graph.prototype.connectVertex = function(source, direction, length, evt, forceCl
 	this.model.beginUpdate();
 	try
 	{
+		// var v1 = this.graph.insertVertex(parent, id, value, x, y, width, height, style)
+//		var v1 = this.insertVertex(parent, null, 'Consequence', pt.x, pt.y, 120, 80, 'shape=mxgraph.bowtie.threatconsequence;html=1;whiteSpace=wrap;fontSize=16');
+		
 		var realTarget = target;
 		
 		if (realTarget == null && duplicate)
 		{
+			console.log(realTarget);
 			// Handles relative children
 			var cellToClone = source;
 			var geo = this.getCellGeometry(source);
@@ -2571,147 +2843,150 @@ HoverIcons.prototype.refreshTarget = new mxImage((mxClient.IS_SVG) ? 'data:image
  */
 HoverIcons.prototype.init = function()
 {
-	this.arrowUp = this.createArrow(this.triangleUp, mxResources.get('plusTooltip'));
-	this.arrowRight = this.createArrow(this.triangleRight, mxResources.get('plusTooltip'));
-	this.arrowDown = this.createArrow(this.triangleDown, mxResources.get('plusTooltip'));
-	this.arrowLeft = this.createArrow(this.triangleLeft, mxResources.get('plusTooltip'));
 
-	this.elts = [this.arrowUp, this.arrowRight, this.arrowDown, this.arrowLeft];
-
-	this.repaintHandler = mxUtils.bind(this, function()
-	{
-		this.repaint();
-	});
-
-	this.graph.selectionModel.addListener(mxEvent.CHANGE, this.repaintHandler);
-	this.graph.model.addListener(mxEvent.CHANGE, this.repaintHandler);
-	this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.repaintHandler);
-	this.graph.view.addListener(mxEvent.TRANSLATE, this.repaintHandler);
-	this.graph.view.addListener(mxEvent.SCALE, this.repaintHandler);
-	this.graph.view.addListener(mxEvent.DOWN, this.repaintHandler);
-	this.graph.view.addListener(mxEvent.UP, this.repaintHandler);
-	this.graph.addListener(mxEvent.ROOT, this.repaintHandler);
+//		console.log(me);
+//		this.arrowUp = this.createArrow(this.triangleUp, mxResources.get('plusTooltip'));
+		this.arrowRight = this.createArrow(this.triangleRight, mxResources.get('plusTooltip'));
+//		this.arrowDown = this.createArrow(this.triangleDown, mxResources.get('plusTooltip'));
+		this.arrowLeft = this.createArrow(this.triangleLeft, mxResources.get('plusTooltip'));
 	
-	// Resets the mouse point on escape
-	this.graph.addListener(mxEvent.ESCAPE, mxUtils.bind(this, function()
-	{
-		this.mouseDownPoint = null;
-	}));
-
-	// Removes hover icons if mouse leaves the container
-	mxEvent.addListener(this.graph.container, 'mouseleave',  mxUtils.bind(this, function(evt)
-	{
-		// Workaround for IE11 firing mouseleave for touch in diagram
-		if (evt.relatedTarget != null && mxEvent.getSource(evt) == this.graph.container)
+//		this.elts = [this.arrowUp, this.arrowRight, this.arrowDown, this.arrowLeft];
+		this.elts = [this.arrowRight, this.arrowLeft];
+	
+		this.repaintHandler = mxUtils.bind(this, function()
 		{
-			this.setDisplay('none');
-		}
-	}));
+			this.repaint();
+		});
 	
-	// Resets current state after update of selection state for touch events
-	var graphClick = this.graph.click;
-	this.graph.click = mxUtils.bind(this, function(me)
-	{
-		graphClick.apply(this.graph, arguments);
+		this.graph.selectionModel.addListener(mxEvent.CHANGE, this.repaintHandler);
+		this.graph.model.addListener(mxEvent.CHANGE, this.repaintHandler);
+		this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.repaintHandler);
+		this.graph.view.addListener(mxEvent.TRANSLATE, this.repaintHandler);
+		this.graph.view.addListener(mxEvent.SCALE, this.repaintHandler);
+		this.graph.view.addListener(mxEvent.DOWN, this.repaintHandler);
+		this.graph.view.addListener(mxEvent.UP, this.repaintHandler);
+		this.graph.addListener(mxEvent.ROOT, this.repaintHandler);
 		
-		if (this.currentState != null && !this.graph.isCellSelected(this.currentState.cell) &&
-			mxEvent.isTouchEvent(me.getEvent()) && !this.graph.model.isVertex(me.getCell()))
+		// Resets the mouse point on escape
+		this.graph.addListener(mxEvent.ESCAPE, mxUtils.bind(this, function()
 		{
-			this.reset();
-		}
-	});
+			this.mouseDownPoint = null;
+		}));
 	
-	// Checks if connection handler was active in mouse move
-	// as workaround for possible double connection inserted
-	var connectionHandlerActive = false;
-	
-	// Implements a listener for hover and click handling
-	this.graph.addMouseListener(
-	{
-	    mouseDown: mxUtils.bind(this, function(sender, me)
-	    {
-	    	connectionHandlerActive = false;
-	    	var evt = me.getEvent();
-	    	
-	    	if (this.isResetEvent(evt))
-	    	{
-	    		this.reset();
-	    	}
-	    	else if (!this.isActive())
-	    	{
-	    		var state = this.getState(me.getState());
-	    		
-	    		if (state != null || !mxEvent.isTouchEvent(evt))
-	    		{
-	    			this.update(state);
-	    		}
-	    	}
-	    	
-	    	this.setDisplay('none');
-	    }),
-	    mouseMove: mxUtils.bind(this, function(sender, me)
-	    {
-	    	var evt = me.getEvent();
-	    	
-	    	if (this.isResetEvent(evt))
-	    	{
-	    		this.reset();
-	    	}
-	    	else if (!this.graph.isMouseDown && !mxEvent.isTouchEvent(evt))
-	    	{
-	    		this.update(this.getState(me.getState()), me.getGraphX(), me.getGraphY());
-	    	}
-	    	
-	    	if (this.graph.connectionHandler != null && this.graph.connectionHandler.shape != null)
-	    	{
-	    		connectionHandlerActive = true;
-	    	}
-	    }),
-	    mouseUp: mxUtils.bind(this, function(sender, me)
-	    {
-	    	var evt = me.getEvent();
-	    	
-	    	if (this.isResetEvent(evt))
-	    	{
-	    		this.reset();
-	    	}
-	    	else if (this.isActive() && this.mouseDownPoint != null &&
-	    		Math.abs(me.getGraphX() - this.mouseDownPoint.x) < this.graph.tolerance &&
-		    	Math.abs(me.getGraphY() - this.mouseDownPoint.y) < this.graph.tolerance)
-	    	{
-	    		// Executes click event on highlighted arrow
-	    		if (!connectionHandlerActive)
-	    		{
-	    			this.click(this.currentState, this.getDirection(), me);
-	    		}
-	    	}
-	    	else if (this.isActive())
-	    	{
-	    		// Selects target vertex after drag and clone if not only new edge was inserted
-	    		if (this.graph.getSelectionCount() != 1 || !this.graph.model.isEdge(this.graph.getSelectionCell()))
-	    		{
-	    			this.update(this.getState(this.graph.view.getState(this.graph.getCellAt(me.getGraphX(), me.getGraphY()))));
-	    		}
-	    		else
-	    		{
-	    			this.reset();
-	    		}
-	    	}
-	    	else if (mxEvent.isTouchEvent(evt) || (this.bbox != null && mxUtils.contains(this.bbox, me.getGraphX(), me.getGraphY())))
-	    	{
-	    		// Shows existing hover icons if inside bounding box
-	    		this.setDisplay('');
-	    		this.repaint();
-	    	}
-	    	else if (!mxEvent.isTouchEvent(evt))
-	    	{
-	    		this.reset();
-	    	}
-	    	
-	    	connectionHandlerActive = false;
-	    	this.resetActiveArrow();
-	    })
-	});
+		// Removes hover icons if mouse leaves the container
+		mxEvent.addListener(this.graph.container, 'mouseleave',  mxUtils.bind(this, function(evt)
+		{
+			// Workaround for IE11 firing mouseleave for touch in diagram
+			if (evt.relatedTarget != null && mxEvent.getSource(evt) == this.graph.container)
+			{
+				this.setDisplay('none');
+			}
+		}));
+		
+		// Resets current state after update of selection state for touch events
+		var graphClick = this.graph.click;
+		this.graph.click = mxUtils.bind(this, function(me)
+		{
+			graphClick.apply(this.graph, arguments);
+			
+			if (this.currentState != null && !this.graph.isCellSelected(this.currentState.cell) &&
+				mxEvent.isTouchEvent(me.getEvent()) && !this.graph.model.isVertex(me.getCell()))
+			{
+				this.reset();
+			}
+		});
+		
+		// Checks if connection handler was active in mouse move
+		// as workaround for possible double connection inserted
+		var connectionHandlerActive = false;
+		
+		// Implements a listener for hover and click handling
+		this.graph.addMouseListener(
+		{
+		    mouseDown: mxUtils.bind(this, function(sender, me)
+		    {
+		    	connectionHandlerActive = false;
+		    	var evt = me.getEvent();
+		    	
+		    	if (this.isResetEvent(evt))
+		    	{
+		    		this.reset();
+		    	}
+		    	else if (!this.isActive())
+		    	{
+		    		var state = this.getState(me.getState());
+		    		
+		    		if (state != null || !mxEvent.isTouchEvent(evt))
+		    		{
+		    			this.update(state);
+		    		}
+		    	}
+		    	
+		    	this.setDisplay('none');
+		    }),
+		    mouseMove: mxUtils.bind(this, function(sender, me)
+		    {
+		    	var evt = me.getEvent();
+		    	
+		    	if (this.isResetEvent(evt))
+		    	{
+		    		this.reset();
+		    	}
+		    	else if (!this.graph.isMouseDown && !mxEvent.isTouchEvent(evt))
+		    	{
+		    		this.update(this.getState(me.getState()), me.getGraphX(), me.getGraphY());
+		    	}
+		    	
+		    	if (this.graph.connectionHandler != null && this.graph.connectionHandler.shape != null)
+		    	{
+		    		connectionHandlerActive = true;
+		    	}
+		    }),
+		    mouseUp: mxUtils.bind(this, function(sender, me)
+		    {
+		    	var evt = me.getEvent();
+		    	
+		    	if (this.isResetEvent(evt))
+		    	{
+		    		this.reset();
+		    	}
+		    	else if (this.isActive() && this.mouseDownPoint != null &&
+		    		Math.abs(me.getGraphX() - this.mouseDownPoint.x) < this.graph.tolerance &&
+			    	Math.abs(me.getGraphY() - this.mouseDownPoint.y) < this.graph.tolerance)
+		    	{
+		    		// Executes click event on highlighted arrow
+		    		if (!connectionHandlerActive)
+		    		{
+		    			this.click(this.currentState, this.getDirection(), me);
+		    		}
+		    	}
+		    	else if (this.isActive())
+		    	{
+		    		// Selects target vertex after drag and clone if not only new edge was inserted
+		    		if (this.graph.getSelectionCount() != 1 || !this.graph.model.isEdge(this.graph.getSelectionCell()))
+		    		{
+		    			this.update(this.getState(this.graph.view.getState(this.graph.getCellAt(me.getGraphX(), me.getGraphY()))));
+		    		}
+		    		else
+		    		{
+		    			this.reset();
+		    		}
+		    	}
+		    	else if (mxEvent.isTouchEvent(evt) || (this.bbox != null && mxUtils.contains(this.bbox, me.getGraphX(), me.getGraphY())))
+		    	{
+		    		// Shows existing hover icons if inside bounding box
+		    		this.setDisplay('');
+		    		this.repaint();
+		    	}
+		    	else if (!mxEvent.isTouchEvent(evt))
+		    	{
+		    		this.reset();
+		    	}
+		    	
+		    	connectionHandlerActive = false;
+		    	this.resetActiveArrow();
+		    })
+		});
 };
 
 /**
@@ -2954,7 +3229,7 @@ HoverIcons.prototype.click = function(state, dir, me)
 	}
 	else if (state != null)
 	{
-		var cells = this.graph.connectVertex(state.cell, dir, this.graph.defaultEdgeLength, evt);
+		var cells = this.graph.connectBowtieVertex(state.cell, dir, this.graph.defaultEdgeLength, evt);		// CHANGED FROM CONNECTVERTEX TO CONNECTBOWTIEVERTEX
 		this.graph.selectCellsForConnectVertex(cells, evt, this);
 		
 		// Selects only target vertex if one exists
@@ -3050,17 +3325,17 @@ HoverIcons.prototype.repaint = function()
 				}
 			}
 			
-			this.arrowUp.style.left = Math.round(this.currentState.getCenterX() - this.triangleUp.width / 2) + 'px';
+/*			this.arrowUp.style.left = Math.round(this.currentState.getCenterX() - this.triangleUp.width / 2) + 'px';
 			this.arrowUp.style.top = Math.round(bds.y - this.triangleUp.height) + 'px';
-			mxUtils.setOpacity(this.arrowUp, this.inactiveOpacity);
+			mxUtils.setOpacity(this.arrowUp, this.inactiveOpacity); */
 			
 			this.arrowRight.style.left = Math.round(bds.x + bds.width) + 'px';
 			this.arrowRight.style.top = Math.round(this.currentState.getCenterY() - this.triangleRight.height / 2) + 'px';
 			mxUtils.setOpacity(this.arrowRight, this.inactiveOpacity);
 			
-			this.arrowDown.style.left = this.arrowUp.style.left
+/*			this.arrowDown.style.left = this.arrowUp.style.left
 			this.arrowDown.style.top = Math.round(bds.y + bds.height) + 'px';
-			mxUtils.setOpacity(this.arrowDown, this.inactiveOpacity);
+			mxUtils.setOpacity(this.arrowDown, this.inactiveOpacity); */
 			
 			this.arrowLeft.style.left = Math.round(bds.x - this.triangleLeft.width) + 'px';
 			this.arrowLeft.style.top = this.arrowRight.style.top;
@@ -3071,17 +3346,18 @@ HoverIcons.prototype.repaint = function()
 				var right = this.graph.getCellAt(bds.x + bds.width +
 						this.triangleRight.width / 2, this.currentState.getCenterY());
 				var left = this.graph.getCellAt(bds.x - this.triangleLeft.width / 2, this.currentState.getCenterY()); 
-				var top = this.graph.getCellAt(this.currentState.getCenterX(), bds.y - this.triangleUp.height / 2); 
-				var bottom = this.graph.getCellAt(this.currentState.getCenterX(), bds.y + bds.height + this.triangleDown.height / 2); 
+//				var top = this.graph.getCellAt(this.currentState.getCenterX(), bds.y - this.triangleUp.height / 2); 
+//				var bottom = this.graph.getCellAt(this.currentState.getCenterX(), bds.y + bds.height + this.triangleDown.height / 2); 
 
 				// Shows hover icons large cell is behind all directions of current cell
-				if (right != null && right == left && left == top && top == bottom)
+/*				if (right != null && right == left && left == top && top == bottom)
 				{
 					right = null;
 					left = null;
 					top = null;
 					bottom = null;
-				}
+				} */
+				
 				
 				var currentGeo = this.graph.getCellGeometry(this.currentState.cell);
 				
@@ -3104,30 +3380,30 @@ HoverIcons.prototype.repaint = function()
 				
 				checkCollision(right, this.arrowRight);
 				checkCollision(left, this.arrowLeft);
-				checkCollision(top, this.arrowUp);
-				checkCollision(bottom, this.arrowDown);
+//				checkCollision(top, this.arrowUp);
+//				checkCollision(bottom, this.arrowDown);
 			}
 			else
 			{
 				this.arrowLeft.style.visibility = 'visible';
 				this.arrowRight.style.visibility = 'visible';
-				this.arrowUp.style.visibility = 'visible';
-				this.arrowDown.style.visibility = 'visible';
+//				this.arrowUp.style.visibility = 'visible';
+//				this.arrowDown.style.visibility = 'visible';
 			}
 			
 			if (this.graph.tooltipHandler.isEnabled())
 			{
 				this.arrowLeft.setAttribute('title', mxResources.get('plusTooltip'));
 				this.arrowRight.setAttribute('title', mxResources.get('plusTooltip'));
-				this.arrowUp.setAttribute('title', mxResources.get('plusTooltip'));
-				this.arrowDown.setAttribute('title', mxResources.get('plusTooltip'));
+//				this.arrowUp.setAttribute('title', mxResources.get('plusTooltip'));
+//				this.arrowDown.setAttribute('title', mxResources.get('plusTooltip'));
 			}
 			else
 			{
 				this.arrowLeft.removeAttribute('title');
 				this.arrowRight.removeAttribute('title');
-				this.arrowUp.removeAttribute('title');
-				this.arrowDown.removeAttribute('title');
+//				this.arrowUp.removeAttribute('title');
+//				this.arrowDown.removeAttribute('title');
 			}
 		}
 		else
@@ -3290,11 +3566,11 @@ HoverIcons.prototype.update = function(state, x, y)
  */
 HoverIcons.prototype.setCurrentState = function(state)
 {
-	if (state.style['portConstraint'] != 'eastwest')
+/*	if (state.style['portConstraint'] != 'eastwest')		// CHANGED
 	{
 		this.graph.container.appendChild(this.arrowUp);
 		this.graph.container.appendChild(this.arrowDown);
-	}
+	} */
 
 	this.graph.container.appendChild(this.arrowRight);
 	this.graph.container.appendChild(this.arrowLeft);
