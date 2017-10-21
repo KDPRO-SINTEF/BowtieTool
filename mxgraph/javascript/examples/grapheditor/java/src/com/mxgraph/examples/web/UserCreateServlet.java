@@ -81,9 +81,9 @@ public class UserCreateServlet extends HttpServlet{
 			return;
 		}
 		
-		// This isn't really good, as we don't know for certain wether the user was created or not.
+		// This isn't really good, as we don't know for certain whether the user was created or not.
 		// The MySQLAccess swallows the exception, and we can't know at this level if an error
-		// actually occured.
+		// actually occurred.
 		userRepo.createUser(username, fullname, password);
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.getOutputStream().flush();

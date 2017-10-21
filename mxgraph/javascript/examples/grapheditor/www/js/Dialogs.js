@@ -455,6 +455,12 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 
 
 			var obj = JSON.parse(req.getText());
+			if (obj.length == 0) {
+				var msg = document.createElement('label');
+				mxUtils.write(msg, mxResources.get('noFiles'));
+				form.appendChild(msg);
+			}
+
 			for (var i = 0, len = obj.length; i < len; i++) {
 				var div = document.createElement('div');
 				var input = document.createElement('input');
@@ -500,9 +506,11 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 			
 			var genericBtn = mxUtils.button(mxResources.get('open'), function()
 			{
-				editorUi.hideDialog();
-				console.log('form', form, form.graphs.value);
-				fn(form.graphs.value);
+				if (form.graphs.value) {
+					editorUi.hideDialog();
+					console.log('form', form, form.graphs.value);
+					fn(form.graphs.value);
+				}
 			});
 			genericBtn.className = 'geBtn gePrimaryBtn';
 			td.appendChild(genericBtn);

@@ -15,6 +15,18 @@ public class RoleRepositoryImpl implements IRoleRepository {
 	public RoleRepositoryImpl(MySQLAccess access) {
 		this.access = access;
 	}
+	
+	@Override
+	public void insertRole(Role r) {
+		String query = "INSERT INTO Role(id, user_id, role) VALUES (?, ?, ?);";
+		access.query(query, r.getGraph().getId(), r.getUser().getId(), r.getRole());
+	}
+
+	@Override
+	public void updateRole(Role r) {
+		String query = "UPDATE Role SET role = ? WHERE id = ? AND user_id = ?";
+		access.query(query, r.getRole(), r.getGraph().getId(), r.getUser().getId());
+	}
 
 	@Override
 	public Role getUserRoleForGraph(Graph g, User u) {
