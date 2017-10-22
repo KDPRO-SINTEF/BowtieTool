@@ -1,4 +1,4 @@
-package com.mxgraph.examples.web;
+package com.mxgraph.examples.web.servlets;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,13 +11,13 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import models.Graph;
-import models.Role;
-import models.User;
-import repository.IGraphRepository;
-import repository.IRoleRepository;
-import repository.IUserRepository;
+import com.mxgraph.examples.web.Constants;
+import com.mxgraph.examples.web.models.Graph;
+import com.mxgraph.examples.web.models.Role;
+import com.mxgraph.examples.web.models.User;
+import com.mxgraph.examples.web.repository.IGraphRepository;
+import com.mxgraph.examples.web.repository.IRoleRepository;
+import com.mxgraph.examples.web.repository.IUserRepository;
 
 /**
  * Servlet implementation class ImageServlet.

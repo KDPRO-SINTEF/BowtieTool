@@ -7,13 +7,18 @@ import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
-import repository.IGraphRepository;
-import repository.IRoleRepository;
-import repository.IUserRepository;
-import repository.MySQLAccess;
-import repository.impl.GraphRepositoryImpl;
-import repository.impl.RoleRepositoryImpl;
-import repository.impl.UserRepositoryImpl;
+import com.mxgraph.examples.web.repository.IGraphRepository;
+import com.mxgraph.examples.web.repository.IRoleRepository;
+import com.mxgraph.examples.web.repository.IUserRepository;
+import com.mxgraph.examples.web.repository.MySQLAccess;
+import com.mxgraph.examples.web.repository.impl.GraphRepositoryImpl;
+import com.mxgraph.examples.web.repository.impl.RoleRepositoryImpl;
+import com.mxgraph.examples.web.repository.impl.UserRepositoryImpl;
+import com.mxgraph.examples.web.servlets.GraphServlet;
+import com.mxgraph.examples.web.servlets.OpenServlet;
+import com.mxgraph.examples.web.servlets.UserCreateServlet;
+import com.mxgraph.examples.web.servlets.UserGraphServlet;
+import com.mxgraph.examples.web.servlets.UserLoginServlet;
 
 /**
  * The save servlet is used to echo XML to the client, eg. for SVG export and saving

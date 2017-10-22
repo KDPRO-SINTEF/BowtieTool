@@ -1,4 +1,4 @@
-package models;
+package com.mxgraph.examples.web.models;
 
 public class Role {
 	private transient User user;

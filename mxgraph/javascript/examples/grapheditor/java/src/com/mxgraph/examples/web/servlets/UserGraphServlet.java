@@ -1,4 +1,4 @@
-package com.mxgraph.examples.web;
+package com.mxgraph.examples.web.servlets;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,11 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.gson.Gson;
-
-import models.Graph;
-import models.User;
-import repository.IGraphRepository;
-import repository.IUserRepository;
+import com.mxgraph.examples.web.models.Graph;
+import com.mxgraph.examples.web.models.User;
+import com.mxgraph.examples.web.repository.IGraphRepository;
+import com.mxgraph.examples.web.repository.IUserRepository;
 
 public class UserGraphServlet extends HttpServlet{
 

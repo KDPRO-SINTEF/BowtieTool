@@ -1,4 +1,4 @@
-package models;
+package com.mxgraph.examples.web.models;
 
 public class User {
 	private int id;

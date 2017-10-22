@@ -1,13 +1,13 @@
-package repository.impl;
+package com.mxgraph.examples.web.repository.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import models.Graph;
-import models.Role;
-import models.User;
-import repository.IRoleRepository;
-import repository.MySQLAccess;
+import com.mxgraph.examples.web.models.Graph;
+import com.mxgraph.examples.web.models.Role;
+import com.mxgraph.examples.web.models.User;
+import com.mxgraph.examples.web.repository.IRoleRepository;
+import com.mxgraph.examples.web.repository.MySQLAccess;
 
 public class RoleRepositoryImpl implements IRoleRepository {
 	private MySQLAccess access;

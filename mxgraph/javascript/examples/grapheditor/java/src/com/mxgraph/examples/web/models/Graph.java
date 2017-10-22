@@ -1,4 +1,4 @@
-package models;
+package com.mxgraph.examples.web.models;
 
 import java.util.Date;
 

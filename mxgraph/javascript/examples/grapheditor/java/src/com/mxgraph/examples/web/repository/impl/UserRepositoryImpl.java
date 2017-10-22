@@ -1,4 +1,4 @@
-package repository.impl;
+package com.mxgraph.examples.web.repository.impl;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.UUID;
 
-import models.User;
-import repository.IUserRepository;
-import repository.MySQLAccess;
+import com.mxgraph.examples.web.models.User;
+import com.mxgraph.examples.web.repository.IUserRepository;
+import com.mxgraph.examples.web.repository.MySQLAccess;
 
 public class UserRepositoryImpl implements IUserRepository{
 	private final int SALT_SIZE = 16;
