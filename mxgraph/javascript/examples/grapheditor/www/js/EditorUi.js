@@ -3281,7 +3281,15 @@ EditorUi.prototype.openFromDb = function()
 			this.editor.setGraphXml(doc.documentElement);
 			this.editor.setModified(false);
 			this.editor.undoManager.clear();
-			
+
+			switch(obj.role) {
+				case 1:
+					console.log('Graph disabled with role', obj.role);
+					this.editor.graph.setEnabled(false);
+					break;
+				default:
+					break;
+			}
 			this.editor.setFilename(obj.title);
 			this.updateDocumentTitle();
 			this.editor.setGraphId(parseInt(graphid));
@@ -3290,6 +3298,43 @@ EditorUi.prototype.openFromDb = function()
 	}), null);
 	this.showDialog(dlg.container, 300, 400, true, true);
 	dlg.init();
+}
+
+EditorUi.prototype.modifyRolesForGraph = function()
+{
+	var token = localStorage.getItem('token');
+	var graphid = this.editor.getGraphId();
+	if (!token || !graphid) {
+		mxUtils.alert(mxResources.get('notLoggedIn'));
+		return;
+	}
+	
+	var dlg = new RoleDialog(this, mxUtils.bind(this, function(user, role)
+	{
+		var json = JSON.stringify({'token': token, 'id': graphid, 'username': user, 'role': role});
+		mxUtils.post(window.ROLE_URL, json, mxUtils.bind(this, function(req)
+		{
+			switch(req.getStatus()) {
+				case 200:
+					mxUtils.alert('Role updated');
+					break;
+				case 403:
+					//Unauthorized
+					mxUtils.alert('Your user doesn\'t have the neccessary permissions to modify this graph');
+					break;
+				case 400:
+					//Bad request
+					mxUtils.alert('Bad request');
+					break;
+				default:
+					//
+					break;
+			}
+
+		}));
+	}), null);
+	this.showDialog(dlg.container, 300, 400, true, true);
+	//dlg.init();
 }
 
 /**

@@ -59,8 +59,8 @@ public class GraphRepositoryImpl implements IGraphRepository {
 		String query = "SELECT graph_data, Graph.id, title, description, created, last_modified"
 				+ "       FROM Graph"
 				+ "            LEFT JOIN Role"
-				+ "            ON Graph.id = Role.id AND Graph.user_id = Role.user_id"
-				+ "      WHERE Graph.user_id = ?";
+				+ "            ON Graph.id = Role.id"
+				+ "      WHERE Role.user_id = ?";
 		try {
 			ResultSet rs = access.query(query, u.getId());
 			while (rs.next()) {
@@ -84,8 +84,8 @@ public class GraphRepositoryImpl implements IGraphRepository {
 		String query = "SELECT graph_data, title, description, created, last_modified"
 				+ "       FROM Graph"
 				+ "            LEFT JOIN Role"
-				+ "            ON Graph.id = Role.id AND Graph.user_id = Role.user_id"
-				+ "      WHERE Graph.user_id = ?"
+				+ "            ON Graph.id = Role.id"
+				+ "      WHERE Role.user_id = ?"
 				+ "            AND Graph.id = ?";
 		try {
 			ResultSet rs = access.query(query, u.getId(), id);

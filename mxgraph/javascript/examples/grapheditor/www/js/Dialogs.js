@@ -532,6 +532,105 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 /**
  * Constructs a new filename dialog.
  */
+var RoleDialog = function(editorUi, fn, cancelFn)
+{
+	var row, td;
+	
+	var table = document.createElement('table');
+	var tbody = document.createElement('tbody');
+	table.style.marginTop = '8px';
+	
+	row = document.createElement('tr');
+	td = document.createElement('td');
+	td.style.whiteSpace = 'nowrap';
+	td.style.fontSize = '10pt';
+	td.style.width = '120px';
+	mxUtils.write(td, mxResources.get('group'));
+	row.appendChild(td);
+	tbody.appendChild(row);
+
+	row = document.createElement('tr');	
+	var nameInput = document.createElement('input');
+	nameInput.setAttribute('value', '');
+	nameInput.style.marginLeft = '4px';
+	nameInput.style.width = '180px';
+
+	var role = document.createElement('select');
+	var owner = document.createElement('option');
+	owner.setAttribute('value', '0');
+	mxUtils.write(owner, 'Owner');
+
+	var readonly = document.createElement('option');
+	readonly.setAttribute('value', '1');
+	mxUtils.write(readonly, 'Read only');
+
+	role.appendChild(owner);
+	role.appendChild(readonly);
+	row.appendChild(nameInput);
+	row.appendChild(role);
+	tbody.appendChild(row);
+
+	row = document.createElement('tr');
+	td = document.createElement('td');
+
+	var cancelBtn = mxUtils.button(mxResources.get('cancel'), function()
+	{
+		editorUi.hideDialog();
+		
+		if (cancelFn != null)
+		{
+			cancelFn();
+		}
+	});
+	cancelBtn.className = 'geBtn';
+	
+	if (editorUi.editor.cancelFirst)
+	{
+		td.appendChild(cancelBtn);
+	}
+
+	mxEvent.addListener(nameInput, 'keypress', function(e)
+	{
+		if (e.keyCode == 13)
+		{
+			genericBtn.click();
+		}
+	});
+	mxEvent.addListener(role, 'keypress', function(e)
+	{
+		if (e.keyCode == 13)
+		{
+			genericBtn.click();
+		}
+	});
+	
+	var genericBtn = mxUtils.button(mxResources.get('save'), mxUtils.bind(this, function()
+	{
+		var user = nameInput.value;
+		var r = parseInt(role.value);
+		if (user && r) {
+			editorUi.hideDialog();
+			console.log('user', user, 'role', r);
+			fn(user, r);
+		}
+	}));
+	genericBtn.className = 'geBtn gePrimaryBtn';
+	td.appendChild(genericBtn);
+	
+	if (!editorUi.editor.cancelFirst)
+	{
+		td.appendChild(cancelBtn);
+	}
+
+	row.appendChild(td);
+	tbody.appendChild(row);
+	table.appendChild(tbody);
+	this.container = table;
+}
+
+/**
+ * Constructs a new filename dialog.
+ */
 var FilenameDialog = function(editorUi, filename, buttonText, fn, label, validateFn, content, helpLink, closeOnBtn, cancelFn)
 {
 	closeOnBtn = (closeOnBtn != null) ? closeOnBtn : true;

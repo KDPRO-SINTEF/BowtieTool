@@ -34,7 +34,17 @@ Actions.prototype.init = function()
 		ui.openFile();*/
 		ui.openFromDb();
 
+
 	});
+	this.addAction('roles...', function()
+	{
+		/*window.openNew = true;
+		window.openKey = 'open';
+		
+		ui.openFile();*/
+		ui.modifyRolesForGraph();
+
+	}).isEnabled = isGraphEnabled;
 	this.addAction('import...', function()
 	{
 		window.openNew = false;

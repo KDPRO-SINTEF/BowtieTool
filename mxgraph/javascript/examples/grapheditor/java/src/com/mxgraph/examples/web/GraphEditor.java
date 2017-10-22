@@ -16,6 +16,7 @@ import com.mxgraph.examples.web.repository.impl.RoleRepositoryImpl;
 import com.mxgraph.examples.web.repository.impl.UserRepositoryImpl;
 import com.mxgraph.examples.web.servlets.GraphServlet;
 import com.mxgraph.examples.web.servlets.OpenServlet;
+import com.mxgraph.examples.web.servlets.RoleServlet;
 import com.mxgraph.examples.web.servlets.UserCreateServlet;
 import com.mxgraph.examples.web.servlets.UserGraphServlet;
 import com.mxgraph.examples.web.servlets.UserLoginServlet;
@@ -64,6 +65,7 @@ public class GraphEditor
 		context.addServlet(new ServletHolder(new UserCreateServlet(userRepo)), "/user/register");
 		context.addServlet(new ServletHolder(new UserGraphServlet(userRepo, graphRepo)), "/user/graph"); 
 		context.addServlet(new ServletHolder(new GraphServlet(userRepo, graphRepo, roleRepo)), "/graph");
+		context.addServlet(new ServletHolder(new RoleServlet(userRepo, graphRepo, roleRepo)), "/role");
 
 
 		ResourceHandler fileHandler = new ResourceHandler();

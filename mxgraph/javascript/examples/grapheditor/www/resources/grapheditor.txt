@@ -251,6 +251,7 @@ reverse=Reverse
 right=Right
 rightAlign=Right Align
 rightToLeft=Right to Left
+roles=Roles
 rotate=Rotate
 rotateTooltip=Click and drag to rotate, click to turn by 90 degrees
 rotation=Rotation
