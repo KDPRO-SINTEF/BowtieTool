@@ -98,7 +98,7 @@ Sidebar.prototype.init = function()
 //	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 //		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
 	this.addBowtiePalette(dir, false);
-	this.addUmlPalette(false);
+//	this.addUmlPalette(false);
 //	this.addBpmnPalette(dir, false); 
 
 //	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
