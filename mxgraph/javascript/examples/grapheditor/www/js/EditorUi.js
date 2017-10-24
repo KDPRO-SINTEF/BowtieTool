@@ -2077,7 +2077,14 @@ EditorUi.prototype.open = function()
 	{
 		// ignore
 	}
-	
+
+
+	var template_xml = '<mxGraphModel dx="809" dy="887" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="Unwanted Event" style="shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" vertex="1" parent="1"><mxGeometry x="440" y="280" width="120" height="80" as="geometry"/></mxCell><mxCell id="3" value="Asset" style="shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" vertex="1" parent="1"><mxGeometry x="455" y="350" width="90" height="60" as="geometry"/></mxCell><mxCell id="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitPerimeter=0;entryX=0.5;entryY=0;entryPerimeter=0;jettySize=auto;orthogonalLoop=1;" edge="1" parent="1" source="4" target="2"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="4" value="Hazard" style="shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed" vertex="1" parent="1"><mxGeometry x="440" y="160" width="120" height="80" as="geometry"/></mxCell></root></mxGraphModel>';
+	var doc = mxUtils.parseXml(template_xml);
+	this.editor.setGraphXml(doc.documentElement);
+	this.editor.setModified(false);
+	this.editor.undoManager.clear();
+
 	// Fires as the last step if no file was loaded
 	this.editor.graph.view.validate();
 	
