@@ -3295,6 +3295,7 @@ EditorUi.prototype.openFromDb = function()
 					this.editor.graph.setEnabled(false);
 					break;
 				default:
+					this.editor.graph.setEnabled(true);
 					break;
 			}
 			this.editor.setFilename(obj.title);
