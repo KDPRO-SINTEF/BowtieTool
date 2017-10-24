@@ -1,5 +1,5 @@
 <shapes name="mxGraph.bowtie">
-	<shape name="barrier" h="80" w="120" aspect="variable" strokewidth="inherit">
+	<shape name="barrier" h="80" w="120" aspect="fixed" strokewidth="inherit">
 		<connections>
 			<constraint x="0.4" y="0.25" perimeter="0" name="W"></constraint>
 			<constraint x="0.6" y="0.25" perimeter="0" name="E"></constraint>
@@ -26,7 +26,7 @@
 		<stroke/>
 	</foreground>
 	</shape>
-	<shape name="control" h="80" w="120" aspect="variable" strokewidth="inherit">
+	<shape name="control" h="80" w="120" aspect="fixed" strokewidth="inherit">
 		<connections>
 			<constraint x="0.4" y="0.25" perimeter="0" name="W"></constraint>
 			<constraint x="0.6" y="0.25" perimeter="0" name="E"></constraint>
@@ -51,27 +51,11 @@
 		<fillstroke></fillstroke><stroke/>
 	</foreground>
 	</shape>
-	<shape name="hazard" h="80" w="120" aspect="variable" strokewidth="inherit">
-		<connections>
-			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
-		</connections>
-	<background>
-		<rect x="0" y="0" h="80" w="120">
-		</rect>
-	</background>
-	<foreground>
-		<stroke></stroke>
-		<fillcolor color="#FFFFFF"></fillcolor>
-		<path>
-			<rect x="10" y="10" h="60" w="100"></rect></path>
-		<fillstroke></fillstroke>
-		<stroke></stroke>
-	</foreground>
-	</shape>
-	<shape name="event" h="80" w="120" aspect="variable" strokewidth="inherit">
+	<shape name="event" h="80" w="120" aspect="fixed" strokewidth="inherit">
 		<connections>
 			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
 			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+			<constraint x="0.5" y="0" perimeter="0" name="N"></constraint>
 		</connections>
 		<background>
 			<stroke>
@@ -89,7 +73,7 @@
 			<stroke></stroke>
 		</foreground>
 	</shape>
-	<shape name="asset" h="80" w="120" aspect="variable" strokewidth="inherit">
+	<shape name="asset" h="60" w="90" aspect="fixed" strokewidth="inherit">
 		<connections>
 		</connections>
 		<background>
@@ -97,18 +81,18 @@
 			</stroke>
 			<fillcolor color="#7fefad"></fillcolor>
 			<path>
-				<move x="0" y="20"/>
-				<line x="40" y="20"/>
-				<line x="60" y="0"/>
-				<line x="80" y="20"/>
-				<line x="120" y="20"/>
-				<line x="100" y="40"/>
-				<line x="120" y="60"/>
-				<line x="80" y="60"/>
-				<line x="60" y="80"/>
-				<line x="40" y="60"/>
-				<line x="0" y="60"/>
-				<line x="20" y="40"/>
+				<move x="0" y="15"/>
+				<line x="30" y="15"/>
+				<line x="45" y="0"/>
+				<line x="60" y="15"/>
+				<line x="90" y="15"/>
+				<line x="75" y="30"/>
+				<line x="90" y="45"/>
+				<line x="60" y="45"/>
+				<line x="45" y="60"/>
+				<line x="30" y="45"/>
+				<line x="0" y="45"/>
+				<line x="15" y="30"/>
 				<close/>
 				</path>
 				<fillstroke></fillstroke><stroke/>
@@ -117,7 +101,7 @@
 		<fillstroke/>
 		</foreground>
 	</shape>
-		<shape name="threatconsequence" h="80" w="120" aspect="variable" strokewidth="inherit">
+		<shape name="threatconsequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
 		<connections>
 			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
 			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
@@ -132,27 +116,17 @@
 			<stroke></stroke>
 		</foreground>
 	</shape>
-	<shape aspect="variable" h="120" name="hazard22z" strokewidth="1" w="120">
-    <connections>
-      <constraint name="N" perimeter="0" x="0.5" y="0"/>
-      <constraint name="S" perimeter="0" x="0.5" y="1"/>
-    </connections>
-    <foreground>
-      <rect h="120" w="120" x="0" y="0"/>
-      <fillstroke/>
-    </foreground>
-  	</shape>
-  	<shape aspect="variable" h="120" name="hazard2" strokewidth="1" w="120">
+  	<shape aspect="fixed" h="80" name="hazard" strokewidth="1" w="120">
     <connections>
       <constraint name="S" perimeter="0" x="0.5" y="1"/>
     </connections>
     <foreground>
-      <rect h="120" w="120" x="0" y="0"/>
+      <rect h="80" w="120" x="0" y="0"/>
       <fillstroke/>
-       <image src="stencils/elements/hazard_128x128.svg" x="0" y="0" w="120" h="120" flipH="0"/>
+       <image src="stencils/elements/hazard_128x128.svg" x="0" y="0" w="120" h="80" flipH="0"/>
     </foreground>
   </shape>
-	<shape aspect="variable" h="20" name="lowthreat" strokewidth="0" w="120">
+	<shape aspect="fixed" h="20" name="lowthreat" strokewidth="0" w="120">
     	<connections>
     	</connections>
     	<foreground>
@@ -162,7 +136,7 @@
 			<image src="stencils/elements/lowthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
 		</foreground>
 	</shape>
-	<shape aspect="variable" h="20" name="lowmediumthreat" strokewidth="0" w="120">
+	<shape aspect="fixed" h="20" name="lowmediumthreat" strokewidth="0" w="120">
     	<connections>
     	</connections>
     	<foreground>
@@ -172,7 +146,7 @@
 			<image src="stencils/elements/lowmediumthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
 		</foreground>
 	</shape>
-	<shape aspect="variable" h="20" name="mediumthreat" strokewidth="0" w="120">
+	<shape aspect="fixed" h="20" name="mediumthreat" strokewidth="0" w="120">
     	<connections>
     	</connections>
     	<foreground>
@@ -182,7 +156,7 @@
 			<image src="stencils/elements/mediumthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
 		</foreground>
 	</shape>
-	<shape aspect="variable" h="20" name="mediumhighthreat" strokewidth="0" w="120">
+	<shape aspect="fixed" h="20" name="mediumhighthreat" strokewidth="0" w="120">
     	<connections>
     	</connections>
     	<foreground>
@@ -192,7 +166,7 @@
 			<image src="stencils/elements/mediumhighthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
 		</foreground>
 	</shape>
-	<shape aspect="variable" h="20" name="highthreat" strokewidth="0" w="120">
+	<shape aspect="fixed" h="20" name="highthreat" strokewidth="0" w="120">
     	<connections>
     	</connections>
     	<foreground>
@@ -202,7 +176,7 @@
 			<image src="stencils/elements/highthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
 		</foreground>
 	</shape>
-	<shape aspect="variable" h="20" name="blankrisk" strokewidth="0" w="120">
+	<shape aspect="fixed" h="20" name="blankrisk" strokewidth="0" w="120">
     	<connections>
     	</connections>
     	<foreground>

@@ -98,7 +98,7 @@ Sidebar.prototype.init = function()
 //	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 //		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
 	this.addBowtiePalette(dir, false);
-	this.addUmlPalette(false);
+//	this.addUmlPalette(false);
 //	this.addBpmnPalette(dir, false); 
 
 //	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
@@ -1169,19 +1169,18 @@ Sidebar.prototype.createAdvancedShapes = function()
 	var fns =
 	[
 		
-		this.createVertexTemplateEntry('shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
-		this.createVertexTemplateEntry('shape=mxgraph.bowtie.control;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16', 120, 80, 'Security Control', 'Security Control', null, null, 'bowtie security control'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard2;whiteSpace=wrap;html=1;fontSize=16', 120, 120, 'Hazard', 'Hazard', null, null, 'bowtie hazard 2'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16', 120, 80, 'Asset', 'Asset', null, null, 'bowtie asset'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.threatconsequence;html=1;whiteSpace=wrap;fontSize=16', 120, 80, 'Threat/Consequence', 'Threat/Consequence', null, null, 'bowtie threatconsequence'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.lowthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator lowthreat'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.lowmediumthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator lowmediumthreat'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.mediumthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator mediumthreat'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.mediumhighthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator mediumhighthreat'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.highthreat;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator highthreat'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.blankrisk;html=1;whiteSpace=wrap;fontSize=16', 120, 20, '', '', null, null, 'bowtie indicator blankrisk'),
+		this.createVertexTemplateEntry('shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
+		this.createVertexTemplateEntry('shape=mxgraph.bowtie.control;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Security Control', 'Security Control', null, null, 'bowtie security control'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 90, 60, 'Asset', 'Asset', null, null, 'bowtie asset'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.threatconsequence;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Threat/Consequence', 'Threat/Consequence', null, null, 'bowtie threatconsequence'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.lowthreat;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 20, '', '', null, null, 'bowtie indicator lowthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.lowmediumthreat;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 20, '', '', null, null, 'bowtie indicator lowmediumthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.mediumthreat;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 20, '', '', null, null, 'bowtie indicator mediumthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.mediumhighthreat;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 20, '', '', null, null, 'bowtie indicator mediumhighthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.highthreat;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 20, '', '', null, null, 'bowtie indicator highthreat'),
+	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.blankrisk;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 20, '', '', null, null, 'bowtie indicator blankrisk'),
 	];
 	
 	this.addPaletteFunctions('bowtie', mxResources.get('bowtie'), false, fns);
