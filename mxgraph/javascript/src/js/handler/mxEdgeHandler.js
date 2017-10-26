@@ -1509,6 +1509,7 @@ mxEdgeHandler.prototype.mouseMove = function(sender, me)
  */
 mxEdgeHandler.prototype.mouseUp = function(sender, me)
 {
+
 	// Workaround for wrong event source in Webkit
 	if (this.index != null && this.marker != null)
 	{

@@ -241,7 +241,6 @@ mxCell.prototype.valueChanged = function(newValue)
 {
 	var previous = this.getValue();
 	this.setValue(newValue);
-	
 	return previous;
 };
 

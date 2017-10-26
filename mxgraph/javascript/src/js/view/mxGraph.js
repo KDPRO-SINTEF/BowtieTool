@@ -8283,7 +8283,7 @@ mxGraph.prototype.isEdgeValid = function(edge, source, target)
  *   return mxGraph.prototype.getEdgeValidationError.apply(this, arguments);
  * }
  * (end)
- *  
+ *
  * Parameters:
  * 
  * edge - <mxCell> that represents the edge to validate.
@@ -8292,11 +8292,12 @@ mxGraph.prototype.isEdgeValid = function(edge, source, target)
  */
 mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
 {
-	if (edge != null && !this.isAllowDanglingEdges() && (source == null || target == null))
+
+    if (edge != null && !this.isAllowDanglingEdges() && (source == null || target == null))
 	{
-		return '';
+
+        return '';
 	}
-	
 	if (edge != null && this.model.getTerminal(edge, true) == null &&
 		this.model.getTerminal(edge, false) == null)	
 	{
@@ -8346,8 +8347,8 @@ mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
 			{
 				var err = this.multiplicities[i].check(this, edge, source,
 					target, sourceOut, targetIn);
-				
-				if (err != null)
+
+                if (err != null)
 				{
 					error += err;
 				}
@@ -8364,7 +8365,6 @@ mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
 		
 		return (error.length > 0) ? error : null;
 	}
-	
 	return (this.allowDanglingEdges) ? null : '';
 };
 
@@ -8403,6 +8403,7 @@ mxGraph.prototype.validateEdge = function(edge, source, target)
  */
 mxGraph.prototype.validateGraph = function(cell, context)
 {
+    console.log("VALIDATEGRAPH");
 	cell = (cell != null) ? cell : this.model.getRoot();
 	context = (context != null) ? context : new Object();
 	

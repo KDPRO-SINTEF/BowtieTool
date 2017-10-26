@@ -13,8 +13,23 @@ EditorUi = function(editor, container, lightbox)
 	this.container = container || document.body;
 	var graph = this.editor.graph;
 	graph.lightbox = lightbox;
+	mxGraph.prototype.setAllowDanglingEdges(false);
 
-	// Pre-fetches submenu image or replaces with embedded image if supported
+    var listener = function(sender, evt)
+    {
+        graph.validateGraph();
+    };
+
+    graph.getModel().addListener(mxEvent.CHANGE, listener);
+
+    graph.multiplicities.push(new mxMultiplicity(
+        false, 'Barrier2', null, null, 1, 1, ["Barrier"],
+        'Target Must Have 1 Source',
+        'Target Must Connect From Source'));
+
+
+
+    // Pre-fetches submenu image or replaces with embedded image if supported
 	if (mxClient.IS_SVG)
 	{
 		mxPopupMenu.prototype.submenuImage = 'data:image/gif;base64,R0lGODlhCQAJAIAAAP///zMzMyH5BAEAAAAALAAAAAAJAAkAAAIPhI8WebHsHopSOVgb26AAADs=';
@@ -47,7 +62,7 @@ EditorUi = function(editor, container, lightbox)
 	this.createDivs();
 	this.createUi();
 	this.refresh();
-	
+
 	// Disables HTML and text selection
 	var textEditing =  mxUtils.bind(this, function(evt)
 	{
