@@ -14,7 +14,7 @@ function Sidebar(editorUi, container)
 	this.graph = editorUi.createTemporaryGraph(this.editorUi.editor.graph.getStylesheet());
 	this.graph.cellRenderer.antiAlias = false;
 	this.graph.foldingEnabled = false;
-	mxCell.prototype.customID = "Default";
+    mxCell.prototype.customID = "Default";
 
 	// Workaround for blank output in IE11-
 	if (!mxClient.IS_IE && !mxClient.IS_IE11)
