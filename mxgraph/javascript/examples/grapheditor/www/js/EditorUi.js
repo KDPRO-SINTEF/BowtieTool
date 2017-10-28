@@ -15,7 +15,8 @@ EditorUi = function(editor, container, lightbox)
 	graph.lightbox = lightbox;
 	mxGraph.prototype.setAllowDanglingEdges(false);
     mxGraph.prototype.multigraph = false;
-    mxGraph.prototype.setCellsBendable(false);
+    mxGraph.prototype.setCellsBendable(true);
+    mxGraph.prototype.setAllowLoops(false);
 
     var listener = function(sender, evt)
     {
