@@ -13,8 +13,11 @@ EditorUi = function(editor, container, lightbox)
 	this.container = container || document.body;
 	var graph = this.editor.graph;
 	graph.lightbox = lightbox;
+    graph.multigraph = false;
+    graph.setAllowDanglingEdges(false);
 
-	// Pre-fetches submenu image or replaces with embedded image if supported
+
+    // Pre-fetches submenu image or replaces with embedded image if supported
 	if (mxClient.IS_SVG)
 	{
 		mxPopupMenu.prototype.submenuImage = 'data:image/gif;base64,R0lGODlhCQAJAIAAAP///zMzMyH5BAEAAAAALAAAAAAJAAkAAAIPhI8WebHsHopSOVgb26AAADs=';
