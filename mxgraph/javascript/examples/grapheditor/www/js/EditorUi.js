@@ -15,6 +15,70 @@ EditorUi = function(editor, container, lightbox)
 	graph.lightbox = lightbox;
     graph.multigraph = false;
     graph.setAllowDanglingEdges(false);
+    graph.allowLoops = false;
+
+    graph.getEdgeValidationError = function(edge, source, target)
+    {
+        if (source != null && target != null &&
+            this.model.getValue(source) != null &&
+            this.model.getValue(target) != null)
+        {
+			switch(source.customID){
+				case 'Threat':
+					if(target.customID !=='Security Control'){
+                        return 'A ' + source.customID + ' can only connect to a Security Control';
+                    }
+					break;
+				case 'Security Control':
+					if(target.customID !== 'Security Control' ||
+						target.customID !== 'Event' ||
+						target.customID !== 'Barrier'||
+                        target.customID !== 'Consequence'){
+                        return 'A ' + source.customID + ' can only connect to itself, an Event, a Barrier or a Consequence';
+                    }
+                    break;
+				case 'Cause':
+                    if(target.customID !== 'Barrier'){
+                        return 'A ' + source.customID + ' can only connect to a Barrier';
+                    }
+                    break;
+                case 'Hazard':
+                    if(target.customID !== 'Event'){
+                        return 'A ' + source.customID + ' can only connect to an Event ';
+                    }
+                    break;
+                case 'Barrier':
+                    if(target.customID !== 'Event'||
+                        target.customID !== 'Security Control'||
+                        target.customID !== 'Consequence'||
+                        target.customID !== 'Barrier'){
+                        return 'A ' + source.customID + ' can only connect to an Event, a Security Control, a Consequence or itself';
+                    }
+                    break;
+                case 'Event':
+                    if(target.customID !== 'Barrier'||
+                        target.customID !== 'Security Control'){
+                        return 'A ' + source.customID + ' can only connect to a Barrier or Security Control';
+                    }
+                    break;
+                case 'Consequence':
+                    if(target.customID !== null){
+                        return 'A ' + source.customID + ' can not connect anything';
+                    }
+                    break;
+                case 'Escalation Factor':
+                    if(target.customID !== 'Barrier'){
+                        return 'A ' + source.customID + ' can only  connect to a Barrier';
+                    }
+                    break;
+				default:
+					break;
+			}
+        }
+
+        // "Supercall"
+        return mxGraph.prototype.getEdgeValidationError.apply(this, arguments);
+    }
 
 
     // Pre-fetches submenu image or replaces with embedded image if supported
