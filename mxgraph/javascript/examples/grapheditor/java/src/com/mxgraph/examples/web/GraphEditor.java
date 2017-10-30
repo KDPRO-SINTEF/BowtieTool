@@ -14,6 +14,7 @@ import com.mxgraph.examples.web.repository.MySQLAccess;
 import com.mxgraph.examples.web.repository.impl.GraphRepositoryImpl;
 import com.mxgraph.examples.web.repository.impl.RoleRepositoryImpl;
 import com.mxgraph.examples.web.repository.impl.UserRepositoryImpl;
+import com.mxgraph.examples.web.servlets.CachelessFileHandler;
 import com.mxgraph.examples.web.servlets.GraphServlet;
 import com.mxgraph.examples.web.servlets.OpenServlet;
 import com.mxgraph.examples.web.servlets.RoleServlet;
@@ -68,7 +69,7 @@ public class GraphEditor
 		context.addServlet(new ServletHolder(new RoleServlet(userRepo, graphRepo, roleRepo)), "/role");
 
 
-		ResourceHandler fileHandler = new ResourceHandler();
+		ResourceHandler fileHandler = new CachelessFileHandler();
 		fileHandler.setResourceBase(".");
 		System.out.println(fileHandler.getResourceBase());
 
@@ -82,6 +83,4 @@ public class GraphEditor
 		server.start();
 		server.join();
 	}
-
-
 }
