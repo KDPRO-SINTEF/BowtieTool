@@ -13,7 +13,7 @@ public class CachelessFileHandler extends ResourceHandler {
 			HttpServletResponse response, int dispatch) throws IOException,
 			ServletException
 	{
-		response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Cache-control", "no-cache, no-store, must-revalidate");
 		response.setHeader("Expires", "0");
 		super.handle(target, request, response, dispatch);

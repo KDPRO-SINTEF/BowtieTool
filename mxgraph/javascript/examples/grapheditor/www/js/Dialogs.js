@@ -433,7 +433,7 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 	var form = document.createElement('form');
 	form.id = 'graphlist';
 	
-	this.init = function()
+	this.init = function(open_endpoint)
 	{
 		var token = localStorage.getItem('token');
 		if (!token) {
@@ -441,7 +441,7 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 			return;
 		}
 		
-		mxUtils.get(window.USER_GRAPHS + '?token=' + encodeURIComponent(token), mxUtils.bind(this, function(req) {
+		mxUtils.get(open_endpoint + '?token=' + encodeURIComponent(token), mxUtils.bind(this, function(req) {
 			tbody.innerHTML = '';
 
 			row = document.createElement('tr');

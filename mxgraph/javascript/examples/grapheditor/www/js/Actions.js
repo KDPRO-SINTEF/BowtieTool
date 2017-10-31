@@ -32,9 +32,13 @@ Actions.prototype.init = function()
 		window.openKey = 'open';
 		
 		ui.openFile();*/
-		ui.openFromDb();
+		ui.openFromDb(window.USER_GRAPHS);
 
 
+	});
+	this.addAction('openTemplate...', function()
+	{
+		ui.openFromDb(window.TEMPLATE_GRAPHS);
 	});
 	this.addAction('roles...', function()
 	{

@@ -3270,7 +3270,7 @@ EditorUi.prototype.isCompatibleString = function(data)
 	return false;
 };
 
-EditorUi.prototype.openFromDb = function()
+EditorUi.prototype.openFromDb = function(open_endpoint)
 {
 	var token = localStorage.getItem('token');
 	if (!token) {
@@ -3294,18 +3294,20 @@ EditorUi.prototype.openFromDb = function()
 					console.log('Graph disabled with role', obj.role);
 					this.editor.graph.setEnabled(false);
 					break;
+				case 2:
+					graphid = null;
 				default:
 					this.editor.graph.setEnabled(true);
 					break;
 			}
 			this.editor.setFilename(obj.title);
 			this.updateDocumentTitle();
-			this.editor.setGraphId(parseInt(graphid));
+			this.editor.setGraphId(graphid == null ? null : parseInt(graphid));
 
 		}));
 	}), null);
 	this.showDialog(dlg.container, 300, 400, true, true);
-	dlg.init();
+	dlg.init(open_endpoint);
 }
 
 EditorUi.prototype.modifyRolesForGraph = function()
@@ -3413,18 +3415,18 @@ EditorUi.prototype.save = function(name)
 					}
 
 					if (!this.editor.getGraphId()) {
-						var data = JSON.stringify({"title": name, "token": token, "graph_data": xml});
+						var data = JSON.stringify({'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
 						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
 							var id = JSON.parse(req.getText()).id;
 							this.editor.setGraphId(id);
-							console.log('Inserted with id', id, "and", this.editor.getGraphId());
+							console.log('Inserted with id', id, 'and', this.editor.getGraphId());
 
 						}));
 					} else {
 						console.log('Existing with id', this.editor.getGraphId());
-						var data = JSON.stringify({"id": this.editor.getGraphId(), "title": name, "token": token, "graph_data": xml});
+						var data = JSON.stringify({'id': this.editor.getGraphId(), 'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
 						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
-							console.log("Updated with response", req.getText());
+							console.log('Updated with response', req.getText());
 						}));
 					}
 				}

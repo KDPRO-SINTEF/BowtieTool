@@ -9,6 +9,7 @@ window.MAX_AREA = window.MAX_AREA || 15000 * 15000;
 window.EXPORT_URL = window.EXPORT_URL || '/export';
 window.SAVE_URL = window.SAVE_URL || '/graph';
 window.USER_GRAPHS = window.USER_GRAPHS || '/user/graph';
+window.TEMPLATE_GRAPHS = window.TEMPLATE_GRAPHS || '/template/graph';
 window.OPEN_URL = window.OPEN_URL || '/open';
 window.ROLE_URL = window.ROLE_URL || '/role';
 window.RESOURCES_PATH = window.RESOURCES_PATH || 'resources';

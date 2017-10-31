@@ -63,21 +63,19 @@ public class GraphServlet extends HttpServlet
 			return;
 		}
 
-		Graph graph = graphRepo.getUserGraph(user, Integer.parseInt(graphid));
+		Graph graph = graphRepo.getGraphById(Integer.parseInt(graphid));
 		if (graph == null) {
-			// This isn't User's graph
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			// Specified graph doesn't exist
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
 			return;
 		}
 		
 		Role r = roleRepo.getUserRoleForGraph(graph, user);
-		if (r == null) {
-			// This will trigger when user doesn't have any role for the specified graph.
-			// Shouldn't really be triggered because we check for this earlier.
-			// I've decided to include this check anyway since the SQL statements might change for
-			// future revisions.
+		if (r == null && (!graph.is_public() || !graph.is_template())) {
+			// This will trigger when user doesn't have any role for the specified graph, in addition
+			// to the graph not being public nor a template.
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
@@ -90,7 +88,7 @@ public class GraphServlet extends HttpServlet
 		JsonObject json = new Gson()
 				.toJsonTree(graph)
 				.getAsJsonObject();
-		json.addProperty("role", r.getRole());
+		json.addProperty("role", r == null ? 2 : r.getRole());
 		out.write(json.toString().getBytes("UTF-8"));
 		out.flush();
 		out.close();
@@ -190,6 +188,16 @@ public class GraphServlet extends HttpServlet
 			System.out.println("Illegal value received: " + e.getMessage());
 		}
 		
+		boolean is_public = false;
+		try {
+			JsonElement j = json.get("is_public");
+			if (j != null) {
+				is_public = j.getAsBoolean();
+			}
+		} catch (ClassCastException e) {
+			System.out.println("Illegal value received: " + e.getMessage());
+		}
+		
 		String xml = null;
 		try {
 			JsonElement j = json.get("graph_data");
@@ -221,7 +229,7 @@ public class GraphServlet extends HttpServlet
 
 		if (graphid == -1) {
 			// Graph doesn't exist yet, we need to create it.
-			int id = graphRepo.insertGraph(user, xml, title, description);
+			int id = graphRepo.insertGraph(user, xml, title, description, is_public);
 			response.setContentType("application/json");
 			response.setStatus(HttpServletResponse.SC_OK);
 			OutputStream out = response.getOutputStream();
@@ -234,7 +242,7 @@ public class GraphServlet extends HttpServlet
 		}
 
 		// Graph already exists in db, we need to check if we're allowed to change it.
-		Graph g = new Graph(graphid, user, xml, title, description);
+		Graph g = new Graph(graphid, xml, title, description, is_public);
 		Role r = roleRepo.getUserRoleForGraph(g, user);
 
 		if (r == null || r.getRole() != 0) {

@@ -206,6 +206,7 @@ notLoggedIn=Not logged in.
 numberedList=Numbered List
 opacity=Opacity
 open=Open
+openTemplate=Open Templates
 openArrow=Open Arrow
 openFile=Open File
 openLink=Open Link
