@@ -15,6 +15,7 @@ import com.mxgraph.examples.web.Constants;
 import com.mxgraph.examples.web.models.Graph;
 import com.mxgraph.examples.web.models.Role;
 import com.mxgraph.examples.web.models.User;
+import com.mxgraph.examples.web.models.Role.Access;
 import com.mxgraph.examples.web.repository.IGraphRepository;
 import com.mxgraph.examples.web.repository.IRoleRepository;
 import com.mxgraph.examples.web.repository.IUserRepository;
@@ -88,7 +89,7 @@ public class RoleServlet extends HttpServlet
 		response.setStatus(HttpServletResponse.SC_OK);
 		OutputStream out = response.getOutputStream();
 		JsonObject a = new JsonObject();
-		a.addProperty("role", r.getRole());
+		a.addProperty("role", r.getRole().ordinal());
 		out.write(a.toString().getBytes("UTF-8"));
 		out.flush();
 		out.close();
@@ -216,7 +217,7 @@ public class RoleServlet extends HttpServlet
 		}
 		
 		Role r = roleRepo.getUserRoleForGraph(g, user);
-		if (r == null || r.getRole() != 0) {
+		if (r == null || r.getRole() != Access.OWNER) {
 			// User isn't owner of graph, can't assign new roles
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			response.getOutputStream().flush();
@@ -237,7 +238,7 @@ public class RoleServlet extends HttpServlet
 		if (roleRepo.getUserRoleForGraph(g, userToAssign) != null) {
 			// Role for userToAssign already exist in the db.
 			
-			if (user.equals(userToAssign) && newRole.getRole() != 0) {
+			if (user.equals(userToAssign) && newRole.getRole() != Access.OWNER) {
 				// User can't dissociate himself as owner.
 				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				response.getOutputStream().flush();
