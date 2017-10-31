@@ -30,10 +30,10 @@ EditorUi = function(editor, container, lightbox)
                     }
 					break;
 				case 'Security Control':
-					if(target.customID !== 'Security Control' ||
-						target.customID !== 'Event' ||
-						target.customID !== 'Barrier'||
-                        target.customID !== 'Consequence'){
+					if(target.customID != 'Security Control' &&
+						target.customID != 'Event' &&
+						target.customID != 'Barrier'&&
+						target.customID != 'Consequence'){
                         return 'A ' + source.customID + ' can only connect to itself, an Event, a Barrier or a Consequence';
                     }
                     break;
@@ -48,15 +48,15 @@ EditorUi = function(editor, container, lightbox)
                     }
                     break;
                 case 'Barrier':
-                    if(target.customID !== 'Event'||
-                        target.customID !== 'Security Control'||
-                        target.customID !== 'Consequence'||
+                    if(target.customID !== 'Event' &&
+                        target.customID !== 'Security Control' &&
+                        target.customID !== 'Consequence' &&
                         target.customID !== 'Barrier'){
                         return 'A ' + source.customID + ' can only connect to an Event, a Security Control, a Consequence or itself';
                     }
                     break;
                 case 'Event':
-                    if(target.customID !== 'Barrier'||
+                    if(target.customID !== 'Barrier' &&
                         target.customID !== 'Security Control'){
                         return 'A ' + source.customID + ' can only connect to a Barrier or Security Control';
                     }
