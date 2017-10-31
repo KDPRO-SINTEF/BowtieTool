@@ -73,7 +73,7 @@ public class GraphServlet extends HttpServlet
 		}
 		
 		Role r = roleRepo.getUserRoleForGraph(graph, user);
-		if (r == null && (!graph.is_public() || !graph.is_template())) {
+		if (r == null && (!graph.is_public() && !graph.is_template())) {
 			// This will trigger when user doesn't have any role for the specified graph, in addition
 			// to the graph not being public nor a template.
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
