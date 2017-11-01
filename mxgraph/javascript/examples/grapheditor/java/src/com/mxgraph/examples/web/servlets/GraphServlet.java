@@ -14,14 +14,14 @@ import com.google.gson.JsonObject;
 import com.mxgraph.examples.web.Constants;
 import com.mxgraph.examples.web.models.Graph;
 import com.mxgraph.examples.web.models.Role;
-import com.mxgraph.examples.web.models.Role.Access;
+import com.mxgraph.examples.web.models.Role.GraphRole;
 import com.mxgraph.examples.web.models.User;
 import com.mxgraph.examples.web.repository.IGraphRepository;
 import com.mxgraph.examples.web.repository.IRoleRepository;
 import com.mxgraph.examples.web.repository.IUserRepository;
 
 /**
- * Servlet implementation class ImageServlet.
+ * Servlet implementation class GraphServlet.
  */
 public class GraphServlet extends HttpServlet
 {
@@ -89,7 +89,7 @@ public class GraphServlet extends HttpServlet
 		JsonObject json = new Gson()
 				.toJsonTree(graph)
 				.getAsJsonObject();
-		json.addProperty("role", r == null ? Access.TEMPLATE.ordinal() : r.getRole().ordinal());
+		json.addProperty("role", r == null ? GraphRole.BYPASS.ordinal() : r.getRole().ordinal());
 		out.write(json.toString().getBytes("UTF-8"));
 		out.flush();
 		out.close();
@@ -246,7 +246,7 @@ public class GraphServlet extends HttpServlet
 		Graph g = new Graph(graphid, xml, title, description, is_public);
 		Role r = roleRepo.getUserRoleForGraph(g, user);
 
-		if (r == null || r.getRole() != Access.OWNER) {
+		if (r == null || r.getRole() != GraphRole.OWNER) {
 			// This isn't User's graph, we cannot update.
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			response.getOutputStream().flush();

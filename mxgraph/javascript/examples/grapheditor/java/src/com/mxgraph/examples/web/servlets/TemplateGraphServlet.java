@@ -17,7 +17,7 @@ import com.mxgraph.examples.web.repository.IGraphRepository;
 import com.mxgraph.examples.web.repository.IUserRepository;
 
 /**
- * Servlet implementation class ImageServlet.
+ * Servlet implementation class TemplateGraphServlet.
  */
 public class TemplateGraphServlet extends HttpServlet
 {

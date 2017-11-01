@@ -27,12 +27,6 @@ public class UserLoginServlet extends HttpServlet{
 	}
 
 	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
-
-
-	}
-
-	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
 		JsonObject json = new Gson().fromJson(req.getReader(), JsonObject.class);
 		
