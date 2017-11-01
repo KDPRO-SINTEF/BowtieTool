@@ -799,6 +799,144 @@ var TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 };
 
 /**
+ * Constructs a new textarea dialog.
+ */
+var InfoTextDialog = function(editorUi, title,title1, url,url1, fn, cancelFn, cancelTitle, w, h, addButtons, noHide, noWrap, applyTitle)
+{
+    w = (w != null) ? w : 300;
+    h = (h != null) ? h : 120;
+    noHide = (noHide != null) ? noHide : false;
+    var row, td;
+
+    var table = document.createElement('table');
+    var tbody = document.createElement('tbody');
+
+    row = document.createElement('tr');
+
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    td.style.width = '100px';
+    mxUtils.write(td, title);
+
+    row.appendChild(td);
+    tbody.appendChild(row);
+
+
+
+    var nameInput = document.createElement('textarea');
+    var nameInput1 = document.createElement('textarea');
+
+    if (noWrap)
+    {
+        nameInput.setAttribute('wrap', 'off');
+        nameInput1.setAttribute('wrap', 'off');
+
+    }
+
+    nameInput.setAttribute('spellcheck', 'false');
+    nameInput.setAttribute('autocorrect', 'off');
+    nameInput.setAttribute('autocomplete', 'off');
+    nameInput.setAttribute('autocapitalize', 'off');
+
+    nameInput1.setAttribute('spellcheck', 'false');
+    nameInput1.setAttribute('autocorrect', 'off');
+    nameInput1.setAttribute('autocomplete', 'off');
+    nameInput1.setAttribute('autocapitalize', 'off');
+
+    mxUtils.write(nameInput, url || '');
+    nameInput.style.resize = 'none';
+    nameInput.style.width = w + 'px';
+    nameInput.style.height = 20 + 'px';
+    nameInput1.style.marginBottom = "10px";
+
+
+
+    mxUtils.write(nameInput1, url1 || '');
+    nameInput1.style.resize = 'none';
+    nameInput1.style.width = w + 'px';
+    nameInput1.style.height = h + 'px';
+    nameInput1.style.marginTop = "10px";
+
+    this.textarea = nameInput;
+
+    this.init = function()
+    {
+        nameInput.focus();
+        nameInput.scrollTop = 0;
+    };
+
+    row = document.createElement('tr');
+    td = document.createElement('td');
+
+    td.appendChild(nameInput);
+
+    row = document.createElement('tr');
+
+    td.style.fontSize = '10pt';
+    td.style.width = '100px';
+    mxUtils.write(td, title1);
+
+    td.appendChild(nameInput1)
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.paddingTop = '14px';
+    td.style.whiteSpace = 'nowrap';
+    td.setAttribute('align', 'right');
+
+    var cancelBtn = mxUtils.button(cancelTitle || mxResources.get('cancel'), function()
+    {
+        editorUi.hideDialog();
+
+        if (cancelFn != null)
+        {
+            cancelFn();
+        }
+    });
+    cancelBtn.className = 'geBtn';
+
+    if (editorUi.editor.cancelFirst)
+    {
+        td.appendChild(cancelBtn);
+    }
+
+    if (addButtons != null)
+    {
+        addButtons(td);
+    }
+
+    if (fn != null)
+    {
+        var genericBtn = mxUtils.button(applyTitle || mxResources.get('apply'), function()
+        {
+            if (!noHide)
+            {
+                editorUi.hideDialog();
+            }
+
+            fn(nameInput.value, nameInput1.value);
+        });
+
+        genericBtn.className = 'geBtn gePrimaryBtn';
+        td.appendChild(genericBtn);
+    }
+
+    if (!editorUi.editor.cancelFirst)
+    {
+        td.appendChild(cancelBtn);
+    }
+
+    row.appendChild(td);
+    tbody.appendChild(row);
+    table.appendChild(tbody);
+    this.container = table;
+};
+
+
+/**
  * Constructs a new edit file dialog.
  */
 var EditDiagramDialog = function(editorUi)
@@ -1455,7 +1593,7 @@ var EditDataDialog = function(ui, cell)
 	var div = document.createElement('div');
 	var graph = ui.editor.graph;
 
-	div.style.height = '310px';
+	div.style.height = '600px';
 	div.style.overflow = 'auto';
 	
 	var value = graph.getModel().getValue(cell);
@@ -1791,6 +1929,143 @@ var EditDataDialog = function(ui, cell)
  */
 EditDataDialog.placeholderHelpLink = null;
 
+
+
+var EditInfoDialog = function(ui, cell)
+{
+    var div = document.createElement('div');
+    var graph = ui.editor.graph;
+
+    div.style.height = '600px';
+    div.style.overflow = 'auto';
+
+    var value = graph.getModel().getValue(cell);
+
+    // Converts the value to an XML node
+    if (!mxUtils.isNode(value))
+    {
+        var doc = mxUtils.createXmlDocument();
+        var obj = doc.createElement('object');
+        obj.setAttribute('label', value || '');
+        value = obj;
+    }
+
+    // Creates the dialog contents
+    var form = new mxForm('properties');
+    form.table.style.width = '100%';
+    form.table.style.paddingRight = '20px';
+    form.addTextarea("Title" + ':', '', 2).style.width = "100%";
+    form.addTextarea("Description" + ':', '', 20).style.width = "100%";
+
+    // FIXME: Fix remove button for quirks mode
+    var addRemoveButton = function(text, name)
+    {
+        text.parentNode.style.marginRight = '12px';
+
+        var removeAttr = document.createElement('a');
+        var img = mxUtils.createImage(Dialog.prototype.closeImage);
+        img.style.height = '9px';
+        img.style.fontSize = '9px';
+        img.style.marginBottom = (mxClient.IS_IE11) ? '-1px' : '5px';
+
+        removeAttr.className = 'geButton';
+        removeAttr.setAttribute('title', mxResources.get('delete'));
+        removeAttr.style.margin = '0px';
+        removeAttr.style.width = '14px';
+        removeAttr.style.height = '14px';
+        removeAttr.style.fontSize = '14px';
+        removeAttr.style.cursor = 'pointer';
+        removeAttr.style.marginLeft = '6px';
+        removeAttr.appendChild(img);
+
+        text.parentNode.style.whiteSpace = 'nowrap';
+    };
+
+
+
+
+
+
+    div.appendChild(form.table);
+
+
+    this.init = function()
+    {
+        if (texts.length > 0)
+        {
+            texts[0].focus();
+        }
+        else
+        {
+            nameInput.focus();
+        }
+    };
+
+
+    var cancelBtn = mxUtils.button(mxResources.get('cancel'), function()
+    {
+        ui.hideDialog.apply(ui, arguments);
+    });
+    cancelBtn.className = 'geBtn';
+
+    var applyBtn = mxUtils.button(mxResources.get('apply'), function()
+    {
+        try
+        {
+            ui.hideDialog.apply(ui, arguments);
+
+            // Clones and updates the value
+            value = value.cloneNode(true);
+            var removeLabel = false;
+
+            for (var i = 0; i < names.length; i++)
+            {
+                if (texts[i] == null)
+                {
+                    value.removeAttribute(names[i]);
+                }
+                else
+                {
+                    value.setAttribute(names[i], texts[i].value);
+                    removeLabel = removeLabel || (names[i] == 'placeholder' &&
+                        value.getAttribute('placeholders') == '1');
+                }
+            }
+
+            // Removes label if placeholder is assigned
+            if (removeLabel)
+            {
+                value.removeAttribute('label');
+            }
+
+            // Updates the value of the cell (undoable)
+            graph.getModel().setValue(cell, value);
+        }
+        catch (e)
+        {
+            mxUtils.alert(e);
+        }
+    });
+    applyBtn.className = 'geBtn gePrimaryBtn';
+
+    var buttons = document.createElement('div');
+    buttons.style.marginTop = '18px';
+    buttons.style.textAlign = 'right';
+
+    if (ui.editor.cancelFirst)
+    {
+        buttons.appendChild(cancelBtn);
+        buttons.appendChild(applyBtn);
+    }
+    else
+    {
+        buttons.appendChild(applyBtn);
+        buttons.appendChild(cancelBtn);
+    }
+
+    div.appendChild(buttons);
+    this.container = div;
+};
 /**
  * Constructs a new link dialog.
  */
