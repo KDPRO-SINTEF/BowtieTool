@@ -24,6 +24,26 @@ var OpenDialog = function()
 	this.container = iframe;
 };
 
+var LoginDialog = function()
+{
+	var iframe = document.createElement('iframe');
+	iframe.style.backgroundColor = 'transparent';
+	iframe.allowTransparency = 'true';
+	iframe.style.borderStyle = 'none';
+	iframe.style.borderWidth = '0px';
+	iframe.style.overflow = 'hidden';
+	iframe.frameBorder = '0';
+	
+	// Adds padding as a workaround for box model in older IE versions
+	var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
+	
+	iframe.setAttribute('width', ((320 + dx) + 'px'));
+	iframe.setAttribute('height', ((480 + dx) + 'px'));
+	iframe.setAttribute('src', LOGIN_FORM);
+	
+	this.container = iframe;
+};
+
 /**
  * Constructs a new color dialog.
  */
@@ -413,7 +433,7 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 	var form = document.createElement('form');
 	form.id = 'graphlist';
 	
-	this.init = function()
+	this.init = function(open_endpoint)
 	{
 		var token = localStorage.getItem('token');
 		if (!token) {
@@ -421,7 +441,7 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 			return;
 		}
 		
-		mxUtils.get(window.USER_GRAPHS + '?token=' + encodeURIComponent(token), mxUtils.bind(this, function(req) {
+		mxUtils.get(open_endpoint + '?token=' + encodeURIComponent(token), mxUtils.bind(this, function(req) {
 			tbody.innerHTML = '';
 
 			row = document.createElement('tr');
@@ -435,6 +455,12 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 
 
 			var obj = JSON.parse(req.getText());
+			if (obj.length == 0) {
+				var msg = document.createElement('label');
+				mxUtils.write(msg, mxResources.get('noFiles'));
+				form.appendChild(msg);
+			}
+
 			for (var i = 0, len = obj.length; i < len; i++) {
 				var div = document.createElement('div');
 				var input = document.createElement('input');
@@ -480,9 +506,11 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 			
 			var genericBtn = mxUtils.button(mxResources.get('open'), function()
 			{
-				editorUi.hideDialog();
-				console.log('form', form, form.graphs.value);
-				fn(form.graphs.value);
+				if (form.graphs.value) {
+					editorUi.hideDialog();
+					console.log('form', form, form.graphs.value);
+					fn(form.graphs.value);
+				}
 			});
 			genericBtn.className = 'geBtn gePrimaryBtn';
 			td.appendChild(genericBtn);
@@ -500,6 +528,105 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 	table.appendChild(tbody);
 	this.container = table;
 };
+
+/**
+ * Constructs a new filename dialog.
+ */
+var RoleDialog = function(editorUi, fn, cancelFn)
+{
+	var row, td;
+	
+	var table = document.createElement('table');
+	var tbody = document.createElement('tbody');
+	table.style.marginTop = '8px';
+	
+	row = document.createElement('tr');
+	td = document.createElement('td');
+	td.style.whiteSpace = 'nowrap';
+	td.style.fontSize = '10pt';
+	td.style.width = '120px';
+	mxUtils.write(td, mxResources.get('group'));
+	row.appendChild(td);
+	tbody.appendChild(row);
+
+	row = document.createElement('tr');	
+	var nameInput = document.createElement('input');
+	nameInput.setAttribute('value', '');
+	nameInput.style.marginLeft = '4px';
+	nameInput.style.width = '180px';
+
+	var role = document.createElement('select');
+	var owner = document.createElement('option');
+	owner.setAttribute('value', '0');
+	mxUtils.write(owner, 'Owner');
+
+	var readonly = document.createElement('option');
+	readonly.setAttribute('value', '1');
+	mxUtils.write(readonly, 'Read only');
+
+	role.appendChild(owner);
+	role.appendChild(readonly);
+	row.appendChild(nameInput);
+	row.appendChild(role);
+	tbody.appendChild(row);
+
+	row = document.createElement('tr');
+	td = document.createElement('td');
+
+	var cancelBtn = mxUtils.button(mxResources.get('cancel'), function()
+	{
+		editorUi.hideDialog();
+		
+		if (cancelFn != null)
+		{
+			cancelFn();
+		}
+	});
+	cancelBtn.className = 'geBtn';
+	
+	if (editorUi.editor.cancelFirst)
+	{
+		td.appendChild(cancelBtn);
+	}
+
+	mxEvent.addListener(nameInput, 'keypress', function(e)
+	{
+		if (e.keyCode == 13)
+		{
+			genericBtn.click();
+		}
+	});
+	mxEvent.addListener(role, 'keypress', function(e)
+	{
+		if (e.keyCode == 13)
+		{
+			genericBtn.click();
+		}
+	});
+	
+	var genericBtn = mxUtils.button(mxResources.get('save'), mxUtils.bind(this, function()
+	{
+		var user = nameInput.value;
+		var r = parseInt(role.value);
+		if (user && r) {
+			editorUi.hideDialog();
+			console.log('user', user, 'role', r);
+			fn(user, r);
+		}
+	}));
+	genericBtn.className = 'geBtn gePrimaryBtn';
+	td.appendChild(genericBtn);
+	
+	if (!editorUi.editor.cancelFirst)
+	{
+		td.appendChild(cancelBtn);
+	}
+
+	row.appendChild(td);
+	tbody.appendChild(row);
+	table.appendChild(tbody);
+	this.container = table;
+}
 
 /**
  * Constructs a new filename dialog.

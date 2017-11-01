@@ -1,4 +1,4 @@
-package com.mxgraph.examples.web;
+package com.mxgraph.examples.web.servlets;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,9 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import models.User;
-import repository.IUserRepository;
+import com.mxgraph.examples.web.models.User;
+import com.mxgraph.examples.web.repository.IUserRepository;
 
 public class UserLoginServlet extends HttpServlet{
 
@@ -25,12 +24,6 @@ public class UserLoginServlet extends HttpServlet{
 
 	public UserLoginServlet(IUserRepository userRepo) {
 		this.userRepo = userRepo;
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
-
-
 	}
 
 	@Override

@@ -7,13 +7,21 @@ import org.mortbay.jetty.handler.ResourceHandler;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
-import repository.IGraphRepository;
-import repository.IRoleRepository;
-import repository.IUserRepository;
-import repository.MySQLAccess;
-import repository.impl.GraphRepositoryImpl;
-import repository.impl.RoleRepositoryImpl;
-import repository.impl.UserRepositoryImpl;
+import com.mxgraph.examples.web.repository.IGraphRepository;
+import com.mxgraph.examples.web.repository.IRoleRepository;
+import com.mxgraph.examples.web.repository.IUserRepository;
+import com.mxgraph.examples.web.repository.MySQLAccess;
+import com.mxgraph.examples.web.repository.impl.GraphRepositoryImpl;
+import com.mxgraph.examples.web.repository.impl.RoleRepositoryImpl;
+import com.mxgraph.examples.web.repository.impl.UserRepositoryImpl;
+import com.mxgraph.examples.web.servlets.CachelessFileHandler;
+import com.mxgraph.examples.web.servlets.GraphServlet;
+import com.mxgraph.examples.web.servlets.OpenServlet;
+import com.mxgraph.examples.web.servlets.RoleServlet;
+import com.mxgraph.examples.web.servlets.TemplateGraphServlet;
+import com.mxgraph.examples.web.servlets.UserCreateServlet;
+import com.mxgraph.examples.web.servlets.UserGraphServlet;
+import com.mxgraph.examples.web.servlets.UserLoginServlet;
 
 /**
  * The save servlet is used to echo XML to the client, eg. for SVG export and saving
@@ -56,12 +64,14 @@ public class GraphEditor
 		context.addServlet(new ServletHolder(new ExportServlet()), "/export");
 		context.addServlet(new ServletHolder(new OpenServlet()), "/open");
 		context.addServlet(new ServletHolder(new UserLoginServlet(userRepo)), "/user/login");
-		context.addServlet(new ServletHolder(new UserCreateServlet(userRepo)), "/user/create");
-		context.addServlet(new ServletHolder(new UserGraphServlet(userRepo, graphRepo)), "/user/graph"); 
+		context.addServlet(new ServletHolder(new UserCreateServlet(userRepo)), "/user/register");
+		context.addServlet(new ServletHolder(new UserGraphServlet(userRepo, graphRepo)), "/user/graph");
+		context.addServlet(new ServletHolder(new TemplateGraphServlet(userRepo, graphRepo)), "/template/graph"); 
 		context.addServlet(new ServletHolder(new GraphServlet(userRepo, graphRepo, roleRepo)), "/graph");
+		context.addServlet(new ServletHolder(new RoleServlet(userRepo, graphRepo, roleRepo)), "/role");
 
 
-		ResourceHandler fileHandler = new ResourceHandler();
+		ResourceHandler fileHandler = new CachelessFileHandler();
 		fileHandler.setResourceBase(".");
 		System.out.println(fileHandler.getResourceBase());
 
@@ -75,6 +85,4 @@ public class GraphEditor
 		server.start();
 		server.join();
 	}
-
-
 }
