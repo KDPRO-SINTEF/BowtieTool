@@ -92,6 +92,7 @@ duplicateIt=Duplicate {1}
 east=East
 edit=Edit
 editData=Edit Data
+editInfo=Edit Info
 editDiagram=Edit Diagram
 editImage=Edit Image
 editLink=Edit Link
