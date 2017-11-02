@@ -3314,8 +3314,13 @@ EditorUi.prototype.modifyRolesForGraph = function()
 {
 	var token = localStorage.getItem('token');
 	var graphid = this.editor.getGraphId();
-	if (!token || !graphid) {
+	if (!token) {
 		mxUtils.alert(mxResources.get('notLoggedIn'));
+		return;
+	}
+
+	if (!graphid) {
+		mxUtils.alert(mxResources.get('rolesNotAssignable'));
 		return;
 	}
 	
