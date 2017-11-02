@@ -726,7 +726,7 @@ Actions.prototype.init = function()
 		
 		window.open(RESOURCES_PATH + '/help' + ext + '.html');
 	});
-	this.put('about', new Action('User control', function()
+	this.put('userControl', new Action(mxResources.get('userControl'), function()
 	{
 		ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
 	}, null, null, 'F1'));

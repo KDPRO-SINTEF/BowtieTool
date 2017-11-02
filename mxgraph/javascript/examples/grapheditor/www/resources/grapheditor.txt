@@ -304,6 +304,7 @@ underline=Underline
 undo=Undo
 ungroup=Ungroup
 url=URL
+userControl=User Control
 untitledLayer=Untitled Layer
 vertical=Vertical
 verticalFlow=Vertical Flow
