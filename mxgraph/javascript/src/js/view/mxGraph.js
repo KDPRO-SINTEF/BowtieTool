@@ -8292,7 +8292,6 @@ mxGraph.prototype.isEdgeValid = function(edge, source, target)
  */
 mxGraph.prototype.getEdgeValidationError = function(edge, source, target)
 {
-    console.log("WAT")
 	if (edge != null && !this.isAllowDanglingEdges() && (source == null || target == null))
 	{
 		return '';

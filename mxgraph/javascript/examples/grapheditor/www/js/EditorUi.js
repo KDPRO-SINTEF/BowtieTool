@@ -23,6 +23,7 @@ EditorUi = function(editor, container, lightbox)
             this.model.getValue(source) != null &&
             this.model.getValue(target) != null)
         {
+        	console.log(target.customID);
 			switch(source.customID){
 				case 'Threat':
 					if(target.customID !=='Security Control'){
@@ -63,7 +64,7 @@ EditorUi = function(editor, container, lightbox)
                     break;
                 case 'Consequence':
                     if(target.customID !== null){
-                        return 'A ' + source.customID + ' can not connect anything';
+                        return 'A ' + source.customID + ' should not connect from itself to anything';
                     }
                     break;
                 case 'Escalation Factor':
@@ -171,7 +172,7 @@ EditorUi = function(editor, container, lightbox)
 	graph.init(this.diagramContainer);
 
 	// Creates hover icons
-	this.hoverIcons = this.createHoverIcons();
+	//this.hoverIcons = this.createHoverIcons();
 	
 	// Adds tooltip when mouse is over scrollbars to show space-drag panning option
 	mxEvent.addListener(this.diagramContainer, 'mousemove', mxUtils.bind(this, function(evt)
@@ -193,19 +194,19 @@ EditorUi = function(editor, container, lightbox)
 	var spaceKeyPressed = false;
 	
 	// Overrides hovericons to disable while space key is pressed
-	var hoverIconsIsResetEvent = this.hoverIcons.isResetEvent;
+	//var hoverIconsIsResetEvent = this.hoverIcons.isResetEvent;
 	
-	this.hoverIcons.isResetEvent = function(evt, allowShift)
+	/*this.hoverIcons.isResetEvent = function(evt, allowShift)
 	{
 		return spaceKeyPressed || hoverIconsIsResetEvent.apply(this, arguments);
-	};
+	};*/
 	
 	this.keydownHandler = mxUtils.bind(this, function(evt)
 	{
 		if (evt.which == 32 /* Space */)
 		{
 			spaceKeyPressed = true;
-			this.hoverIcons.reset();
+			//this.hoverIcons.reset();
 			graph.container.style.cursor = 'move';
 			
 			// Disables scroll after space keystroke with scrollbars
