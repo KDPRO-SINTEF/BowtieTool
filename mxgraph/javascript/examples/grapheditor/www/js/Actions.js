@@ -32,9 +32,23 @@ Actions.prototype.init = function()
 		window.openKey = 'open';
 		
 		ui.openFile();*/
-		ui.openFromDb();
+		ui.openFromDb(window.USER_GRAPHS);
+
 
 	});
+	this.addAction('openTemplate...', function()
+	{
+		ui.openFromDb(window.TEMPLATE_GRAPHS);
+	});
+	this.addAction('roles...', function()
+	{
+		/*window.openNew = true;
+		window.openKey = 'open';
+		
+		ui.openFile();*/
+		ui.modifyRolesForGraph();
+
+	}).isEnabled = isGraphEnabled;
 	this.addAction('import...', function()
 	{
 		window.openNew = false;
@@ -757,9 +771,9 @@ Actions.prototype.init = function()
 		
 		window.open(RESOURCES_PATH + '/help' + ext + '.html');
 	});
-	this.put('about', new Action(mxResources.get('about') + ' Graph Editor...', function()
+	this.put('about', new Action('User control', function()
 	{
-		ui.showDialog(new AboutDialog(ui).container, 320, 280, true, true);
+		ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
 	}, null, null, 'F1'));
 	
 	// Font style actions

@@ -1,4 +1,6 @@
-package models;
+package com.mxgraph.examples.web.models;
+
+import java.util.Objects;
 
 public class User {
 	private int id;
@@ -62,4 +64,14 @@ public class User {
 	public void setToken(String token) {
 		this.token = token;
 	}
+	
+	@Override
+	public boolean equals(Object other) {
+		return this.id == ((User) other).id;
+	}
+    
+	@Override
+    public int hashCode() {
+        return Objects.hash(id, username, token);
+    }
 }
