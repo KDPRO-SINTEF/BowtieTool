@@ -4608,8 +4608,20 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			this.setAttributeForCell(cell, 'tooltip', link);
 		};
-		
-		/**
+
+
+        Graph.prototype.setInfoTitleForCell = function(cell, link)
+        {
+            this.setAttributeForCell(cell, 'infoTitle', link);
+        };
+
+        Graph.prototype.setInfoDescForCell = function(cell, link)
+        {
+            this.setAttributeForCell(cell, 'infoDesc', link);
+        };
+
+
+        /**
 		 * Sets the link for the given cell.
 		 */
 		Graph.prototype.setAttributeForCell = function(cell, attributeName, attributeValue)

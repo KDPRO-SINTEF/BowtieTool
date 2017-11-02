@@ -1,4 +1,4 @@
-package repository;
+package com.mxgraph.examples.web.repository;
 
 import java.io.IOException;
 import java.io.InputStream;

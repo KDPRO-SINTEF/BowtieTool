@@ -21,16 +21,18 @@
             var usernameInput = document.getElementById('username');
             var passwordInput = document.getElementById('password');
             var confirmPassword = document.getElementById('confirm_password');
-            var emailInput = document.getElementById('email');
-            if (usernameInput.checkValidity() && passwordInput.checkValidity() && emailInput.checkValidity() && confirmPassword.checkValidity() && name.checkValidity()) {
+            //var emailInput = document.getElementById('email');
+            if (usernameInput.checkValidity() && passwordInput.checkValidity() && /*emailInput.checkValidity() &&*/ confirmPassword.checkValidity() && name.checkValidity()) {
                 if (passwordInput.value === confirmPassword.value) {
-                    var params = 'username=' + usernameInput.value + '&password=' + passwordInput.value + '&email=' + emailInput.value + '&fullname=' + name.value;
-
-                    // TODO Replace http://httpbin.org/post with the url of the server
-                    mxUtils.post('http://httpbin.org/post', params, function () {
-
-                        // TODO: window.localStorage.setItem(token, token);
-                        window.location.href = "index.html";
+                    var params = JSON.stringify({'username': usernameInput.value, 'password': passwordInput.value, 'fullname': name.value});
+                    mxUtils.post(window.parent.REGISTER, params, function (req) {
+                        if (req.getStatus() == 200) {
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.LOGIN_FORM + '\'>User created successfully!</a>';
+                        } else if (req.getStatus() == 403) {
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.REGISTER_FORM + '\'>The username is already taken!</a>';
+                        } else {
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.REGISTER_FORM + '\'>An error occured!</a>';
+                        }
 
                     }, function () {
                         alert("Communication failure!");
@@ -48,7 +50,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="mainbody">
     <div class="row justify-content-center">
         <div class="col-md-4 login-form">
             <h1>Register</h1>
@@ -61,13 +63,15 @@
 
                 <div class="form-group">
                     <label>Username:</label>
-                    <input type="text" class="form-control" id="username" placeholder="Enter username" required>
+                    <input type="email" class="form-control" id="username" placeholder="Enter username" required>
                 </div>
 
-                <div class="form-group">
+                <!--
+                 <div class="form-group">
                     <label>Email:</label>
                     <input type="email" class="form-control" id="email" placeholder="Enter email address" required>
                 </div>
+                -->
 
                 <div class="form-group">
                     <label>Password:</label>

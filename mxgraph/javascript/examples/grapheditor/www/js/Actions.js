@@ -32,9 +32,23 @@ Actions.prototype.init = function()
 		window.openKey = 'open';
 		
 		ui.openFile();*/
-		ui.openFromDb();
+		ui.openFromDb(window.USER_GRAPHS);
+
 
 	});
+	this.addAction('openTemplate...', function()
+	{
+		ui.openFromDb(window.TEMPLATE_GRAPHS);
+	});
+	this.addAction('roles...', function()
+	{
+		/*window.openNew = true;
+		window.openKey = 'open';
+		
+		ui.openFile();*/
+		ui.modifyRolesForGraph();
+
+	}).isEnabled = isGraphEnabled;
 	this.addAction('import...', function()
 	{
 		window.openNew = false;
@@ -243,17 +257,62 @@ Actions.prototype.init = function()
 			graph.startEditingAtCell();
 		}
 	}, null, null, 'F2/Enter');
+
 	this.addAction('editData...', function()
 	{
 		var cell = graph.getSelectionCell() || graph.getModel().getRoot();
-		
+
 		if (cell != null)
 		{
 			var dlg = new EditDataDialog(ui, cell);
-			ui.showDialog(dlg.container, 320, 320, true, false);
+			ui.showDialog(dlg.container, 600, 600, true, true);
 			dlg.init();
 		}
 	}, null, null, Editor.ctrlKey + '+M');
+
+
+    this.addAction('editInfo...', function()
+    {
+        var graph = ui.editor.graph;
+
+        if (graph.isEnabled() && !graph.isSelectionEmpty())
+        {
+            var cell = graph.getSelectionCell();
+			var info = '';
+            var info1 = '';
+
+            if (mxUtils.isNode(cell.value))
+            {
+                var tmp = cell.value.getAttribute('infoTitle');
+
+                if (tmp != null)
+                {
+                    info = tmp;
+                }
+
+				tmp = cell.value.getAttribute('infoDesc');
+
+                if (tmp != null)
+                {
+                    info1 = tmp;
+                }
+            }
+
+            var dlg = new InfoTextDialog(ui, "Title" + ':',"Description :", info, info1, function(newValue, newValue1)
+            {
+                graph.setInfoTitleForCell(cell, newValue);
+                graph.setInfoDescForCell(cell, newValue1);
+
+            }, null, null , 400,350);
+
+
+
+            ui.showDialog(dlg.container, 400, 500, true, true);
+            dlg.init();
+        }
+    });
+
+
 	this.addAction('editTooltip...', function()
 	{
 		var graph = ui.editor.graph;
@@ -712,9 +771,9 @@ Actions.prototype.init = function()
 		
 		window.open(RESOURCES_PATH + '/help' + ext + '.html');
 	});
-	this.put('about', new Action(mxResources.get('about') + ' Graph Editor...', function()
+	this.put('about', new Action('User control', function()
 	{
-		ui.showDialog(new AboutDialog(ui).container, 320, 280, true, true);
+		ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
 	}, null, null, 'F1'));
 	
 	// Font style actions
