@@ -442,6 +442,21 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 		}
 		
 		mxUtils.get(open_endpoint + '?token=' + encodeURIComponent(token), mxUtils.bind(this, function(req) {
+			switch(req.getStatus()) {
+				case 400:
+					mxUtils.alert(mxResources.get('serverBadRequest'));
+					break;
+				case 401:
+					mxUtils.alert(mxResources.get('serverUnauthorized'));
+					break;
+				case 403:
+					mxUtils.alert(mxResources.get('serverForbidden'));
+					break;
+				default:
+					break;
+
+			}
+
 			tbody.innerHTML = '';
 
 			row = document.createElement('tr');

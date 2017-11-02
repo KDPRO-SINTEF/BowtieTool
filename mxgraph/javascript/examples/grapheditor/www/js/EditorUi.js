@@ -3282,6 +3282,21 @@ EditorUi.prototype.openFromDb = function(open_endpoint)
 	{
 		mxUtils.get(window.SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function(req)
 		{
+            switch(req.getStatus()) {
+                case 400:
+                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                    break;
+                case 401:
+                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                    break;
+                case 403:
+                    mxUtils.alert(mxResources.get('serverForbidden'));
+                    break;
+                default:
+                    break;
+
+            }
+
 			var obj = JSON.parse(req.getText());
 
 			var doc = mxUtils.parseXml(obj.graph_data);
@@ -3330,22 +3345,21 @@ EditorUi.prototype.modifyRolesForGraph = function()
 		mxUtils.post(window.ROLE_URL, json, mxUtils.bind(this, function(req)
 		{
 			switch(req.getStatus()) {
-				case 200:
-					mxUtils.alert('Role updated');
-					break;
-				case 403:
-					//Unauthorized
-					mxUtils.alert('Your user doesn\'t have the neccessary permissions to modify this graph');
-					break;
-				case 400:
-					//Bad request
-					mxUtils.alert('Bad request');
-					break;
-				default:
-					//
-					break;
-			}
-
+                case 200:
+                    mxUtils.alert('Role updated');
+                    break;
+                case 400:
+                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                    break;
+                case 401:
+                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                    break;
+                case 403:
+                    mxUtils.alert(mxResources.get('serverForbidden'));
+                    break;
+                default:
+                    break;
+            }
 		}));
 	}), null);
 	this.showDialog(dlg.container, 300, 400, true, true);
@@ -3420,8 +3434,23 @@ EditorUi.prototype.save = function(name)
 					}
 
 					if (!this.editor.getGraphId()) {
-						var data = JSON.stringify({'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
-						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
+						var postdata = JSON.stringify({'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
+						mxUtils.post(window.SAVE_URL, postdata, mxUtils.bind(this, function(req) {
+                            switch(req.getStatus()) {
+                                case 400:
+                                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                                    break;
+                                case 401:
+                                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                                    break;
+                                case 403:
+                                    mxUtils.alert(mxResources.get('serverForbidden'));
+                                    break;
+                                default:
+                                    break;
+
+                            }
+
 							var id = JSON.parse(req.getText()).id;
 							this.editor.setGraphId(id);
 							console.log('Inserted with id', id, 'and', this.editor.getGraphId());
@@ -3429,8 +3458,23 @@ EditorUi.prototype.save = function(name)
 						}));
 					} else {
 						console.log('Existing with id', this.editor.getGraphId());
-						var data = JSON.stringify({'id': this.editor.getGraphId(), 'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
-						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
+						var postdata = JSON.stringify({'id': this.editor.getGraphId(), 'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
+						mxUtils.post(window.SAVE_URL, postdata, mxUtils.bind(this, function(req) {
+                            switch(req.getStatus()) {
+                                case 400:
+                                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                                    break;
+                                case 401:
+                                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                                    break;
+                                case 403:
+                                    mxUtils.alert(mxResources.get('serverForbidden'));
+                                    break;
+                                default:
+                                    break;
+
+                            }
+
 							console.log('Updated with response', req.getText());
 						}));
 					}
