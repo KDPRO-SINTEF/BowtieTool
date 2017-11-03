@@ -7327,8 +7327,9 @@ if (typeof mxVertexHandler != 'undefined')
 		// Shows rotation handle for edge labels.
 		mxVertexHandler.prototype.isRotationHandleVisible = function()
 		{
-			return this.graph.isEnabled() && this.rotationEnabled && this.graph.isCellRotatable(this.state.cell) &&
-				(mxGraphHandler.prototype.maxCells <= 0 || this.graph.getSelectionCount() < mxGraphHandler.prototype.maxCells);
+			return false;
+		/*	return this.graph.isEnabled() && this.rotationEnabled && this.graph.isCellRotatable(this.state.cell) &&
+				(mxGraphHandler.prototype.maxCells <= 0 || this.graph.getSelectionCount() < mxGraphHandler.prototype.maxCells);*/
 		};
 	
 		// Invokes turn on single click on rotation handle

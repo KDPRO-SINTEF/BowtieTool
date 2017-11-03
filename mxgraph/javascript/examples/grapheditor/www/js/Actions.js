@@ -152,7 +152,7 @@ Actions.prototype.init = function()
 		if (cells != null && cells.length > 0)
 		{
 			var parents = graph.model.getParents(cells);
-			graph.removeCells(cells, includeEdges);
+			graph.removeCells(cells, true);
 			
 			// Selects parents for easier editing of groups
 			if (parents != null)
