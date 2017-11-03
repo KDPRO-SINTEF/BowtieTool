@@ -23,6 +23,7 @@ EditorUi = function(editor, container, lightbox)
             this.model.getValue(source) != null &&
             this.model.getValue(target) != null)
         {
+        	console.log(target.customID);
 			switch(source.customID){
 				case 'Threat':
 					if(target.customID !=='Security Control'){
@@ -63,7 +64,7 @@ EditorUi = function(editor, container, lightbox)
                     break;
                 case 'Consequence':
                     if(target.customID !== null){
-                        return 'A ' + source.customID + ' can not connect anything';
+                        return 'A ' + source.customID + ' should not connect from itself to anything';
                     }
                     break;
                 case 'Escalation Factor':
@@ -171,7 +172,7 @@ EditorUi = function(editor, container, lightbox)
 	graph.init(this.diagramContainer);
 
 	// Creates hover icons
-	this.hoverIcons = this.createHoverIcons();
+	//this.hoverIcons = this.createHoverIcons();
 	
 	// Adds tooltip when mouse is over scrollbars to show space-drag panning option
 	mxEvent.addListener(this.diagramContainer, 'mousemove', mxUtils.bind(this, function(evt)
@@ -193,19 +194,19 @@ EditorUi = function(editor, container, lightbox)
 	var spaceKeyPressed = false;
 	
 	// Overrides hovericons to disable while space key is pressed
-	var hoverIconsIsResetEvent = this.hoverIcons.isResetEvent;
+	//var hoverIconsIsResetEvent = this.hoverIcons.isResetEvent;
 	
-	this.hoverIcons.isResetEvent = function(evt, allowShift)
+	/*this.hoverIcons.isResetEvent = function(evt, allowShift)
 	{
 		return spaceKeyPressed || hoverIconsIsResetEvent.apply(this, arguments);
-	};
+	};*/
 	
 	this.keydownHandler = mxUtils.bind(this, function(evt)
 	{
 		if (evt.which == 32 /* Space */)
 		{
 			spaceKeyPressed = true;
-			this.hoverIcons.reset();
+			//this.hoverIcons.reset();
 			graph.container.style.cursor = 'move';
 			
 			// Disables scroll after space keystroke with scrollbars
@@ -2144,7 +2145,14 @@ EditorUi.prototype.open = function()
 	{
 		// ignore
 	}
-	
+
+
+	var template_xml = '<mxGraphModel dx="809" dy="887" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="#ffffff"><root><mxCell id="0"/><mxCell id="1" parent="0"/><mxCell id="2" value="Unwanted Event" style="shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" vertex="1" parent="1"><mxGeometry x="440" y="280" width="120" height="80" as="geometry"/></mxCell><mxCell id="3" value="Asset" style="shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" vertex="1" parent="1"><mxGeometry x="455" y="350" width="90" height="60" as="geometry"/></mxCell><mxCell id="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitPerimeter=0;entryX=0.5;entryY=0;entryPerimeter=0;jettySize=auto;orthogonalLoop=1;" edge="1" parent="1" source="4" target="2"><mxGeometry relative="1" as="geometry"/></mxCell><mxCell id="4" value="Hazard" style="shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed" vertex="1" parent="1"><mxGeometry x="440" y="160" width="120" height="80" as="geometry"/></mxCell></root></mxGraphModel>';
+	var doc = mxUtils.parseXml(template_xml);
+	this.editor.setGraphXml(doc.documentElement);
+	this.editor.setModified(false);
+	this.editor.undoManager.clear();
+
 	// Fires as the last step if no file was loaded
 	this.editor.graph.view.validate();
 	
@@ -3330,7 +3338,7 @@ EditorUi.prototype.isCompatibleString = function(data)
 	return false;
 };
 
-EditorUi.prototype.openFromDb = function()
+EditorUi.prototype.openFromDb = function(open_endpoint)
 {
 	var token = localStorage.getItem('token');
 	if (!token) {
@@ -3348,15 +3356,63 @@ EditorUi.prototype.openFromDb = function()
 			this.editor.setGraphXml(doc.documentElement);
 			this.editor.setModified(false);
 			this.editor.undoManager.clear();
-			
+
+			switch(obj.role) {
+				case 1:
+					console.log('Graph disabled with role', obj.role);
+					this.editor.graph.setEnabled(false);
+					break;
+				case 2:
+					graphid = null;
+				default:
+					this.editor.graph.setEnabled(true);
+					break;
+			}
 			this.editor.setFilename(obj.title);
 			this.updateDocumentTitle();
-			this.editor.setGraphId(parseInt(graphid));
+			this.editor.setGraphId(graphid == null ? null : parseInt(graphid));
 
 		}));
 	}), null);
 	this.showDialog(dlg.container, 300, 400, true, true);
-	dlg.init();
+	dlg.init(open_endpoint);
+}
+
+EditorUi.prototype.modifyRolesForGraph = function()
+{
+	var token = localStorage.getItem('token');
+	var graphid = this.editor.getGraphId();
+	if (!token || !graphid) {
+		mxUtils.alert(mxResources.get('notLoggedIn'));
+		return;
+	}
+	
+	var dlg = new RoleDialog(this, mxUtils.bind(this, function(user, role)
+	{
+		var json = JSON.stringify({'token': token, 'id': graphid, 'username': user, 'role': role});
+		mxUtils.post(window.ROLE_URL, json, mxUtils.bind(this, function(req)
+		{
+			switch(req.getStatus()) {
+				case 200:
+					mxUtils.alert('Role updated');
+					break;
+				case 403:
+					//Unauthorized
+					mxUtils.alert('Your user doesn\'t have the neccessary permissions to modify this graph');
+					break;
+				case 400:
+					//Bad request
+					mxUtils.alert('Bad request');
+					break;
+				default:
+					//
+					break;
+			}
+
+		}));
+	}), null);
+	this.showDialog(dlg.container, 300, 400, true, true);
+	//dlg.init();
 }
 
 /**
@@ -3427,18 +3483,18 @@ EditorUi.prototype.save = function(name)
 					}
 
 					if (!this.editor.getGraphId()) {
-						var data = JSON.stringify({"title": name, "token": token, "graph_data": xml});
+						var data = JSON.stringify({'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
 						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
 							var id = JSON.parse(req.getText()).id;
 							this.editor.setGraphId(id);
-							console.log('Inserted with id', id, "and", this.editor.getGraphId());
+							console.log('Inserted with id', id, 'and', this.editor.getGraphId());
 
 						}));
 					} else {
 						console.log('Existing with id', this.editor.getGraphId());
-						var data = JSON.stringify({"id": this.editor.getGraphId(), "title": name, "token": token, "graph_data": xml});
+						var data = JSON.stringify({'id': this.editor.getGraphId(), 'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
 						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
-							console.log("Updated with response", req.getText());
+							console.log('Updated with response', req.getText());
 						}));
 					}
 				}

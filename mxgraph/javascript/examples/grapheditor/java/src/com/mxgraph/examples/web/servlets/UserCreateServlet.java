@@ -1,4 +1,4 @@
-package com.mxgraph.examples.web;
+package com.mxgraph.examples.web.servlets;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import repository.IUserRepository;
+import com.mxgraph.examples.web.repository.IUserRepository;
 
 public class UserCreateServlet extends HttpServlet{
 
@@ -22,12 +21,6 @@ public class UserCreateServlet extends HttpServlet{
 
 	public UserCreateServlet(IUserRepository userRepo) {
 		this.userRepo = userRepo;
-	}
-
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
-
-
 	}
 
 	@Override
@@ -81,9 +74,9 @@ public class UserCreateServlet extends HttpServlet{
 			return;
 		}
 		
-		// This isn't really good, as we don't know for certain wether the user was created or not.
+		// This isn't really good, as we don't know for certain whether the user was created or not.
 		// The MySQLAccess swallows the exception, and we can't know at this level if an error
-		// actually occured.
+		// actually occurred.
 		userRepo.createUser(username, fullname, password);
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.getOutputStream().flush();

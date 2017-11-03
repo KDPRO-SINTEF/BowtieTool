@@ -1,6 +1,6 @@
-package repository;
+package com.mxgraph.examples.web.repository;
 
-import models.User;
+import com.mxgraph.examples.web.models.User;
 
 public interface IUserRepository {
 	public void createUser(String username, String fullname, String password);
