@@ -447,7 +447,7 @@ Format.prototype.refresh = function()
 		label2.style.backgroundColor = '#d7d7d7';
 		label3.style.backgroundColor = '#d7d7d7';
 		
-		// Style
+		/*// Style
 		if (containsLabel)
 		{
 			label2.style.borderLeftWidth = '0px';
@@ -465,7 +465,7 @@ Format.prototype.refresh = function()
 
 			addClickHandler(label, stylePanel, idx++);
 		}
-		
+		*/
 		// Text
 		mxUtils.write(label2, mxResources.get('text'));
 		div.appendChild(label2);
@@ -476,16 +476,16 @@ Format.prototype.refresh = function()
 		this.container.appendChild(textPanel);
 		
 		// Arrange
-		mxUtils.write(label3, mxResources.get('arrange'));
+	/*	mxUtils.write(label3, mxResources.get('arrange'));
 		div.appendChild(label3);
 
 		var arrangePanel = div.cloneNode(false);
 		arrangePanel.style.display = 'none';
 		this.panels.push(new ArrangePanel(this, ui, arrangePanel));
-		this.container.appendChild(arrangePanel);
+		this.container.appendChild(arrangePanel);*/
 		
 		addClickHandler(label2, textPanel, idx++);
-		addClickHandler(label3, arrangePanel, idx++);
+		//addClickHandler(label3, arrangePanel, idx++);
 	}
 };
 
@@ -4454,9 +4454,9 @@ DiagramFormatPanel.prototype.init = function()
 
 	if (graph.isEnabled())
 	{
-		this.container.appendChild(this.addOptions(this.createPanel()));
+		//this.container.appendChild(this.addOptions(this.createPanel()));
 		this.container.appendChild(this.addPaperSize(this.createPanel()));
-		this.container.appendChild(this.addStyleOps(this.createPanel()));
+		//this.container.appendChild(this.addStyleOps(this.createPanel()));
 	}
 };
 

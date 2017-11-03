@@ -16,7 +16,6 @@ EditorUi = function(editor, container, lightbox)
     graph.multigraph = false;
     graph.setAllowDanglingEdges(false);
     graph.allowLoops = false;
-
     graph.getEdgeValidationError = function(edge, source, target)
     {
         if (source != null && target != null &&
@@ -2147,24 +2146,21 @@ EditorUi.prototype.open = function()
 	}
 
 
-	var template_xml = '<mxGraphModel dx="1737" dy="927" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff">\n' +
+	var template_xml = '<mxGraphModel dx="1737" dy="1010" grid="1" gridSize="10" guides="1" tooltips="0" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff">\n' +
         '  <root>\n' +
         '    <mxCell id="0"/>\n' +
         '    <mxCell id="1" parent="0"/>\n' +
-        '    <mxCell id="16" value="" style="group" vertex="1" connectable="0" parent="1">\n' +
-        '      <mxGeometry x="540" y="250" width="120" height="260" as="geometry"/>\n' +
+        '    <mxCell id="12" value="Hazard" style="shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Hazard">\n' +
+        '      <mxGeometry x="540" y="250" width="120" height="80" as="geometry"/>\n' +
         '    </mxCell>\n' +
-        '    <mxCell id="12" value="Hazard" style="shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed" vertex="1" customID="Hazard" parent="16">\n' +
-        '      <mxGeometry width="120" height="80" as="geometry"/>\n' +
+        '    <mxCell id="13" value="Unwanted Event" style="shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Event">\n' +
+        '      <mxGeometry x="540" y="380" width="120" height="80" as="geometry"/>\n' +
         '    </mxCell>\n' +
-        '    <mxCell id="13" value="Unwanted Event" style="shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" vertex="1" customID="Event" parent="16">\n' +
-        '      <mxGeometry y="130" width="120" height="80" as="geometry"/>\n' +
-        '    </mxCell>\n' +
-        '    <mxCell id="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitPerimeter=0;entryX=0.5;entryY=0;entryPerimeter=0;jettySize=auto;orthogonalLoop=1;" edge="1" parent="16" source="12" target="13">\n' +
+        '    <mxCell id="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitPerimeter=0;entryX=0.5;entryY=0;entryPerimeter=0;jettySize=auto;orthogonalLoop=1;" parent="1" source="12" target="13" edge="1">\n' +
         '      <mxGeometry relative="1" as="geometry"/>\n' +
         '    </mxCell>\n' +
-        '    <mxCell id="14" value="Asset" style="shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" vertex="1" customID="Asset" parent="16">\n' +
-        '      <mxGeometry x="15" y="200" width="90" height="60" as="geometry"/>\n' +
+        '    <mxCell id="14" value="Asset" style="shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Asset">\n' +
+        '      <mxGeometry x="555" y="450" width="90" height="60" as="geometry"/>\n' +
         '    </mxCell>\n' +
         '  </root>\n' +
         '</mxGraphModel>\n';
