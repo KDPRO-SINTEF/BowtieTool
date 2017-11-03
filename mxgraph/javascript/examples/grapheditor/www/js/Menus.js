@@ -459,12 +459,12 @@ Menus.prototype.init = function()
 	})));
 	this.put('file', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
-		this.addMenuItems(menu, ['new', 'open', '-', 'save', 'saveAs', '-', 'import', 'export', '-', 'pageSetup', 'print'], parent);
+		this.addMenuItems(menu, ['new', 'open', 'openTemplate', '-', 'save', 'saveAs', 'roles', '-', 'import', 'export', '-', 'pageSetup', 'print'], parent);
 	})));
 	this.put('edit', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'paste', 'delete', '-', 'duplicate', '-',
-		                         'editData', 'editTooltip', 'editStyle', '-', 'edit', '-', 'editLink', 'openLink', '-',
+		                         'editData','editInfo', 'editTooltip', 'editStyle', '-', 'edit', '-', 'editLink', 'openLink', '-',
 		                         'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
 	})));
 	this.put('extras', new Menu(mxUtils.bind(this, function(menu, parent)

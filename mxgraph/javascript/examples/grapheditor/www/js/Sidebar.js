@@ -14,6 +14,7 @@ function Sidebar(editorUi, container)
 	this.graph = editorUi.createTemporaryGraph(this.editorUi.editor.graph.getStylesheet());
 	this.graph.cellRenderer.antiAlias = false;
 	this.graph.foldingEnabled = false;
+    mxCell.prototype.customID = "Default";
 
 	// Workaround for blank output in IE11-
 	if (!mxClient.IS_IE && !mxClient.IS_IE11)
@@ -1205,15 +1206,18 @@ Sidebar.prototype.createAdvancedShapes = function()
 	/* It might be necessary to use addEntry directly to make them collapseable. Take a look at the UML library below.*/
 	var fns =
 	[
-		this.createVertexTemplateEntry('shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
-		this.createVertexTemplateEntry('shape=mxgraph.bowtie.control;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Security Control', 'Security Control', null, null, 'bowtie security control'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 90, 60, 'Asset', 'Asset', null, null, 'bowtie asset'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bowtie.threatconsequence;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Threat/Consequence', 'Threat/Consequence', null, null, 'bowtie threatconsequence'),
-    this.createVertexTemplateEntry('shape=mxgraph.bowtie.likelihood;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 30, '', 'Likelihood', null, null, 'bowtie indicator likelihood'),
-    this.createVertexTemplateEntry('shape=mxgraph.bowtie.impact;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 30, '', 'Impact', null, null, 'bowtie indicator impact'),
-    //this.createVertexTemplateEntry('swimlane;', 200, 200, 'Container', 'Container', null, null, 'container swimlane lane pool'),
+		this.createVertexTemplateEntry('Barrier','shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
+		this.createVertexTemplateEntry('Security Control','shape=mxgraph.bowtie.control;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Security Control', 'Security Control', null, null, 'bowtie security control'),
+	 	this.createVertexTemplateEntry('Hazard','shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
+	 	this.createVertexTemplateEntry('Asset','shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 90, 60, 'Asset', 'Asset', null, null, 'bowtie asset'),
+	 	this.createVertexTemplateEntry('Event','shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
+	 	this.createVertexTemplateEntry('Threat','shape=mxgraph.bowtie.threat;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Threat', 'Threat', null, null, 'bowtie threat'),
+    this.createVertexTemplateEntry('Consequence','shape=mxgraph.bowtie.consequence;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Consequence', 'Consequence', null, null, 'bowtie consequence'),
+    this.createVertexTemplateEntry('Cause','shape=mxgraph.bowtie.cause;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Cause', 'Cause', null, null, 'bowtie cause'),
+    this.createVertexTemplateEntry('Escalation Factor','shape=mxgraph.bowtie.escalationfactor;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Escalation Factor', 'Escalation Factor', null, null, 'bowtie escalation factor'),
+
+    //this.createVertexTemplateEntry('shape=mxgraph.bowtie.likelihood;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 30, '', 'Likelihood', null, null, 'bowtie indicator likelihood'),
+    //this.createVertexTemplateEntry('shape=mxgraph.bowtie.impact;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 30, '', 'Impact', null, null, 'bowtie indicator impact'),
 		this.addEntry('Likelihood', function()
 		{
 			var likelihood = new mxCell('Likelihood', new mxGeometry(0, 0, 200, 150),
@@ -1294,7 +1298,6 @@ Sidebar.prototype.createAdvancedShapes = function()
 
 			return sb.createVertexTemplateFromCells([impact], impact.geometry.width, impact.geometry.height, 'Impact');
 		}),
-
 	];
 	
 	this.addPaletteFunctions('bowtie', mxResources.get('bowtie'), false, fns);
@@ -3289,24 +3292,25 @@ Sidebar.prototype.addClickHandler = function(elt, ds, cells)
 /**
  * Creates a drop handler for inserting the given cells.
  */
-Sidebar.prototype.createVertexTemplateEntry = function(style, width, height, value, title, showLabel, showTitle, tags)
+Sidebar.prototype.createVertexTemplateEntry = function(customID,style, width, height, value, title, showLabel, showTitle, tags)
 {
 	tags = (tags != null && tags.length > 0) ? tags : title.toLowerCase();
 	
 	return this.addEntry(tags, mxUtils.bind(this, function()
  	{
- 		return this.createVertexTemplate(style, width, height, value, title, showLabel, showTitle);
+ 		return this.createVertexTemplate(customID,style, width, height, value, title, showLabel, showTitle);
  	}));
 }
 
 /**
  * Creates a drop handler for inserting the given cells.
  */
-Sidebar.prototype.createVertexTemplate = function(style, width, height, value, title, showLabel, showTitle, allowCellsInserted)
+Sidebar.prototype.createVertexTemplate = function(customID,style, width, height, value, title, showLabel, showTitle, allowCellsInserted)
 {
 	var cells = [new mxCell((value != null) ? value : '', new mxGeometry(0, 0, width, height), style)];
 	cells[0].vertex = true;
-	
+	cells[0].customID = customID;
+	console.log(cells[0].customID);
 	return this.createVertexTemplateFromCells(cells, width, height, title, showLabel, showTitle, allowCellsInserted);
 };
 

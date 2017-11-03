@@ -1,4 +1,4 @@
-package com.mxgraph.examples.web;
+package com.mxgraph.examples.web.servlets;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -11,21 +11,22 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import models.Graph;
-import models.Role;
-import models.User;
-import repository.IGraphRepository;
-import repository.IRoleRepository;
-import repository.IUserRepository;
+import com.mxgraph.examples.web.Constants;
+import com.mxgraph.examples.web.models.Graph;
+import com.mxgraph.examples.web.models.Role;
+import com.mxgraph.examples.web.models.Role.GraphRole;
+import com.mxgraph.examples.web.models.User;
+import com.mxgraph.examples.web.repository.IGraphRepository;
+import com.mxgraph.examples.web.repository.IRoleRepository;
+import com.mxgraph.examples.web.repository.IUserRepository;
 
 /**
- * Servlet implementation class ImageServlet.
+ * Servlet implementation class RoleServlet.
  */
-public class GraphServlet extends HttpServlet
+public class RoleServlet extends HttpServlet
 {
 
-	private static final long serialVersionUID = -5040708166131034516L;
+	private static final long serialVersionUID = -5040708166131034512L;
 	private IUserRepository userRepo;
 	private IGraphRepository graphRepo;
 	private IRoleRepository roleRepo;
@@ -33,19 +34,19 @@ public class GraphServlet extends HttpServlet
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public GraphServlet(IUserRepository userRepo, IGraphRepository graphRepo, IRoleRepository roleRepo)
+	public RoleServlet(IUserRepository userRepo, IGraphRepository graphRepo, IRoleRepository roleRepo)
 	{
 		super();
 		this.userRepo = userRepo;
 		this.graphRepo = graphRepo;
 		this.roleRepo = roleRepo;
 	}
-
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		String graphid = request.getParameter("id");
 		String logintoken = request.getParameter("token");
-
+		
 		if (graphid == null || logintoken == null) {
 			// User must provide graphid and token
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -53,25 +54,43 @@ public class GraphServlet extends HttpServlet
 			response.getOutputStream().close();
 			return;
 		}
-
+		
 		User user = userRepo.getUserByToken(logintoken);
 		if (user == null) {
-			// User isn't authorized
+			// User isn't authenticated
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
 			return;
 		}
-
-		Graph graph = graphRepo.getUserGraph(user, Integer.parseInt(graphid));
+		
+		Graph g = graphRepo.getUserGraph(user, Integer.parseInt(graphid));
+		if (g == null) {
+			// This isn't User's graph, we cannot get role
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			return;
+		}
+		
+		Role r = roleRepo.getUserRoleForGraph(g, user);
+		if (r == null) {
+			// This will trigger when user doesn't have any role for the specified graph.
+			// Shouldn't really be triggered because we check for this earlier.
+			// I've decided to include this check anyway since the SQL statements might change for
+			// future revisions.
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			return;
+		}
+		
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_OK);
 		OutputStream out = response.getOutputStream();
-		out.write(new Gson()
-				.toJsonTree(graph)
-				.getAsJsonObject()
-				.toString().getBytes("UTF-8")
-		);
+		JsonObject a = new JsonObject();
+		a.addProperty("role", r.getRole().ordinal());
+		out.write(a.toString().getBytes("UTF-8"));
 		out.flush();
 		out.close();
 	}
@@ -92,7 +111,7 @@ public class GraphServlet extends HttpServlet
 				long mem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 				long dt = System.currentTimeMillis() - t0;
 
-				System.out.println("save: ip=" + request.getRemoteAddr() + " ref=\"" + request.getHeader("Referer") + "\" length="
+				System.out.println("role: ip=" + request.getRemoteAddr() + " ref=\"" + request.getHeader("Referer") + "\" length="
 						+ request.getContentLength() + " mem=" + mem + " dt=" + dt);
 			}
 			else
@@ -150,39 +169,27 @@ public class GraphServlet extends HttpServlet
 			System.out.println("Illegal value received: " + e.getMessage());
 		}
 		
-		String title = null;
+		int role = -1;
 		try {
-			JsonElement j = json.get("title");
+			JsonElement j = json.get("role");
 			if (j != null) {
-				title = j.getAsString();
+				role = j.getAsInt();
 			}
 		} catch (ClassCastException e) {
 			System.out.println("Illegal value received: " + e.getMessage());
 		}
 		
-		String description = null;
+		String username = null;
 		try {
-			JsonElement j = json.get("description");
+			JsonElement j = json.get("username");
 			if (j != null) {
-				description = j.getAsString();
+				username = j.getAsString();
 			}
 		} catch (ClassCastException e) {
 			System.out.println("Illegal value received: " + e.getMessage());
 		}
 		
-		String xml = null;
-		try {
-			JsonElement j = json.get("graph_data");
-			if (j != null) {
-				xml = j.getAsString();
-			}
-		} catch (ClassCastException e) {
-			System.out.println("Illegal value received: " + e.getMessage());
-		}
-
-		System.out.println("Graph id " + graphid + " Token " + logintoken  + " Title " + title + " Description "+ description + " Graph data " + xml);
-		
-		if (logintoken == null || title == null || xml == null) {
+		if (graphid == -1 || logintoken == null || role == -1 || username == null) {
 			// User must specify these fields
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
 			response.getOutputStream().flush();
@@ -199,33 +206,54 @@ public class GraphServlet extends HttpServlet
 			return;
 		}
 
-		if (graphid == -1) {
-			// Graph doesn't exist yet, we need to create it.
-			int id = graphRepo.insertGraph(user, xml, title, description);
-			response.setContentType("application/json");
-			response.setStatus(HttpServletResponse.SC_OK);
-			OutputStream out = response.getOutputStream();
-			JsonObject a = new JsonObject();
-			a.addProperty("id", id);
-			out.write(a.toString().getBytes("UTF-8"));
-			out.flush();
-			out.close();
-			return;
-		}
-
-		// Graph already exists in db, we need to check if we're allowed to change it.
-		Graph g = new Graph(graphid, user, xml, title, description);
-		Role r = roleRepo.getUserRoleForGraph(g, user);
-
-		if (r == null || r.getRole() != 0) {
-			// This isn't User's graph, we cannot update.
+		// We need to check if we're allowed to change roles for the graph.
+		Graph g = graphRepo.getUserGraph(user, graphid);
+		if (g == null) {
+			// User doesn't have access to graph
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
 			return;
 		}
-
-		graphRepo.updateGraph(g);
+		
+		Role r = roleRepo.getUserRoleForGraph(g, user);
+		if (r == null || r.getRole() != GraphRole.OWNER) {
+			// User isn't owner of graph, can't assign new roles
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			return;
+		}
+		
+		User userToAssign = userRepo.getUserByUsername(username);
+		if (userToAssign == null) {
+			// Specified user doesn't exist in the db
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			return;
+		}
+		
+		Role newRole = new Role(userToAssign, g, role);
+		if (roleRepo.getUserRoleForGraph(g, userToAssign) != null) {
+			// Role for userToAssign already exist in the db.
+			
+			if (user.equals(userToAssign) && newRole.getRole() != GraphRole.OWNER) {
+				// User can't dissociate himself as owner.
+				response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				response.getOutputStream().flush();
+				response.getOutputStream().close();
+				return;
+			}
+			
+			roleRepo.updateRole(newRole);
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+			return;
+		}
+		
+		roleRepo.insertRole(newRole);
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.getOutputStream().flush();
 		response.getOutputStream().close();

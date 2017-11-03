@@ -75,6 +75,7 @@
 	</shape>
 	<shape name="asset" h="60" w="90" aspect="fixed" strokewidth="inherit">
 		<connections>
+            <constraint x="0.5" y="0" perimeter="0" name="N"></constraint>
 		</connections>
 		<background>
 			<stroke>
@@ -101,17 +102,78 @@
 		<fillstroke/>
 		</foreground>
 	</shape>
-		<shape name="threatconsequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
+	<shape name="threat" h="80" w="120" aspect="fixed" strokewidth="inherit">
 		<connections>
-			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
 			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
 		</connections>
 		<background>
+			<stroke></stroke>
+			<fillcolor color="#f6c3b3"></fillcolor>
 			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
 		</background>
 		<foreground>
 			<stroke></stroke>
 			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="cause" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#8badae"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="consequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#000000"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="escalationfactor" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#8badae"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
 			<fillstroke></fillstroke>
 			<stroke></stroke>
 		</foreground>

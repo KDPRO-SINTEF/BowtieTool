@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2011-2012, JGraph Ltd
  */
-package com.mxgraph.examples.web;
+package com.mxgraph.examples.web.servlets;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,6 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.mxgraph.examples.web.Constants;
 
 /**
  * Servlet implementation class OpenServlet.
