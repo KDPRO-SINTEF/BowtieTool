@@ -75,6 +75,7 @@
 	</shape>
 	<shape name="asset" h="60" w="90" aspect="fixed" strokewidth="inherit">
 		<connections>
+            <constraint x="0.5" y="0" perimeter="0" name="N"></constraint>
 		</connections>
 		<background>
 			<stroke>
