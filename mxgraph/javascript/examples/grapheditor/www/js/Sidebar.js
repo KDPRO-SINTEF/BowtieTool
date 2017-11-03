@@ -1183,7 +1183,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 		    	'swimlane;fontStyle=0;childLayout=stackLayout;horizontal=0;startSize=50;fillColor=none;horizontalStack=1;' +
 		    	'resizeParent=1;collapsible=1;fill=1;marginBottom=0;swimlaneFillColor=#ffffff;');
 			lane.vertex = true;
-			lane.type="horizontalLane"
+			lane.type = "horizontalLane"
 			likelihoodLanes.push(lane);
 		}
 		 /*
@@ -1225,6 +1225,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 		    	'collapsible=1;fill=1;resizeParentMax=0;marginBottom=0;swimlaneFillColor=#ffffff;');
 			likelihood.vertex = true;
 			likelihood.resizeParent = true;
+			likelihood.customID="Likelihood";
 			count = 0;
 			for (i = 0; i < 4; i++){		
 				switch(i){
@@ -1265,6 +1266,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 		    	'resizeParent=1;fill=1;resizeParentMax=0;collapsible=1;marginBottom=0;swimlaneFillColor=#ffffff;');
 			impact.vertex = true;
 			impact.resizeParent = true;
+			impact.customID="Impact";
 			count = 0;
 			for (i = 0; i < 4; i++){
 				switch(i){
