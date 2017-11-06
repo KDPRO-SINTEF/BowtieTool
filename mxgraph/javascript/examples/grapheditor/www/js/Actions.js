@@ -28,13 +28,14 @@ Actions.prototype.init = function()
 	this.addAction('new...', function() { window.open(ui.getUrl()); });
 	this.addAction('open...', function()
 	{
-		/*window.openNew = true;
-		window.openKey = 'open';
-		
-		ui.openFile();*/
+		var token = localStorage.getItem('token');
+        if (!token) {
+			window.openNew = true;
+			window.openKey = 'open';
+			ui.openFile();
+			return;
+        }
 		ui.openFromDb(window.USER_GRAPHS);
-
-
 	});
 	this.addAction('openTemplate...', function()
 	{
@@ -726,10 +727,28 @@ Actions.prototype.init = function()
 		
 		window.open(RESOURCES_PATH + '/help' + ext + '.html');
 	});
+
+    this.put('loginLogout', new Action(mxResources.get('loginLogout'), function()
+    {
+        var user = {
+            "username": localStorage.getItem("username"),
+            "fullname": localStorage.getItem("fullname"),
+            "token": localStorage.getItem("token")
+        };
+    	if (!user.token) {
+            ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
+            return;
+        }
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('fullname');
+        editor.setStatus(mxUtils.htmlEntities(mxResources.get('loggedOut')));
+    }, null, null, 'F1'));
+
 	this.put('userControl', new Action(mxResources.get('userControl'), function()
 	{
-		ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
-	}, null, null, 'F1'));
+		ui.showDialog(new UserControlDialog(ui).container, 320, 480, true, true);
+	}, null, null, null));
 	
 	// Font style actions
 	var toggleFontStyle = mxUtils.bind(this, function(key, style, fn, shortcut)

@@ -12,31 +12,6 @@
 
     <script type="text/javascript" src="../../../src/js/mxClient.js"></script>
     <script type="text/javascript">
-
-        window.onload = function() {
-            var user = {
-                'token': localStorage.getItem('token'),
-                'fullname': localStorage.getItem('fullname'),
-                'username': localStorage.getItem('username')
-            };
-            if (user.token) {
-                document.getElementById('mainbody').innerHTML = 'Already logged in.' + 
-                ' <br/> Username: ' + user.username + 
-                ' <br/> Full name: ' + user.fullname + 
-                ' <br/> Token: ' + user.token + 
-                ' <br/> <button id=\'logout\'>Logout</button>';
-                
-                document.getElementById('logout').addEventListener('click', function() {
-                    localStorage.removeItem('token');
-                    localStorage.removeItem('username');
-                    localStorage.removeItem('fullname');
-                    document.getElementById('mainbody').innerHTML = 'Successfully logged out';
-                    setTimeout('window.parent.location.reload();', 5000);
-                });
-            }
-        };
-
-
         function sendData() {
             var usernameInput = document.getElementById('username');
             var passwordInput = document.getElementById('password');
@@ -48,7 +23,7 @@
                         localStorage.setItem('fullname', data.fullname);
                         localStorage.setItem('username', data.username);
                         localStorage.setItem('token', data.token);
-                        document.getElementById('mainbody').innerHTML = 'Logged in successfully!';
+                        document.getElementById('mainbody').innerHTML = 'Successfully logged in';
                     } else {
                         document.getElementById('mainbody').innerHTML = 'Invalid combination!';
                     }
@@ -59,7 +34,6 @@
             }
 
         }
-
     </script>
 
 </head>

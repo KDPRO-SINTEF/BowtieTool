@@ -347,15 +347,15 @@ ColorDialog.resetRecentColors = function()
 };
 
 /**
- * Constructs a new about dialog.
+ * Constructs a new user control dialog.
  */
-var AboutDialog = function(editorUi)
+var UserControlDialog = function(editorUi)
 {
 	var div = document.createElement('div');
 	div.setAttribute('align', 'center');
 	
 	var h3 = document.createElement('h3');
-	mxUtils.write(h3, mxResources.get('about') + ' BowTie');
+	mxUtils.write(h3, mxResources.get('userControl'));
 	div.appendChild(h3);
 	
 	var img = document.createElement('img');
@@ -364,10 +364,6 @@ var AboutDialog = function(editorUi)
 	img.setAttribute('width', '151');
 	img.setAttribute('src', IMAGE_PATH + '/logo.png');
 	div.appendChild(img);
-	
-	localStorage.setItem("token", "50f0fd79-fa52-47c4-bb5e-2d755c649200");
-	localStorage.setItem("username", "tronds@abc.com");
-	localStorage.setItem("fullname", "Trond Humborstad");
 
 	var user = {
 		"username": localStorage.getItem("username"),
@@ -386,15 +382,8 @@ var AboutDialog = function(editorUi)
 		mxUtils.br(div);
 		mxUtils.write(div, 'Token: ' + user.token);
 	} else {
-		mxUtils.write(div, 'Currently not logged in');
-	}
-	mxUtils.br(div);
-	
-	var link = document.createElement('a');
-	link.setAttribute('href', 'http://www.jgraph.com/');
-	link.setAttribute('target', '_blank');
-	mxUtils.write(link, 'www.jgraph.com');
-	div.appendChild(link);
+        mxUtils.write(div, 'Currently not logged in');
+    }
 	
 	mxUtils.br(div);
 	mxUtils.br(div);
@@ -430,8 +419,10 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 	row.appendChild(td);
 	tbody.appendChild(row);
 	
-	var form = document.createElement('form');
-	form.id = 'graphlist';
+	var select = document.createElement('select');
+	select.id = 'graphlist';
+	select.size = '3';
+	select.style = 'width:300px;height:150px';
 	
 	this.init = function(open_endpoint)
 	{
@@ -473,24 +464,17 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 			if (obj.length == 0) {
 				var msg = document.createElement('label');
 				mxUtils.write(msg, mxResources.get('noFiles'));
-				form.appendChild(msg);
+				select.appendChild(msg);
 			}
 
 			for (var i = 0, len = obj.length; i < len; i++) {
-				var div = document.createElement('div');
-				var input = document.createElement('input');
-				input.type = 'radio';
-				input.name = 'graphs';
-				input.value = obj[i]['id'];
-				input.checked = true;
-				div.appendChild(input);
+				var option = document.createElement('option');
+				option.value = obj[i]['id'];
 
-				var name = document.createElement('label');
-				mxUtils.write(name, obj[i]['id'] + ' ' + obj[i]['title']);
-				div.appendChild(name);
-				form.appendChild(div);
+				mxUtils.write(option, obj[i]['id'] + ' ' + obj[i]['title']);
+				select.appendChild(option);
 			}
-			tbody.appendChild(form);
+			tbody.appendChild(select);
 
 			row = document.createElement('tr');
 			td = document.createElement('td');
@@ -511,7 +495,7 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 				td.appendChild(cancelBtn);
 			}
 
-			mxEvent.addListener(form, 'keypress', function(e)
+			mxEvent.addListener(select, 'keypress', function(e)
 			{
 				if (e.keyCode == 13)
 				{
@@ -521,10 +505,9 @@ var OpenFromDBDialog = function(editorUi, fn, cancelFn)
 			
 			var genericBtn = mxUtils.button(mxResources.get('open'), function()
 			{
-				if (form.graphs.value) {
+                if (select.value) {
 					editorUi.hideDialog();
-					console.log('form', form, form.graphs.value);
-					fn(form.graphs.value);
+					fn(select.value);
 				}
 			});
 			genericBtn.className = 'geBtn gePrimaryBtn';
