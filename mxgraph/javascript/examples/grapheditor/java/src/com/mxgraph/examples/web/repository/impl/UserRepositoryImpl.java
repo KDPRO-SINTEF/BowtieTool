@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import com.mxgraph.examples.web.models.User;
 import com.mxgraph.examples.web.repository.IUserRepository;
-import com.mxgraph.examples.web.repository.MySQLAccess;
 
 public class UserRepositoryImpl implements IUserRepository{
 	private final int SALT_SIZE = 16;

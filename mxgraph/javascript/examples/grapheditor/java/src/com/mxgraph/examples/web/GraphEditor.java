@@ -1,5 +1,9 @@
 package com.mxgraph.examples.web;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.handler.HandlerList;
@@ -10,8 +14,8 @@ import org.mortbay.jetty.servlet.ServletHolder;
 import com.mxgraph.examples.web.repository.IGraphRepository;
 import com.mxgraph.examples.web.repository.IRoleRepository;
 import com.mxgraph.examples.web.repository.IUserRepository;
-import com.mxgraph.examples.web.repository.MySQLAccess;
 import com.mxgraph.examples.web.repository.impl.GraphRepositoryImpl;
+import com.mxgraph.examples.web.repository.impl.MySQLAccess;
 import com.mxgraph.examples.web.repository.impl.RoleRepositoryImpl;
 import com.mxgraph.examples.web.repository.impl.UserRepositoryImpl;
 import com.mxgraph.examples.web.servlets.CachelessFileHandler;
@@ -45,6 +49,39 @@ public class GraphEditor
 		//		mxGraphicsCanvas2D.HTML_SCALE = 0.75;
 		//		mxGraphicsCanvas2D.HTML_UNIT = "px";
 	}
+	
+	private static Properties readConfig() {
+		Properties prop = new Properties();
+		InputStream input = null;
+
+		try {
+
+			//String filename = "G:\\git\\BowtieTool\\mxgraph\\javascript\\examples\\grapheditor\\java\\src\\repository\\config.properties";
+			//input = new FileInputStream(new File(filename));
+			String filename = "config.properties";
+			input = MySQLAccess.class.getClassLoader().getResourceAsStream(filename);
+			if (input == null) {
+				// Returning an empty prop list is fine as we're still able to serve up the static graph application
+				// without having to rely on the config values. 
+				System.out.println("Sorry, unable to find " + filename);
+				return prop;
+			}
+
+			// load a properties file
+			prop.load(input);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		} finally {
+			if (input != null) {
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return prop;
+	}
 
 	/**
 	 * Point your browser to http://localhost:8080/javascript/examples/grapheditor/www/index.html
@@ -52,8 +89,9 @@ public class GraphEditor
 	public static void main(String[] args) throws Exception
 	{
 		Server server = new Server(PORT);
+		Properties config = readConfig();
 
-		MySQLAccess access = new MySQLAccess();
+		MySQLAccess access = new MySQLAccess(config.getProperty("dburi"));
 		IUserRepository userRepo = new UserRepositoryImpl(access);
 		IGraphRepository graphRepo = new GraphRepositoryImpl(access);
 		IRoleRepository roleRepo = new RoleRepositoryImpl(access);

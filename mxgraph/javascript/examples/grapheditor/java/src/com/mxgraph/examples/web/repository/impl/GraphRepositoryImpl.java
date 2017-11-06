@@ -9,7 +9,6 @@ import java.util.List;
 import com.mxgraph.examples.web.models.Graph;
 import com.mxgraph.examples.web.models.User;
 import com.mxgraph.examples.web.repository.IGraphRepository;
-import com.mxgraph.examples.web.repository.MySQLAccess;
 
 public class GraphRepositoryImpl implements IGraphRepository {
 	private MySQLAccess access;
