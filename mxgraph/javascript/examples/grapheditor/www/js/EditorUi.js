@@ -25,12 +25,11 @@ EditorUi = function(editor, container, lightbox)
 
 	graph.isCellResizable = function(cell)
 	{
-		return (graph.isCellsResizable() && !graph.isCellLocked(cell) && !graph.getModel().isVertex(graph.getModel().getParent(cell)) && !cell.customID === 'Likelihood' && !cell.customID === 'Impact');
+		return (graph.isCellsResizable() && !graph.isCellLocked(cell) && !graph.getModel().isVertex(graph.getModel().getParent(cell)) && !cell.customID == 'Likelihood' && !cell.customID == 'Impact');
 	}
 
     graph.getEdgeValidationError = function(edge, source, target)
     {
-    	console.log(source);
         if (source != null && target != null &&
             this.model.getValue(source) != null &&
             this.model.getValue(target) != null)
@@ -83,6 +82,16 @@ EditorUi = function(editor, container, lightbox)
                 case 'Escalation Factor':
                     if(target.customID !== 'Barrier'){
                         return 'A ' + source.customID + ' can only  connect to a Barrier';
+                    }
+                    break;
+				case 'Likelihood':
+                    if(target.customID !== 'Threat'){
+                        return 'A ' + source.customID + ' can only  connect to a Threat';
+                    }
+                    break;
+				case 'Impact':
+                    if(target.customID !== 'Consequence'){
+                        return 'A ' + source.customID + ' can only  connect to a Consequence';
                     }
                     break;
 				default:

@@ -1214,7 +1214,7 @@ Sidebar.prototype.addBranchPalette = function(dir, expand)
 			ellipse.name = 'ellipse_' + 'r' + (Math.floor(i/5) + 1).toString() + '_c' +((i%5) + 1).toString()
     	ellipse.vertex = true;
     	ellipse.resizeParent = true;
-    	ellipse.connectable = false;
+    	ellipse.customID = 'ellipse';
 			ellipsises.push(ellipse)
 		}
 
@@ -1225,7 +1225,7 @@ Sidebar.prototype.addBranchPalette = function(dir, expand)
 		    	'resizeParent=1;collapsible=1;fill=1;marginBottom=0;swimlaneFillColor=#ffffff;');
 			lane.vertex = true;
 			lane.type = "horizontalLane"
-			lane.connectable = false;
+			lane.customID = 'lane';
 			likelihoodLanes.push(lane);
 		}
 
@@ -1271,7 +1271,6 @@ Sidebar.prototype.addBranchPalette = function(dir, expand)
 					count +=1
 				}
 				likelihood.insert(lane, '');
-                mxGraph.prototype.setCellStyles(mxConstants.STYLE_MOVABLE,"0",likelihood);
             }
 			return sb.createVertexTemplateFromCells([likelihood], likelihood.geometry.width, likelihood.geometry.height, 'Likelihood');
 		}),
