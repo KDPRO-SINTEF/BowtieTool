@@ -25,7 +25,7 @@ EditorUi = function(editor, container, lightbox)
         	console.log(target.customID);
 			switch(source.customID){
 				case 'Threat':
-					if(target.customID !=='Security Control' || target.customID !== 'Likelihood'){
+					if(target.customID !=='Security Control' && target.customID !== 'Likelihood'){
                         return 'A ' + source.customID + ' can only connect to a Security Control';
                     }
 					break;
