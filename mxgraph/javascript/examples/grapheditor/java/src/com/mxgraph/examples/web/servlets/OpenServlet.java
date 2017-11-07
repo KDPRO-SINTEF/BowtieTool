@@ -302,5 +302,4 @@ public class OpenServlet extends HttpServlet
 			return "";
 		}
 	}
-
 }

@@ -7,7 +7,6 @@ import com.mxgraph.examples.web.models.Graph;
 import com.mxgraph.examples.web.models.Role;
 import com.mxgraph.examples.web.models.User;
 import com.mxgraph.examples.web.repository.IRoleRepository;
-import com.mxgraph.examples.web.repository.MySQLAccess;
 
 public class RoleRepositoryImpl implements IRoleRepository {
 	private MySQLAccess access;
