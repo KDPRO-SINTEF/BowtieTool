@@ -39,7 +39,7 @@ import com.mxgraph.examples.web.servlets.UserLoginServlet;
 public class GraphEditor
 {
 
-	public static int PORT = 8080;
+	public static int PORT = 8070;
 
 	/**
 	 * Uncomment this for better font size rendering in px units within labels.
@@ -118,7 +118,7 @@ public class GraphEditor
 		handlers.setHandlers(new Handler[] { fileHandler, context });
 		server.setHandler(handlers);
 
-		System.out.println("Go to http://localhost:" + PORT + "/javascript/examples/grapheditor/www/index.html");
+		System.out.println("Go to http://localhost:" + PORT + "/mxgraph/javascript/examples/grapheditor/www/index.html");
 
 		server.start();
 		server.join();

@@ -13,8 +13,98 @@ EditorUi = function(editor, container, lightbox)
 	this.container = container || document.body;
 	var graph = this.editor.graph;
 	graph.lightbox = lightbox;
+    graph.multigraph = false;
+    graph.setAllowDanglingEdges(false);
+    graph.allowLoops = false;
+	graph.graphHandler.removeCellsFromParent = false;
 
-	// Pre-fetches submenu image or replaces with embedded image if supported
+	graph.isCellMovable = function(cell)
+	{
+		return (graph.isCellsMovable() && !graph.isCellLocked(cell) && !graph.getModel().isVertex(graph.getModel().getParent(cell)));
+	}
+
+	graph.isCellResizable = function(cell)
+	{
+		return (graph.isCellsResizable() && !graph.isCellLocked(cell) && !graph.getModel().isVertex(graph.getModel().getParent(cell)) && !cell.customID == 'Likelihood' && !cell.customID == 'Impact');
+	}
+
+    graph.getEdgeValidationError = function(edge, source, target)
+    {
+        if (source != null && target != null &&
+            this.model.getValue(source) != null &&
+            this.model.getValue(target) != null)
+        {
+        	// console.log(target.customID);
+			switch(source.customID){
+
+				case 'Threat':
+					if(target.customID !=='Security Control' && target.customID !== 'Likelihood'){
+                        return 'A ' + source.customID + ' can only connect to a Security Control';
+                    }
+					break;
+				case 'Security Control':
+					if(target.customID != 'Security Control' &&
+						target.customID != 'Event' &&
+						target.customID != 'Barrier'&&
+						target.customID != 'Consequence'){
+                        return 'A ' + source.customID + ' can only connect to itself, an Event, a Barrier or a Consequence';
+                    }
+                    break;
+				case 'Cause':
+                    if(target.customID !== 'Barrier'){
+                        return 'A ' + source.customID + ' can only connect to a Barrier';
+                    }
+                    break;
+                case 'Hazard':
+                    if(target.customID !== 'Event'){
+                        return 'A ' + source.customID + ' can only connect to an Event ';
+                    }
+                    break;
+                case 'Barrier':
+                    if(target.customID !== 'Event' &&
+                        target.customID !== 'Security Control' &&
+                        target.customID !== 'Consequence' &&
+                        target.customID !== 'Barrier'){
+                        return 'A ' + source.customID + ' can only connect to an Event, a Security Control, a Consequence or itself';
+                    }
+                    break;
+                case 'Event':
+                    if(target.customID !== 'Barrier' &&
+                        target.customID !== 'Security Control'){
+                        return 'A ' + source.customID + ' can only connect to a Barrier or Security Control';
+                    }
+                    break;
+                case 'Consequence':
+                    if(target.customID !== 'Impact'){
+                        return 'A ' + source.customID + ' can only connect to an Impact Indicator';
+                    }
+                    break;
+                case 'Escalation Factor':
+                    if(target.customID !== 'Barrier'){
+                        return 'A ' + source.customID + ' can only  connect to a Barrier';
+                    }
+                    break;
+				case 'Likelihood':
+                    if(target.customID !== 'Threat'){
+                        return 'A ' + source.customID + ' can only  connect to a Threat';
+                    }
+                    break;
+				case 'Impact':
+                    if(target.customID !== 'Consequence'){
+                        return 'A ' + source.customID + ' can only  connect to a Consequence';
+                    }
+                    break;
+				default:
+					break;
+			}
+        }
+
+        // "Supercall"
+        return mxGraph.prototype.getEdgeValidationError.apply(this, arguments);
+    }
+
+
+    // Pre-fetches submenu image or replaces with embedded image if supported
 	if (mxClient.IS_SVG)
 	{
 		mxPopupMenu.prototype.submenuImage = 'data:image/gif;base64,R0lGODlhCQAJAIAAAP///zMzMyH5BAEAAAAALAAAAAAJAAkAAAIPhI8WebHsHopSOVgb26AAADs=';
@@ -104,7 +194,7 @@ EditorUi = function(editor, container, lightbox)
 	graph.init(this.diagramContainer);
 
 	// Creates hover icons
-	this.hoverIcons = this.createHoverIcons();
+	//this.hoverIcons = this.createHoverIcons();
 	
 	// Adds tooltip when mouse is over scrollbars to show space-drag panning option
 	mxEvent.addListener(this.diagramContainer, 'mousemove', mxUtils.bind(this, function(evt)
@@ -126,19 +216,19 @@ EditorUi = function(editor, container, lightbox)
 	var spaceKeyPressed = false;
 	
 	// Overrides hovericons to disable while space key is pressed
-	var hoverIconsIsResetEvent = this.hoverIcons.isResetEvent;
+	//var hoverIconsIsResetEvent = this.hoverIcons.isResetEvent;
 	
-	this.hoverIcons.isResetEvent = function(evt, allowShift)
+	/*this.hoverIcons.isResetEvent = function(evt, allowShift)
 	{
 		return spaceKeyPressed || hoverIconsIsResetEvent.apply(this, arguments);
-	};
+	};*/
 	
 	this.keydownHandler = mxUtils.bind(this, function(evt)
 	{
 		if (evt.which == 32 /* Space */)
 		{
 			spaceKeyPressed = true;
-			this.hoverIcons.reset();
+			//this.hoverIcons.reset();
 			graph.container.style.cursor = 'move';
 			
 			// Disables scroll after space keystroke with scrollbars
@@ -2628,7 +2718,7 @@ EditorUi.prototype.updateActionStates = function()
 	
 	// Updates action states
 	var actions = ['cut', 'copy', 'bold', 'italic', 'underline', 'delete', 'duplicate',
-	               'editStyle', 'editTooltip', 'editLink', 'backgroundColor', 'borderColor',
+	               'editStyle', 'editInfo', 'editTooltip', 'editLink', 'backgroundColor', 'borderColor',
 	               'edit', 'toFront', 'toBack', 'lockUnlock', 'solid', 'dashed',
 	               'dotted', 'fillColor', 'gradientColor', 'shadow', 'fontColor',
 	               'formattedText', 'rounded', 'toggleRounded', 'sharp', 'strokeColor'];

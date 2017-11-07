@@ -30,7 +30,7 @@ Menus.prototype.defaultFontSize = '12';
 /**
  * Sets the default font size.
  */
-Menus.prototype.defaultMenuItems = ['file', 'edit', 'view', 'arrange', 'extras', 'myUser'];
+Menus.prototype.defaultMenuItems = ['file', 'edit', 'view', 'arrange', 'myUser'];
 
 /**
  * Adds the label menu items to the given menu and parent.
@@ -408,15 +408,15 @@ Menus.prototype.init = function()
 	this.put('arrange', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['toFront', 'toBack', '-'], parent);
-		this.addSubmenu('direction', menu, parent);
-		this.addMenuItems(menu, ['turn', '-'], parent);
-		this.addSubmenu('align', menu, parent);
-		this.addSubmenu('distribute', menu, parent);
+		//this.addSubmenu('direction', menu, parent);
+		//this.addMenuItems(menu, ['turn', '-'], parent);
+		//this.addSubmenu('align', menu, parent);
+		//this.addSubmenu('distribute', menu, parent);
 		menu.addSeparator(parent);
-		this.addSubmenu('navigation', menu, parent);
-		this.addSubmenu('insert', menu, parent);
-		this.addSubmenu('layout', menu, parent);
-		this.addMenuItems(menu, ['-', 'group', 'ungroup', 'removeFromGroup', '-', 'clearWaypoints', 'autosize'], parent);
+		//this.addSubmenu('navigation', menu, parent);
+        this.addMenuItems(menu, ['insertLink'], parent);
+		//this.addSubmenu('layout', menu, parent);
+		this.addMenuItems(menu, ['-', 'group', 'ungroup', 'removeFromGroup', '-', 'clearWaypoints'], parent);
 	}))).isEnabled = isGraphEnabled;
 	this.put('insert', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
@@ -425,8 +425,8 @@ Menus.prototype.init = function()
 	this.put('view', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ((this.editorUi.format != null) ? ['formatPanel'] : []).
-			concat(['outline', 'layers', '-', 'pageView', 'pageScale', '-', 'scrollbars', 'tooltips', '-',
-			        'grid', 'guides', '-', 'connectionArrows', 'connectionPoints', '-',
+			concat(['outline', '-', 'pageScale', '-',
+			        'grid', 'guides', '-',
 			        'resetView', 'zoomIn', 'zoomOut'], parent));
 	})));
 	// Two special dropdowns that are only used in the toolbar
@@ -464,12 +464,8 @@ Menus.prototype.init = function()
 	this.put('edit', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'paste', 'delete', '-', 'duplicate', '-',
-		                         'editData', 'editTooltip', 'editStyle', '-', 'edit', '-', 'editLink', 'openLink', '-',
-		                         'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
-	})));
-	this.put('extras', new Menu(mxUtils.bind(this, function(menu, parent)
-	{
-		this.addMenuItems(menu, ['copyConnect', 'collapseExpand', '-', 'editDiagram']);
+		                         'editInfo', '-', 'edit', '-', 'editLink', 'openLink', '-',
+		                          'selectAll', 'selectNone', '-', 'lockUnlock','editDiagram']);
 	})));
 	this.put('myUser', new Menu(mxUtils.bind(this, function(menu, parent)
 	{

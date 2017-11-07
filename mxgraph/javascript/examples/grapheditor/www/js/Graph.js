@@ -111,7 +111,68 @@ Graph = function(container, model, renderHint, stylesheet, themes)
 		
 		return style['html'] == '1' || style[mxConstants.STYLE_WHITE_SPACE] == 'wrap';
 	};
-	
+	new mxSwimlaneManager();
+
+	// Adds listener for setting impact and likelihood values
+	this.addListener(mxEvent.CLICK, function(sender, evt)
+	{
+		var e = evt.getProperty('event'); // mouse event
+	  var cell = evt.getProperty('cell'); // cell may be null
+	  //console.log(e)
+	  //console.log(cell)
+	  if (cell != null)
+	  {
+		  // reset all children
+		  if(cell.style.indexOf("ellipse") != -1){
+			  	var siblings = cell.getParent().children
+			  	for (i = 0; i < 5; i++){
+			  		var style = 'ellipse;fillColor=#cafefd;'
+			  		siblings[i].setStyle(style)
+			  	}
+			  //Find index to get right color
+			  var index = Number(cell.name.indexOf('_c')) + 2
+			  var c = Number(cell.name.charAt(index))
+			  //console.log(c)
+			  /*
+			    nr 1, fill="#00ff06" for lowthreat 
+				  nr 2, fill="#a7ec67" for lowmediumthreat
+				  nr 3, fill="#fffe00" for mediumthreat
+				  nr 4, fill="#fe773d" for mediumhighthreat
+				  nr 5, fill="#ff0000" for highthreat
+			  */
+			  switch(c){
+			  	case 5:
+			  	var fill="#00ff06";
+			  	break;
+			  	case 4:
+			  	var fill="#a7ec67";
+			  	break;
+			  	case 3:
+			  	var fill="#fffe00";
+			  	break;
+			  	case 2:
+			  	var fill="#fe773d";
+			  	break;
+			  	case 1:
+			  	var fill="#ff0000";
+			  	break;
+			  	default:
+			  	case 0:
+			  	var fill="#cafefd";
+			  	break;
+			  }
+
+			  //set color of cell
+			  var s = 'ellipse;' +'fillColor='+ fill+';'
+			  cell.setStyle(s)
+			  this.refresh()
+			  //console.log(cell.getStyle())
+		    // Do something useful with cell and consume the event
+		  }
+	    evt.consume();
+	  }
+	});
+
 	// Implements a listener for hover and click handling on edges
 	if (this.edgeMode)
 	{
@@ -954,12 +1015,12 @@ Graph.prototype.defaultEdgeLength = 80;
 /**
  * Disables move of bends/segments without selecting.
  */
-Graph.prototype.edgeMode = false;
+Graph.prototype.edgeMode = true;
 
 /**
  * Allows all values in fit.
  */
-Graph.prototype.connectionArrowsEnabled = true;
+Graph.prototype.connectionArrowsEnabled = false;
 
 /**
  * Specifies the regular expression for matching placeholders.
@@ -1940,25 +2001,89 @@ Graph.prototype.getLinkForCell = function(cell)
 /**
  * Overrides label orientation for collapsed swimlanes inside stack.
  */
+
 Graph.prototype.getCellStyle = function(cell)
 {
 	var style = mxGraph.prototype.getCellStyle.apply(this, arguments);
-	
+
 	if (cell != null && this.layoutManager != null)
 	{
 		var parent = this.model.getParent(cell);
-		
 		if (this.model.isVertex(parent) && this.isCellCollapsed(cell))
 		{
 			var layout = this.layoutManager.getLayout(parent);
-			
 			if (layout != null && layout.constructor == mxStackLayout)
 			{
 				style[mxConstants.STYLE_HORIZONTAL] = !layout.horizontal;
+				style[mxConstants.FONT_BOLD] = false;
+				if(cell.type && cell.type == "horizontalLane" && cell.value.length == 3) {
+					switch (cell.value){
+						case 'THR':
+						cell.setValue('Threat actors')
+						break;
+						case 'WIN':
+						cell.setValue('Window of opportunity')
+						break;
+						case 'VUL':
+						cell.setValue('Vulnerabilities')
+						break;
+						case 'SEC':
+						cell.setValue('Security control')
+						break;
+						case 'IND':
+						cell.setValue('Individual')
+						break;
+						case 'ENV':
+						cell.setValue('Environment')
+						break;
+						case 'REP':
+						cell.setValue('Reputation')
+						break;
+						case 'COM':
+						cell.setValue('Commercial')
+						break;
+						default:
+						 console.log("Warning: cell-value: " + cell.value + " not recognized.")
+						break;
+					}				
+				}
+			}
+		}
+		else if (cell.type && cell.type == "horizontalLane" && this.model.isVertex(parent) && !this.isCellCollapsed(cell))
+		{
+			if(cell.type && cell.type == "horizontalLane" && cell.value.length > 4) {
+				switch (cell.value){
+					case 'Threat actors':
+					cell.setValue('THR')
+					break;
+					case 'Window of opportunity':
+					cell.setValue('WIN')
+					break;
+					case 'Vulnerabilities':
+					cell.setValue('VUL')
+					break;
+					case 'Security control':
+					cell.setValue('SEC')
+					break;
+					case 'Individual':
+					cell.setValue('IND')
+					break;
+					case 'Environment':
+					cell.setValue('ENV')
+					break;
+					case 'Reputation':
+					cell.setValue('REP')
+					break;
+					case 'Commercial':
+					cell.setValue('COM')
+					break;
+					default:
+					 console.log("Warning: cell-value: " + cell.value + " not recognized.")
+					break;
+				}
 			}
 		}
 	}
-	
 	return style;
 };
 
@@ -4608,8 +4733,20 @@ if (typeof mxVertexHandler != 'undefined')
 		{
 			this.setAttributeForCell(cell, 'tooltip', link);
 		};
-		
-		/**
+
+
+        Graph.prototype.setInfoTitleForCell = function(cell, link)
+        {
+            this.setAttributeForCell(cell, 'infoTitle', link);
+        };
+
+        Graph.prototype.setInfoDescForCell = function(cell, link)
+        {
+            this.setAttributeForCell(cell, 'infoDesc', link);
+        };
+
+
+        /**
 		 * Sets the link for the given cell.
 		 */
 		Graph.prototype.setAttributeForCell = function(cell, attributeName, attributeValue)
@@ -5931,6 +6068,51 @@ if (typeof mxVertexHandler != 'undefined')
 				// ignore
 			}
 		};
+
+        // Snaps to fixed points
+        mxConstraintHandler.prototype.intersects = function(icon, point, source, existingEdge)
+        {
+            return (!source || existingEdge) || mxUtils.intersects(icon.bounds, point);
+        };
+
+        // Special case: Snaps source of new connections to fixed points
+        // Without a connect preview in connectionHandler.createEdgeState mouseMove
+        // and getSourcePerimeterPoint should be overriden by setting sourceConstraint
+        // sourceConstraint to null in mouseMove and updating it and returning the
+        // nearest point (cp) in getSourcePerimeterPoint (see below)
+        var mxConnectionHandlerUpdateEdgeState = mxConnectionHandler.prototype.updateEdgeState;
+        mxConnectionHandler.prototype.updateEdgeState = function(pt, constraint) {
+            if (pt != null && this.previous != null) {
+                var constraints = this.graph.getAllConnectionConstraints(this.previous);
+                var nearestConstraint = null;
+                var dist = null;
+
+                for (var i = 0; i < constraints.length; i++) {
+                    var cp = this.graph.getConnectionPoint(this.previous, constraints[i]);
+
+                    if (cp != null) {
+                        var tmp = (cp.x - pt.x) * (cp.x - pt.x) + (cp.y - pt.y) * (cp.y - pt.y);
+
+                        if (dist == null || tmp < dist) {
+                            nearestConstraint = constraints[i];
+                            dist = tmp;
+                        }
+                    }
+                }
+
+                if (nearestConstraint != null) {
+                    this.sourceConstraint = nearestConstraint;
+                }
+
+                // In case the edge style must be changed during the preview:
+                // this.edgeState.style['edgeStyle'] = 'orthogonalEdgeStyle';
+                // And to use the new edge style in the new edge inserted into the graph,
+                // update the cell style as follows:
+                //this.edgeState.cell.style = mxUtils.setStyle(this.edgeState.cell.style, 'edgeStyle', this.edgeState.style['edgeStyle']);
+            }
+
+            mxConnectionHandlerUpdateEdgeState.apply(this, arguments);
+        }
 	
 		/**
 		 * Handling of special nl2Br style for not converting newlines to breaks in HTML labels.
@@ -7145,8 +7327,9 @@ if (typeof mxVertexHandler != 'undefined')
 		// Shows rotation handle for edge labels.
 		mxVertexHandler.prototype.isRotationHandleVisible = function()
 		{
-			return this.graph.isEnabled() && this.rotationEnabled && this.graph.isCellRotatable(this.state.cell) &&
-				(mxGraphHandler.prototype.maxCells <= 0 || this.graph.getSelectionCount() < mxGraphHandler.prototype.maxCells);
+			return false;
+		/*	return this.graph.isEnabled() && this.rotationEnabled && this.graph.isCellRotatable(this.state.cell) &&
+				(mxGraphHandler.prototype.maxCells <= 0 || this.graph.getSelectionCount() < mxGraphHandler.prototype.maxCells);*/
 		};
 	
 		// Invokes turn on single click on rotation handle

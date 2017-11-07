@@ -5,3 +5,7 @@ javascript/examples/**/dist
 /bin/
 
 config.properties
+
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/dictionaries

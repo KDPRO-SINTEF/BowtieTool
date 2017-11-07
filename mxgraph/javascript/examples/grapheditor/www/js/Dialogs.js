@@ -924,6 +924,144 @@ var TextareaDialog = function(editorUi, title, url, fn, cancelFn, cancelTitle, w
 };
 
 /**
+ * Constructs a two new textarea dialog, on for title and one for description of element.
+ */
+var InfoTextDialog = function(editorUi, title,title1, url,url1, fn, cancelFn, cancelTitle, w, h, addButtons, noHide, noWrap, applyTitle)
+{
+    w = (w != null) ? w : 300;
+    h = (h != null) ? h : 120;
+    noHide = (noHide != null) ? noHide : false;
+    var row, td;
+
+    var table = document.createElement('table');
+    var tbody = document.createElement('tbody');
+
+    row = document.createElement('tr');
+
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    td.style.width = '100px';
+    mxUtils.write(td, title);
+
+    row.appendChild(td);
+    tbody.appendChild(row);
+
+
+
+    var nameInput = document.createElement('textarea');
+    var nameInput1 = document.createElement('textarea');
+
+    if (noWrap)
+    {
+        nameInput.setAttribute('wrap', 'off');
+        nameInput1.setAttribute('wrap', 'off');
+
+    }
+
+    nameInput.setAttribute('spellcheck', 'false');
+    nameInput.setAttribute('autocorrect', 'off');
+    nameInput.setAttribute('autocomplete', 'off');
+    nameInput.setAttribute('autocapitalize', 'off');
+
+    nameInput1.setAttribute('spellcheck', 'false');
+    nameInput1.setAttribute('autocorrect', 'off');
+    nameInput1.setAttribute('autocomplete', 'off');
+    nameInput1.setAttribute('autocapitalize', 'off');
+
+    mxUtils.write(nameInput, url || '');
+    nameInput.style.resize = 'none';
+    nameInput.style.width = w + 'px';
+    nameInput.style.height = 20 + 'px';
+    nameInput1.style.marginBottom = "10px";
+
+
+
+    mxUtils.write(nameInput1, url1 || '');
+    nameInput1.style.resize = 'none';
+    nameInput1.style.width = w + 'px';
+    nameInput1.style.height = h + 'px';
+    nameInput1.style.marginTop = "10px";
+
+    this.textarea = nameInput;
+
+    this.init = function()
+    {
+        nameInput.focus();
+        nameInput.scrollTop = 0;
+    };
+
+    row = document.createElement('tr');
+    td = document.createElement('td');
+
+    td.appendChild(nameInput);
+
+    row = document.createElement('tr');
+
+    td.style.fontSize = '10pt';
+    td.style.width = '100px';
+    mxUtils.write(td, title1);
+
+    td.appendChild(nameInput1)
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.paddingTop = '14px';
+    td.style.whiteSpace = 'nowrap';
+    td.setAttribute('align', 'right');
+
+    var cancelBtn = mxUtils.button(cancelTitle || mxResources.get('cancel'), function()
+    {
+        editorUi.hideDialog();
+
+        if (cancelFn != null)
+        {
+            cancelFn();
+        }
+    });
+    cancelBtn.className = 'geBtn';
+
+    if (editorUi.editor.cancelFirst)
+    {
+        td.appendChild(cancelBtn);
+    }
+
+    if (addButtons != null)
+    {
+        addButtons(td);
+    }
+
+    if (fn != null)
+    {
+        var genericBtn = mxUtils.button(applyTitle || mxResources.get('apply'), function()
+        {
+            if (!noHide)
+            {
+                editorUi.hideDialog();
+            }
+
+            fn(nameInput.value, nameInput1.value);
+        });
+
+        genericBtn.className = 'geBtn gePrimaryBtn';
+        td.appendChild(genericBtn);
+    }
+
+    if (!editorUi.editor.cancelFirst)
+    {
+        td.appendChild(cancelBtn);
+    }
+
+    row.appendChild(td);
+    tbody.appendChild(row);
+    table.appendChild(tbody);
+    this.container = table;
+};
+
+
+/**
  * Constructs a new edit file dialog.
  */
 var EditDiagramDialog = function(editorUi)
@@ -1580,7 +1718,7 @@ var EditDataDialog = function(ui, cell)
 	var div = document.createElement('div');
 	var graph = ui.editor.graph;
 
-	div.style.height = '310px';
+	div.style.height = '600px';
 	div.style.overflow = 'auto';
 	
 	var value = graph.getModel().getValue(cell);
@@ -1915,6 +2053,7 @@ var EditDataDialog = function(ui, cell)
  * Optional help link.
  */
 EditDataDialog.placeholderHelpLink = null;
+
 
 /**
  * Constructs a new link dialog.
