@@ -18,9 +18,9 @@ EditorUi = function(editor, container, lightbox)
     graph.allowLoops = false;
 	graph.graphHandler.removeCellsFromParent = false;
 
-	graph.isCellMovable = function(cell)
-	{
-		return (graph.isCellsMovable() && !graph.isCellLocked(cell) && !graph.getModel().isVertex(graph.getModel().getParent(cell)));
+	 graph.isCellMovable = function(cell)
+	 {
+		return (graph.isCellsMovable() && !graph.isCellLocked(cell) && cell.customID != 'ellipse');
 	}
 
 	graph.isCellResizable = function(cell)
@@ -94,6 +94,10 @@ EditorUi = function(editor, container, lightbox)
                         return 'A ' + source.customID + ' can only  connect to a Consequence';
                     }
                     break;
+				case 'ellipse':
+					return 'Invalid source';
+				case 'lane':
+					return 'Invalid source';
 				default:
 					break;
 			}
