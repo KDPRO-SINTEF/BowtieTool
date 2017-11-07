@@ -39,7 +39,7 @@ import com.mxgraph.examples.web.servlets.UserLoginServlet;
 public class GraphEditor
 {
 
-	public static int PORT = 8070;
+	public static int PORT = 8080;
 
 	/**
 	 * Uncomment this for better font size rendering in px units within labels.

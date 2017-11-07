@@ -772,28 +772,6 @@ Actions.prototype.init = function()
 		
 		window.open(RESOURCES_PATH + '/help' + ext + '.html');
 	});
-
-    this.put('loginLogout', new Action(mxResources.get('loginLogout'), function()
-    {
-        var user = {
-            "username": localStorage.getItem("username"),
-            "fullname": localStorage.getItem("fullname"),
-            "token": localStorage.getItem("token")
-        };
-    	if (!user.token) {
-            ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
-            return;
-        }
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('fullname');
-        editor.setStatus(mxUtils.htmlEntities(mxResources.get('loggedOut')));
-    }, null, null, 'F1'));
-
-	this.put('userControl', new Action(mxResources.get('userControl'), function()
-	{
-		ui.showDialog(new UserControlDialog(ui).container, 320, 480, true, true);
-	}, null, null, null));
 	
 	// Font style actions
 	var toggleFontStyle = mxUtils.bind(this, function(key, style, fn, shortcut)
