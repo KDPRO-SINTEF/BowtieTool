@@ -99,7 +99,7 @@ Sidebar.prototype.init = function()
 //	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 //		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
     this.addRootPalette(dir, false);
-    this.addBranchPalette(dir, false);
+    this.addBranchPalette(dir, true);
 	this.addIndicatorsPalette(dir, false);
 //	this.addUmlPalette(false);
 //	this.addBpmnPalette(dir, false); 
@@ -1172,7 +1172,7 @@ Sidebar.prototype.addRootPalette = function(dir, expand)
             this.createVertexTemplateEntry('Event','shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
             ];
 
-    this.addPaletteFunctions('Bowtie Root', mxResources.get('bowtieroot'), false, fns);
+    this.addPaletteFunctions('Bowtie Root', mxResources.get('bowtieroot'), expand, fns);
 }
 
 /* Adds the bowtie branch elements to the sidebar. */
@@ -1194,7 +1194,7 @@ Sidebar.prototype.addBranchPalette = function(dir, expand)
             this.createVertexTemplateEntry('Escalation Factor','shape=mxgraph.bowtie.escalationfactor;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Escalation Factor', 'Escalation Factor', null, null, 'bowtie escalation factor'),
         ];
 
-    this.addPaletteFunctions('Bowtie Branch', mxResources.get('bowtiebranch'), false, fns);
+    this.addPaletteFunctions('Bowtie Branch', mxResources.get('bowtiebranch'), expand, fns);
 }
 
 /* Adds the bowtie risk indicators to the sidebar. */
