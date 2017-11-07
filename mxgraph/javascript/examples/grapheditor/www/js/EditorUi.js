@@ -2161,36 +2161,35 @@ EditorUi.prototype.open = function()
 					mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
 				}
 			}));
+		} else {
+            var template_xml = '<mxGraphModel dx="1737" dy="1010" grid="1" gridSize="10" guides="1" tooltips="0" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff">\n' +
+                '  <root>\n' +
+                '    <mxCell id="0"/>\n' +
+                '    <mxCell id="1" parent="0"/>\n' +
+                '    <mxCell id="12" value="Hazard" style="shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Hazard">\n' +
+                '      <mxGeometry x="540" y="250" width="120" height="80" as="geometry"/>\n' +
+                '    </mxCell>\n' +
+                '    <mxCell id="13" value="Unwanted Event" style="shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Event">\n' +
+                '      <mxGeometry x="540" y="380" width="120" height="80" as="geometry"/>\n' +
+                '    </mxCell>\n' +
+                '    <mxCell id="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitPerimeter=0;entryX=0.5;entryY=0;entryPerimeter=0;jettySize=auto;orthogonalLoop=1;" parent="1" source="12" target="13" edge="1">\n' +
+                '      <mxGeometry relative="1" as="geometry"/>\n' +
+                '    </mxCell>\n' +
+                '    <mxCell id="14" value="Asset" style="shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Asset">\n' +
+                '      <mxGeometry x="555" y="450" width="90" height="60" as="geometry"/>\n' +
+                '    </mxCell>\n' +
+                '  </root>\n' +
+                '</mxGraphModel>\n';
+            var doc = mxUtils.parseXml(template_xml);
+            this.editor.setGraphXml(doc.documentElement);
+            this.editor.setModified(false);
+            this.editor.undoManager.clear();
 		}
 	}
 	catch(e)
 	{
 		// ignore
 	}
-
-
-	var template_xml = '<mxGraphModel dx="1737" dy="1010" grid="1" gridSize="10" guides="1" tooltips="0" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" background="#ffffff">\n' +
-        '  <root>\n' +
-        '    <mxCell id="0"/>\n' +
-        '    <mxCell id="1" parent="0"/>\n' +
-        '    <mxCell id="12" value="Hazard" style="shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Hazard">\n' +
-        '      <mxGeometry x="540" y="250" width="120" height="80" as="geometry"/>\n' +
-        '    </mxCell>\n' +
-        '    <mxCell id="13" value="Unwanted Event" style="shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Event">\n' +
-        '      <mxGeometry x="540" y="380" width="120" height="80" as="geometry"/>\n' +
-        '    </mxCell>\n' +
-        '    <mxCell id="15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;exitX=0.5;exitY=1;exitPerimeter=0;entryX=0.5;entryY=0;entryPerimeter=0;jettySize=auto;orthogonalLoop=1;" parent="1" source="12" target="13" edge="1">\n' +
-        '      <mxGeometry relative="1" as="geometry"/>\n' +
-        '    </mxCell>\n' +
-        '    <mxCell id="14" value="Asset" style="shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed" parent="1" vertex="1" customID="Asset">\n' +
-        '      <mxGeometry x="555" y="450" width="90" height="60" as="geometry"/>\n' +
-        '    </mxCell>\n' +
-        '  </root>\n' +
-        '</mxGraphModel>\n';
-	var doc = mxUtils.parseXml(template_xml);
-	this.editor.setGraphXml(doc.documentElement);
-	this.editor.setModified(false);
-	this.editor.undoManager.clear();
 
 	// Fires as the last step if no file was loaded
 	this.editor.graph.view.validate();
@@ -3389,6 +3388,21 @@ EditorUi.prototype.openFromDb = function(open_endpoint)
 	{
 		mxUtils.get(window.SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function(req)
 		{
+            switch(req.getStatus()) {
+                case 400:
+                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                    break;
+                case 401:
+                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                    break;
+                case 403:
+                    mxUtils.alert(mxResources.get('serverForbidden'));
+                    break;
+                default:
+                    break;
+
+            }
+
 			var obj = JSON.parse(req.getText());
 
 			var doc = mxUtils.parseXml(obj.graph_data);
@@ -3413,7 +3427,7 @@ EditorUi.prototype.openFromDb = function(open_endpoint)
 
 		}));
 	}), null);
-	this.showDialog(dlg.container, 300, 400, true, true);
+	this.showDialog(dlg.container, 300, 200, true, true);
 	dlg.init(open_endpoint);
 }
 
@@ -3421,8 +3435,13 @@ EditorUi.prototype.modifyRolesForGraph = function()
 {
 	var token = localStorage.getItem('token');
 	var graphid = this.editor.getGraphId();
-	if (!token || !graphid) {
+	if (!token) {
 		mxUtils.alert(mxResources.get('notLoggedIn'));
+		return;
+	}
+
+	if (!graphid) {
+		mxUtils.alert(mxResources.get('rolesNotAssignable'));
 		return;
 	}
 	
@@ -3432,22 +3451,21 @@ EditorUi.prototype.modifyRolesForGraph = function()
 		mxUtils.post(window.ROLE_URL, json, mxUtils.bind(this, function(req)
 		{
 			switch(req.getStatus()) {
-				case 200:
-					mxUtils.alert('Role updated');
-					break;
-				case 403:
-					//Unauthorized
-					mxUtils.alert('Your user doesn\'t have the neccessary permissions to modify this graph');
-					break;
-				case 400:
-					//Bad request
-					mxUtils.alert('Bad request');
-					break;
-				default:
-					//
-					break;
-			}
-
+                case 200:
+                    mxUtils.alert('Role updated');
+                    break;
+                case 400:
+                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                    break;
+                case 401:
+                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                    break;
+                case 403:
+                    mxUtils.alert(mxResources.get('serverForbidden'));
+                    break;
+                default:
+                    break;
+            }
 		}));
 	}), null);
 	this.showDialog(dlg.container, 300, 400, true, true);
@@ -3517,13 +3535,29 @@ EditorUi.prototype.save = function(name)
 				{
 					var token = localStorage.getItem('token');
 					if (!token) {
-						mxUtils.alert(mxResources.get('notLoggedIn'));
+                        new mxXmlRequest(window.LOCAL_SAVE_URL, 'filename=' + encodeURIComponent(name) +
+                            '&xml=' + encodeURIComponent(xml)).simulate(document, '_blank');
 						return;
 					}
 
 					if (!this.editor.getGraphId()) {
-						var data = JSON.stringify({'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
-						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
+						var postdata = JSON.stringify({'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
+						mxUtils.post(window.SAVE_URL, postdata, mxUtils.bind(this, function(req) {
+                            switch(req.getStatus()) {
+                                case 400:
+                                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                                    break;
+                                case 401:
+                                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                                    break;
+                                case 403:
+                                    mxUtils.alert(mxResources.get('serverForbidden'));
+                                    break;
+                                default:
+                                    break;
+
+                            }
+
 							var id = JSON.parse(req.getText()).id;
 							this.editor.setGraphId(id);
 							console.log('Inserted with id', id, 'and', this.editor.getGraphId());
@@ -3531,8 +3565,23 @@ EditorUi.prototype.save = function(name)
 						}));
 					} else {
 						console.log('Existing with id', this.editor.getGraphId());
-						var data = JSON.stringify({'id': this.editor.getGraphId(), 'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
-						mxUtils.post(window.SAVE_URL, data, mxUtils.bind(this, function(req) {
+						var postdata = JSON.stringify({'id': this.editor.getGraphId(), 'title': name, 'token': token, 'graph_data': xml, 'is_public': false});
+						mxUtils.post(window.SAVE_URL, postdata, mxUtils.bind(this, function(req) {
+                            switch(req.getStatus()) {
+                                case 400:
+                                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                                    break;
+                                case 401:
+                                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                                    break;
+                                case 403:
+                                    mxUtils.alert(mxResources.get('serverForbidden'));
+                                    break;
+                                default:
+                                    break;
+
+                            }
+
 							console.log('Updated with response', req.getText());
 						}));
 					}

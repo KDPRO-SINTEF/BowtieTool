@@ -1,12 +1,9 @@
-package com.mxgraph.examples.web.repository;
+package com.mxgraph.examples.web.repository.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -16,8 +13,8 @@ public class MySQLAccess {
 	private String dburi;
 	private Connection connection;
 
-	public MySQLAccess() {
-		readConfig();
+	public MySQLAccess(String dburi) {
+		this.dburi = dburi;
 	}
 
 	public void getConnection() throws SQLException {
@@ -44,38 +41,6 @@ public class MySQLAccess {
 			System.out.println("Database connection closed");
 		} catch (Exception e) {
 			System.err.println("Database error: " + e.getMessage());
-		}
-	}
-
-	private void readConfig() {
-		Properties prop = new Properties();
-		InputStream input = null;
-
-		try {
-
-			//String filename = "G:\\git\\BowtieTool\\mxgraph\\javascript\\examples\\grapheditor\\java\\src\\repository\\config.properties";
-			//input = new FileInputStream(new File(filename));
-			String filename = "config.properties";
-			input = MySQLAccess.class.getClassLoader().getResourceAsStream(filename);
-			if (input == null) {
-				System.out.println("Sorry, unable to find " + filename);
-				return;
-			}
-
-			// load a properties file
-			prop.load(input);
-			dburi = prop.getProperty("dburi");
-
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
 		}
 	}
 

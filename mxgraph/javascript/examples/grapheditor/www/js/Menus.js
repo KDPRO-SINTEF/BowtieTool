@@ -30,7 +30,7 @@ Menus.prototype.defaultFontSize = '12';
 /**
  * Sets the default font size.
  */
-Menus.prototype.defaultMenuItems = ['file', 'edit', 'view', 'arrange', 'help'];
+Menus.prototype.defaultMenuItems = ['file', 'edit', 'view', 'arrange', 'myUser'];
 
 /**
  * Adds the label menu items to the given menu and parent.
@@ -467,13 +467,9 @@ Menus.prototype.init = function()
 		                         'editInfo', '-', 'edit', '-', 'editLink', 'openLink', '-',
 		                          'selectAll', 'selectNone', '-', 'lockUnlock','editDiagram']);
 	})));
-/*	this.put('extras', new Menu(mxUtils.bind(this, function(menu, parent)
+	this.put('myUser', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
-		this.addMenuItems(menu, ['copyConnect', 'collapseExpand', '-', 'editDiagram']);
-	})));*/
-	this.put('help', new Menu(mxUtils.bind(this, function(menu, parent)
-	{
-		this.addMenuItems(menu, ['help', '-', 'about']);
+		this.addMenuItems(menu, ['loginLogout', '-', 'userControl']);
 	})));
 };
 
