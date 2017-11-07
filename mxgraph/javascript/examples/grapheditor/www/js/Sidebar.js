@@ -98,15 +98,14 @@ Sidebar.prototype.init = function()
 //	this.addBasicPalette(dir);
 //	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 //		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-	this.addBowtiePalette(dir, false);
+    this.addRootPalette(dir, false);
+    this.addBranchPalette(dir, false);
+	this.addIndicatorsPalette(dir, false);
 //	this.addUmlPalette(false);
 //	this.addBpmnPalette(dir, false); 
 
 //	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-//	this.addStencilPalette('bowtieStencil', 'Bowtie Stencil', dir + '/bowtie.xml', ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-/*	this.addImagePalette('bowtie', mxResources.get('bowtie'), dir + '/elements/', '.svg',
-	['barrier', 'barrier1', 'blank_risk', 'high-threat', 'low-medium-threat', 'low-threat', 'medium-high-threat', 'medium-threat'], null,
-		 null);  */
+
 
 /*	this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
 ['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
@@ -1157,9 +1156,50 @@ Sidebar.prototype.createAdvancedShapes = function()
 	];
 };
 
-/* Adds the bowtie library to the sidebar. */
+/* Adds the bowtie root elements to the sidebar. */
 
- Sidebar.prototype.addBowtiePalette = function(dir, expand)
+Sidebar.prototype.addRootPalette = function(dir, expand)
+{
+    // Avoids having to bind all functions to "this"
+    var sb = this;
+
+    /* All relevant bowtie root elements are made here using createVertexTemplateEntry using shape defined within resources/bowtie.xml. */
+    /* It might be necessary to use addEntry directly to make them collapseable. Take a look at the UML library below.*/
+    var fns =
+        [
+			this.createVertexTemplateEntry('Hazard','shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
+            this.createVertexTemplateEntry('Asset','shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 90, 60, 'Asset', 'Asset', null, null, 'bowtie asset'),
+            this.createVertexTemplateEntry('Event','shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
+            ];
+
+    this.addPaletteFunctions('Bowtie Root', mxResources.get('bowtieroot'), false, fns);
+}
+
+/* Adds the bowtie branch elements to the sidebar. */
+
+Sidebar.prototype.addBranchPalette = function(dir, expand)
+{
+    // Avoids having to bind all functions to "this"
+    var sb = this;
+
+    /* All relevant bowtie branch elements are made here using createVertexTemplateEntry using shape defined within resources/bowtie.xml. */
+    /* It might be necessary to use addEntry directly to make them collapseable. Take a look at the UML library below.*/
+    var fns =
+        [
+            this.createVertexTemplateEntry('Barrier','shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
+            this.createVertexTemplateEntry('Security Control','shape=mxgraph.bowtie.control;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Security Control', 'Security Control', null, null, 'bowtie security control'),
+			this.createVertexTemplateEntry('Threat','shape=mxgraph.bowtie.threat;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Threat', 'Threat', null, null, 'bowtie threat'),
+            this.createVertexTemplateEntry('Consequence','shape=mxgraph.bowtie.consequence;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Consequence', 'Consequence', null, null, 'bowtie consequence'),
+            this.createVertexTemplateEntry('Cause','shape=mxgraph.bowtie.cause;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Cause', 'Cause', null, null, 'bowtie cause'),
+            this.createVertexTemplateEntry('Escalation Factor','shape=mxgraph.bowtie.escalationfactor;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Escalation Factor', 'Escalation Factor', null, null, 'bowtie escalation factor'),
+        ];
+
+    this.addPaletteFunctions('Bowtie Branch', mxResources.get('bowtiebranch'), false, fns);
+}
+
+/* Adds the bowtie risk indicators to the sidebar. */
+
+ Sidebar.prototype.addIndicatorsPalette = function(dir, expand)
 {
 	// Avoids having to bind all functions to "this"
 	var sb = this;
@@ -1174,6 +1214,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 			ellipse.name = 'ellipse_' + 'r' + (Math.floor(i/5) + 1).toString() + '_c' +((i%5) + 1).toString()
     	ellipse.vertex = true;
     	ellipse.resizeParent = true;
+    	ellipse.customID = 'ellipse';
 			ellipsises.push(ellipse)
 		}
 
@@ -1184,40 +1225,15 @@ Sidebar.prototype.createAdvancedShapes = function()
 		    	'resizeParent=1;collapsible=1;fill=1;marginBottom=0;swimlaneFillColor=#ffffff;');
 			lane.vertex = true;
 			lane.type = "horizontalLane"
+			lane.customID = 'lane';
 			likelihoodLanes.push(lane);
 		}
-		 /*
-    var e1 = new mxCell('', new mxGeometry(200, 20, 20, 20),'ellipse;fillColor=#cafefd;');
-    e1.vertex = true;
-    var e2 = new mxCell('', new mxGeometry(180, 20, 20, 20), 'ellipse;fillColor=#cafefd;');
-    e2.vertex = true;
-    var e3 = new mxCell('', new mxGeometry(160, 20, 20, 20), 'ellipse;fillColor=#cafefd;');
-    e3.vertex = true;
-    var e4 = new mxCell('', new mxGeometry(140, 20, 20, 20), 'ellipse;fillColor=#cafefd;');
-    e4.vertex = true;
-    var e5 = new mxCell('', new mxGeometry(120, 20, 20, 20), 'ellipse;fillColor=#cafefd;');
-    e5.vertex = true;
-    */
-    //var s1 = new mxCell('Threat', new mxGeometry(55, 20, 45, 10), 'text;value=Threat actors;color=#000000;fillColor=#ffffff;');
-        //s1.vertex = true;
 
-	 	//ellipse.vertex = true;
 	/* All relevant bowtie elements are made here using createVertexTemplateEntry using shape defined within resources/bowtie.xml. */
 	/* It might be necessary to use addEntry directly to make them collapseable. Take a look at the UML library below.*/
 	var fns =
 	[
-		this.createVertexTemplateEntry('Barrier','shape=mxgraph.bowtie.barrier;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Barrier', 'Barrier', null, null, 'bowtie barrier'),
-		this.createVertexTemplateEntry('Security Control','shape=mxgraph.bowtie.control;whiteSpace=wrap;html=1;verticalAlign=bottom;fontSize=16;aspect=fixed', 120, 80, 'Security Control', 'Security Control', null, null, 'bowtie security control'),
-	 	this.createVertexTemplateEntry('Hazard','shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
-	 	this.createVertexTemplateEntry('Asset','shape=mxgraph.bowtie.asset;;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 90, 60, 'Asset', 'Asset', null, null, 'bowtie asset'),
-	 	this.createVertexTemplateEntry('Event','shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
-	 	this.createVertexTemplateEntry('Threat','shape=mxgraph.bowtie.threat;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Threat', 'Threat', null, null, 'bowtie threat'),
-    this.createVertexTemplateEntry('Consequence','shape=mxgraph.bowtie.consequence;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Consequence', 'Consequence', null, null, 'bowtie consequence'),
-    this.createVertexTemplateEntry('Cause','shape=mxgraph.bowtie.cause;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Cause', 'Cause', null, null, 'bowtie cause'),
-    this.createVertexTemplateEntry('Escalation Factor','shape=mxgraph.bowtie.escalationfactor;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Escalation Factor', 'Escalation Factor', null, null, 'bowtie escalation factor'),
 
-    //this.createVertexTemplateEntry('shape=mxgraph.bowtie.likelihood;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 30, '', 'Likelihood', null, null, 'bowtie indicator likelihood'),
-    //this.createVertexTemplateEntry('shape=mxgraph.bowtie.impact;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 30, '', 'Impact', null, null, 'bowtie indicator impact'),
 		this.addEntry('Likelihood', function()
 		{
 			var likelihood = new mxCell('Likelihood', new mxGeometry(0, 0, 200, 150),
@@ -1255,8 +1271,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 					count +=1
 				}
 				likelihood.insert(lane, '');
-			}
-			
+            }
 			return sb.createVertexTemplateFromCells([likelihood], likelihood.geometry.width, likelihood.geometry.height, 'Likelihood');
 		}),
 		this.addEntry('Impact', function()
@@ -1302,7 +1317,7 @@ Sidebar.prototype.createAdvancedShapes = function()
 		}),
 	];
 	
-	this.addPaletteFunctions('bowtie', mxResources.get('bowtie'), false, fns);
+	this.addPaletteFunctions('Bowtie Indicators', mxResources.get('bowtieindicators'), false, fns);
 }
 /**
  * Adds the general palette to the sidebar.

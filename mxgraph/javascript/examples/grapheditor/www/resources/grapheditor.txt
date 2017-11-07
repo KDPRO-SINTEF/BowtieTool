@@ -318,4 +318,6 @@ writingDirection=Writing Direction
 zoom=Zoom
 zoomIn=Zoom In
 zoomOut=Zoom Out
-bowtie=Bowtie
+bowtieroot=Bowtie Root Elements
+bowtiebranch=Bowtie Branch Elements
+bowtieindicators=Bowtie Indicators

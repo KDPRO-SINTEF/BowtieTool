@@ -2022,7 +2022,7 @@ Graph.prototype.getCellStyle = function(cell)
 						cell.setValue('Threat actors')
 						break;
 						case 'WIN':
-						cell.setValue('Window of opportunety')
+						cell.setValue('Window of opportunity')
 						break;
 						case 'VUL':
 						cell.setValue('Vulnerabilities')
@@ -2031,16 +2031,16 @@ Graph.prototype.getCellStyle = function(cell)
 						cell.setValue('Security control')
 						break;
 						case 'IND':
-						cell.setValue('Induvidual')
+						cell.setValue('Individual')
 						break;
 						case 'ENV':
-						cell.setValue('Enviroment')
+						cell.setValue('Environment')
 						break;
 						case 'REP':
-						cell.setValue('Repurtation')
+						cell.setValue('Reputation')
 						break;
 						case 'COM':
-						cell.setValue('Comercial')
+						cell.setValue('Commercial')
 						break;
 						default:
 						 console.log("Warning: cell-value: " + cell.value + " not recognized.")
@@ -2056,7 +2056,7 @@ Graph.prototype.getCellStyle = function(cell)
 					case 'Threat actors':
 					cell.setValue('THR')
 					break;
-					case 'Window of opportunety':
+					case 'Window of opportunity':
 					cell.setValue('WIN')
 					break;
 					case 'Vulnerabilities':
@@ -2065,16 +2065,16 @@ Graph.prototype.getCellStyle = function(cell)
 					case 'Security control':
 					cell.setValue('SEC')
 					break;
-					case 'Induvidual':
+					case 'Individual':
 					cell.setValue('IND')
 					break;
-					case 'Enviroment':
+					case 'Environment':
 					cell.setValue('ENV')
 					break;
-					case 'Repurtation':
+					case 'Reputation':
 					cell.setValue('REP')
 					break;
-					case 'Comercial':
+					case 'Commercial':
 					cell.setValue('COM')
 					break;
 					default:

@@ -375,13 +375,13 @@
 	        <fillstroke/>
 
 		      <fontsize size="10"/>
-					<text str="Induvidual" x="55" y="2"/>
+					<text str="Individual" x="55" y="2"/>
 					<stroke/>
-	        <text str="Enviroment" x="55" y="14"/>
+	        <text str="Environment" x="55" y="14"/>
 					<stroke/>
-	        <text str="Repurtation" x="55" y="26"/>
+	        <text str="Reputation" x="55" y="26"/>
 					<stroke/>
-	        <text str="Comercial" x="55" y="38"/>
+	        <text str="Commercial" x="55" y="38"/>
 					<stroke/>
     	</foreground>
 		</shape>
