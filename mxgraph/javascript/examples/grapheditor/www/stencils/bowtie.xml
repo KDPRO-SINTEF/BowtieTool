@@ -167,7 +167,7 @@
 		</connections>
 		<background>
 			<stroke></stroke>
-			<fillcolor color="#8badae"></fillcolor>
+			<fillcolor color="#f9fb3c"></fillcolor>
 			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
 			<fillstroke></fillstroke>
 		</background>

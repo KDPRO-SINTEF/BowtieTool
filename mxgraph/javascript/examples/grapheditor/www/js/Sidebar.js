@@ -1212,9 +1212,10 @@ Sidebar.prototype.addBranchPalette = function(dir, expand)
 			var x = (i % 5)*30
 			var ellipse = new mxCell('', new mxGeometry(x, y, 30, 30),'ellipse;fill=1;fillColor=#cafefd;');
 			ellipse.name = 'ellipse_' + 'r' + (Math.floor(i/5) + 1).toString() + '_c' +((i%5) + 1).toString()
-    	ellipse.vertex = true;
-    	ellipse.resizeParent = true;
-    	ellipse.customID = 'ellipse';
+    		ellipse.vertex = true;
+    		ellipse.resizeParent = true;
+    		ellipse.customID = 'ellipse';
+    		ellipse.connectable = false;
 			ellipsises.push(ellipse)
 		}
 
