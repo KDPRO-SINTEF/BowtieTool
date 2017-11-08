@@ -23,10 +23,10 @@ EditorUi = function(editor, container, lightbox)
 		return (graph.isCellsMovable() && !graph.isCellLocked(cell) && cell.customID != 'ellipse');
 	}
 
-	graph.isCellResizable = function(cell)
+/*	graph.isCellResizable = function(cell)
 	{
 		return (graph.isCellsResizable() && !graph.isCellLocked(cell) && !graph.getModel().isVertex(graph.getModel().getParent(cell)) && !cell.customID == 'Likelihood' && !cell.customID == 'Impact');
-	}
+	}*/
 
     graph.getEdgeValidationError = function(edge, source, target)
     {

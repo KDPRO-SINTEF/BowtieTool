@@ -304,7 +304,7 @@ Actions.prototype.init = function()
 
             var dlg = new InfoTextDialog(ui, "Title" + ':',"Description :", info, info1, function(newValue, newValue1)
             {
-                cell.setValue(newValue);
+                graph.labelChanged(cell,newValue);
 
                 graph.setInfoDescForCell(cell, newValue1);
 
