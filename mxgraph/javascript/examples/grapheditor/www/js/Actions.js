@@ -23,6 +23,10 @@ Actions.prototype.init = function()
 	{
 		return Action.prototype.isEnabled.apply(this, arguments) && graph.isEnabled();
 	};
+	var isLoggedIn = function()
+	{
+		return localStorage.getItem('token') != null;
+	};
 
 	// File actions
 	this.addAction('new...', function() { window.open(ui.getUrl()); });
@@ -40,7 +44,7 @@ Actions.prototype.init = function()
 	this.addAction('openTemplate...', function()
 	{
 		ui.openFromDb(window.TEMPLATE_GRAPHS);
-	});
+	}).isEnabled = isLoggedIn;
 	this.addAction('roles...', function()
 	{
 		/*window.openNew = true;
@@ -49,7 +53,7 @@ Actions.prototype.init = function()
 		ui.openFile();*/
 		ui.modifyRolesForGraph();
 
-	}).isEnabled = isGraphEnabled;
+	}).isEnabled = isLoggedIn;
 	this.addAction('import...', function()
 	{
 		window.openNew = false;
