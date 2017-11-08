@@ -38,8 +38,8 @@ EditorUi = function(editor, container, lightbox)
 			switch(source.customID){
 
 				case 'Threat':
-					if(target.customID !=='Security Control' && target.customID !== 'Likelihood'){
-                        return 'A ' + source.customID + ' can only connect to a Security Control';
+					if(target.customID !=='Security Control' && target.customID !== 'Likelihood' && target.customID !== 'Event'){
+                        return 'A ' + source.customID + ' element can only connect to the following elements: Security Control, Event, likelihood.';
                     }
 					break;
 				case 'Security Control':
@@ -47,12 +47,12 @@ EditorUi = function(editor, container, lightbox)
 						target.customID != 'Event' &&
 						target.customID != 'Barrier'&&
 						target.customID != 'Consequence'){
-                        return 'A ' + source.customID + ' can only connect to itself, an Event, a Barrier or a Consequence';
+                        return 'A ' + source.customID + ' element can only connect to the following elements: itself, Event, Barrier , Consequence';
                     }
                     break;
 				case 'Cause':
-                    if(target.customID !== 'Barrier'){
-                        return 'A ' + source.customID + ' can only connect to a Barrier';
+                    if(target.customID !== 'Barrier' && target.customID !== 'Event'){
+                        return 'A ' + source.customID + ' element can only connect to the following elements: Barrier, Event';
                     }
                     break;
                 case 'Hazard':
@@ -65,33 +65,34 @@ EditorUi = function(editor, container, lightbox)
                         target.customID !== 'Security Control' &&
                         target.customID !== 'Consequence' &&
                         target.customID !== 'Barrier'){
-                        return 'A ' + source.customID + ' can only connect to an Event, a Security Control, a Consequence or itself';
+                        return 'A ' + source.customID + ' element can only connect to the following elements: Event, a Security Control, a Consequence or itself';
                     }
                     break;
                 case 'Event':
                     if(target.customID !== 'Barrier' &&
-                        target.customID !== 'Security Control'){
-                        return 'A ' + source.customID + ' can only connect to a Barrier or Security Control';
+                        target.customID !== 'Security Control' &&
+                        target.customID !== 'Consequence'){
+                        return 'A ' + source.customID + ' element can only connect to the following elements: Barrier, Security Control, Consequence ';
                     }
                     break;
                 case 'Consequence':
                     if(target.customID !== 'Impact'){
-                        return 'A ' + source.customID + ' can only connect to an Impact Indicator';
+                        return 'A ' + source.customID + ' element can only connect to the following elements: Impact Indicator';
                     }
                     break;
                 case 'Escalation Factor':
                     if(target.customID !== 'Barrier'){
-                        return 'A ' + source.customID + ' can only  connect to a Barrier';
+                        return 'A ' + source.customID + ' element can only connect to the following elements: a Barrier';
                     }
                     break;
 				case 'Likelihood':
-                    if(target.customID !== 'Threat'){
-                        return 'A ' + source.customID + ' can only  connect to a Threat';
+                    if(target.customID !== null){
+                        return 'A ' + source.customID + ' element can only be connected to from a threat';
                     }
                     break;
 				case 'Impact':
-                    if(target.customID !== 'Consequence'){
-                        return 'A ' + source.customID + ' can only  connect to a Consequence';
+                    if(target.customID !== null){
+                        return 'A ' + source.customID + ' element can only be connected to from a consequence.';
                     }
                     break;
 				case 'ellipse':
