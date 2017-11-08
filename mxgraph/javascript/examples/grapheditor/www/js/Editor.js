@@ -1750,7 +1750,7 @@ PageSetupDialog.getFormats = function()
 								graph.dblClick(evt);
 							})
 						);
-						
+
 						// Adds basic listeners for graph event dispatching outside of the
 						// container and finishing the handling of a single gesture
 						mxEvent.addGestureListeners(this.backgroundPageShape.node,

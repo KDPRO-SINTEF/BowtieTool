@@ -4852,7 +4852,7 @@ if (typeof mxVertexHandler != 'undefined')
 				mxGraph.prototype.dblClick.call(this, evt, cell);
 			}
 		};
-		
+
 		/**
 		 * Returns a point that specifies the location for inserting cells.
 		 */

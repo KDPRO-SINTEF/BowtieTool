@@ -282,15 +282,18 @@ Actions.prototype.init = function()
 			var info = '';
             var info1 = '';
 
-            if (mxUtils.isNode(cell.value))
-            {
-                var tmp = cell.value.getAttribute('infoTitle');
+
+                console.log("WAT");
+
+                var tmp = graph.getEditingValue(cell);
 
                 if (tmp != null)
                 {
                     info = tmp;
                 }
 
+            if (mxUtils.isNode(cell.value))
+            {
 				tmp = cell.value.getAttribute('infoDesc');
 
                 if (tmp != null)
@@ -301,7 +304,8 @@ Actions.prototype.init = function()
 
             var dlg = new InfoTextDialog(ui, "Title" + ':',"Description :", info, info1, function(newValue, newValue1)
             {
-                graph.setInfoTitleForCell(cell, newValue);
+                cell.setValue(newValue);
+
                 graph.setInfoDescForCell(cell, newValue1);
 
             }, null, null , 400,350);
