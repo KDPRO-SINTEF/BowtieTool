@@ -15,46 +15,42 @@ import com.mxgraph.examples.web.models.User;
 import com.mxgraph.examples.web.repository.IGraphRepository;
 import com.mxgraph.examples.web.repository.IUserRepository;
 
-public class UserGraphServlet extends HttpServlet{
+public class UserGraphServlet extends HttpServlet {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1983280837215922033L;
-	private IUserRepository userRepo;
-	private IGraphRepository graphRepo;
+  /** */
+  private static final long serialVersionUID = -1983280837215922033L;
 
-	public UserGraphServlet(IUserRepository userRepo, IGraphRepository graphRepo) {
-		this.userRepo = userRepo;
-		this.graphRepo = graphRepo;
-	}
+  private IUserRepository userRepo;
+  private IGraphRepository graphRepo;
 
-	@Override
-	protected void doGet(HttpServletRequest req, HttpServletResponse response) throws ServletException, IOException {
-		String token = req.getParameter("token");
-		if (token == null) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			response.getOutputStream().flush();
-			response.getOutputStream().close();
-			return;
-		}
-		
-		User user = userRepo.getUserByToken(token);
-		if (user == null) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			response.getOutputStream().flush();
-			response.getOutputStream().close();
-			return;
-		}
-		List<Graph> graphs = graphRepo.getUserGraphs(user);
-		response.setStatus(HttpServletResponse.SC_OK);
-		OutputStream out = response.getOutputStream();
-		out.write(new Gson()
-				.toJsonTree(graphs)
-				.getAsJsonArray()
-				.toString().getBytes("UTF-8")
-		);
-		out.flush();
-		out.close();
-	}
+  public UserGraphServlet(IUserRepository userRepo, IGraphRepository graphRepo) {
+    this.userRepo = userRepo;
+    this.graphRepo = graphRepo;
+  }
+
+  @Override
+  protected void doGet(HttpServletRequest req, HttpServletResponse response)
+      throws ServletException, IOException {
+    String token = req.getParameter("token");
+    if (token == null) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.getOutputStream().flush();
+      response.getOutputStream().close();
+      return;
+    }
+
+    User user = userRepo.getUserByToken(token);
+    if (user == null) {
+      response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+      response.getOutputStream().flush();
+      response.getOutputStream().close();
+      return;
+    }
+    List<Graph> graphs = graphRepo.getUserGraphs(user);
+    response.setStatus(HttpServletResponse.SC_OK);
+    OutputStream out = response.getOutputStream();
+    out.write(new Gson().toJsonTree(graphs).getAsJsonArray().toString().getBytes("UTF-8"));
+    out.flush();
+    out.close();
+  }
 }

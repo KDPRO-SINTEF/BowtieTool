@@ -543,23 +543,25 @@ var RoleDialog = function(editorUi, fn, cancelFn)
 	td.style.whiteSpace = 'nowrap';
 	td.style.fontSize = '10pt';
 	td.style.width = '120px';
-	mxUtils.write(td, mxResources.get('group'));
+	mxUtils.write(td, mxResources.get('share'));
 	row.appendChild(td);
 	tbody.appendChild(row);
 
 	row = document.createElement('tr');	
 	var nameInput = document.createElement('input');
-	nameInput.setAttribute('value', '');
+	nameInput.type = 'email';
+	nameInput.value = '';
+	nameInput.placeholder = 'Email of user to share with';
 	nameInput.style.marginLeft = '4px';
 	nameInput.style.width = '180px';
 
 	var role = document.createElement('select');
 	var owner = document.createElement('option');
-	owner.setAttribute('value', '0');
+	owner.value = '0';
 	mxUtils.write(owner, 'Owner');
 
 	var readonly = document.createElement('option');
-	readonly.setAttribute('value', '1');
+	readonly.value = '1';
 	mxUtils.write(readonly, 'Read only');
 
 	role.appendChild(owner);

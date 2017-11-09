@@ -2993,6 +2993,7 @@ EditorUi.prototype.createUi = function()
 	// Adds status bar in menubar
 	if (this.menubar != null)
 	{
+		this.loginContainer = this.createStatusContainer();
 		this.statusContainer = this.createStatusContainer();
 	
 		// Connects the status bar to the editor status
@@ -3000,8 +3001,10 @@ EditorUi.prototype.createUi = function()
 		{
 			this.setStatusText(this.editor.getStatus());
 		}));
-	
+
+		this.setLoginText(this.getContextualLoginText());
 		this.setStatusText(this.editor.getStatus());
+		this.menubar.container.appendChild(this.loginContainer);
 		this.menubar.container.appendChild(this.statusContainer);
 		
 		// Inserts into DOM
@@ -3082,6 +3085,51 @@ EditorUi.prototype.createStatusContainer = function()
 	}
 	
 	return container;
+};
+
+EditorUi.prototype.getContextualLoginText = function() {
+	var user = {
+		'token': localStorage.getItem('token'),
+		'fullname': localStorage.getItem('fullname'),
+		'username': localStorage.getItem('username')
+    };
+    var button = document.createElement('button');
+    button.style = 'background:none!important;' +
+        'color:inherit;' +
+        'border:none;' +
+        'padding:0!important;' +
+        'font: inherit;' +
+        'border-bottom:1px solid #444;' +
+        'cursor: pointer;';
+	if (!user.token) {
+		mxUtils.write(button, mxResources.get('notLoggedIn') + ' ' + mxResources.get('login'));
+		button.addEventListener('click', mxUtils.bind(this, function() {
+            window.updateLoginStatus = mxUtils.bind(this, function()
+            {
+                this.setLoginText(this.getContextualLoginText());
+                this.hideDialog();
+            });
+            this.showDialog(new LoginDialog(this).container, 320, 480, true, true);
+		}));
+	} else {
+        mxUtils.write(button, mxResources.get('loggedInAs') + ' ' + user.username + ' ' + mxResources.get('logout'));
+        button.addEventListener('click', mxUtils.bind(this, function () {
+            localStorage.removeItem('token');
+            localStorage.removeItem('username');
+            localStorage.removeItem('fullname');
+            this.setLoginText(this.getContextualLoginText());
+        }));
+    }
+    return button;
+};
+
+/**
+ * Creates a new toolbar for the given container.
+ */
+EditorUi.prototype.setLoginText = function(value)
+{
+    this.loginContainer.innerHTML = '';
+    this.loginContainer.appendChild(value);
 };
 
 /**
@@ -3472,9 +3520,9 @@ EditorUi.prototype.modifyRolesForGraph = function()
             }
 		}));
 	}), null);
-	this.showDialog(dlg.container, 300, 400, true, true);
+	this.showDialog(dlg.container, 300, 80, true, true);
 	//dlg.init();
-}
+};
 
 /**
  * Adds the label menu items to the given menu and parent.
