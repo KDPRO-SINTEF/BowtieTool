@@ -27,11 +27,11 @@
                     var params = JSON.stringify({'username': usernameInput.value, 'password': passwordInput.value, 'fullname': name.value});
                     mxUtils.post(window.parent.REGISTER, params, function (req) {
                         if (req.getStatus() == 200) {
-                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.LOGIN_FORM + '\'>User created successfully!</a>';
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.LOGIN_FORM + '\'>User created successfully! Click here to go back to the login screen</a>';
                         } else if (req.getStatus() == 403) {
-                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.REGISTER_FORM + '\'>The username is already taken!</a>';
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.REGISTER_FORM + '\'>The username is already taken! Click here to go back to the registration screen</a>';
                         } else {
-                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.REGISTER_FORM + '\'>An error occured!</a>';
+                            document.getElementById('mainbody').innerHTML = '<a href=\'' + window.parent.REGISTER_FORM + '\'>An error occured! Click here to go back to the registration screen</a>';
                         }
 
                     }, function () {
@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Username:</label>
+                    <label>Email:</label>
                     <input type="email" class="form-control" id="username" placeholder="Enter email" required>
                 </div>
 

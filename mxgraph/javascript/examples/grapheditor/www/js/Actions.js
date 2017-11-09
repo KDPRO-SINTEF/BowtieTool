@@ -23,6 +23,10 @@ Actions.prototype.init = function()
 	{
 		return Action.prototype.isEnabled.apply(this, arguments) && graph.isEnabled();
 	};
+	var isLoggedIn = function()
+	{
+		return localStorage.getItem('token') != null;
+	};
 
 	// File actions
 	this.addAction('new...', function() { window.open(ui.getUrl()); });
@@ -40,7 +44,7 @@ Actions.prototype.init = function()
 	this.addAction('openTemplate...', function()
 	{
 		ui.openFromDb(window.TEMPLATE_GRAPHS);
-	});
+	}).isEnabled = isLoggedIn;
 	this.addAction('roles...', function()
 	{
 		/*window.openNew = true;
@@ -49,7 +53,7 @@ Actions.prototype.init = function()
 		ui.openFile();*/
 		ui.modifyRolesForGraph();
 
-	}).isEnabled = isGraphEnabled;
+	}).isEnabled = isLoggedIn;
 	this.addAction('import...', function()
 	{
 		window.openNew = false;
@@ -776,28 +780,6 @@ Actions.prototype.init = function()
 		
 		window.open(RESOURCES_PATH + '/help' + ext + '.html');
 	});
-
-    this.put('loginLogout', new Action(mxResources.get('loginLogout'), function()
-    {
-        var user = {
-            "username": localStorage.getItem("username"),
-            "fullname": localStorage.getItem("fullname"),
-            "token": localStorage.getItem("token")
-        };
-    	if (!user.token) {
-            ui.showDialog(new LoginDialog(ui).container, 320, 480, true, true);
-            return;
-        }
-        localStorage.removeItem('token');
-        localStorage.removeItem('username');
-        localStorage.removeItem('fullname');
-        editor.setStatus(mxUtils.htmlEntities(mxResources.get('loggedOut')));
-    }, null, null, 'F1'));
-
-	this.put('userControl', new Action(mxResources.get('userControl'), function()
-	{
-		ui.showDialog(new UserControlDialog(ui).container, 320, 480, true, true);
-	}, null, null, null));
 	
 	// Font style actions
 	var toggleFontStyle = mxUtils.bind(this, function(key, style, fn, shortcut)

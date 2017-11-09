@@ -1,31 +1,31 @@
 package com.mxgraph.examples.web.models;
 
 public class Role {
-	public enum GraphRole {
-		OWNER,
-		READONLY,
-		BYPASS
-	}
-	
-	private transient User user;
-	private transient Graph graph; 
-	private GraphRole role;
+  public enum GraphRole {
+    OWNER,
+    READONLY,
+    BYPASS
+  }
 
-	public Role(User user, Graph graph, int role) {
-		this.user = user;
-		this.graph = graph;
-		this.role = GraphRole.values()[role];
-	}
+  private transient User user;
+  private transient Graph graph;
+  private GraphRole role;
 
-	public User getUser() {
-		return user;
-	}
+  public Role(User user, Graph graph, int role) {
+    this.user = user;
+    this.graph = graph;
+    this.role = GraphRole.values()[role];
+  }
 
-	public Graph getGraph() {
-		return graph;
-	}
+  public User getUser() {
+    return user;
+  }
 
-	public GraphRole getRole() {
-		return role;
-	}
+  public Graph getGraph() {
+    return graph;
+  }
+
+  public GraphRole getRole() {
+    return role;
+  }
 }
