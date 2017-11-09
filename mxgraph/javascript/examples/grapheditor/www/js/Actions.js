@@ -285,7 +285,7 @@ Actions.prototype.init = function()
 
                 console.log("WAT");
 
-                var tmp = graph.getEditingValue(cell);
+            var tmp = graph.convertValueToString(cell);
 
                 if (tmp != null)
                 {
