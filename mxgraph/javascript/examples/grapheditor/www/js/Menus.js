@@ -986,11 +986,11 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 
 	if (!graph.isSelectionEmpty())
 	{
-		if (graph.getSelectionCount() == 1)
+	/*	if (graph.getSelectionCount() == 1)
 		{
 			this.addMenuItems(menu, ['setAsDefaultStyle'], null, evt);
 		}
-		
+		*/
 		menu.addSeparator();
 		
 		cell = graph.getSelectionCell();
@@ -1048,7 +1048,7 @@ Menus.prototype.createPopupMenu = function(menu, cell, evt)
 			if (graph.getSelectionCount() == 1)
 			{
 				menu.addSeparator();
-				this.addMenuItems(menu, ['edit', '-', 'editData', 'editLink'], null, evt);
+				this.addMenuItems(menu, ['edit', 'editLink', 'editInfo'], null, evt);
 
 				// Shows edit image action if there is an image in the style
 				if (graph.getModel().isVertex(cell) && mxUtils.getValue(state.style, mxConstants.STYLE_IMAGE, null) != null)

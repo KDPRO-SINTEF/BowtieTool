@@ -98,9 +98,9 @@ Sidebar.prototype.init = function()
 //	this.addBasicPalette(dir);
 //	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 //		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-    this.addRootPalette(dir, false);
+    this.addRootPalette(dir, true);
     this.addBranchPalette(dir, true);
-	this.addIndicatorsPalette(dir, false);
+	this.addIndicatorsPalette(dir, true);
 //	this.addUmlPalette(false);
 //	this.addBpmnPalette(dir, false); 
 
@@ -1317,7 +1317,7 @@ Sidebar.prototype.addBranchPalette = function(dir, expand)
 		}),
 	];
 	
-	this.addPaletteFunctions('Bowtie Indicators', mxResources.get('bowtieindicators'), false, fns);
+	this.addPaletteFunctions('Bowtie Indicators', mxResources.get('bowtieindicators'), expand, fns);
 }
 /**
  * Adds the general palette to the sidebar.

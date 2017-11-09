@@ -366,12 +366,8 @@ Format.prototype.refresh = function()
 		img.style.padding = '1px';
 		img.style.opacity = 0.5;
 		label.appendChild(img)
-		
-		mxEvent.addListener(img, 'click', function()
-		{
-			ui.actions.get('formatPanel').funct();
-		});
-		
+
+
 		div.appendChild(label);
 		this.panels.push(new DiagramFormatPanel(this, ui, div));
 	}
@@ -441,7 +437,16 @@ Format.prototype.refresh = function()
 		label.style.width = (containsLabel) ? '50%' : '33.3%';
 		label.style.width = (containsLabel) ? '50%' : '33.3%';
 		var label2 = label.cloneNode(false);
-		var label3 = label2.cloneNode(false);
+		var label3 = label.cloneNode(false);
+        label3.style.border = '1px solid #c0c0c0';
+        label3.style.borderWidth = '0px 0px 1px 0px';
+        label3.style.textAlign = 'center';
+        label3.style.fontWeight = 'bold';
+        label3.style.overflow = 'hidden';
+        label3.style.display = (mxClient.IS_QUIRKS) ? 'inline' : 'inline-block';
+        label3.style.paddingTop = '8px';
+        label3.style.height = (mxClient.IS_QUIRKS) ? '34px' : '25px';
+        label3.style.width = '70%';
 
 		// Workaround for ignored background in IE
 		label2.style.backgroundColor = '#d7d7d7';
@@ -467,13 +472,7 @@ Format.prototype.refresh = function()
 		}
 		*/
 		// Text
-		mxUtils.write(label2, mxResources.get('text'));
-		div.appendChild(label2);
 
-		var textPanel = div.cloneNode(false);
-		textPanel.style.display = 'none';
-		this.panels.push(new TextFormatPanel(this, ui, textPanel));
-		this.container.appendChild(textPanel);
 		
 		// Arrange
 	/*	mxUtils.write(label3, mxResources.get('arrange'));
@@ -483,9 +482,30 @@ Format.prototype.refresh = function()
 		arrangePanel.style.display = 'none';
 		this.panels.push(new ArrangePanel(this, ui, arrangePanel));
 		this.container.appendChild(arrangePanel);*/
-		
-		addClickHandler(label2, textPanel, idx++);
-		//addClickHandler(label3, arrangePanel, idx++);
+
+		if(graph.getSelectionCount() == 1){
+            mxUtils.write(label3, "Element Information");
+
+            div.appendChild(label3);
+
+            var informationPanel = document.createElement('div');
+            informationPanel.style.display = 'none';
+            this.panels.push(new InformationPanel(this, ui, informationPanel));
+            this.container.appendChild(informationPanel);
+		}
+
+        mxUtils.write(label2, mxResources.get('text'));
+        div.appendChild(label2);
+
+        var textPanel = div.cloneNode(false);
+        textPanel.style.display = 'none';
+        this.panels.push(new TextFormatPanel(this, ui, textPanel));
+        this.container.appendChild(textPanel);
+        addClickHandler(label3, informationPanel, idx++);
+
+        addClickHandler(label2, textPanel, idx++);
+
+        //addClickHandler(label3, arrangePanel, idx++);
 	}
 };
 
@@ -676,7 +696,7 @@ BaseFormatPanel.prototype.createPanel = function()
 BaseFormatPanel.prototype.createTitle = function(title)
 {
 	var div = document.createElement('div');
-	div.style.padding = '0px 0px 6px 0px';
+	div.style.padding = '5px 0px 6px 0px';
 	div.style.whiteSpace = 'nowrap';
 	div.style.overflow = 'hidden';
 	div.style.width = '200px';
@@ -684,6 +704,22 @@ BaseFormatPanel.prototype.createTitle = function(title)
 	mxUtils.write(div, title);
 	
 	return div;
+};
+
+BaseFormatPanel.prototype.createText = function(title)
+{
+    var div = document.createElement('div');
+
+    div.style.padding = '5px 20px 6px 5px';
+    div.style.overflow = 'hidden';
+    div.style.width = '200px';
+    div.style.border = "2px solid lightgrey";
+    div.style.wordWrap = 'break-word';
+    div.style.background = "white";
+
+    mxUtils.write(div, title);
+
+    return div;
 };
 
 /**
@@ -1406,6 +1442,59 @@ BaseFormatPanel.prototype.destroy = function()
 		this.listeners = null;
 	}
 };
+
+InformationPanel = function(format, editorUi, container)
+{
+    BaseFormatPanel.call(this, format, editorUi, container);
+    this.container.style.borderBottom = 'none';
+
+    this.init(this.container);
+};
+
+mxUtils.extend(InformationPanel, BaseFormatPanel);
+
+
+InformationPanel.prototype.init = function (container) {
+    var graph = this.editorUi.editor.graph;
+    var cell = graph.getSelectionCell();
+    var info = '';
+    var info1 = '';
+
+    var tmp = graph.convertValueToString(cell);
+
+    if (tmp != null)
+    {
+        info = tmp;
+    }
+
+    if (mxUtils.isNode(cell.value))
+    {
+        tmp = cell.value.getAttribute('infoDesc');
+
+        if (tmp != null)
+        {
+            info1 = tmp;
+        }
+    }
+
+
+
+    container.appendChild(this.createTitle("Title:"));
+    container.appendChild(this.createText(info));
+    container.appendChild(this.createTitle("Description:"));
+    container.appendChild(this.createText(info1));
+
+    btn = mxUtils.button(mxResources.get('editInfo'), mxUtils.bind(this, function(evt)
+    {
+        this.editorUi.actions.get('editInfo').funct();
+    }));
+    btn.style.marginTop = "5px";
+    container.appendChild(btn);
+
+
+};
+
+
 
 /**
  * Adds the label menu items to the given menu and parent.
@@ -2771,8 +2860,8 @@ TextFormatPanel.prototype.addFont = function(container)
 		wrapper2.style.paddingTop = '10px';
 		wrapper2.style.paddingBottom = '10px';
 		wrapper2.appendChild(this.createTitle(mxResources.get('insert')));
-		wrapper2.appendChild(insertPanel);
-		container.appendChild(wrapper2);
+		//wrapper2.appendChild(insertPanel);
+		//container.appendChild(wrapper2);
 		
 		if (mxClient.IS_QUIRKS)
 		{
