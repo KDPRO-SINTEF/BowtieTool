@@ -2860,8 +2860,8 @@ TextFormatPanel.prototype.addFont = function(container)
 		wrapper2.style.paddingTop = '10px';
 		wrapper2.style.paddingBottom = '10px';
 		wrapper2.appendChild(this.createTitle(mxResources.get('insert')));
-		wrapper2.appendChild(insertPanel);
-		container.appendChild(wrapper2);
+		//wrapper2.appendChild(insertPanel);
+		//container.appendChild(wrapper2);
 		
 		if (mxClient.IS_QUIRKS)
 		{

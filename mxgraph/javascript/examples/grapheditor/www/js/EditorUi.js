@@ -18,6 +18,10 @@ EditorUi = function(editor, container, lightbox)
     graph.allowLoops = false;
 	graph.graphHandler.removeCellsFromParent = false;
 
+    graph.isCellEditable = function(cell)
+    {
+        return (graph.isCellsEditable() && !graph.isCellLocked(cell) && cell.customID != 'lane');
+    }
 	 graph.isCellMovable = function(cell)
 	 {
 		return (graph.isCellsMovable() && !graph.isCellLocked(cell) && cell.customID != 'ellipse');
