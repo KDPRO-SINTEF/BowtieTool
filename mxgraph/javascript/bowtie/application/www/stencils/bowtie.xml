@@ -67,10 +67,6 @@
 			<stroke/>
 		</background>
 		<foreground>
-			<stroke></stroke>
-			<fillcolor color="#FFFFFF"></fillcolor>
-			<fillstroke></fillstroke>
-			<stroke></stroke>
 		</foreground>
 	</shape>
 	<shape name="asset" h="60" w="90" aspect="fixed" strokewidth="inherit">
@@ -116,8 +112,7 @@
 		<foreground>
 			<stroke></stroke>
 			<fillcolor color="#FFFFFF"></fillcolor>
-			<path>
-				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<path><roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
 			<fillstroke></fillstroke>
 			<stroke></stroke>
 		</foreground>
@@ -185,9 +180,9 @@
       <constraint name="S" perimeter="0" x="0.5" y="1"/>
     </connections>
     <foreground>
-      <rect h="80" w="120" x="0" y="0"/>
-      <fillstroke/>
-       <image src="stencils/elements/hazard_128x128.svg" x="0" y="0" w="120" h="80" flipH="0"/>
+		<rect h="80" w="120" x="0" y="0"/>
+		<fillstroke></fillstroke>
+		<image src="stencils/elements/hazard_128x128.png" x="0" y="0" w="120" h="80" flipH="0"/>
     </foreground>
   </shape>
 	<shape aspect="fixed" h="20" name="lowthreat" strokewidth="0" w="120">
