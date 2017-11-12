@@ -457,9 +457,15 @@ Menus.prototype.init = function()
 
 		this.addMenuItems(menu, ['-', 'fitWindow', 'fitPageWidth', 'fitPage', 'fitTwoPages', '-', 'customZoom'], parent);
 	})));
+    this.put('open', new Menu(mxUtils.bind(this, function(menu, parent)
+    {
+        this.addMenuItems(menu, ['openDb', 'openTemplate', 'openLocal'], parent);
+    })));
 	this.put('file', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
-		this.addMenuItems(menu, ['new', 'open', 'openTemplate', '-', 'save', 'saveAs', 'roles', '-', 'import', 'export', '-', 'pageSetup', 'print'], parent);
+		this.addMenuItems(menu, ['new'], parent);
+		this.addSubmenu('open', menu, parent);
+		this.addMenuItems(menu, ['-', 'save', 'saveAs', 'roles', '-', 'import', 'export', '-', 'pageSetup', 'print'], parent);
 	})));
 	this.put('edit', new Menu(mxUtils.bind(this, function(menu, parent)
 	{

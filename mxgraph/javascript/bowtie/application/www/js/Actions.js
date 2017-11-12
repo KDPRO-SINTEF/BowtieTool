@@ -27,20 +27,22 @@ Actions.prototype.init = function()
 	{
 		return localStorage.getItem('token') != null;
 	};
+	var allEnabled = function () {
+		return isLoggedIn() && isGraphEnabled();
+    };
 
 	// File actions
 	this.addAction('new...', function() { window.open(ui.getUrl()); });
-	this.addAction('open...', function()
+	this.addAction('openDb...', function()
 	{
-		var token = localStorage.getItem('token');
-        if (!token) {
-			window.openNew = true;
-			window.openKey = 'open';
-			ui.openFile();
-			return;
-        }
 		ui.openFromDb(window.USER_GRAPHS);
-	});
+	}).isEnabled = isLoggedIn;
+	this.addAction('openLocal...', function()
+	{
+        window.openNew = true;
+        window.openKey = 'open';
+        ui.openFile();
+	}).isEnabled = isGraphEnabled;
 	this.addAction('openTemplate...', function()
 	{
 		ui.openFromDb(window.TEMPLATE_GRAPHS);
@@ -89,8 +91,8 @@ Actions.prototype.init = function()
 			window.openFile = null;
 		});
 	}).isEnabled = isGraphEnabled;
-	this.addAction('save', function() { ui.saveFile(false); }, null, null, Editor.ctrlKey + '+S').isEnabled = isGraphEnabled;
-	this.addAction('saveAs...', function() { ui.saveFile(true); }, null, null, Editor.ctrlKey + '+Shift+S').isEnabled = isGraphEnabled;
+	this.addAction('save', function() { ui.saveFile(false); }, null, null, Editor.ctrlKey + '+S').isEnabled = allEnabled;
+	this.addAction('saveAs...', function() { ui.saveFile(true); }, null, null, Editor.ctrlKey + '+Shift+S').isEnabled = allEnabled;
 	this.addAction('export...', function() { ui.showDialog(new ExportDialog(ui).container, 300, 230, true, true); });
 	this.addAction('editDiagram...', function()
 	{
