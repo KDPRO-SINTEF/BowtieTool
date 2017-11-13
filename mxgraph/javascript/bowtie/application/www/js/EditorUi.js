@@ -3592,8 +3592,7 @@ EditorUi.prototype.save = function(name)
 				{
 					var token = localStorage.getItem('token');
 					if (!token) {
-                        new mxXmlRequest(window.LOCAL_SAVE_URL, 'filename=' + encodeURIComponent(name) +
-                            '&xml=' + encodeURIComponent(xml)).simulate(document, '_blank');
+                        mxUtils.alert(mxResources.get('notLoggedIn'));
 						return;
 					}
 
