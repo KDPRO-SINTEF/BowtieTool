@@ -57,7 +57,7 @@ public class GraphEditor {
 
       //String filename = "G:\\git\\BowtieTool\\mxgraph\\javascript\\examples\\grapheditor\\java\\src\\repository\\config.properties";
       //input = new FileInputStream(new File(filename));
-      String filename = "config.properties";
+      String filename = "./config.properties";
       input = MySQLAccess.class.getClassLoader().getResourceAsStream(filename);
       if (input == null) {
         // Returning an empty prop list is fine as we're still able to serve up the static graph application
@@ -107,7 +107,7 @@ public class GraphEditor {
     context.addServlet(new ServletHolder(new RoleServlet(userRepo, graphRepo, roleRepo)), "/role");
 
     ResourceHandler fileHandler = new CachelessFileHandler();
-    fileHandler.setResourceBase(".");
+    fileHandler.setResourceBase(config.getProperty("resourceBase", "."));
     System.out.println(fileHandler.getResourceBase());
 
     HandlerList handlers = new HandlerList();
