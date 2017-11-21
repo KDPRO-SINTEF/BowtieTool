@@ -471,7 +471,7 @@ Menus.prototype.init = function()
 	{
 		this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'paste', 'delete', '-', 'duplicate', '-',
 		                         'editInfo', '-', 'edit', '-', 'editLink', 'openLink', '-',
-		                          'selectAll', 'selectNone', '-', 'lockUnlock','editDiagram']);
+		                          'selectAll', 'selectNone', '-', 'lockUnlock']);
 	})));
 };
 
