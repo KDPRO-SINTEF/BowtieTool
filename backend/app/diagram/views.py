@@ -40,6 +40,7 @@ class DiagramDetail(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self, pk):
+        """Get diagram object from Primary key"""
         queryset = Diagram.objects.all().filter(user=self.request.user)
         try:
             return queryset.get(pk=pk)
@@ -59,6 +60,13 @@ class DiagramDetail(APIView):
 
         response['Content-Disposition'] = 'attachment; filename="%s"' % path.split('/')[-1]
         return response
+
+
+    def delete(self, request, pk):
+        """Delete selected diagram of authenticated user"""
+        diagram = self.get_object(pk)
+        diagram.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class PublicDiagrams(APIView):
