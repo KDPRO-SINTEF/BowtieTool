@@ -9,4 +9,5 @@ class DiagramSerializer(serializers.ModelSerializer):
     class Meta:
         model = Diagram
         fields = ('id', 'name', 'public', 'diagram')
+        extra_kwargs = {'diagram': {'write_only': True}}
         read_only_fields = ('id',)
