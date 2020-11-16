@@ -1,0 +1,384 @@
+<shapes name="mxGraph.bowtie">
+	<shape name="barrier" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0.4" y="0.25" perimeter="0" name="W"></constraint>
+			<constraint x="0.6" y="0.25" perimeter="0" name="E"></constraint>
+		</connections>
+	<background>
+		<roundrect x="0" y="40" w="120" h="40" arcsize="6"></roundrect>
+	</background>
+	<foreground>
+		<stroke>
+		</stroke>
+		<fillcolor color="#8badae"></fillcolor>
+		<path>
+		<move x="50" y="0"/>
+		<line x="50" y="40"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="50" y="40"></arc>
+		<line x="70" y="40"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="40"/>
+		<line x="70" y="0"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="0"/>
+		<line x="50" y="0"></line>
+		</path>
+		<fillstroke>
+		</fillstroke>
+		<stroke/>
+	</foreground>
+	</shape>
+	<shape name="control" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0.4" y="0.25" perimeter="0" name="W"></constraint>
+			<constraint x="0.6" y="0.25" perimeter="0" name="E"></constraint>
+		</connections>
+	<background>
+		<roundrect x="0" y="40" w="120" h="40" arcsize="6"></roundrect>
+	</background>
+	<foreground>
+		<stroke>
+		</stroke>
+		<fillcolor color="#f6c3b3"></fillcolor>
+		<path>
+		<move x="50" y="0"/>
+		<line x="50" y="40"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="50" y="40"></arc>
+		<line x="70" y="40"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="40"/>
+		<line x="70" y="0"/>
+		<arc rx="5" ry="5" x-axis-rotation="0" large-arc-flag="0" sweep-flag="1" x="70" y="0"/>
+		<line x="50" y="0"></line>
+		</path>
+		<fillstroke></fillstroke><stroke/>
+	</foreground>
+	</shape>
+	<shape name="event" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+			<constraint x="0.5" y="0" perimeter="0" name="N"></constraint>
+		</connections>
+		<background>
+			<stroke>
+			</stroke>
+			<fillcolor color="#ffce00"></fillcolor>
+			<ellipse x="0" y="0" w="120" h="80"/>
+			<fillstroke>
+			</fillstroke>
+			<stroke/>
+		</background>
+		<foreground>
+		</foreground>
+	</shape>
+	<shape name="asset" h="60" w="90" aspect="fixed" strokewidth="inherit">
+		<connections>
+            <constraint x="0.5" y="0" perimeter="0" name="N"></constraint>
+		</connections>
+		<background>
+			<stroke>
+			</stroke>
+			<fillcolor color="#7fefad"></fillcolor>
+			<path>
+				<move x="0" y="15"/>
+				<line x="30" y="15"/>
+				<line x="45" y="0"/>
+				<line x="60" y="15"/>
+				<line x="90" y="15"/>
+				<line x="75" y="30"/>
+				<line x="90" y="45"/>
+				<line x="60" y="45"/>
+				<line x="45" y="60"/>
+				<line x="30" y="45"/>
+				<line x="0" y="45"/>
+				<line x="15" y="30"/>
+				<close/>
+				</path>
+				<fillstroke></fillstroke><stroke/>
+		</background>
+		<foreground>
+		<fillstroke/>
+		</foreground>
+	</shape>
+	<shape name="threat" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#f6c3b3"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path><roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="cause" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#8badae"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="consequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#000000"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="escalationfactor" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#f9fb3c"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+  	<shape aspect="fixed" h="80" name="hazard" strokewidth="1" w="120">
+    <connections>
+      <constraint name="S" perimeter="0" x="0.5" y="1"/>
+    </connections>
+    <foreground>
+		<rect h="80" w="120" x="0" y="0"/>
+		<fillstroke></fillstroke>
+		<image src="stencils/elements/hazard_128x128.png" x="0" y="0" w="120" h="80" flipH="0"/>
+    </foreground>
+  </shape>
+	<shape aspect="fixed" h="20" name="lowthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/lowthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="fixed" h="20" name="lowmediumthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/lowmediumthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="fixed" h="20" name="mediumthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/mediumthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="fixed" h="20" name="mediumhighthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/mediumhighthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="fixed" h="20" name="highthreat" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/highthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape aspect="fixed" h="20" name="blankrisk" strokewidth="0" w="120">
+    	<connections>
+    	</connections>
+    	<foreground>
+			<rect h="20" w="120" x="0" y="0"/>
+			<strokecolor color="#00000"></strokecolor>
+			<fillstroke/>
+			<image src="stencils/elements/blankrisk.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+		</foreground>
+	</shape>
+	<shape name="likelihood" h="50" w="100" aspect="variable" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+		</connections>
+		<background>
+			<roundrect x="0" y="0" h="50" w="100" arcsize="6"></roundrect>
+		</background>
+		<foreground>
+				<fillcolor color="#cafefd"></fillcolor>
+        <ellipse h="10" w="10" x="0" y="2"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="10" y="2" />
+        <fillstroke/>
+       	<ellipse h="10" w="10" x="20" y="2"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="30" y="2"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="40" y="2"/>
+        <fillstroke/>
+        <label x="50" y="2">Threat actors</label>
+        <stroke/>
+        <text x="50" y="2">Threat actors</text>
+                <stroke/>
+
+      	<ellipse h="10" w="10" x="0" y="14"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="10" y="14" />
+        <fillstroke/>
+       	<ellipse h="10" w="10" x="20" y="14"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="30" y="14"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="40" y="14"/>
+        <fillstroke/>
+
+      	<ellipse h="10" w="10" x="0" y="26"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="10" y="26" />
+        <fillstroke/>
+       	<ellipse h="10" w="10" x="20" y="26"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="30" y="26"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="40" y="26"/>
+        <fillstroke/>
+
+      	<ellipse h="10" w="10" x="0" y="38"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="10" y="38" />
+        <fillstroke/>
+       	<ellipse h="10" w="10" x="20" y="38"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="30" y="38"/>
+        <fillstroke/>
+        <ellipse h="10" w="10" x="40" y="38"/>
+        <fillstroke/>
+
+      	<fontsize size="10"/>
+				<text str="Threat actors" x="55" y="2"/>
+				<stroke/>
+        <text str="Window of opportunety" x="55" y="14"/>
+				<stroke/>
+        <text str="Vulnerabilities" x="55" y="26"/>
+				<stroke/>
+        <text str="Security control" x="55" y="38"/>
+				<stroke/>
+  	</foreground>
+	</shape>
+	
+	<shape name="impact" h="50" w="100" aspect="variable" strokewidth="inherit">
+			<connections>
+				<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+				<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+			</connections>
+			<background>
+				<roundrect x="0" y="0" h="50" w="100"  arcsize="6"></roundrect>
+			</background>
+			<foreground>
+					<fillcolor color="#cafefd"></fillcolor>
+	        <ellipse h="10" w="10" x="0" y="2"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="10" y="2" />
+	        <fillstroke/>
+	       	<ellipse h="10" w="10" x="20" y="2"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="30" y="2"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="40" y="2"/>
+	        <fillstroke/>
+
+        	<ellipse h="10" w="10" x="0" y="14"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="10" y="14" />
+	        <fillstroke/>
+	       	<ellipse h="10" w="10" x="20" y="14"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="30" y="14"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="40" y="14"/>
+	        <fillstroke/>
+
+        	<ellipse h="10" w="10" x="0" y="26"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="10" y="26" />
+	        <fillstroke/>
+	       	<ellipse h="10" w="10" x="20" y="26"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="30" y="26"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="40" y="26"/>
+	        <fillstroke/>
+
+        	<ellipse h="10" w="10" x="0" y="38"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="10" y="38" />
+	        <fillstroke/>
+	       	<ellipse h="10" w="10" x="20" y="38"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="30" y="38"/>
+	        <fillstroke/>
+	        <ellipse h="10" w="10" x="40" y="38"/>
+	        <fillstroke/>
+
+		      <fontsize size="10"/>
+					<text str="Individual" x="55" y="2"/>
+					<stroke/>
+	        <text str="Environment" x="55" y="14"/>
+					<stroke/>
+	        <text str="Reputation" x="55" y="26"/>
+					<stroke/>
+	        <text str="Commercial" x="55" y="38"/>
+					<stroke/>
+    	</foreground>
+		</shape>
+</shapes>
+
