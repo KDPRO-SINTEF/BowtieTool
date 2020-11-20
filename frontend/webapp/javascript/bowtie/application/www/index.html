@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>GraphEditor</title>
+    <title>Grapheditor</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" type="text/css" href="styles/grapheditor.css">
@@ -59,7 +59,7 @@
 		(function()
 		{
 			var editorUiInit = EditorUi.prototype.init;
-			
+
 			EditorUi.prototype.init = function()
 			{
 				editorUiInit.apply(this, arguments);
@@ -79,7 +79,7 @@
 					}));
 				}
 			};
-			
+
 			// Adds required resources (disables loading of fallback properties, this can only
 			// be used if we know that all keys are defined in the language specific file)
 			mxResources.loadDefaultBundle = false;
@@ -91,11 +91,11 @@
 			{
 				// Adds bundle text to resources
 				mxResources.parse(xhr[0].getText());
-				
+
 				// Configures the default graph theme
 				var themes = new Object();
-				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
-				
+				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement();
+
 				// Main
 				new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
 			}, function()
