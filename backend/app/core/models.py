@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 from django.conf import settings
 from taggit.managers import TaggableManager
-# import reversion
+import reversion
 
 class UserManager(BaseUserManager):
 
@@ -50,7 +50,7 @@ class DiagramStat(models.Model):
     barriers = models.IntegerField(default=0)
     time_Spent = models.FloatField(default=0)
 
-# @reversion.register()
+@reversion.register()
 class Diagram(models.Model):
     """Diagram created by user"""
     diagram_content = models.TextField(default="")
