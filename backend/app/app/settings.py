@@ -9,12 +9,15 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
 import os
+import django
+from django.core.wsgi import get_wsgi_application
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+APP_DIR = os.path.join(BASE_DIR,  "app")
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -25,7 +28,9 @@ SECRET_KEY = '4=$8n0nxmsh$ymweh5-kr%8e(z1j_2-(l@^kw1qb86y5xd4b8w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'testserver',
+]
 
 
 # Application definition
@@ -132,4 +137,5 @@ AUTH_USER_MODEL = 'core.User'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-
+application = get_wsgi_application()
+django.setup()

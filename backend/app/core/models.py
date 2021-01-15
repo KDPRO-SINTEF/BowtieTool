@@ -53,7 +53,7 @@ class DiagramStat(models.Model):
 @reversion.register()
 class Diagram(models.Model):
     """Diagram created by user"""
-    diagram_content = models.TextField(default="")
+    diagram = models.TextField(default="")
     name = models.CharField(max_length=255)
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,

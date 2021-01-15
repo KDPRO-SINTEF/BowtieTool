@@ -17,6 +17,7 @@ services:
       - DB_NAME=app
       - DB_USER=postgres
       - DB_PASS=789456123
+      - DJANGO_SETTINGS_MODULE=app.settings
     depends_on:
       - db
 

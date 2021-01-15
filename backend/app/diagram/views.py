@@ -14,6 +14,8 @@ from diagram import serializers
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q
+from PIL import Image
+
 
 class DiagramList(APIView):
     """Manage diagrams in the database"""
@@ -54,14 +56,25 @@ class DiagramDetail(APIView):
         """Return selected diagram of the authenticated user"""
         diagram = self.get_object(pk, auth_user_only=True)
         serializer = serializers.DiagramSerializer(diagram)
+        export_type = request.GET.get("export_type")
+        xml_data = serializer.data['diagram'][1:]
 
-        path = serializer.data['diagram'][1:]
+        if export_type == "PNG":
+            img = Image.open(xml_data, format="XML")
+            transformed = img.save(img, format="PNG")
+            response = HttpResponse(transformed, content_type='application/png')
+        if export_type == "PDF":
+            img = Image.open(xml_data, format="XML")
+            transformed = img.save(img, format="PDF")
+            response = HttpResponse(transformed, content_type='application/pdf')
+        if export_type == "SVG":
+            img = Image.open(xml_data, format="XML")
+            transformed = img.save(img, format="SVG")
+            response = HttpResponse(transformed, content_type='application/svg')
+        else:
+            response = HttpResponse(xml_data, content_type='application/xml')
 
-        file = open(path, 'rb')
-
-        response = HttpResponse(File(file), content_type='application/file')
-
-        response['Content-Disposition'] = 'attachment; filename="%s"' % path.split('/')[-1]
+        # response['Content-Disposition'] = 'attachment; filename="%s"' % path.split('/')[-1]
         return response
 
     # TODO: handle case where diagram public , and owner update ( currently duplicates file)
@@ -93,6 +106,3 @@ class PublicDiagrams(APIView):
         """Returns all public diagrams"""
         serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(public=True), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-
-
