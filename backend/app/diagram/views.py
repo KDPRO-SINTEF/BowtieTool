@@ -8,7 +8,7 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.core.files import File
-from core.models import Diagram, User
+from core.models import Diagram, User, DiagramStat
 from django.conf import settings
 from diagram import serializers
 from rest_framework.views import APIView
@@ -24,15 +24,16 @@ class DiagramList(APIView):
 
     def get(self, request):
         """Return diagrams of the current authenticated user only"""
-        serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(user=self.request.user), many=True)
+        serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(owner=self.request.user), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     # TODO: make filename safe (handles accents)
     def post(self, request):
         """Create new Diagram"""
         serializer = serializers.DiagramSerializer(data=request.data)
+        diagramStat = DiagramStat.objects.create()
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save(owner=request.user, diagram_stat=diagramStat)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -44,9 +45,9 @@ class DiagramDetail(APIView):
     def get_object(self, pk, auth_user_only=False):
         """Get diagram object from Primary key"""
         if auth_user_only:
-            queryset = Diagram.objects.all().filter(user=self.request.user)
+            queryset = Diagram.objects.all().filter(owner=self.request.user)
         else:
-            queryset = Diagram.objects.all().filter(Q(user=self.request.user) | Q(public=True))
+            queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(public=True))
         try:
             return queryset.get(pk=pk)
         except Diagram.DoesNotExist:
@@ -58,17 +59,17 @@ class DiagramDetail(APIView):
         serializer = serializers.DiagramSerializer(diagram)
         export_type = request.GET.get("export_type")
         xml_data = serializer.data['diagram'][1:]
-
+        # TODO actually fix with https://stackoverflow.com/questions/35274068/rendering-xml-from-draw-io-as-an-image-using-mxcellrenderer
         if export_type == "PNG":
-            img = Image.open(xml_data, format="XML")
+            img = Image.open(xml_data, formats=("XML",))
             transformed = img.save(img, format="PNG")
             response = HttpResponse(transformed, content_type='application/png')
         if export_type == "PDF":
-            img = Image.open(xml_data, format="XML")
+            img = Image.open(xml_data, formats=("XML",))
             transformed = img.save(img, format="PDF")
             response = HttpResponse(transformed, content_type='application/pdf')
         if export_type == "SVG":
-            img = Image.open(xml_data, format="XML")
+            img = Image.open(xml_data, formats=("XML",))
             transformed = img.save(img, format="SVG")
             response = HttpResponse(transformed, content_type='application/svg')
         else:
@@ -86,7 +87,7 @@ class DiagramDetail(APIView):
             if not diagram.public:
                 os.remove(diagram.diagram.path)
                 diagram.delete()
-            serializer.save(user=request.user)
+            serializer.save(owner=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -44,7 +44,7 @@ class Modeltests(TestCase):
 
     def test_diagram_str(self):
         diagram = models.Diagram.objects.create(
-            user=sample_user(),
+            owner=sample_user(),
             name="test_diagram"
         )
 

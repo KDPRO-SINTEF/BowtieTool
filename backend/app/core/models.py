@@ -69,7 +69,6 @@ class Diagram(models.Model):
     hours_spent = models.FloatField(default=0)
 
     diagram_stat = models.ForeignKey(DiagramStat,
-                                     default=1,  # TODO not sure about this default implementation
                                      on_delete=models.CASCADE)
 
     def __str__(self):
