@@ -22,6 +22,20 @@ class Modeltests(TestCase):
         self.assertEqual(user.email, email)
         self.assertTrue(user.check_password(password))
 
+
+    def test_create_user_with_default_profile(self):
+        
+        email = 'test@bowtie.com'
+        password = 'testpass123'
+        user = get_user_model().objects.create_user(
+            email=email,
+            password=password)
+        
+        self.assertIsNotNone(user.profile)
+        self.assertEqual(False, user.profile.email_confirmed)
+        self.assertEqual(False, user.profile.password_reset)
+
+
     def test_new_user_email_normalized(self):
         """test the email of new user is normalized"""
         email = 'test@bowtie.COM'
@@ -42,10 +56,11 @@ class Modeltests(TestCase):
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
 
-    def test_diagram_str(self):
-        diagram = models.Diagram.objects.create(
-            owner=sample_user(),
-            name="test_diagram"
-        )
 
-        self.assertEqual(str(diagram), diagram.name)
+    # def test_diagram_str(self):
+    #     diagram = models.Diagram.objects.create(
+    #         owner=sample_user(),
+    #         name="test_diagram"
+    #     )
+
+    #     self.assertEqual(str(diagram), diagram.name)

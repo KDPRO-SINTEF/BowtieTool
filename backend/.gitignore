@@ -1,3 +1,4 @@
 .venv/
 .idea/
 .media/
+__pycache__/

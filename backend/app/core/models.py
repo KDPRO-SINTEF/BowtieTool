@@ -6,6 +6,8 @@ from taggit.managers import TaggableManager
 import reversion
 
 class UserManager(BaseUserManager):
+    """ A manager class for instantiating and updting users 
+    """
 
     def create_user(self, email, password=None, first_name="",
                     last_name="", **extra_fields):
@@ -17,7 +19,9 @@ class UserManager(BaseUserManager):
         user.first_name = first_name
         user.last_name = last_name
         user.save(using=self._db)
-
+        profile = Profile(user=user)
+        profile.save(using=self._db)
+        user.profile = profile
         return user
 
     def create_superuser(self, email, password, first_name="", last_name=""):
@@ -26,7 +30,13 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
-
+        # profile
+        profile = Profile(user=user)
+        user.profile.save()
+        user.profile.email_confirmed = True
+        user.profile.password_reset = False
+        profile.save(using=self._db)
+        user.profile = profile
         return user
 
 
@@ -43,6 +53,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
 
+    def __str__(self):
+        return  self.username + " " + self.email
+
+class Profile(models.Model):
+    """Profile of a user related to authentication features"""
+    
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    # Authentication attributes
+    email_confirmed = models.BooleanField(default=False)
+    password_reset = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.email + " " + str(self.email_confirmed) + " " + str(self.password_reset)
 
 class DiagramStat(models.Model):
     threats = models.IntegerField(default=0)
@@ -58,8 +81,7 @@ class Diagram(models.Model):
     owner = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         to_field='id',
-        on_delete=models.CASCADE
-    )
+        on_delete=models.CASCADE)
 
     is_public = models.BooleanField(default=False)
     reader = models.ManyToManyField(User, related_name="readers")
@@ -70,6 +92,8 @@ class Diagram(models.Model):
 
     diagram_stat = models.ForeignKey(DiagramStat,
                                      on_delete=models.CASCADE)
-
     def __str__(self):
         return self.name
+
+
+
