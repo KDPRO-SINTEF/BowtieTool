@@ -5,30 +5,33 @@ from user.serializers import UserSerializer, AuthTokenSerialize
 from user.customPermission import HasConfirmedEmail, HasNotResetPassword
 from django.core import mail 
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken
-import os
-from django.contrib import messages
+from rest_framework import status
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model, login
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.urls import reverse
+from django.forms import ValidationError
 
 class CreateUserView(generics.CreateAPIView):
     """Create a new user in the system"""
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-       response = super().create(request=request, *args, **kwargs)
-       
-       if response:
-
-            user = get_user_model().objects.filter(email=email).first() 
-            token = AccountActivationTokenGenerator().make_token(user)  # generate an activation token for the user           
-            message = "To activate your account please click on the following link %s" % (reverse('user:confirm') + urlsafe_base64_encode(user.pk) + '/' + token)
+        response = super().create(request=request, *args, **kwargs)
+        if response:
+            user = get_user_model().objects.filter(email=request.data['email']).first()
+            # generate an activation token for the user
+            token = AccountActivationTokenGenerator().make_token(user)     
+            message = "To activate your account please click on the following link %s" % (
+                reverse('user:confirm') + urlsafe_base64_encode(user.pk) + '/' + token)
             subject = 'Activate account for Bowtie++'
-            res = mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']], fail_silently=False) 
-       
-       return response
-        
+            mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
+                fail_silently=False)
+
+        return response
+
 
 class CreateTokenView(ObtainAuthToken):
     """Create a new auth token for user"""
@@ -56,9 +59,9 @@ class ActivateAccount(APIView):
 
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
-            user = user.objects.get(pk=uid)
+            user = get_user_model().objects.get(pk=uid)
 
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e:
             user = None
 
         # check the validity of the token
@@ -71,60 +74,61 @@ class ActivateAccount(APIView):
             return Response(status=status.HTTP_200_OK)
 
         else:
-            raise Http404
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         # @TODO - redirect to home page of bowtie
 
 
 class PasswordReset(APIView):
-    """ View for password reset of a user """
+    """ View for password reset request of a user """
 
     authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (not permissions.IsAuthenticated, HasConfirmedEmail, not HasNotResetPassword)
-    
-
+   
     def post(self, request):
 
         email = request.data['email']
-        user = User.objects.filter(email=email).first()
+        user = get_user_model().objects.filter(email=email).first()
         if user is not None:
             user.is_active = False # User needs to be inactive for the reset password duration
             user.profile.password_reset = True
             user.save()
-            token = PasswordResetToken().make_token(user)  # generate an activation token for the user           
+            token = PasswordResetToken().make_token(user)  # generate an activation token for the user         
             # Reset message and mail sending
             message = "To reset your account password please click on the following link %s" % (reverse('user:validate-reset') + urlsafe_base64_encode(user.pk) + '/' + token)
             subject = 'Reset password for Bowtie++'
             res = mail.send_mail(subject, message, 'no-reply-Bowtie++', email, fail_silently=False)
 
         return  Response(status=status.HTTP_200_OK)
-       
+  
 
 class ValidatePasswordReset(APIView):
-    """Validate the reset password request - update the user with a new password """
-
+    """View for password reset request validation - update the user with a new password """
+    
     def post(self, request, uidb64, token):
 
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
-            user = user.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist) as e:
+            user = get_user_model().objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
             user = None
+            print(e_ex)
 
         if user is not None and PasswordResetToken().check_token(user, token):
-            # @TODO check if the password matches the required pattern (length, etc)?  
-            
             password = request.data['password']
-            if not check_pass_validity(password):
-                return Response(status=status.HTTP_406_NOT_ACCEPTABLE, data="Password dont meet the requirements")
-            user.set_password()
-            user.is_active = True
-            user.profile.reset_password = False # invalidates the token
-            user.save()
-            return Response(status=status.HTTP_200_OK)
-        
+            try:
+                user.set_password(password)
+                user.is_active = True
+                user.profile.reset_password = False # invalidates the token
+                user.save()
+                return Response(status=status.HTTP_200_OK)
+            except ValidationError as err_valid:
+                if hasattr(err_valid, 'message'):
+                    data = err_valid.message
+                else:
+                    data = err_valid
+                return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
         elif user is not None:
             return Response(status=status.HTTP_400_BAD_REQUEST, data="Your token has expired")
-        
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)     
+            return Response(status=status.HTTP_400_BAD_REQUEST)

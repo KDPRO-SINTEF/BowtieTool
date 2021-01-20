@@ -34,7 +34,6 @@ ALLOWED_HOSTS = [
 ]
 
 
-
 # Email configuration 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"
@@ -111,15 +110,28 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 9,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+    {
+        'NAME': 'user.validators.LowercaseValidator',
+    },
+    {
+        'NAME':'user.validators.UppercaseValidator',
+    },
+    {
+        'NAME': 'user.validators.SymbolValidator',
     },
 ]
 

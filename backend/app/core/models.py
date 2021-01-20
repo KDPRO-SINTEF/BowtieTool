@@ -4,6 +4,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
 from django.conf import settings
 from taggit.managers import TaggableManager
 import reversion
+from django.core import exceptions
+import django.contrib.auth.password_validation as validators
+
 
 class UserManager(BaseUserManager):
     """ A manager class for instantiating and updting users 
@@ -15,6 +18,12 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError('User email is required')
         user = self.model(email=self.normalize_email(email), **extra_fields)
+        try:
+            validators.validate_password(password=password, user=user)
+        except exceptions.ValidationError as e_valid:
+            #log the exception
+            print(e_valid)
+            return None
         user.set_password(password)
         user.first_name = first_name
         user.last_name = last_name
@@ -94,6 +103,3 @@ class Diagram(models.Model):
                                      on_delete=models.CASCADE)
     def __str__(self):
         return self.name
-
-
-
