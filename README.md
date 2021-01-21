@@ -1,6 +1,6 @@
 # BowtieTool
 
-Docker is required to run this application. Please refer to the officiel website at https://www.docker.com/.
+Docker is required to run this application. Please refer to the official website at https://www.docker.com/.
 
 ## Front-end installation
 
