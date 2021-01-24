@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import django
 from django.core.wsgi import get_wsgi_application
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 APP_DIR = os.path.join(BASE_DIR,  "app")
@@ -33,12 +32,14 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
+# Tokens valdity
+PASSWORD_RESET_TIMEOUT_DAYS = 2  # client requirement
 
-# Email configuration 
+# Email configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_HOST_USER = "bowtieplusplus@gmail.com"
-EMAIL_HOST_PASSWORD = "6&r5%%M5ifhZA9*r4X56" 
+EMAIL_HOST_PASSWORD = "6&r5%%M5ifhZA9*r4X56"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 

@@ -1,8 +1,11 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.translation import ugettext_lazy as _
-
 from rest_framework import serializers
 from core.models import Profile
+from django.forms import ValidationError
+import django.contrib.auth.password_validation as validators
+from django.utils import timezone
+
 
 class UserSerializer(serializers.ModelSerializer):
     """Serializer for users"""
@@ -14,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create new user and return it"""
-        user = get_user_model().objects.create_user(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data) # if error?
         return user
 
     def update(self, instance, validated_data):
@@ -24,9 +27,12 @@ class UserSerializer(serializers.ModelSerializer):
         user = super().update(instance, validated_data)
 
         if password:
-            user.set_password(password)
-            user.save()
-
+            try:
+                validators.validate_password(password)
+                user.set_password(password)
+                user.save()
+            except ValidationError as err_valid:
+                serializers.ValidationError(err_valid, code='authentication')
         return user
 
 
@@ -48,14 +54,10 @@ class AuthTokenSerialize(serializers.Serializer):
                             password=password
         )
 
-        if not user:
-            msg = _('Authentication failed')
-            raise serializers.ValidationError(msg, code='authentication')
-        
-        elif  user.profile.password_reset or not user.profile.email_confirmed:
-            msg = _('Authentication failed')
-            raise serializers.ValidationError(msg, code='authentication')
-                
-        attrs['user'] = user
-        return attrs
+        if user :
+            attrs['user'] = user
+            Profile.objects.filter(user=user).update(last_login=timezone.now())
+            return attrs
 
+        msg = _('Authentication failed')
+        raise serializers.ValidationError(msg, code='authentication')

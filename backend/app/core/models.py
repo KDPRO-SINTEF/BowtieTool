@@ -6,10 +6,10 @@ from taggit.managers import TaggableManager
 import reversion
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
-
+from django.utils import timezone
 
 class UserManager(BaseUserManager):
-    """ A manager class for instantiating and updting users 
+    """ A manager class for instantiating and updting users
     """
 
     def create_user(self, email, password=None, first_name="",
@@ -24,6 +24,7 @@ class UserManager(BaseUserManager):
             #log the exception
             print(e_valid)
             return None
+
         user.set_password(password)
         user.first_name = first_name
         user.last_name = last_name
@@ -43,7 +44,6 @@ class UserManager(BaseUserManager):
         profile = Profile(user=user)
         user.profile.save()
         user.profile.email_confirmed = True
-        user.profile.password_reset = False
         profile.save(using=self._db)
         user.profile = profile
         return user
@@ -67,14 +67,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Profile(models.Model):
     """Profile of a user related to authentication features"""
-    
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     # Authentication attributes
-    email_confirmed = models.BooleanField(default=False)
-    password_reset = models.BooleanField(default=False)
+    email_confirmed = models.BooleanField(default=False, unique=False)
+    last_login = models.DateTimeField(default=timezone.now, unique=False)
 
     def __str__(self):
-        return self.user.email + " " + str(self.email_confirmed) + " " + str(self.password_reset)
+        return self.user.email + " " + str(self.email_confirmed) + " " + str(self.last_login)
 
 class DiagramStat(models.Model):
     threats = models.IntegerField(default=0)

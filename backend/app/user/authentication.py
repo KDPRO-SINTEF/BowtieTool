@@ -19,7 +19,11 @@ class PasswordResetToken(PasswordResetTokenGenerator):
        A password reset will invalidate the token
     """
     def _make_hash_value(self, user, timestamp):
+        """Producing the token"""
+
+        login_timestamp = user.profile.last_login
         return (
             six.text_type(user.pk) + six.text_type(timestamp) +
-            six.text_type(user.profile.reset_password)
+            six.text_type(login_timestamp)  +
+            six.text_type(user.password)
         )
