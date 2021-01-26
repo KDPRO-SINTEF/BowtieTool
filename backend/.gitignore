@@ -3,3 +3,4 @@
 .media/
 __pycache__/
 TodoClementMoi.txt
+.env

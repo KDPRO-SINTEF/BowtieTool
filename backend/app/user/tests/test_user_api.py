@@ -24,6 +24,7 @@ class PublicUserApiTests(TestCase):
 
 
     def setUp(self):
+        """Test setup"""
         self.client = APIClient()
 
     def test_create_valid_user_success(self):
@@ -38,7 +39,7 @@ class PublicUserApiTests(TestCase):
 
         # check user object is returned
         user = get_user_model().objects.filter(email=payload['email']).first()
-    
+
         # check password is correct
         self.assertTrue(user.check_password(payload['password']))
         # self.assertFalse(user.profile)
@@ -76,7 +77,7 @@ class PublicUserApiTests(TestCase):
             'email': 'test@bowtie.com',
             'password': '123456789A#a'
         }
-        user = create_user(**payload)
+        create_user(**payload)
 
         res = self.client.post(TOKEN_URL, payload)
 
@@ -85,12 +86,14 @@ class PublicUserApiTests(TestCase):
 
 
     def test_create_token_for_user_ok(self):
+        """Successful creation of authentication token"""
 
         payload = {
             'email': 'test@bowtie.com',
             'password': '123456789A#a'
         }
         user = create_user(**payload)
+
         Profile.objects.filter(user=user).update(email_confirmed=True)
         res = self.client.post(TOKEN_URL, payload)
 

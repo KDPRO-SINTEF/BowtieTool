@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 import os
 import django
+
+import environ
 from django.core.wsgi import get_wsgi_application
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,14 +20,26 @@ APP_DIR = os.path.join(BASE_DIR,  "app")
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "app.settings")
 
+
+# ENVIRONEMENT VARIABLES SEE env.example
+env = environ.Env()
+# reading .env file
+environ.Env.read_env()
+
+
+
+#SECRET_KEY = env("SECRET_KEY")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '4=$8n0nxmsh$ymweh5-kr%8e(z1j_2-(l@^kw1qb86y5xd4b8w'
-
+SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY_RESET = env('SECRET_KEY_RESET') # key for password reset token generation
+SECRET_KEY_CONFIRM =  env('SECRET_KEY_CONFIRM') # key for email confirm token
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
+
+
 
 ALLOWED_HOSTS = [
     'testserver',
@@ -35,14 +49,14 @@ ALLOWED_HOSTS = [
 # Tokens valdity
 PASSWORD_RESET_TIMEOUT_DAYS = 2  # client requirement
 
-# Email configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_HOST_USER = "bowtieplusplus@gmail.com"
-EMAIL_HOST_PASSWORD = "6&r5%%M5ifhZA9*r4X56"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
 
+EMAIL_BACKEND = env('EMAIL_BACKEND')
+# Email configuration
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_USER =  env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+EMAIL_PORT = env("EMAIL_PORT")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS")
 
 # Application definition
 INSTALLED_APPS = [
@@ -97,10 +111,10 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': os.environ.get('DB_HOST'),
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASS'),
+        'HOST': env('DB_HOST'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASS'),
     }
 }
 
