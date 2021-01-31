@@ -5,6 +5,7 @@ app_name = 'diagram'
 
 urlpatterns = [
     path('private', views.DiagramList.as_view(), name='private-diagrams'),
-    path('public', views.PublicDiagrams.as_view(), name='public-diagrams'),
-    path('<int:pk>', views.DiagramDetail.as_view(), name='my-diagrams')
+    path('list/public', views.PublicDiagrams.as_view(), name='all-public-diagrams'),
+    path('<int:pk>', views.DiagramDetail.as_view(), name='my-diagrams'),
+    path('list/private', views.PrivateDiagrams.as_view(), name='all-my-private_diagrams')
 ]
