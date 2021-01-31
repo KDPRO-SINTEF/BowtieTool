@@ -60,6 +60,8 @@ EMAIL_USE_TLS = env("EMAIL_USE_TLS")
 
 # Application definition
 INSTALLED_APPS = [
+    'django_otp',
+    'django_otp.plugins.otp_totp',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,6 +83,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    # 'django_otp.middleware.OTPMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
