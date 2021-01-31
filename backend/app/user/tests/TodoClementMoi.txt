@@ -1,0 +1,16 @@
+Etapes 1
+- Routes for authentification and register.
+- Routes for reset password.
+- Git branches for dev back&front or one for back and one for front.
+- Disable password validators for testing. 
+- Log in route for test. 
+
+
+Etape 2
+2. Option 2FA dans in settings
+2.a - Form for token submit by user + check with google
+3. Redirect from route for email reset password/activate account to Bowtie page. (HTTP)
+
+
+Etape 3 :
+- TLS config.

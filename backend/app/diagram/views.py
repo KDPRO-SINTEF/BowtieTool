@@ -1,5 +1,5 @@
+#  Module docstring
 import os
-
 from django.http import Http404, HttpResponse
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import TokenAuthentication
@@ -26,7 +26,6 @@ class DiagramList(APIView):
         """Return diagrams of the current authenticated user only"""
         serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(owner=self.request.user), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
-
     # TODO: make filename safe (handles accents)
     def post(self, request):
         """Create new Diagram"""
