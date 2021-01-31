@@ -212,14 +212,37 @@
 	background:inherit !important;
 }
 .geMenubar a.geStatus {
-	color:#b3b3b3;
 	padding-left:6px;
 	display:inline-block;
 	cursor:default !important;
+	position: absolute;
+	right: 10px;
 }
+
+.geMenubar a.geStatus p#userLoginName {
+	float: top;
+	color: grey;
+	margin-top: 1px;
+	float: left;
+	margin-right: 15px;
+}
+
+.geMenubar a.geStatus button#loginButton {
+	color:white;
+	border:none;
+	font: inherit;
+	cursor: pointer;
+	background-color: #4CAF50;
+	border-radius:5px;
+	width:70px;
+	height: 20px;
+	text-align: center;
+}
+
 .geMenubar a.geStatus:hover {
 	background:transparent;
 }
+
 .geMenubarMenu {
 	border:1px solid #d5d5d5 !important;
 }
@@ -254,7 +277,6 @@
 .geToolbarContainer .geButton {
 	float:left;
 	width:20px;
-	height:20px;
 	padding:0px 2px 4px 2px;
 	margin:2px;
 	border:1px solid transparent;

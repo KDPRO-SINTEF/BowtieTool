@@ -37,8 +37,8 @@ var LoginDialog = function()
 	// Adds padding as a workaround for box model in older IE versions
 	var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
 	
-	iframe.setAttribute('width', ((320 + dx) + 'px'));
-	iframe.setAttribute('height', ((480 + dx) + 'px'));
+	iframe.setAttribute('width', ((300 + dx) + 'px'));
+	iframe.setAttribute('height', ((300 + dx) + 'px'));
 	iframe.setAttribute('src', LOGIN_FORM);
 	
 	this.container = iframe;
