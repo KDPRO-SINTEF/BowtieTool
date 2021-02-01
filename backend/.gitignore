@@ -1,6 +1,6 @@
 .venv/
 .idea/
 .media/
-__pycache__/
+__pycache__
 TodoClementMoi.txt
 .env
