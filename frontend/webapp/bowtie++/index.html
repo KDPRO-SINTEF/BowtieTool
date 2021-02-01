@@ -62,7 +62,7 @@
 			
 			EditorUi.prototype.init = function()
 			{
-				editorUiInit.apply(this, arguments);
+				editorUiInit.apply(this);
 				this.actions.get('export').setEnabled(false);
 
 				// Updates action states which require a backend

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="styles/login.css">
+    <link rel="stylesheet" href="../styles/login.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">    <meta charset="UTF-8">
     <title>Login</title>
 
@@ -10,19 +10,19 @@
         mxBasePath = '../lib/mxgraph/src';
     </script>
 
-    <script type="text/javascript" src="../lib/mxgraph/src/js/mxClient.js"></script>
+    <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
     <script type="text/javascript">
         function sendData() {
             var usernameInput = document.getElementById('username');
             var passwordInput = document.getElementById('password');
             if (usernameInput.checkValidity() && passwordInput.checkValidity()) {
                 var params = JSON.stringify({'username': usernameInput.value, 'password': passwordInput.value});
-                mxUtils.post(window.parent.LOGIN, params, function (req) {
+                mxUtils.post(window.parent.LOGIN, 'email=testa@testa.com&password=123456789', function (req) {
                     if (req.getStatus() == 200) {
                         var data = JSON.parse(req.getText());
                         localStorage.setItem('fullname', data.fullname);
                         localStorage.setItem('username', data.username);
-                        localStorage.setItem('token', data.token);
+                        //localStorage.setItem('token', data.token);
                         document.getElementById('info').innerHTML = '';
                         window.parent.updateLoginStatus();
                     } else {
@@ -33,7 +33,6 @@
                     alert('Communication failure!');
                 });
             }
-
         }
     </script>
 
@@ -63,7 +62,7 @@
 
                 <div class="form-group">
                     <label>Don't have an account? </label>
-                    <a href="register.html">Register</a>
+                    <a href="register_old.html">Register</a>
                 </div>
 
             </form>

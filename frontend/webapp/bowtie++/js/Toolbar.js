@@ -4,6 +4,7 @@
 /**
  * Construcs a new toolbar for the given editor.
  */
+
 function Toolbar(editorUi, container)
 {
 	this.editorUi = editorUi;
@@ -59,12 +60,12 @@ Toolbar.prototype.init = function()
 	// Takes into account initial compact mode
 	sw -= (screen.height > 740) ? 56 : 0;
 	
-	/* if (sw >= 700)
+	/*if (sw >= 700)
 	{
 		var formatMenu = this.addMenu('', mxResources.get('view') + ' (' + mxResources.get('panTooltip') + ')', true, 'viewPanels', null, true);
 		this.addDropDownArrow(formatMenu, 'geSprite-formatpanel', 38, 50, -4, -3, 36, -8);
 		this.addSeparator();
-	} */
+	}*/
 	
 	var viewMenu = this.addMenu('', mxResources.get('zoom') + ' (Alt+Mousewheel)', true, 'viewZoom', null, true);
 	viewMenu.showDisabled = true;

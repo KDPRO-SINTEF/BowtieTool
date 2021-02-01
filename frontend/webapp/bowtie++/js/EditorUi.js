@@ -3092,38 +3092,54 @@ EditorUi.prototype.createStatusContainer = function()
 	return container;
 };
 
+/**
+ * Creates the login button and bind it to the login dialog window
+ */
 EditorUi.prototype.getContextualLoginText = function() {
 	var user = {
 		'token': localStorage.getItem('token'),
-		'fullname': localStorage.getItem('fullname'),
 		'username': localStorage.getItem('username')
     };
     var button = document.createElement('button');
-    button.style = 'background:none!important;' +
-        'color:inherit;' +
-        'border:none;' +
-        'padding:0!important;' +
-        'font: inherit;' +
-        'border-bottom:1px solid #444;' +
-        'cursor: pointer;';
-	if (!user.token) {
-		mxUtils.write(button, mxResources.get('notLoggedIn') + ' ' + mxResources.get('login'));
-		button.addEventListener('click', mxUtils.bind(this, function() {
+    button.setAttribute('id', 'loginButton');
+	if (user.token === null) {
+		mxUtils.write(button, mxResources.get('login'));
+		/*button.addEventListener('click', mxUtils.bind(this, function() {
             window.updateLoginStatus = mxUtils.bind(this, function()
             {
-                this.setLoginText(this.getContextualLoginText());
+                this.setLoginText(this.getContextualLoginText(), user.username);
                 this.hideDialog();
             });
-            this.showDialog(new LoginDialog(this).container, 320, 480, true, true);
-		}));
+            this.showDialog(new LoginDialog(this).container, 300, 300, true, true);
+		}));*/
+		button.addEventListener('click', mxUtils.bind(this, function() {
+				window.location.assign(window.LOGIN_PAGE);
+				/*window.updateLoginStatus = mxUtils.bind(this, function() {
+					this.setLoginText(this.getContextualLoginText());
+				});*/
+			})
+		);
 	} else {
-        mxUtils.write(button, mxResources.get('loggedInAs') + ' ' + user.username + ' ' + mxResources.get('logout'));
-        button.addEventListener('click', mxUtils.bind(this, function () {
+		mxUtils.write(button, mxResources.get('logout'));
+        button.style.backgroundColor='#f44336';
+        /*button.addEventListener('click', mxUtils.bind(this, function () {
             localStorage.removeItem('token');
             localStorage.removeItem('username');
-            localStorage.removeItem('fullname');
-            this.setLoginText(this.getContextualLoginText());
-        }));
+            this.setLoginText(this.getContextualLoginText(), '');
+            alert('You have been disconnected.');
+        }));*/
+		button.addEventListener('click', mxUtils.bind(this, function() {
+				//window.location.href = '/app/bowtie++';
+				localStorage.removeItem('token');
+				localStorage.removeItem('username');
+				alert("You will be disconnected");
+				/*window.updateLoginStatus = mxUtils.bind(this, function() {
+					this.setLoginText(this.getContextualLoginText());
+				});*/
+				window.location.reload();
+			})
+		);
+
     }
     return button;
 };
@@ -3133,8 +3149,15 @@ EditorUi.prototype.getContextualLoginText = function() {
  */
 EditorUi.prototype.setLoginText = function(value)
 {
-    this.loginContainer.innerHTML = '';
-    this.loginContainer.appendChild(value);
+	let uinfo = localStorage.getItem('username');
+	this.loginContainer.innerHTML = '';
+	this.loginContainer.appendChild(value);
+	if (uinfo !== null) {
+		let userName = document.createElement('p');
+		userName.setAttribute('id', 'userLoginName');
+		userName.innerHTML = 'Welcome ' + uinfo + '!';
+		this.loginContainer.appendChild(userName);
+	}
 };
 
 /**

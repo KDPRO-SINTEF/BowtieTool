@@ -1,6 +1,9 @@
 // urlParams is null when used for embedding
 window.urlParams = window.urlParams || {};
 
+// Base path of the web app
+window.BASE_PATH = '/app/bowtie++'
+
 // Public global variables
 window.MAX_REQUEST_SIZE = window.MAX_REQUEST_SIZE  || 10485760;
 window.MAX_AREA = window.MAX_AREA || 15000 * 15000;
@@ -15,7 +18,7 @@ window.STENCIL_PATH = window.STENCIL_PATH || 'stencils';
 window.IMAGE_PATH = window.IMAGE_PATH || 'images';
 window.STYLE_PATH = window.STYLE_PATH || 'styles';
 window.CSS_PATH = window.CSS_PATH || 'styles';
-window.OPEN_FORM = window.OPEN_FORM || 'open.html';
+window.OPEN_FORM = window.OPEN_FORM || 'templates/open.html';
 
 
 // Sets the base path, the UI language via URL param and configures the
@@ -29,13 +32,15 @@ window.mxBasePath = window.mxBasePath || '../lib/mxgraph/src';
 window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
 
+window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie++/templates/login.html';
+window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie++/templates/register.html'
 
 // Customer driven project specifics
-window.LOGIN = window.LOGIN || '/user/login';
-window.LOGIN_FORM = window.LOGIN_FORM || 'login.html';
-window.REGISTER = window.REGISTER || '/user/register';
-window.REGISTER_FORM = window.REGISTER_FORM || 'register.html';
+window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';
+window.USER_INFO = window.USER_INFO || 'http://localhost:8000/api/user/me/';
+window.REGISTER = window.REGISTER || 'http://localhost:8000/api/user/create/';
+/* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
 window.ROLE_URL = window.ROLE_URL || '/role';
 window.USER_GRAPHS = window.USER_GRAPHS || '/user/graph';
 window.SAVE_URL = window.SAVE_URL || '/graph';
-window.TEMPLATE_GRAPHS = window.TEMPLATE_GRAPHS || '/template/graph';
+window.TEMPLATE_GRAPHS = window.TEMPLATE_GRAPHS || '/template/graph';*/
