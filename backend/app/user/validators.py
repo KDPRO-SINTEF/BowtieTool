@@ -13,7 +13,7 @@ class LowercaseValidator:
         )
 
 class UppercaseValidator:
-    """Validater for uppercase in password"""
+    """Validation for uppercase in password"""
     def validate(self, password, user=None):
         if not re.findall('[A-Z]', password):
             raise ValidationError("The password must contain at least 1 uppercase letter, A-Z.",
@@ -28,15 +28,18 @@ class UppercaseValidator:
 class SymbolValidator:
     """Synbol Validator """
     def validate(self, password, user=None):
-        if not re.findall('[()[\]{}|\\`~!@#$%^&*_\-+=;:\'",<>./?]', password):
+        """Validation for symbol charecter in password"""
+        regex_validator = r"[()[\]{}|\\`~!@#$%^&*_\-+=;:\'\",<>./?]"
+        if not re.findall(regex_validator, password):
             raise ValidationError(
-                "The password must contain at least 1 symbol: " +
-                  "()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?",
+                r"The password must contain at least 1 symbol: " +
+                  "()[]{}|`~!@#$%^&*_-+=;:'\",<>./?",
                 code='password_no_symbol',
             )
 
     def get_help_text(self):
+        """Helper function"""
         return(
-            "Your password must contain at least 1 symbol: " +
-            "()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?"
+            r"Your password must contain at least 1 symbol: " +
+            "()[]{}|`~!@#$%^&*_-+=;:'\",<>./?"
         )
