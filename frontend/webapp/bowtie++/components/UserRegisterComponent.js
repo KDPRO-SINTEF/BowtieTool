@@ -52,13 +52,11 @@ Vue.component('UserRegisterComponent', {
         // Submit the register by fetching the api
         registerSubmit: function() {
             if (this.verifyRegisterForm()) {
-                let params = { "username": this.userName, "email": this.userEmail, "password": this.userPassword };
-                fetch(window.REGISTER, {
-                    method: 'post',
+                let params = JSON.stringify({ "username": this.userName, "email": this.userEmail, "password": this.userPassword });
+                axios.post(window.REGISTER, params, {
                     headers: {
                         'Content-type': 'application/json'
                     },
-                    body: JSON.stringify(params)
                 })
                     .then(res => {
                         if (!res.ok) this.filterErrorResponse(res);
@@ -70,7 +68,7 @@ Vue.component('UserRegisterComponent', {
                     });
             }
         },
-        // Handles the different errors received after the above fetch operation
+        // Handles the different errors received after the above axios operation
         filterErrorResponse: function(error) {
             if(error.status === 400) {
                 error.json()

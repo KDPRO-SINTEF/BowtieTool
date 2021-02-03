@@ -21,15 +21,13 @@ Vue.component('UserLoginComponent',  {
         }
     },
     methods: {
-        // Submit the login by fetching from the api
+        // Submit the login by fetching the api
         loginSubmit: function () {
-            let params = {"email": this.userEmail, "password": this.userPassword};
-            fetch(window.LOGIN, {
-                method: 'post',
+            let params = JSON.stringify({"email": this.userEmail, "password": this.userPassword});
+            axios.post(window.LOGIN, params, {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(params)
             })
                 .then(res => {
                     if (res.status == 400) {
@@ -47,8 +45,7 @@ Vue.component('UserLoginComponent',  {
         // Handle the token if the login form has been correctly submitted
         processToken: function (token) {
             localStorage.setItem('token', token);
-            fetch(window.USER_INFO, {
-                method: 'get',
+            axios.get(window.USER_INFO, {
                 headers: {
                     'Authorization': 'Token ' + token
                 },
