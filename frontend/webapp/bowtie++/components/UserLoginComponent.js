@@ -30,17 +30,28 @@ Vue.component('UserLoginComponent',  {
                 },
             })
                 .then(res => {
+                    this.processToken(res.data.token);
+                })
+                .catch(error => {
+                    if (error.response) {
+                        if (error.response.status === 400) {
+                            this.userPassword = '';
+                            this.errors.wrongCredentialsErr.show = true;
+                        }
+                    }
+                })
+                /*.then(res => {
                     if (res.status == 400) {
                         this.userPassword = '';
                         this.errors.wrongCredentialsErr.show = true;
+                        if(!res.ok) throw new Error('Error while login.');
+                    } else {
+                        this.processToken(res.data.token);
                     }
-                    if(!res.ok) throw new Error('Error while login.');
-                    return res.json();
                 })
-                .then(data => this.processToken(data.token))
             .catch(error => {
                 console.error(error.message);
-            });
+            });*/
         },
         // Handle the token if the login form has been correctly submitted
         processToken: function (token) {
@@ -48,10 +59,11 @@ Vue.component('UserLoginComponent',  {
             axios.get(window.USER_INFO, {
                 headers: {
                     'Authorization': 'Token ' + token
-                },
+                }
             })
-                .then(res => res.json())
-                .then(data => this.processName(data.username));
+                .then(res => {
+                    this.processName(res.data.username);
+                })
         },
         // Handle the user information after request
         processName: function (name) {

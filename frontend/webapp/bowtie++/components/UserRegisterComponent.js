@@ -59,33 +59,29 @@ Vue.component('UserRegisterComponent', {
                     },
                 })
                     .then(res => {
-                        if (!res.ok) this.filterErrorResponse(res);
-                        else window.location.assign(window.LOGIN_PAGE);
-                        return res.json();
+                        alert('Registration succeeded. You will be redirected to login page');
+                        window.location.assign(window.LOGIN_PAGE);
                     })
                     .catch(error => {
-                        console.log();
+                        if (error.response) this.filterErrorResponse(error.response);
                     });
             }
         },
         // Handles the different errors received after the above axios operation
         filterErrorResponse: function(error) {
             if(error.status === 400) {
-                error.json()
-                    .then(errorMessage => {
-                        if (errorMessage.email !== undefined) {
-                            this.errors.existingEmailErr.show = true;
-                            this.userEmail = '';
-                        }
-                        if (errorMessage.password !== undefined) {
-                            console.log(errorMessage.password);
-                            this.errors.unsecuredPwdErr.show = true;
-                            this.userPassword = '';
-                            this.passwordConfirm = '';
-                        }
-                    })
+                if (error.data.email !== undefined) {
+                    this.errors.existingEmailErr.show = true;
+                    this.userEmail = '';
+                }
+                if (error.data.password !== undefined) {
+                    console.log(error.data.password);
+                    this.errors.unsecuredPwdErr.show = true;
+                    this.userPassword = '';
+                    this.passwordConfirm = '';
+                }
             }
-            throw new Error('Error while register');
+
         }
     }
 })
