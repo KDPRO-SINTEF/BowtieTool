@@ -2,7 +2,6 @@ FROM python:3.7-alpine
 MAINTAINER Moulkaf Badreddine
 
 ENV PYTHONUNBUFFERED 1
-
 COPY ./requirements.txt /requirements.txt
 RUN apk add --update --no-cache postgresql-client
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
