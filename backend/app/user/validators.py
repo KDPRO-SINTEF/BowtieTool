@@ -28,15 +28,15 @@ class UppercaseValidator:
 class SymbolValidator:
     """Synbol Validator """
     def validate(self, password, user=None):
-        if not re.findall('[()[\]{}|\\`~!@#$%^&*_\-+=;:\'",<>./?]', password):
+        if not re.findall(r'[()[\]{}|\\`~!@#$%^&*_\-+=;:\'",<>./?]', password):
             raise ValidationError(
                 "The password must contain at least 1 symbol: " +
-                  "()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?",
+                  r"()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?",
                 code='password_no_symbol',
             )
 
     def get_help_text(self):
         return(
             "Your password must contain at least 1 symbol: " +
-            "()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?"
+            r"()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?"
         )

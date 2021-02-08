@@ -79,6 +79,7 @@ class Profile(models.Model):
         return self.user.email + " " + str(self.email_confirmed) + " " + str(self.last_login)
 
 class DiagramStat(models.Model):
+    """ Statistical datas linked to a diagram, used by researchers"""
     threats = models.IntegerField(default=0)
     consequences = models.IntegerField(default=0)
     barriers = models.IntegerField(default=0)
@@ -113,12 +114,10 @@ class Diagram(models.Model):
                                     on_delete=models.CASCADE)
 
     def get_tags(self):
-        # TODO Fix tags (try running post test and see the query results)
-        print(self.tags.names())
         return self.tags.names()
 
     def save(self, *args, **kwargs):
-
+        """ Redefinition of default save method so that it update all field when a new diagram is saved"""
         if self.diagram == "":
             # If the diagram is empty raise error
             self.diagramStat = DiagramStat.objects.create()

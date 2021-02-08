@@ -15,9 +15,10 @@ from diagram import serializers
 
 
 class DiagramApiTests(TestCase):
+    """ Test class for all diagram related tests"""
     def setUp(self):
         self.client = APIClient()
-        self.test_user = get_user_model().objects.create_user(email='test@bowtie.com', password="123456789")
+        self.test_user = get_user_model().objects.create_user(email='test@bowtie.com', password="123Az*bbbbb")
         self.client.force_authenticate(user=self.test_user)
         diagramStat = DiagramStat.objects.create()
         xml_string = """<mxGraphModel dx="1426" dy="783" grid="1" gridSize="10" guides="1" tooltips="0" connect="1" 

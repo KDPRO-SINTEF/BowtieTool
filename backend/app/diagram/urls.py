@@ -9,3 +9,5 @@ urlpatterns = [
     path('<int:pk>', views.DiagramDetail.as_view(), name='my-diagrams'),
     path('list/private', views.PrivateDiagrams.as_view(), name='all-my-private_diagrams')
 ]
+# 'search' to look for a diagram depending on it's tags and/or description
+# 'researcher' to give statistical analysis over all the diagrams
