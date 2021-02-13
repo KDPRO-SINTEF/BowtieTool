@@ -1,4 +1,4 @@
-FROM httpd:2.4
+FROM httpd:2.4.46-alpine
 MAINTAINER Clement Chavanon
 
 RUN mkdir app
