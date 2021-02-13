@@ -7,6 +7,8 @@ import reversion
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
 from django.utils import timezone
+from xml.dom import minidom
+
 
 class UserManager(BaseUserManager):
     """ A manager class for instantiating and updting users
@@ -77,10 +79,19 @@ class Profile(models.Model):
         return self.user.email + " " + str(self.email_confirmed) + " " + str(self.last_login)
 
 class DiagramStat(models.Model):
+    """ Statistical datas linked to a diagram, used by researchers"""
     threats = models.IntegerField(default=0)
     consequences = models.IntegerField(default=0)
     barriers = models.IntegerField(default=0)
-    time_Spent = models.FloatField(default=0)
+    causes = models.IntegerField(default=0)
+    totalTimeSpent = models.FloatField(default=0) # total time in minutes passed on this diagram
+
+    def __str__(self):
+        res = "threats: " + str(self.threats) + "\nconsequences: " + \
+              str(self.consequences) + "\nbarriers: " + str(self.barriers) + "\ncauses: " + str(self.causes) + \
+              "\ntime_Spent: " + str(self.totalTimeSpent)
+        return res
+
 
 @reversion.register()
 class Diagram(models.Model):
@@ -97,9 +108,50 @@ class Diagram(models.Model):
     writer = models.ManyToManyField(User, related_name="writers")
     tags = TaggableManager()
     description = models.TextField(default="")
-    hours_spent = models.FloatField(default=0)
+    lastTimeSpent = models.FloatField(default=0) # time in minutes between the last two updates
 
-    diagram_stat = models.ForeignKey(DiagramStat,
-                                     on_delete=models.CASCADE)
+    diagramStat = models.ForeignKey(DiagramStat,
+                                    on_delete=models.CASCADE)
+
+    def get_tags(self):
+        return self.tags.names()
+
+    def save(self, *args, **kwargs):
+        """ Redefinition of default save method so that it update all field when a new diagram is saved"""
+        if self.diagram == "":
+            # If the diagram is empty raise error
+            self.diagramStat = DiagramStat.objects.create()
+            print("Content of diagram is empty (printed from models.py)")
+        else:
+            # Each time we save a new diagram we will parse the xml to update the diagramStat
+            diagram_xml = minidom.parseString(self.diagram)
+            root = diagram_xml.documentElement.firstChild
+            threats = 0
+            causes = 0
+            consequences = 0
+            barriers = 0
+            allMxCell = root.getElementsByTagName('mxCell')
+            for node in allMxCell:
+                if node.getAttribute('customID') == "Threat":
+                    threats += 1
+                if node.getAttribute('customID') == "Consequence":
+                    consequences += 1
+                if node.getAttribute('customID') == "Cause":
+                    causes += 1
+                if node.getAttribute('customID') == "Barrier":
+                    barriers += 1
+                if node.getAttribute('customID') == "Hazard":
+                    self.description += node.getAttribute('value') + ", "
+                if node.getAttribute('customID') == "Event":
+                    self.description += node.getAttribute('value') + ", "
+            new_total_time_spent = self.lastTimeSpent
+            # Check that the diagramStat existed before saving (hence adding it's previous value)
+            if self.id: # self.id==None only if it's a new instances of Diagram (hence diagramStat is None too)
+                new_total_time_spent += float(self.diagramStat.totalTimeSpent)
+            self.diagramStat = DiagramStat.objects.create(consequences=consequences, threats=threats,
+                                                          barriers=barriers, causes=causes,
+                                                          totalTimeSpent=new_total_time_spent)
+        super().save(*args, **kwargs)  # Call the "real" save() method.
+
     def __str__(self):
         return self.name
