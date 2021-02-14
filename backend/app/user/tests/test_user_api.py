@@ -251,3 +251,14 @@ class PublicUserApiTests(TestCase):
                     'token': token})
         res = self.client.post(url, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def totp_token_create_test(self):
+        """Creating an TOTP token"""
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+        user = create_user(**payload)
+
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+        res = self.client.post(TOKEN_URL, payload)

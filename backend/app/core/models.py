@@ -35,7 +35,8 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, first_name="", last_name=""):
-        """creates and saves new super user"""
+        """creates and saves new super user
+        """
         user = self.create_user(email, password, first_name, last_name)
         user.is_staff = True
         user.is_superuser = True
@@ -72,7 +73,7 @@ class Profile(models.Model):
     # Authentication attributes
     email_confirmed = models.BooleanField(default=False, unique=False)
     last_login = models.DateTimeField(default=timezone.now, unique=False)
-
+    two_factor_enabled = models.BooleanField(default=False, unique=False)
     def __str__(self):
         return self.user.email + " " + str(self.email_confirmed) + " " + str(self.last_login)
 
