@@ -154,7 +154,6 @@ class PublicUserApiTests(TestCase):
                     kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': token})
         res = self.client.get(url)
-        self.assertEqual(res.status_code, status.HTTP_200_OK)
         user = get_user_model().objects.filter(email=payload['email']).first()
         self.assertTrue(user.profile.email_confirmed)
 
@@ -184,8 +183,27 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
+    def test_account_password__reset_token_nomail(self):
+        payload = {
+            'email': 'mkirov@insa-rennes.fr',
+            'password': '123456789Aa#',
+            'username': 'Test name'
+        }
+        self.client.post(CREATE_USER_URL, payload)
+        user = get_user_model().objects.filter(email=payload['email']).first()
+        user.profile.email_confirmed = True
+        user.save()
+        user.profile.save()
+
+        payload = {
+            'email': ""
+        }
+        res = self.client.post(reverse("user:reset"), payload)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+    
     def test_password_change_with_token(self):
-        """ test the password change """
+        """ Test the password change with a valid token """
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
@@ -217,6 +235,38 @@ class PublicUserApiTests(TestCase):
         user = get_user_model().objects.filter(email='mkirov@insa-rennes.fr').first()
         res = self.client.post(url, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+    def test_password_change_with_token_fail(self):
+        """ Test the password change with invlid passwords"""
+        payload = {
+            'email': 'mkirov@insa-rennes.fr',
+            'password': '123456789Aa#',
+            'username': 'Test name'
+        }
+        self.client.post(CREATE_USER_URL, payload)
+        user = get_user_model().objects.filter(email=payload['email']).first()
+
+        user.profile.email_confirmed = True
+        user.save()
+        user.profile.save()
+        payload = {
+            'email': 'mkirov@insa-rennes.fr'
+        }
+        self.client.post(reverse("user:reset"), payload)
+        user = get_user_model().objects.filter(email='mkirov@insa-rennes.fr').first()
+        token = PasswordResetToken().make_token(user)
+        url = reverse('user:validate-reset',
+                    kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
+                    'token': token})
+        payload = {
+            'password': '',
+        }
+        res = self.client.post(url, payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_password_change_with_token_error(self):
+        """Test if reset password endpoint handles errors"""
 
 
     def test_user_reset_password_token_after_login(self):

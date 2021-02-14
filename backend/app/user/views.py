@@ -51,17 +51,18 @@ class CreateUserView(generics.CreateAPIView):
         return response
 
 class CreateTokenView(ObtainAuthToken):
-    """Create a new auth token for user"""
+    """Create a new authentication token for user"""
     serializer_class = AuthTokenSerialize
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
     permission_classes = (HasConfirmedEmail,)
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+
+        serializer = AuthTokenSerialize(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         # if user has enabled 2 fa redirect the login
-        if user.two_factor_enabled == True:
+        if user.profile.two_factor_enabled == True:
             # TODO redirect to 2fa view
             redirect(TWO_FACTOR_URL)
         token, created = Token.objects.get_or_create(user=user)
@@ -93,7 +94,6 @@ class ActivateAccount(APIView):
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_valid:
             print(e_valid)
             user = None
-
         # check the validity of the token
         if user is not None and AccountActivationTokenGenerator().check_token(user, token):
             # Activation of the user
@@ -110,12 +110,11 @@ class ActivateAccount(APIView):
 class PasswordReset(APIView):
     """ Route for password reset request of a user"""
 
-    permission_classes = (HasConfirmedEmail,)
-
     def post(self, request):
         """Post method for password reset. It takes a JSON with the user's email"""
-
+        
         email = request.data['email']
+
         user = get_user_model().objects.filter(email=email).first()
         if not user is None:
             # generate an activation token for the user
@@ -156,12 +155,8 @@ class ValidatePasswordReset(APIView):
                 user.save()
                 user.profile.save()
                 return Response(status=status.HTTP_200_OK)
-            except ValidationError as err_valid:
-                if hasattr(err_valid, 'message'):
-                    data = err_valid.message
-                else:
-                    data = err_valid
-
+            except ValidationError:
+                data = "bad credentials"
                 return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
         elif user is not None:
