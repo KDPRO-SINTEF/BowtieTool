@@ -74,6 +74,9 @@ INSTALLED_APPS = [
     'user',
     'diagram',
     'taggit',
+    'django_extensions',
+    'pydot',
+    'pydotplus',
 ]
 
 MIDDLEWARE = [

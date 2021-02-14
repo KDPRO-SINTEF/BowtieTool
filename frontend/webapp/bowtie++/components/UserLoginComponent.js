@@ -21,40 +21,49 @@ Vue.component('UserLoginComponent',  {
         }
     },
     methods: {
-        // Submit the login by fetching from the api
+        // Submit the login by fetching the api
         loginSubmit: function () {
-            let params = {"email": this.userEmail, "password": this.userPassword};
-            fetch(window.LOGIN, {
-                method: 'post',
+            let params = JSON.stringify({"email": this.userEmail, "password": this.userPassword});
+            axios.post(window.LOGIN, params, {
                 headers: {
                     'Content-type': 'application/json'
                 },
-                body: JSON.stringify(params)
             })
                 .then(res => {
+                    this.processToken(res.data.token);
+                })
+                .catch(error => {
+                    if (error.response) {
+                        if (error.response.status === 400) {
+                            this.userPassword = '';
+                            this.errors.wrongCredentialsErr.show = true;
+                        }
+                    }
+                })
+                /*.then(res => {
                     if (res.status == 400) {
                         this.userPassword = '';
                         this.errors.wrongCredentialsErr.show = true;
+                        if(!res.ok) throw new Error('Error while login.');
+                    } else {
+                        this.processToken(res.data.token);
                     }
-                    if(!res.ok) throw new Error('Error while login.');
-                    return res.json();
                 })
-                .then(data => this.processToken(data.token))
             .catch(error => {
                 console.error(error.message);
-            });
+            });*/
         },
         // Handle the token if the login form has been correctly submitted
         processToken: function (token) {
             localStorage.setItem('token', token);
-            fetch(window.USER_INFO, {
-                method: 'get',
+            axios.get(window.USER_INFO, {
                 headers: {
                     'Authorization': 'Token ' + token
-                },
+                }
             })
-                .then(res => res.json())
-                .then(data => this.processName(data.username));
+                .then(res => {
+                    this.processName(res.data.username);
+                })
         },
         // Handle the user information after request
         processName: function (name) {
