@@ -19,6 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create new user and return it"""
         user = get_user_model().objects.create_user(**validated_data) # if error?
+        if user is None:
+            serializers.ValidationError("Validation error", code='authentication')
+
         return user
 
     def update(self, instance, validated_data):
@@ -45,6 +48,9 @@ class AuthTokenSerialize(serializers.Serializer):
         style={'input_type': 'password'},
         trim_whitespace=False
     )
+
+    def __str__(self):
+        return "required fields: email and password"
 
     def validate(self, attrs):
         """Validate and authenticate the user"""

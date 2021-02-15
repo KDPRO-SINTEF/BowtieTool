@@ -10,3 +10,6 @@ class HasConfirmedEmail(permissions.BasePermission):
         if not user is None:
             return user.profile.email_confirmed
         return False
+
+    def __str__(self):
+    	return "Has confirmed email permission class"

@@ -1,9 +1,10 @@
+import base64
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
 from user.serializers import UserSerializer, AuthTokenSerialize
 from user.customPermission import HasConfirmedEmail
-from django.core import mail 
+from django.core import mail
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken
 from rest_framework import status
 from rest_framework.response import Response
@@ -15,7 +16,20 @@ from django.urls import reverse
 from django.forms import ValidationError
 import django.contrib.auth.password_validation as validators
 from core.models import Profile, User
+from rest_framework.authtoken.models import Token
+from django_otp import devices_for_user
+from django_otp.plugins.otp_totp.models import TOTPDevice
+from django.shortcuts import redirect
 
+image_path = "/app"
+import qrcode
+
+IMAGE_PATH = ""
+REDIRECT_ACCOUNT = "localhost:8080/app/bowtie++/templates/login.html"
+TWO_FACTOR_URL = ""
+
+
+# User creation and authentication logic
 class CreateUserView(generics.CreateAPIView):
     """Create a new user in the system"""
     serializer_class = UserSerializer
@@ -37,10 +51,22 @@ class CreateUserView(generics.CreateAPIView):
         return response
 
 class CreateTokenView(ObtainAuthToken):
-    """Create a new auth token for user"""
+    """Create a new authentication token for user"""
     serializer_class = AuthTokenSerialize
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
     permission_classes = (HasConfirmedEmail,)
+
+    def post(self, request, *args, **kwargs):
+
+        serializer = AuthTokenSerialize(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        # if user has enabled 2 fa redirect the login
+        if user.profile.two_factor_enabled == True:
+            # TODO redirect to 2fa view
+            redirect(TWO_FACTOR_URL)
+        token, created = Token.objects.get_or_create(user=user)
+        return Response({'token': token.key})
 
 
 class ManageUserViews(generics.RetrieveUpdateAPIView):
@@ -54,7 +80,7 @@ class ManageUserViews(generics.RetrieveUpdateAPIView):
         return self.request.user
 
 
-
+# User account confirmation and password reset logic
 class ActivateAccount(APIView):
     """Activate a users account"""
 
@@ -68,7 +94,6 @@ class ActivateAccount(APIView):
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_valid:
             print(e_valid)
             user = None
-
         # check the validity of the token
         if user is not None and AccountActivationTokenGenerator().check_token(user, token):
             # Activation of the user
@@ -76,22 +101,20 @@ class ActivateAccount(APIView):
             # and we're changing the boolean field so that the token link becomes invalid
             Profile.objects.filter(user=user).update(email_confirmed=True)
             user.profile.email_confirmed = True
-            return Response(status=status.HTTP_200_OK)
+            return redirect(REDIRECT_ACCOUNT)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        # @TODO - redirect to home page of bowtie
 
 
 class PasswordReset(APIView):
     """ Route for password reset request of a user"""
 
-    permission_classes = (HasConfirmedEmail,)
-
     def post(self, request):
         """Post method for password reset. It takes a JSON with the user's email"""
-
+        
         email = request.data['email']
+
         user = get_user_model().objects.filter(email=email).first()
         if not user is None:
             # generate an activation token for the user
@@ -132,12 +155,8 @@ class ValidatePasswordReset(APIView):
                 user.save()
                 user.profile.save()
                 return Response(status=status.HTTP_200_OK)
-            except ValidationError as err_valid:
-                if hasattr(err_valid, 'message'):
-                    data = err_valid.message
-                else:
-                    data = err_valid
-
+            except ValidationError:
+                data = "bad credentials"
                 return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
         elif user is not None:
@@ -146,3 +165,75 @@ class ValidatePasswordReset(APIView):
 
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# Two factor authentication logic
+
+def get_user_totp_device(user, confirmed=None):
+    """
+        Find an existing user totp device and returning it
+    """
+
+    devices = devices_for_user(user, confirmed=confirmed)
+    for device in devices:
+        if isinstance(device, TOTPDevice):
+            return device
+
+class TOTPCreateAPIView(APIView):
+    """
+    Creation of a time based one time password for a user
+    """
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def __str__(self):
+        return "TOTP create endpoint"
+
+    def get(self, request):
+        """TOPT generaton"""
+
+        user = request.user
+        device = get_user_totp_device(user)
+        if not device:
+            device = user.totpdevice_set.create(confirmed=False)
+
+        # url = device.config_url 
+        img = qrcode.make(device.config_url)
+        # img.save()
+        image_data = base64.b64encode(img).decode('utf-8')
+        # Producing an image from the url
+        return Response({"qrImg": image_data}, status=status.HTTP_201_CREATED)
+
+class TOTPVerifyView(APIView):
+    """
+    Use this endpoint to verify/enable a TOTP device
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    def __str__(self):
+        return "Verification endpoint"
+    
+
+    def post(self, request, token):
+        """Verify user one-time password"""
+        user = request.user
+        device = get_user_totp_device(self, user)
+
+        if not device:
+            return Response(dict(
+           errors=['This user has not setup two factor authentication']),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if not device is None and device.verify_token(token):
+
+            if not device.confirmed:
+                device.confirmed = True
+                device.save()
+                user.profile.two_factor_enabled = True
+                user.save()
+                user.profile.save()
+
+            return Response({"token": token.key}, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
