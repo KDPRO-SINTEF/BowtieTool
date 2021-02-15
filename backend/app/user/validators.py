@@ -2,7 +2,7 @@ import re
 from django.forms import ValidationError
 class LowercaseValidator:
     """Test class for lowercase letter in password """
-    def validate(self, password, user=None):
+    def validate(self, password):
         if not re.findall('[a-z]', password):
             raise ValidationError(
                 "The password must contain at least 1 lowercase letter, a-z.",
@@ -14,7 +14,7 @@ class LowercaseValidator:
 
 class UppercaseValidator:
     """Validation for uppercase in password"""
-    def validate(self, password, user=None):
+    def validate(self, password):
         if not re.findall('[A-Z]', password):
             raise ValidationError("The password must contain at least 1 uppercase letter, A-Z.",
                     code='password_no_upper')
@@ -27,7 +27,7 @@ class UppercaseValidator:
 
 class SymbolValidator:
     """Synbol Validator """
-    def validate(self, password, user=None):
+    def validate(self, password):
         """Validation for symbol charecter in password"""
         regex_validator = r"[()[\]{}|\\`~!@#$%^&*_\-+=;:\'\",<>./?]"
         if not re.findall(regex_validator, password):

@@ -36,6 +36,7 @@ environ.Env.read_env()
 SECRET_KEY = env('SECRET_KEY')
 SECRET_KEY_RESET = env('SECRET_KEY_RESET') # key for password reset token generation
 SECRET_KEY_CONFIRM =  env('SECRET_KEY_CONFIRM') # key for email confirm token
+SECRET_KEY_TOTP = env('SECRET_KEY_TOTP')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
@@ -47,7 +48,8 @@ ALLOWED_HOSTS = [
 ]
 
 # Tokens valdity
-PASSWORD_RESET_TIMEOUT_DAYS = 2  # client requirement
+PASSWORD_RESET_TIMEOUT = env('PASSWORD_RESET_TIMEOUT_DAYS')  # client requirement
+TOTP_CONFIRM_RESET_TIMEOUT = env('TOTP_CONFIRM_RESET_TIMEOUT')
 
 
 EMAIL_BACKEND = env('EMAIL_BACKEND')

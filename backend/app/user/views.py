@@ -5,7 +5,7 @@ from rest_framework.settings import api_settings
 from user.serializers import UserSerializer, AuthTokenSerialize
 from user.customPermission import HasConfirmedEmail
 from django.core import mail
-from user.authentication import AccountActivationTokenGenerator, PasswordResetToken
+from user.authentication import AccountActivationTokenGenerator, PasswordResetToken, TOTPValidityToken
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -26,8 +26,8 @@ import qrcode
 
 IMAGE_PATH = ""
 REDIRECT_ACCOUNT = "localhost:8080/app/bowtie++/templates/login.html"
-TWO_FACTOR_URL = ""
-
+TWO_FACTOR_URL = "localhost:8080/app/bowtie++/templates/validate_TOTP.html/?token=%s"
+PASSWORD_RESET_URL = "http://serveur-ip/app/bowtie++/templates/reset_password.html/?id=%s&token=%s"
 
 # User creation and authentication logic
 class CreateUserView(generics.CreateAPIView):
@@ -62,9 +62,9 @@ class CreateTokenView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         # if user has enabled 2 fa redirect the login
-        if user.profile.two_factor_enabled == True:
-            # TODO redirect to 2fa view
-            redirect(TWO_FACTOR_URL)
+        if user.profile.two_factor_enabled:
+            token = TOTPValidityToken().make_token(user)
+            redirect(TWO_FACTOR_URL % (token))
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
 
@@ -112,7 +112,7 @@ class PasswordReset(APIView):
 
     def post(self, request):
         """Post method for password reset. It takes a JSON with the user's email"""
-        
+
         email = request.data['email']
 
         user = get_user_model().objects.filter(email=email).first()
@@ -120,10 +120,9 @@ class PasswordReset(APIView):
             # generate an activation token for the user
             token = PasswordResetToken().make_token(user)
             # Reset message and mail sending
-            message = "To reset your account password please click on the following link %s" % (
-                reverse('user:validate-reset',
-                    kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': token}))
+            message = "To activate your account please click on the following link %s" % (
+                PASSWORD_RESET_URL % (urlsafe_base64_encode(force_bytes(user.pk)), token))
+
             subject = 'Reset password for Bowtie++'
             mail.send_mail(subject, message, 'no-reply-Bowtie++', [email], fail_silently=True)
 
@@ -196,32 +195,44 @@ class TOTPCreateAPIView(APIView):
         if not device:
             device = user.totpdevice_set.create(confirmed=False)
 
-        # url = device.config_url 
+        # url = device.config_url
         img = qrcode.make(device.config_url)
         # img.save()
+        token =  TOTPValidityToken().make_token(user)
         image_data = base64.b64encode(img).decode('utf-8')
         # Producing an image from the url
-        return Response({"qrImg": image_data}, status=status.HTTP_201_CREATED)
+        return Response({"qrImg": image_data, "token":token}, status=status.HTTP_201_CREATED)
+
+
+
+
 
 class TOTPVerifyView(APIView):
     """
     Use this endpoint to verify/enable a TOTP device
     """
 
-    permission_classes = [permissions.IsAuthenticated]
-
     def __str__(self):
         return "Verification endpoint"
-    
+
 
     def post(self, request, token):
         """Verify user one-time password"""
+
+        # totp token verification logic
         user = request.user
         device = get_user_totp_device(self, user)
-
         if not device:
             return Response(dict(
            errors=['This user has not setup two factor authentication']),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # check if request is made in the permitted time
+        totp_token = request.data['tokentotp']
+        if not TOTPValidityToken().verify_token(totp_token):
+            return Response(dict(
+           errors=['Invalid token']),
                 status=status.HTTP_400_BAD_REQUEST
             )
 
