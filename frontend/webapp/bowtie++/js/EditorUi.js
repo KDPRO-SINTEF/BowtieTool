@@ -3132,7 +3132,7 @@ EditorUi.prototype.getContextualLoginText = function() {
 				//window.location.href = '/app/bowtie++';
 				localStorage.removeItem('token');
 				localStorage.removeItem('username');
-				alert("You will be disconnected");
+				alert("You will be disconnected.");
 				/*window.updateLoginStatus = mxUtils.bind(this, function() {
 					this.setLoginText(this.getContextualLoginText());
 				});*/

@@ -13,36 +13,38 @@
 
     <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
     <link rel="stylesheet" href="../styles/login.css">
+
 </head>
 <body>
-    <div id="login-form-container">
-        <div class="mb-4 login-header">
-            <img id="bwt-logo" class="mb-4" src="../images/logo.png" width="150">
-            <h1 id="register-title" class="mb-4">{{ title }} to Bowtie++</h1>
-        </div>
-        <user-login-component v-bind:title="title"></user-login-component>
+<div id="login-form-container">
+    <div class="mb-4 login-header">
+        <img id="bwt-logo" class="mb-4" src="../images/logo.png" width="120">
+        <h1 id="register-title" class="mb-4">{{ title }} to Bowtie++</h1>
     </div>
-    <script type="text/x-template" id="user-login">
-        <div class="login-form">
-            <form novalidate="true">
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
-                    <input v-model="userEmail" type="email" class="form-control" id="email" placeholder="name@example.com">
+    <user-login-component v-bind:title="title"></user-login-component>
+</div>
+<script type="text/x-template" id="user-login">
+    <div class="login-form">
+        <form novalidate="true">
+            <div class="mb-3">
+                <label for="email" class="form-label">Email address</label>
+                <input v-model="userEmail" type="email" class="form-control" id="email" placeholder="name@example.com">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input v-model="userPassword" type="password" class="form-control" id="password" placeholder="Enter password">
+                <a id="reset-pwd-link" href="reset_password.html">Forgot password?</a>
+                <div class="error-message mt-1" v-show="errors.wrongCredentialsErr.show && userPassword === ''">
+                    <p>{{ errors.wrongCredentialsErr.message }}</p>
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input v-model="userPassword" type="password" class="form-control" id="password" placeholder="Enter password">
-                    <div class="error-message mt-1" v-show="errors.wrongCredentialsErr.show && userPassword === ''">
-                        <p>{{ errors.wrongCredentialsErr.message }}</p>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <button v-on:click="loginSubmit" type="button" class="btn btn-success">Login</button>
-                </div>
-            </form>
-            <p>Don't have an account yet ? Please <a href="register.html">register</a>.</p>
-        </div>
-    </script>
-    <script src="../components/UserLoginComponent.js"></script>
+            </div>
+            <div class="mb-3">
+                <button v-on:click="loginSubmit" type="button" class="btn btn-submit btn-success">Login</button>
+            </div>
+        </form>
+        <p>Don't have an account yet? Please <a href="register.html">register</a>.</p>
+    </div>
+</script>
+<script src="../components/UserLoginComponent.js"></script>
 </body>
 </html>

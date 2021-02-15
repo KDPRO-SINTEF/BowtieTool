@@ -39,6 +39,7 @@ window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie++/templates/register
 window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';
 window.USER_INFO = window.USER_INFO || 'http://localhost:8000/api/user/me/';
 window.REGISTER = window.REGISTER || 'http://localhost:8000/api/user/create/';
+window.RESET_PWD = window.RESET_PWD || 'http://localhost:8000/api/user/reset/';
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
 window.ROLE_URL = window.ROLE_URL || '/role';
 window.USER_GRAPHS = window.USER_GRAPHS || '/user/graph';

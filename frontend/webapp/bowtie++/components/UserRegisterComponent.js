@@ -37,7 +37,9 @@ Vue.component('UserRegisterComponent', {
     methods: {
         // Verify if the form is correct or not
         verifyRegisterForm: function() {
-            this.errors.missingFieldsErr.show = false;
+            for (const errorName in this.errors)  {
+                this.errors[errorName].show = false;
+            }
             if (this.userName === '' || this.userEmail === '' || this.userPassword === '') {
                 this.errors.missingFieldsErr.show = true;
                 return false;
@@ -59,7 +61,7 @@ Vue.component('UserRegisterComponent', {
                     },
                 })
                     .then(res => {
-                        alert('Registration succeeded. You will be redirected to login page');
+                        alert('Registration succeeded. You will be redirected to login page.');
                         window.location.assign(window.LOGIN_PAGE);
                     })
                     .catch(error => {
