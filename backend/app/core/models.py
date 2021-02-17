@@ -14,8 +14,7 @@ class UserManager(BaseUserManager):
     """ A manager class for instantiating and updting users
     """
 
-    def create_user(self, email, password=None, first_name="",
-                    last_name="", **extra_fields):
+    def create_user(self, email, password=None, username="", **extra_fields):
         """creates and saves new user"""
         if not email:
             raise ValueError('User email is required')
@@ -23,23 +22,21 @@ class UserManager(BaseUserManager):
         try:
             validators.validate_password(password=password, user=user)
         except exceptions.ValidationError as e_valid:
-            #log the exception
             print(e_valid)
             return None
 
+        user.username = username
         user.set_password(password)
-        user.first_name = first_name
-        user.last_name = last_name
         user.save(using=self._db)
         profile = Profile(user=user)
         profile.save(using=self._db)
         user.profile = profile
         return user
 
-    def create_superuser(self, email, password, first_name="", last_name=""):
+    def create_superuser(self, email, password, username=""):
         """creates and saves new super user
         """
-        user = self.create_user(email, password, first_name, last_name)
+        user = self.create_user(email, password, username)
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)

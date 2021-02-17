@@ -21,12 +21,11 @@ from django_otp import devices_for_user
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django.shortcuts import redirect
 
-image_path = "/app"
 import qrcode
 
-IMAGE_PATH = ""
+IMAGE_PATH = "/app/media/QR/token_qr.png"
 REDIRECT_ACCOUNT = "localhost:8080/app/bowtie++/templates/login.html"
-TWO_FACTOR_URL = "localhost:8080/app/bowtie++/templates/validate_TOTP.html/?token=%s"
+TWO_FACTOR_URL = "localhost:8080/app/bowtie++/templates/validate_TOTP.html/?id=%s&token=%s"
 PASSWORD_RESET_URL = "http://serveur-ip/app/bowtie++/templates/reset_password.html/?id=%s&token=%s"
 
 # User creation and authentication logic
@@ -40,7 +39,7 @@ class CreateUserView(generics.CreateAPIView):
             user = get_user_model().objects.filter(email=request.data['email']).first()
             # generate an activation token for the user
             token = AccountActivationTokenGenerator().make_token(user)
-            message = "To activate your account please click on the following link %s" % (
+            message = "To activate your account please click on the following link http://localhost:8080/%s" % (
                 reverse('user:confirm',
                     kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': token}))
@@ -62,11 +61,16 @@ class CreateTokenView(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         # if user has enabled 2 fa redirect the login
+
         if user.profile.two_factor_enabled:
             token = TOTPValidityToken().make_token(user)
-            redirect(TWO_FACTOR_URL % (token))
-        token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+            redirect(TWO_FACTOR_URL % (urlsafe_base64_encode(force_bytes(user.pk), token)))
+
+        else:
+            token, created = Token.objects.get_or_create(user=user)
+            if created:
+                return Response({'token': token.key}, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class ManageUserViews(generics.RetrieveUpdateAPIView):
@@ -182,6 +186,7 @@ class TOTPCreateAPIView(APIView):
     Creation of a time based one time password for a user
     """
 
+    authentication_classes = (authentication.TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
     def __str__(self):
@@ -197,30 +202,78 @@ class TOTPCreateAPIView(APIView):
 
         # url = device.config_url
         img = qrcode.make(device.config_url)
-        # img.save()
+        img.save(IMAGE_PATH) # save for further byte reading
+
         token =  TOTPValidityToken().make_token(user)
-        image_data = base64.b64encode(img).decode('utf-8')
-        # Producing an image from the url
-        return Response({"qrImg": image_data, "token":token}, status=status.HTTP_201_CREATED)
+        with open(IMAGE_PATH, "rb") as image_file:
+            image_data = base64.b64encode(image_file.read()).decode('utf-8')
+
+        return Response({"qrImg": image_data, "token": token}, status=status.HTTP_201_CREATED)
 
 
 
 
-
-class TOTPVerifyView(APIView):
+class TOTPAuthenticateView(APIView):
     """
-    Use this endpoint to verify/enable a TOTP device
+    Use this endpoint to verify a token produced by a TOTP device
+    in order to authenticate user
     """
 
     def __str__(self):
         return "Verification endpoint"
 
 
-    def post(self, request, token):
+    def post(self, request, uidb64, token):
         """Verify user one-time password"""
 
-        # totp token verification logic
-        user = request.user
+        # check if request is made in the permitted time
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = get_user_model().objects.get(pk=uid)
+
+        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
+            user = None
+            # TODO log the exception
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        if not TOTPValidityToken().check_token(user, token):
+            return Response(dict(
+           errors=['Expired token']),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        device = get_user_totp_device(self, user)
+        if not device or not device.confirmed:
+            return Response(dict(
+           errors=['This user has not setup two factor authentication']),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if device.verify_token(token):
+            token, created = Token.objects.get_or_create(user=user)
+            if created:
+                return Response({"token": token.key}, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+class VerifyTOTPView(APIView):
+    """Endpoint for validation of TOTP otpion"""
+
+    authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, token):
+        """Activate the device of authenticated user given a totp token in the post request
+           which validation period is defined by token
+        """
+
+        user = request.users
+        if not TOTPValidityToken().check_token(user, token):
+            return Response(dict(
+           errors=['Validation token expired']),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
         device = get_user_totp_device(self, user)
         if not device:
             return Response(dict(
@@ -228,23 +281,17 @@ class TOTPVerifyView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        # check if request is made in the permitted time
-        totp_token = request.data['tokentotp']
-        if not TOTPValidityToken().verify_token(totp_token):
-            return Response(dict(
-           errors=['Invalid token']),
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        if not "token_totp" in request.data:
+            return Response(status=status.HTTP_400_BAD_REQUEST) 
+        
+        token_totp = request.data["token_totp"]
+        if device.verify_token(token_totp) and not device.confirmed:
 
-        if not device is None and device.verify_token(token):
-
-            if not device.confirmed:
-                device.confirmed = True
-                device.save()
-                user.profile.two_factor_enabled = True
-                user.save()
-                user.profile.save()
-
+            device.confirmed = True
+            device.save()
+            user.profile.two_factor_enabled = True
+            user.save()
+            user.profile.save()
             return Response({"token": token.key}, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
