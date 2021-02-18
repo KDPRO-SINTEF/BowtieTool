@@ -7,6 +7,7 @@ class LowercaseValidator:
             raise ValidationError(
                 "The password must contain at least 1 lowercase letter, a-z.",
                 code='password_no_lower')
+
     def get_help_text(self):
         return(
             "Your password must contain at least 1 lowercase letter, a-z."
@@ -19,6 +20,7 @@ class UppercaseValidator:
             raise ValidationError("The password must contain at least 1 uppercase letter, A-Z.",
                     code='password_no_upper')
 
+
     def get_help_text(self):
         """ Help message """
         return(
@@ -27,6 +29,7 @@ class UppercaseValidator:
 
 class SymbolValidator:
     """Synbol Validator """
+
     def validate(self, password, user=None):
         """Validation for symbol charecter in password"""
         regex_validator = r"[()[\]{}|\\`~!@#$%^&*_\-+=;:\'\",<>./?]"
@@ -40,6 +43,7 @@ class SymbolValidator:
                   r"()[]{}|\`~!@#$%^&*_-+=;:'\",<>./?",
                 code='password_no_symbol',
             )
+
 
     def get_help_text(self):
         """Helper function"""

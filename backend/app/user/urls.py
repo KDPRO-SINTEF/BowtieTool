@@ -14,5 +14,7 @@ urlpatterns = [
     path('reset/<slug:uidb64>/<slug:token>', views.ValidatePasswordReset.as_view(),
     	name='validate-reset'),
     path('totp/create/', views.TOTPCreateAPIView.as_view(), name='totp-create'),
-    path('totp/login/<slug:token>', views.TOTPVerifyView.as_view(), name='totp-login'),
+    path('totp/login/<slug:uidb64>/<slug:token>', views.TOTPAuthenticateView.as_view(),
+    	name='totp-login'),
+    path('totp/verify/<slug:token>', views.VerifyTOTPView.as_view(), name='totp-activate'),
 ]

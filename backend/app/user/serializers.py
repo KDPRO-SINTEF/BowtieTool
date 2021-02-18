@@ -8,17 +8,18 @@ from django.utils import timezone
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Serializer for users"""
+    """Serializer for user model"""
 
     class Meta:
         """Meta information"""
         model = get_user_model()
         fields = ('email', 'password', 'username')
-        extra_kwargs = {'password': {'write_only': True, 'min_length': 8}}
+        extra_kwargs = {'password': {'write_only': True, 'min_length': 9}}
 
     def create(self, validated_data):
         """Create new user and return it"""
-        user = get_user_model().objects.create_user(**validated_data) # if error?
+
+        user = get_user_model().objects.create_user(**validated_data)
         if user is None:
             serializers.ValidationError("Validation error", code='authentication')
 

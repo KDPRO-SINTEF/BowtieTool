@@ -72,7 +72,6 @@ class Modeltests(TestCase):
             password=password)
         self.assertIsNotNone(user.profile)
         self.assertEqual(False, user.profile.email_confirmed)
-        print(user.profile.last_login)
         #self.assertEqual(None, user.profile.last_login)
 
 

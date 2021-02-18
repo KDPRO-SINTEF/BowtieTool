@@ -32,10 +32,18 @@ environ.Env.read_env()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
+# Crypto section
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 SECRET_KEY_RESET = env('SECRET_KEY_RESET') # key for password reset token generation
 SECRET_KEY_CONFIRM =  env('SECRET_KEY_CONFIRM') # key for email confirm token
+SECRET_KEY_TOTP = env('SECRET_KEY_TOTP')
+TOTP_CONFIRM_SALT = env('TOTP_CONFIRM_SALT')
+SALT_CONFIRM_MAIL = env('SALT_CONFIRM_MAIL')
+SALT_RESET_PASSWORD = env('SALT_RESET_PASSWORD')
+
+ 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
@@ -46,8 +54,16 @@ ALLOWED_HOSTS = [
     'localhost',
 ]
 
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8080',
+)
+# CORS_ORIGIN_WHITELIST = (
+#     '.localhost', '127.0.0.1', '[::1]',
+# )
+
 # Tokens valdity
-PASSWORD_RESET_TIMEOUT_DAYS = 2  # client requirement
+PASSWORD_RESET_TIMEOUT = env('PASSWORD_RESET_TIMEOUT')  # client requirement
+TOTP_CONFIRM_RESET_TIMEOUT = env('TOTP_CONFIRM_RESET_TIMEOUT')
 
 
 EMAIL_BACKEND = env('EMAIL_BACKEND')
@@ -75,6 +91,7 @@ INSTALLED_APPS = [
     'diagram',
     'taggit',
     'django_extensions',
+    'corsheaders',
     'pydot',
     'pydotplus',
 ]
@@ -88,6 +105,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django_otp.middleware.OTPMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
