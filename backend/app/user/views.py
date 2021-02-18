@@ -24,8 +24,8 @@ from django.shortcuts import redirect
 import qrcode
 
 IMAGE_PATH = "/app/media/QR/token_qr.png"
-REDIRECT_ACCOUNT = "localhost:8080/app/bowtie++/templates/login.html"
-TWO_FACTOR_URL = "localhost:8080/app/bowtie++/templates/validate_TOTP.html/?id=%s&token=%s"
+REDIRECT_ACCOUNT = "http://localhost:8080/app/bowtie++/templates/login.html"
+TWO_FACTOR_URL = "http://localhost:8080/app/bowtie++/templates/validate_TOTP.html/?id=%s&token=%s"
 PASSWORD_RESET_URL = "http://serveur-ip/app/bowtie++/templates/reset_password.html/?id=%s&token=%s"
 
 # User creation and authentication logic
@@ -34,12 +34,13 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
+
         response = super().create(request=request, *args, **kwargs)
         if response:
             user = get_user_model().objects.filter(email=request.data['email']).first()
             # generate an activation token for the user
             token = AccountActivationTokenGenerator().make_token(user)
-            message = "To activate your account please click on the following link http://localhost:8080/%s" % (
+            message = "To activate your account please click on the following link http://localhost:8080%s" % (
                 reverse('user:confirm',
                     kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
                     'token': token}))
@@ -99,6 +100,7 @@ class ActivateAccount(APIView):
             print(e_valid)
             user = None
         # check the validity of the token
+
         if user is not None and AccountActivationTokenGenerator().check_token(user, token):
             # Activation of the user
             User.objects.filter(email=user.email).update(is_active=True)
