@@ -42892,7 +42892,7 @@ var mxCellPath =
 	 * 
 	 * Variable: PATH_SEPARATOR
 	 * 
-	 * Defines the separator between the path components. Default is ".".
+	 * Defines the separator between the path vue-components. Default is ".".
 	 */
 	PATH_SEPARATOR: '.',
 	

@@ -4,9 +4,6 @@
  */
 
 Vue.component('UserLoginComponent',  {
-    props: {
-        title: String
-    },
     template: '#user-login',
     data: function() {
         return {
@@ -78,6 +75,6 @@ let login_vue = new Vue({
     el: '#login-form-container',
     data: {
         title: 'Login'
-    }
+    },
 })
 

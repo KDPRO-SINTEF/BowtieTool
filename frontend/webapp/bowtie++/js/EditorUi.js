@@ -4,6 +4,7 @@
 /**
  * Constructs a new graph editor
  */
+
 EditorUi = function(editor, container, lightbox)
 {
 	mxEventSource.call(this);
@@ -3120,6 +3121,7 @@ EditorUi.prototype.getContextualLoginText = function() {
 			})
 		);
 	} else {
+
 		mxUtils.write(button, mxResources.get('logout'));
         button.style.backgroundColor='#f44336';
         /*button.addEventListener('click', mxUtils.bind(this, function () {
@@ -3153,10 +3155,15 @@ EditorUi.prototype.setLoginText = function(value)
 	this.loginContainer.innerHTML = '';
 	this.loginContainer.appendChild(value);
 	if (uinfo !== null) {
-		let userName = document.createElement('p');
+		var loginButton = document.getElementById('loginButton');
+		var userProfileButton = document.createElement('button');
+		userProfileButton.setAttribute('id', 'userProfileButton');
+		mxUtils.write(userProfileButton, mxResources.get('test'));
+		this.loginContainer.insertBefore(userProfileButton, loginButton);
+		/*let userName = document.createElement('p');
 		userName.setAttribute('id', 'userLoginName');
 		userName.innerHTML = 'Welcome ' + uinfo + '!';
-		this.loginContainer.appendChild(userName);
+		this.loginContainer.appendChild(userName);*/
 	}
 };
 

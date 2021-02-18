@@ -5,9 +5,9 @@ col = getCol(click.X-coordinate, vertex);
 id = 'r' + str(row) + 'c' + str(col);
 
 for (i = 1; i < 6; i++) { 
-	if( i === col)
+	if( i === col) {
 		document.getElementById(id).setAttribute('stroke-width', '4');
-	} else{
+	} else {
 		document.getElementById(id).setAttribute('stroke-width', '0');
 	}
 }

@@ -18,7 +18,7 @@ window.STENCIL_PATH = window.STENCIL_PATH || 'stencils';
 window.IMAGE_PATH = window.IMAGE_PATH || 'images';
 window.STYLE_PATH = window.STYLE_PATH || 'styles';
 window.CSS_PATH = window.CSS_PATH || 'styles';
-window.OPEN_FORM = window.OPEN_FORM || 'templates/open.html';
+window.OPEN_FORM = window.OPEN_FORM || 'common/open.html';
 
 
 // Sets the base path, the UI language via URL param and configures the
@@ -32,8 +32,9 @@ window.mxBasePath = window.mxBasePath || '../lib/mxgraph/src';
 window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
 
-window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie++/templates/login.html';
-window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie++/templates/register.html'
+window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie++/common/login.html';
+window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie++/common/register.html';
+window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie++/common/reset_pwd.html';
 
 // Customer driven project specifics
 window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';

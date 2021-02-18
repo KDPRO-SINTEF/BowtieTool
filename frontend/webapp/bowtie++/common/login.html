@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>Login</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -10,43 +10,41 @@
         mxBasePath = '../../lib/mxgraph/src';
     </script>
     <script type="text/javascript" src="../js/Init.js"></script>
+
     <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
-    <link rel="stylesheet" href="../styles/login.css">
+    <link rel="stylesheet" href="../css/login.css">
+
 </head>
 <body>
-<div id="register-form-container">
-    <div class="mb-4 register-header">
+<div id="login-form-container">
+    <div class="mb-4 login-header">
         <img id="bwt-logo" class="mb-4" src="../images/logo.png" width="120">
         <h1 id="register-title" class="mb-4">{{ title }} to Bowtie++</h1>
     </div>
-    <user-register-component v-bind:title="title"></user-register-component>
+    <user-login-component></user-login-component>
 </div>
-<script type="text/x-template" id="user-register">
-    <div class="register-form">
+<script type="text/x-template" id="user-login">
+    <div class="login-form">
         <form novalidate="true">
-            <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input v-model="userName" class="form-control" id="username" placeholder="Bowtie User">
-            </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Email address</label>
                 <input v-model="userEmail" type="email" class="form-control" id="email" placeholder="name@example.com">
-                <p v-show="errors.existingEmailErr.show && userEmail === ''" class="mt-1 error-message"> {{ errors.existingEmailErr.message }}</p>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
                 <input v-model="userPassword" type="password" class="form-control" id="password" placeholder="Enter password">
-                <p v-show="errors.unsecuredPwdErr.show && userPassword.length < 8" class="mt-1 error-message"> {{ errors.unsecuredPwdErr.message }}</p>
-                <input v-model="passwordConfirm" type="password" class="mt-2 form-control" id="password-confirmation" placeholder="Confirm password">
-                <p v-show="errors.confirmPwdErr.show && passwordConfirm === ''" class="mt-1 error-message"> {{ errors.confirmPwdErr.message }}</p>
+                <a id="reset-pwd-link" href="reset_pwd.html">Forgot password?</a>
+                <div class="error-message mt-1" v-show="errors.wrongCredentialsErr.show && userPassword === ''">
+                    <p>{{ errors.wrongCredentialsErr.message }}</p>
+                </div>
             </div>
-            <div class="mb-2">
-                <button v-on:click="registerSubmit" type="button" class="btn btn-submit btn-success">Register</button>
+            <div class="mb-3">
+                <button v-on:click="loginSubmit" type="button" class="btn btn-submit btn-success">Login</button>
             </div>
-            <p v-show="errors.missingFieldsErr.show" class="mt-1 error-message"> {{ errors.missingFieldsErr.message }}</p>
         </form>
+        <p>Don't have an account yet? Please <a href="register.html">register</a>.</p>
     </div>
 </script>
-<script src="../components/UserRegisterComponent.js"></script>
+<script src="../vue-components/UserLoginComponent.js"></script>
 </body>
 </html>

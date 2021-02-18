@@ -5,7 +5,7 @@
     <title>Grapheditor</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" type="text/css" href="styles/grapheditor.css">
+    <link rel="stylesheet" type="text/css" href="css/grapheditor.css">
 	<script type="text/javascript">
 		// Parses URL parameters. Supported parameters are:
 		// - lang=xy: Specifies the language of the user interface.
@@ -97,7 +97,8 @@
 				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
 				
 				// Main
-				new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+				var graph = new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+				console.log(graph.editor.graph.model.cells);
 			}, function()
 			{
 				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
