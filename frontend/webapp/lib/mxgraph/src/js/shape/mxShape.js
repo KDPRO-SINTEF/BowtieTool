@@ -89,6 +89,13 @@ mxShape.prototype.scale = 1;
 mxShape.prototype.antiAlias = true;
 
 /**
+ * Variable: minSvgStrokeWidth
+ * 
+ * Minimum stroke width for SVG output.
+ */
+mxShape.prototype.minSvgStrokeWidth = 1;
+
+/**
  * Variable: bounds
  *
  * Holds the <mxRectangle> that specifies the bounds of this shape.
@@ -546,7 +553,9 @@ mxShape.prototype.redrawShape = function()
 		// Specifies if events should be handled
 		canvas.pointerEvents = this.pointerEvents;
 	
+		this.beforePaint(canvas);
 		this.paint(canvas);
+		this.afterPaint(canvas);
 	
 		if (this.node != canvas.root)
 		{
@@ -604,6 +613,7 @@ mxShape.prototype.createCanvas = function()
 		canvas.setFillColor = function() {};
 		canvas.setGradient = function() {};
 		canvas.setDashed = function() {};
+		canvas.text = function() {};
 	}
 
 	return canvas;
@@ -619,7 +629,6 @@ mxShape.prototype.createSvgCanvas = function()
 	var canvas = new mxSvgCanvas2D(this.node, false);
 	canvas.strokeTolerance = (this.pointerEvents) ? this.svgStrokeTolerance : 0;
 	canvas.pointerEventsValue = this.svgPointerEvents;
-	canvas.blockImagePointerEvents = mxClient.IS_FF;
 	var off = this.getSvgScreenOffset();
 
 	if (off != 0)
@@ -630,6 +639,8 @@ mxShape.prototype.createSvgCanvas = function()
 	{
 		this.node.removeAttribute('transform');
 	}
+
+	canvas.minStrokeWidth = this.minSvgStrokeWidth;
 	
 	if (!this.antiAlias)
 	{
@@ -763,7 +774,7 @@ mxShape.prototype.updateHtmlFilters = function(node)
 };
 
 /**
- * Function: mixedModeHtml
+ * Function: updateHtmlColors
  *
  * Allow optimization by replacing VML with HTML.
  */
@@ -813,7 +824,7 @@ mxShape.prototype.updateHtmlColors = function(node)
 };
 
 /**
- * Function: mixedModeHtml
+ * Function: updateHtmlBounds
  *
  * Allow optimization by replacing VML with HTML.
  */
@@ -863,12 +874,47 @@ mxShape.prototype.destroyCanvas = function(canvas)
 };
 
 /**
+ * Function: beforePaint
+ * 
+ * Invoked before paint is called.
+ */
+mxShape.prototype.beforePaint = function(c) { }
+
+/**
+ * Function: afterPaint
+ * 
+ * Invokes after paint was called.
+ */
+mxShape.prototype.afterPaint = function(c) { }
+
+/**
  * Function: paint
  * 
  * Generic rendering code.
  */
 mxShape.prototype.paint = function(c)
 {
+	var strokeDrawn = false;
+	
+	if (c != null && this.outline)
+	{
+		var stroke = c.stroke;
+		
+		c.stroke = function()
+		{
+			strokeDrawn = true;
+			stroke.apply(this, arguments);
+		};
+
+		var fillAndStroke = c.fillAndStroke;
+		
+		c.fillAndStroke = function()
+		{
+			strokeDrawn = true;
+			fillAndStroke.apply(this, arguments);
+		};
+	}
+
 	// Scale is passed-through to canvas
 	var s = this.scale;
 	var x = this.bounds.x / s;
@@ -945,6 +991,13 @@ mxShape.prototype.paint = function(c)
 	if (bg != null && c.state != null && c.state.transform != null)
 	{
 		bg.setAttribute('transform', c.state.transform);
+	}
+	
+	// Draws highlight rectangle if no stroke was used
+	if (c != null && this.outline && !strokeDrawn)
+	{
+		c.rect(x, y, w, h);
+		c.stroke();
 	}
 };
 
@@ -1029,8 +1082,13 @@ mxShape.prototype.updateTransform = function(c, x, y, w, h)
 mxShape.prototype.paintVertexShape = function(c, x, y, w, h)
 {
 	this.paintBackground(c, x, y, w, h);
-	c.setShadow(false);
-	this.paintForeground(c, x, y, w, h);
+	
+	if (!this.outline || this.style == null || mxUtils.getValue(
+		this.style, mxConstants.STYLE_BACKGROUND_OUTLINE, 0) == 0)
+	{
+		c.setShadow(false);
+		this.paintForeground(c, x, y, w, h);
+	}
 };
 
 /**
@@ -1365,6 +1423,16 @@ mxShape.prototype.setCursor = function(cursor)
 mxShape.prototype.getCursor = function()
 {
 	return this.cursor;
+};
+
+/**
+ * Function: isRoundable
+ * 
+ * Hook for subclassers.
+ */
+mxShape.prototype.isRoundable = function()
+{
+	return false;
 };
 
 /**

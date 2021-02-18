@@ -100,7 +100,7 @@ mxUrlConverter.prototype.setBaseUrl = function(value)
 mxUrlConverter.prototype.getBaseDomain = function()
 {
 	return this.baseDomain;
-},
+};
 
 /**
  * Function: setBaseDomain
@@ -110,7 +110,7 @@ mxUrlConverter.prototype.getBaseDomain = function()
 mxUrlConverter.prototype.setBaseDomain = function(value)
 {
 	this.baseDomain = value;
-},
+};
 
 /**
  * Function: isRelativeUrl
@@ -119,7 +119,9 @@ mxUrlConverter.prototype.setBaseDomain = function(value)
  */
 mxUrlConverter.prototype.isRelativeUrl = function(url)
 {
-	return url.substring(0, 2) != '//' && url.substring(0, 7) != 'http://' && url.substring(0, 8) != 'https://' && url.substring(0, 10) != 'data:image';
+	return url != null && url.substring(0, 2) != '//' && url.substring(0, 7) != 'http://' &&
+		url.substring(0, 8) != 'https://' && url.substring(0, 10) != 'data:image' &&
+		url.substring(0, 7) != 'file://';
 };
 
 /**

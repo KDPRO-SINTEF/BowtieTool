@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2006-2015, JGraph Ltd
- * Copyright (c) 2006-2015, Gaudenz Alder
+ * Copyright (c) 2006-2019, JGraph Ltd
+ * Copyright (c) 2006-2017, draw.io AG
  */
 /**
  * Class: mxPrintPreview
@@ -156,10 +156,10 @@
  * 
  * graph - <mxGraph> to be previewed.
  * scale - Optional scale of the output. Default is 1 / <mxGraph.pageScale>.
+ * pageFormat - <mxRectangle> that specifies the page format (in pixels).
  * border - Border in pixels along each side of every page. Note that the
  * actual print function in the browser will add another border for
  * printing.
- * pageFormat - <mxRectangle> that specifies the page format (in pixels).
  * This should match the page format of the printer. Default uses the
  * <mxGraph.pageFormat> of the given graph.
  * x0 - Optional left offset of the output. Default is 0.
@@ -570,6 +570,14 @@ mxPrintPreview.prototype.open = function(css, targetWindow, forcePageBreaks, kee
 				doc.writeln(div.outerHTML);
 				div.parentNode.removeChild(div);
 			}
+			else if (mxClient.IS_IE || document.documentMode >= 11 || mxClient.IS_EDGE)
+			{
+				var clone = doc.createElement('div');
+				clone.innerHTML = div.outerHTML;
+				clone = clone.getElementsByTagName('div')[0];
+				doc.body.appendChild(clone);
+				div.parentNode.removeChild(div);
+			}
 			else
 			{
 				div.parentNode.removeChild(div);
@@ -680,17 +688,24 @@ mxPrintPreview.prototype.addPageBreak = function(doc)
  */
 mxPrintPreview.prototype.closeDocument = function()
 {
-	if (this.wnd != null && this.wnd.document != null)
+	try
 	{
-		var doc = this.wnd.document;
-		
-		this.writePostfix(doc);
-		doc.writeln('</body>');
-		doc.writeln('</html>');
-		doc.close();
-		
-		// Removes all event handlers in the print output
-		mxEvent.release(doc.body);
+		if (this.wnd != null && this.wnd.document != null)
+		{
+			var doc = this.wnd.document;
+			
+			this.writePostfix(doc);
+			doc.writeln('</body>');
+			doc.writeln('</html>');
+			doc.close();
+			
+			// Removes all event handlers in the print output
+			mxEvent.release(doc.body);
+		}
+	}
+	catch (e)
+	{
+		// ignore any errors resulting from wnd no longer being available
 	}
 };
 
@@ -719,6 +734,7 @@ mxPrintPreview.prototype.writeHead = function(doc, css)
 	// Removes horizontal rules and page selector from print output
 	doc.writeln('<style type="text/css">');
 	doc.writeln('@media print {');
+	doc.writeln('  * { -webkit-print-color-adjust: exact; }');
 	doc.writeln('  table.mxPageSelector { display: none; }');
 	doc.writeln('  hr.mxPageBreak { display: none; }');
 	doc.writeln('}');
@@ -880,7 +896,8 @@ mxPrintPreview.prototype.renderPage = function(w, h, dx, dy, content, pageNumber
 			innerDiv.style.height = (h - 2 * this.border) + 'px';
 			innerDiv.style.overflow = 'hidden';
 
-			if (mxClient.IS_IE && (doc.documentMode == null || doc.documentMode == 5 || doc.documentMode == 8 || doc.documentMode == 7))
+			if (mxClient.IS_IE && (doc.documentMode == null || doc.documentMode == 5 ||
+				doc.documentMode == 8 || doc.documentMode == 7))
 			{
 				innerDiv.style.marginTop = this.border + 'px';
 				innerDiv.style.marginLeft = this.border + 'px';	
@@ -932,6 +949,18 @@ mxPrintPreview.prototype.getRoot = function()
 };
 
 /**
+ * Function: useCssTransforms
+ * 
+ * Returns true if CSS transforms should be used for scaling content.
+ * This returns true if foreignObject is supported and we're not in Safari
+ * as it has clipping bugs for transformed CSS content with foreignObjects.
+ */
+mxPrintPreview.prototype.useCssTransforms = function()
+{
+	return !mxClient.NO_FO && !mxClient.IS_SF;
+};
+
+/**
  * Function: addGraphFragment
  * 
  * Adds a graph fragment to the given div.
@@ -955,10 +984,25 @@ mxPrintPreview.prototype.addGraphFragment = function(dx, dy, scale, pageNumber, 
 	var backgroundPane = view.getBackgroundPane();
 	var drawPane = view.getDrawPane();
 	var overlayPane = view.getOverlayPane();
+	var realScale = scale;
 
 	if (this.graph.dialect == mxConstants.DIALECT_SVG)
 	{
 		view.createSvg();
+		
+		// Uses CSS transform for scaling
+		if (this.useCssTransforms())
+		{
+			var g = view.getDrawPane().parentNode;
+			var prev = g.getAttribute('transform');
+			g.setAttribute('transformOrigin', '0 0');
+			g.setAttribute('transform', 'scale(' + scale + ',' + scale + ')' +
+				'translate(' + dx + ',' + dy + ')');
+			
+			scale = 1;
+			dx = 0;
+			dy = 0;
+		}
 	}
 	else if (this.graph.dialect == mxConstants.DIALECT_VML)
 	{
@@ -985,13 +1029,13 @@ mxPrintPreview.prototype.addGraphFragment = function(dx, dy, scale, pageNumber, 
 	var redraw = this.graph.cellRenderer.redraw;
 	var states = view.states;
 	var s = view.scale;
-	
+
 	// Gets the transformed clip for intersection check below
 	if (this.clipping)
 	{
 		var tempClip = new mxRectangle((clip.x + translate.x) * s, (clip.y + translate.y) * s,
-				clip.width * s / scale, clip.height * s / scale);
-		
+				clip.width * s / realScale, clip.height * s / realScale);
+
 		// Checks clipping rectangle for speedup
 		// Must create terminal states for edge clipping even if terminal outside of clip
 		this.graph.cellRenderer.redraw = function(state, force, rendering)
@@ -1005,8 +1049,10 @@ mxPrintPreview.prototype.addGraphFragment = function(dx, dy, scale, pageNumber, 
 				{
 					var bbox = view.getBoundingBox(orig, false);
 					
-					// Stops rendering if outside clip for speedup
-					if (bbox != null && !mxUtils.intersects(tempClip, bbox))
+					// Stops rendering if outside clip for speedup but ignores
+					// edge labels where width and height is set to 0
+					if (bbox != null && bbox.width > 0 && bbox.height > 0 &&
+						!mxUtils.intersects(tempClip, bbox))
 					{
 						return;
 					}
@@ -1024,7 +1070,10 @@ mxPrintPreview.prototype.addGraphFragment = function(dx, dy, scale, pageNumber, 
 		// Creates the temporary cell states in the view and
 		// draws them onto the temporary DOM nodes in the view
 		var cells = [this.getRoot()];
-		temp = new mxTemporaryCellStates(view, scale, cells);
+		temp = new mxTemporaryCellStates(view, scale, cells, null, mxUtils.bind(this, function(state)
+		{
+			return this.getLinkForCellState(state);
+		}));
 	}
 	finally
 	{
@@ -1096,6 +1145,16 @@ mxPrintPreview.prototype.addGraphFragment = function(dx, dy, scale, pageNumber, 
 		temp.destroy();
 		view.setEventsEnabled(eventsEnabled);
 	}
+};
+
+/**
+ * Function: getLinkForCellState
+ * 
+ * Returns the link for the given cell state. This returns null.
+ */
+mxPrintPreview.prototype.getLinkForCellState = function(state)
+{
+	return this.graph.getLinkForCell(state.cell);
 };
 
 /**

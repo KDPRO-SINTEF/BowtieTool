@@ -250,7 +250,7 @@ mxWindow.prototype.normalizeImage = mxClient.imageBasePath + '/normalize.gif';
 mxWindow.prototype.maximizeImage = mxClient.imageBasePath + '/maximize.gif';
 
 /**
- * Variable: normalizeImage
+ * Variable: resizeImage
  * 
  * URL of the image to be used for the resize icon.
  */
@@ -438,7 +438,8 @@ mxWindow.prototype.setTitle = function(title)
 mxWindow.prototype.setScrollable = function(scrollable)
 {
 	// Workaround for hang in Presto 2.5.22 (Opera 10.5)
-	if (navigator.userAgent.indexOf('Presto/2.5') < 0)
+	if (navigator.userAgent == null ||
+		navigator.userAgent.indexOf('Presto/2.5') < 0)
 	{
 		if (scrollable)
 		{
@@ -541,7 +542,7 @@ mxWindow.prototype.setResizable = function(resizable)
 			this.resize.style.bottom = '2px';
 			this.resize.style.right = '2px';
 
-			this.resize.setAttribute('src', mxClient.imageBasePath + '/resize.gif');
+			this.resize.setAttribute('src', this.resizeImage);
 			this.resize.style.cursor = 'nw-resize';
 			
 			var startX = null;
@@ -1087,7 +1088,8 @@ mxWindow.prototype.show = function()
 	
 	var style = mxUtils.getCurrentStyle(this.contentWrapper);
 	
-	if (!mxClient.IS_QUIRKS && (style.overflow == 'auto' || this.resize != null))
+	if (!mxClient.IS_QUIRKS && (style.overflow == 'auto' || this.resize != null) &&
+		this.contentWrapper.style.display != 'none')
 	{
 		this.contentWrapper.style.height = (this.div.offsetHeight -
 				this.title.offsetHeight - this.contentHeightCorrection) + 'px';

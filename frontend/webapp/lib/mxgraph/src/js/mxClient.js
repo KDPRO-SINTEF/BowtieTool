@@ -20,9 +20,9 @@ var mxClient =
 	 * 
 	 * versionMajor.versionMinor.buildNumber.revisionNumber
 	 * 
-	 * Current version is 3.7.5.
+	 * Current version is 4.2.2.
 	 */
-	VERSION: '3.7.5',
+	VERSION: '4.2.2',
 
 	/**
 	 * Variable: IS_IE
@@ -30,35 +30,36 @@ var mxClient =
 	 * True if the current browser is Internet Explorer 10 or below. Use <mxClient.IS_IE11>
 	 * to detect IE 11.
 	 */
-	IS_IE: navigator.userAgent.indexOf('MSIE') >= 0,
+	IS_IE: navigator.userAgent != null && navigator.userAgent.indexOf('MSIE') >= 0,
 
 	/**
 	 * Variable: IS_IE6
 	 *
 	 * True if the current browser is Internet Explorer 6.x.
 	 */
-	IS_IE6: navigator.userAgent.indexOf('MSIE 6') >= 0,
+	IS_IE6: navigator.userAgent != null && navigator.userAgent.indexOf('MSIE 6') >= 0,
 
 	/**
 	 * Variable: IS_IE11
 	 *
 	 * True if the current browser is Internet Explorer 11.x.
 	 */
-	IS_IE11: !!navigator.userAgent.match(/Trident\/7\./),
+	IS_IE11: navigator.userAgent != null && !!navigator.userAgent.match(/Trident\/7\./),
 
 	/**
 	 * Variable: IS_EDGE
 	 *
 	 * True if the current browser is Microsoft Edge.
 	 */
-	IS_EDGE: !!navigator.userAgent.match(/Edge\//),
+	IS_EDGE: navigator.userAgent != null && !!navigator.userAgent.match(/Edge\//),
 
 	/**
 	 * Variable: IS_QUIRKS
 	 *
 	 * True if the current browser is Internet Explorer and it is in quirks mode.
 	 */
-	IS_QUIRKS: navigator.userAgent.indexOf('MSIE') >= 0 && (document.documentMode == null || document.documentMode == 5),
+	IS_QUIRKS: navigator.userAgent != null && navigator.userAgent.indexOf('MSIE') >= 0 &&
+		(document.documentMode == null || document.documentMode == 5),
 
 	/**
 	 * Variable: IS_EM
@@ -86,7 +87,8 @@ var mxClient =
 	 *
 	 * True if the current browser is Netscape (including Firefox).
 	 */
-  	IS_NS: navigator.userAgent.indexOf('Mozilla/') >= 0 &&
+  	IS_NS: navigator.userAgent != null &&
+  		navigator.userAgent.indexOf('Mozilla/') >= 0 &&
   		navigator.userAgent.indexOf('MSIE') < 0 &&
   		navigator.userAgent.indexOf('Edge/') < 0,
 
@@ -95,8 +97,9 @@ var mxClient =
 	 *
 	 * True if the current browser is Opera.
 	 */
-  	IS_OP: navigator.userAgent.indexOf('Opera/') >= 0 ||
-  		navigator.userAgent.indexOf('OPR/') >= 0,
+  	IS_OP: navigator.userAgent != null &&
+  		(navigator.userAgent.indexOf('Opera/') >= 0 ||
+  		navigator.userAgent.indexOf('OPR/') >= 0),
 
 	/**
 	 * Variable: IS_OT
@@ -104,7 +107,8 @@ var mxClient =
 	 * True if -o-transform is available as a CSS style, ie for Opera browsers
 	 * based on a Presto engine with version 2.5 or later.
 	 */
-  	IS_OT: navigator.userAgent.indexOf('Presto/') >= 0 &&
+  	IS_OT: navigator.userAgent != null &&
+  		navigator.userAgent.indexOf('Presto/') >= 0 &&
   		navigator.userAgent.indexOf('Presto/2.4.') < 0 &&
   		navigator.userAgent.indexOf('Presto/2.3.') < 0 &&
   		navigator.userAgent.indexOf('Presto/2.2.') < 0 &&
@@ -117,24 +121,28 @@ var mxClient =
 	 *
 	 * True if the current browser is Safari.
 	 */
-  	IS_SF: navigator.userAgent.indexOf('AppleWebKit/') >= 0 &&
-  		navigator.userAgent.indexOf('Chrome/') < 0 &&
-  		navigator.userAgent.indexOf('Edge/') < 0,
-  	
+  	IS_SF: /Apple Computer, Inc/.test(navigator.vendor),
+
+	/**
+	 * Variable: IS_ANDROID
+	 * 
+	 * Returns true if the user agent contains Android.
+	 */
+  	IS_ANDROID: navigator.appVersion.indexOf('Android') >= 0,
+
 	/**
 	 * Variable: IS_IOS
 	 * 
 	 * Returns true if the user agent is an iPad, iPhone or iPod.
 	 */
-  	IS_IOS: (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false),
-  		
+  	IS_IOS: (/iP(hone|od|ad)/.test(navigator.platform)),
+
 	/**
 	 * Variable: IS_GC
 	 *
 	 * True if the current browser is Google Chrome.
 	 */
-  	IS_GC: navigator.userAgent.indexOf('Chrome/') >= 0 &&
-		navigator.userAgent.indexOf('Edge/') < 0,
+  	IS_GC: /Google Inc/.test(navigator.vendor),
 	
 	/**
 	 * Variable: IS_CHROMEAPP
@@ -142,13 +150,13 @@ var mxClient =
 	 * True if the this is running inside a Chrome App.
 	 */
   	IS_CHROMEAPP: window.chrome != null && chrome.app != null && chrome.app.runtime != null,
-		
+
 	/**
 	 * Variable: IS_FF
 	 *
 	 * True if the current browser is Firefox.
 	 */
-  	IS_FF: navigator.userAgent.indexOf('Firefox/') >= 0,
+  	IS_FF: typeof InstallTrigger !== 'undefined',
   	
 	/**
 	 * Variable: IS_MT
@@ -169,20 +177,18 @@ var mxClient =
   		navigator.userAgent.indexOf('Iceape/1.') < 0),
 
 	/**
+	 * Variable: IS_VML
+	 *
+	 * True if the browser supports VML.
+	 */
+  	IS_VML: navigator.appName.toUpperCase() == 'MICROSOFT INTERNET EXPLORER',
+
+	/**
 	 * Variable: IS_SVG
 	 *
 	 * True if the browser supports SVG.
 	 */
-  	IS_SVG: navigator.userAgent.indexOf('Firefox/') >= 0 || // FF and Camino
-	  	navigator.userAgent.indexOf('Iceweasel/') >= 0 || // Firefox on Debian
-	  	navigator.userAgent.indexOf('Seamonkey/') >= 0 || // Firefox-based
-	  	navigator.userAgent.indexOf('Iceape/') >= 0 || // Seamonkey on Debian
-	  	navigator.userAgent.indexOf('Galeon/') >= 0 || // Gnome Browser (old)
-	  	navigator.userAgent.indexOf('Epiphany/') >= 0 || // Gnome Browser (new)
-	  	navigator.userAgent.indexOf('AppleWebKit/') >= 0 || // Safari/Google Chrome
-	  	navigator.userAgent.indexOf('Gecko/') >= 0 || // Netscape/Gecko
-	  	navigator.userAgent.indexOf('Opera/') >= 0 || // Opera
-	  	(document.documentMode != null && document.documentMode >= 9), // IE9+
+  	IS_SVG: navigator.appName.toUpperCase() != 'MICROSOFT INTERNET EXPLORER',
 
 	/**
 	 * Variable: NO_FO
@@ -192,13 +198,6 @@ var mxClient =
 	 */
   	NO_FO: !document.createElementNS || document.createElementNS('http://www.w3.org/2000/svg',
   		'foreignObject') != '[object SVGForeignObjectElement]' || navigator.userAgent.indexOf('Opera/') >= 0,
-
-	/**
-	 * Variable: IS_VML
-	 *
-	 * True if the browser supports VML.
-	 */
-  	IS_VML: navigator.appName.toUpperCase() == 'MICROSOFT INTERNET EXPLORER',
 
 	/**
 	 * Variable: IS_WIN
@@ -213,6 +212,13 @@ var mxClient =
 	 * True if the client is a Mac.
 	 */
   	IS_MAC: navigator.appVersion.indexOf('Mac') > 0,
+	
+	/**
+	 * Variable: IS_CHROMEOS
+	 *
+	 * True if the client is a Chrome OS.
+	 */
+  	IS_CHROMEOS: /\bCrOS\b/.test(navigator.appVersion),
 
 	/**
 	 * Variable: IS_TOUCH
@@ -236,6 +242,13 @@ var mxClient =
 	 */
   	IS_LOCAL: document.location.href.indexOf('http://') < 0 &&
   			  document.location.href.indexOf('https://') < 0,
+
+	/**
+	 * Variable: defaultBundles
+	 * 
+	 * Contains the base names of the default bundles if mxLoadResources is false.
+	 */
+  	defaultBundles: [],
 
 	/**
 	 * Function: isBrowserSupported
@@ -275,8 +288,9 @@ var mxClient =
 	 * rel - String that represents the rel attribute of the link node.
 	 * href - String that represents the href attribute of the link node.
 	 * doc - Optional parent document of the link node.
+	 * id - unique id for the link element to check if it already exists
 	 */
-	link: function(rel, href, doc)
+	link: function(rel, href, doc, id)
 	{
 		doc = doc || document;
 
@@ -294,8 +308,41 @@ var mxClient =
 			link.setAttribute('charset', 'UTF-8');
 			link.setAttribute('type', 'text/css');
 			
+			if (id)
+			{
+				link.setAttribute('id', id);
+			}
+			
 			var head = doc.getElementsByTagName('head')[0];
 	   		head.appendChild(link);
+		}
+	},
+	
+	/**
+	 * Function: loadResources
+	 * 
+	 * Helper method to load the default bundles if mxLoadResources is false.
+	 * 
+	 * Parameters:
+	 * 
+	 * fn - Function to call after all resources have been loaded.
+	 * lan - Optional string to pass to <mxResources.add>.
+	 */
+	loadResources: function(fn, lan)
+	{
+		var pending = mxClient.defaultBundles.length;
+		
+		function callback()
+		{
+			if (--pending == 0)
+			{
+				fn();
+			}
+		}
+		
+		for (var i = 0; i < mxClient.defaultBundles.length; i++)
+		{
+			mxResources.add(mxClient.defaultBundles[i], lan, callback);
 		}
 	},
 	
@@ -312,26 +359,7 @@ var mxClient =
 	include: function(src)
 	{
 		document.write('<script src="'+src+'"></script>');
-	},
-	
-	/**
-	 * Function: dispose
-	 * 
-	 * Frees up memory in IE by resolving cyclic dependencies between the DOM
-	 * and the JavaScript objects.
-	 */
-	dispose: function()
-	{
-		// Cleans all objects where listeners have been added
-		for (var i = 0; i < mxEvent.objects.length; i++)
-		{
-			if (mxEvent.objects[i].mxListenerList != null)
-			{
-				mxEvent.removeAllListeners(mxEvent.objects[i]);
-			}
-		}
 	}
-
 };
 
 /**
@@ -339,7 +367,8 @@ var mxClient =
  * 
  * Optional global config variable to toggle loading of the two resource files
  * in <mxGraph> and <mxEditor>. Default is true. NOTE: This is a global variable,
- * not a variable of mxClient.
+ * not a variable of mxClient. If this is false, you can use <mxClient.loadResources>
+ * with its callback to load the default bundles asynchronously.
  *
  * (code)
  * <script type="text/javascript">
@@ -577,17 +606,19 @@ if (mxClient.IS_VML)
 	else
 	{
 		// Enables support for IE8 standards mode. Note that this requires all attributes for VML
-		// elements to be set using direct notation, ie. node.attr = value. The use of setAttribute
-		// is not possible.
-		if (document.documentMode == 8)
+		// elements to be set using direct notation, ie. node.attr = value, not setAttribute.
+		if (document.namespaces != null)
 		{
-			document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml', '#default#VML');
-			document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office', '#default#VML');
-		}
-		else
-		{
-			document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml');
-			document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office');
+			if (document.documentMode == 8)
+			{
+				document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml', '#default#VML');
+				document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office', '#default#VML');
+			}
+			else
+			{
+				document.namespaces.add(mxClient.VML_PREFIX, 'urn:schemas-microsoft-com:vml');
+				document.namespaces.add(mxClient.OFFICE_PREFIX, 'urn:schemas-microsoft-com:office:office');
+			}
 		}
 
 		// Workaround for limited number of stylesheets in IE (does not work in standards mode)
@@ -612,9 +643,6 @@ if (mxClient.IS_VML)
 	    {
 	    	mxClient.link('stylesheet', mxClient.basePath + '/css/explorer.css');
 	    }
-	
-		// Cleans up resources when the application terminates
-		window.attachEvent('onunload', mxClient.dispose);
 	}
 }
 
@@ -660,8 +688,8 @@ if (mxForceIncludes || !(typeof module === 'object' && module.exports != null))
 	mxClient.include(mxClient.basePath+'/js/util/mxSvgCanvas2D.js');
 	mxClient.include(mxClient.basePath+'/js/util/mxVmlCanvas2D.js');
 	mxClient.include(mxClient.basePath+'/js/util/mxGuide.js');
-	mxClient.include(mxClient.basePath+'/js/shape/mxStencil.js');
 	mxClient.include(mxClient.basePath+'/js/shape/mxShape.js');
+	mxClient.include(mxClient.basePath+'/js/shape/mxStencil.js');
 	mxClient.include(mxClient.basePath+'/js/shape/mxStencilRegistry.js');
 	mxClient.include(mxClient.basePath+'/js/shape/mxMarker.js');
 	mxClient.include(mxClient.basePath+'/js/shape/mxActor.js');
