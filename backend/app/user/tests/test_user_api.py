@@ -82,7 +82,7 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(TOKEN_URL, payload)
 
         self.assertNotIn('token', res.data)
-        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
     def test_create_token_for_user_ok(self):
@@ -124,7 +124,7 @@ class PublicUserApiTests(TestCase):
         }
         res = self.client.post(TOKEN_URL, payload)
         self.assertNotIn('token', res.data)
-        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_token_missing_field(self):
         """Test that  email, password and username are required"""
@@ -134,7 +134,7 @@ class PublicUserApiTests(TestCase):
         }
         res = self.client.post(TOKEN_URL, payload)
         self.assertNotIn('token', res.data)
-        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_account_activation_token(self):
         """ Test if account activation token is valid and the request
@@ -183,7 +183,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
 
-    def test_account_password__reset_token_nomail(self):
+    def test_account_password_reset_token_nomail(self):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',

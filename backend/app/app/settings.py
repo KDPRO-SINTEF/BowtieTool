@@ -42,8 +42,6 @@ TOTP_CONFIRM_SALT = env('TOTP_CONFIRM_SALT')
 SALT_CONFIRM_MAIL = env('SALT_CONFIRM_MAIL')
 SALT_RESET_PASSWORD = env('SALT_RESET_PASSWORD')
 
- 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
@@ -64,6 +62,8 @@ CORS_ORIGIN_WHITELIST = (
 # Tokens valdity
 PASSWORD_RESET_TIMEOUT = env('PASSWORD_RESET_TIMEOUT')  # client requirement
 TOTP_CONFIRM_RESET_TIMEOUT = env('TOTP_CONFIRM_RESET_TIMEOUT')
+AUTHENTICATION_TOKEN_EXPIRE_HOURS = env('AUTHENTICATION_TOKEN_EXPIRE_HOURS')
+AUTHENTICATION_TOKEN_EXPIRE_SECONDS = env('AUTHENTICATION_TOKEN_EXPIRE_SECONDS')
 
 
 EMAIL_BACKEND = env('EMAIL_BACKEND')
@@ -174,6 +174,16 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# defining the custom token authentication as primary authentication (in the place of TokenAuthentication)
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+         'user.authentication.ExpiringTokenAuthentication',
+    ],
+
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

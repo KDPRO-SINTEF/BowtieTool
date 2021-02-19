@@ -5,7 +5,7 @@ from rest_framework.settings import api_settings
 from user.serializers import UserSerializer, AuthTokenSerialize
 from user.customPermission import HasConfirmedEmail
 from django.core import mail
-from user.authentication import AccountActivationTokenGenerator, PasswordResetToken, TOTPValidityToken
+from user.authentication import AccountActivationTokenGenerator, PasswordResetToken, TOTPValidityToken, ExpiringTokenAuthentication
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -20,8 +20,10 @@ from rest_framework.authtoken.models import Token
 from django_otp import devices_for_user
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django.shortcuts import redirect
-
+import datetime
 import qrcode
+
+from django.utils import timezone
 
 IMAGE_PATH = "/app/media/QR/token_qr.png"
 REDIRECT_ACCOUNT = "http://localhost:8080/app/bowtie++/templates/login.html"
@@ -61,23 +63,25 @@ class CreateTokenView(ObtainAuthToken):
         serializer = AuthTokenSerialize(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
-        # if user has enabled 2 fa redirect the login
 
+        # if user has enabled 2 fa redirect the login
         if user.profile.two_factor_enabled:
             token = TOTPValidityToken().make_token(user)
             redirect(TWO_FACTOR_URL % (urlsafe_base64_encode(force_bytes(user.pk), token)))
 
         else:
             token, created = Token.objects.get_or_create(user=user)
-            if created:
-                return Response({'token': token.key}, status=status.HTTP_200_OK)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            if not created:
+                # update the created time of the token to keep it valid
+                token.created = timezone.now()
+                token.save()
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
 
 
 class ManageUserViews(generics.RetrieveUpdateAPIView):
     """Manage the authenticated user"""
     serializer_class = UserSerializer
-    authentication_classes = (authentication.TokenAuthentication,)
+    authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
@@ -100,7 +104,6 @@ class ActivateAccount(APIView):
             print(e_valid)
             user = None
         # check the validity of the token
-
         if user is not None and AccountActivationTokenGenerator().check_token(user, token):
             # Activation of the user
             User.objects.filter(email=user.email).update(is_active=True)
@@ -188,7 +191,7 @@ class TOTPCreateAPIView(APIView):
     Creation of a time based one time password for a user
     """
 
-    authentication_classes = (authentication.TokenAuthentication,)
+    authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
     def __str__(self):
@@ -261,7 +264,7 @@ class TOTPAuthenticateView(APIView):
 class VerifyTOTPView(APIView):
     """Endpoint for validation of TOTP otpion"""
 
-    authentication_classes = (authentication.TokenAuthentication,)
+    authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, token):
@@ -284,8 +287,8 @@ class VerifyTOTPView(APIView):
             )
 
         if not "token_totp" in request.data:
-            return Response(status=status.HTTP_400_BAD_REQUEST) 
-        
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         token_totp = request.data["token_totp"]
         if device.verify_token(token_totp) and not device.confirmed:
 

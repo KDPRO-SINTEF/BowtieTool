@@ -8,6 +8,7 @@ class HasConfirmedEmail(permissions.BasePermission):
         
         if not 'email' in request.data:
             return False
+       
         email = request.data['email']
         user = get_user_model().objects.filter(email=email).first()
         if not user is None:

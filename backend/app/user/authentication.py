@@ -5,7 +5,11 @@ from django.conf import settings
 from django.utils.crypto import constant_time_compare
 from django.utils.http import base36_to_int, int_to_base36
 from datetime import datetime
-
+from rest_framework.authentication import TokenAuthentication, get_authorization_header
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework import exceptions
+from datetime import timedelta
+import pytz 
 
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
     """ Generation of tokens for email confirmation.
@@ -105,3 +109,29 @@ class TOTPValidityToken(PasswordResetTokenGenerator):
     def _now(self):
         # Used for mocking in tests
         return datetime.now()
+
+
+class ExpiringTokenAuthentication(TokenAuthentication):
+    """Class extending the normal token authentication in RESTFUL Django
+       by adding a validity time defined in the settings module
+    """
+      
+    def authenticate_credentials(self, key):
+        """Check the validity of the token used for authentication"""
+        model = self.get_model()
+        try:
+            token = model.objects.get(key=key)
+        except model.DoesNotExist as not_exist_mod:
+            raise exceptions.AuthenticationFailed('Invalid token')
+
+        if not token.user.is_active:
+            raise exceptions.AuthenticationFailed('User inactive or deleted')
+
+        # This is required for the time comparison
+        utc_now = datetime.utcnow()
+        utc_now = utc_now.replace(tzinfo=pytz.UTC)
+        if token.created < utc_now - timedelta(hours=int(settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS), 
+            seconds=int(settings.AUTHENTICATION_TOKEN_EXPIRE_SECONDS)):
+            raise exceptions.AuthenticationFailed('Token has expired')
+
+        return token.user, token
