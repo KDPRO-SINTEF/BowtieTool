@@ -47,6 +47,14 @@ mxSwimlaneLayout.prototype.roots = null;
 mxSwimlaneLayout.prototype.swimlanes = null;
 
 /**
+ * Variable: dummyVertices
+ * 
+ * Holds an array of <mxCell> of dummy vertices inserted during the layout
+ * to pad out empty swimlanes
+ */
+mxSwimlaneLayout.prototype.dummyVertices = null;
+
+/**
  * Variable: dummyVertexWidth
  * 
  * The cell width of any dummy vertices inserted
@@ -82,7 +90,7 @@ mxSwimlaneLayout.prototype.moveParent = false;
  * Variable: parentBorder
  * 
  * The border to be added around the children if the parent is to be
- * resized using <resizeParent>. Default is 30.
+ * resized using <resizeParent>. Default is 0.
  */
 mxSwimlaneLayout.prototype.parentBorder = 30;
 
@@ -96,7 +104,7 @@ mxSwimlaneLayout.prototype.intraCellSpacing = 30;
 /**
  * Variable: interRankCellSpacing
  * 
- * The spacing buffer added between cell on adjacent layers. Default is 100.
+ * The spacing buffer added between cell on adjacent layers. Default is 50.
  */
 mxSwimlaneLayout.prototype.interRankCellSpacing = 100;
 
@@ -110,8 +118,7 @@ mxSwimlaneLayout.prototype.interHierarchySpacing = 60;
 /**
  * Variable: parallelEdgeSpacing
  * 
- * The distance between each parallel edge on each ranks for long edges.
- * Default is 10.
+ * The distance between each parallel edge on each ranks for long edges
  */
 mxSwimlaneLayout.prototype.parallelEdgeSpacing = 10;
 
@@ -132,10 +139,11 @@ mxSwimlaneLayout.prototype.orientation = mxConstants.DIRECTION_NORTH;
 mxSwimlaneLayout.prototype.fineTuning = true;
 
 /**
+ * 
  * Variable: tightenToSource
  * 
  * Whether or not to tighten the assigned ranks of vertices up towards
- * the source cells. Default is true.
+ * the source cells.
  */
 mxSwimlaneLayout.prototype.tightenToSource = true;
 
@@ -152,8 +160,8 @@ mxSwimlaneLayout.prototype.disableEdgeStyle = true;
  * 
  * Whether or not to drill into child cells and layout in reverse
  * group order. This also cause the layout to navigate edges whose 
- * terminal vertices have different parents but are in the same
- * ancestry chain. Default is true.
+ * terminal vertices  * have different parents but are in the same 
+ * ancestry chain
  */
 mxSwimlaneLayout.prototype.traverseAncestors = true;
 
@@ -188,8 +196,7 @@ mxHierarchicalLayout.prototype.edgesTargetTermCache = null;
 /**
  * Variable: edgeStyle
  * 
- * The style to apply between cell layers to edge segments.
- * Default is <mxHierarchicalEdgeStyle.POLYLINE>.
+ * The style to apply between cell layers to edge segments
  */
 mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
 
@@ -255,7 +262,7 @@ mxSwimlaneLayout.prototype.execute = function(parent, swimlanes)
 	}
 
 	this.swimlanes = swimlanes;
-	var dummyVertices = [];
+	this.dummyVertices = [];
 	// Check the swimlanes all have vertices
 	// in them
 	for (var i = 0; i < swimlanes.length; i++)
@@ -265,7 +272,7 @@ mxSwimlaneLayout.prototype.execute = function(parent, swimlanes)
 		if (children == null || children.length == 0)
 		{
 			var vertex = this.graph.insertVertex(swimlanes[i], null, null, 0, 0, this.dummyVertexWidth, 0);
-			dummyVertices.push(vertex);
+			this.dummyVertices.push(vertex);
 		}
 	}
 	
@@ -293,7 +300,7 @@ mxSwimlaneLayout.prototype.execute = function(parent, swimlanes)
 			}
 		}
 
-		this.graph.removeCells(dummyVertices);
+		this.graph.removeCells(this.dummyVertices);
 	}
 	finally
 	{
@@ -373,18 +380,15 @@ mxSwimlaneLayout.prototype.updateGroupBounds = function()
 			var newGeo = geo.clone();
 			
 			var leftGroupBorder = (i == 0) ? this.parentBorder : this.interRankCellSpacing/2;
-			var w = size.width + leftGroupBorder;
-			var x = childBounds[i].x - w;
-			var y = layoutBounds.y - this.parentBorder;
-
-			newGeo.x += x;
-			newGeo.y = y;
+			newGeo.x += childBounds[i].x - size.width - leftGroupBorder;
+			newGeo.y = newGeo.y + layoutBounds.y - geo.y - this.parentBorder;
 			
-			newGeo.width = childBounds[i].width + w + this.interRankCellSpacing/2;
+			newGeo.width = childBounds[i].width + size.width + this.interRankCellSpacing/2 + leftGroupBorder;
 			newGeo.height = layoutBounds.height + size.height + 2 * this.parentBorder;
 			
 			this.graph.model.setGeometry(lane, newGeo);
-			this.graph.moveCells(children, -x, geo.y - y);
+			this.graph.moveCells(children, -childBounds[i].x + size.width + leftGroupBorder, 
+					geo.y - layoutBounds.y + this.parentBorder);
 		}
 	}
 };
@@ -585,7 +589,7 @@ mxSwimlaneLayout.prototype.run = function(parent)
 {
 	// Separate out unconnected hierarchies
 	var hierarchyVertices = [];
-	var allVertexSet = Object();
+	var allVertexSet = [];
 
 	if (this.swimlanes != null && this.swimlanes.length > 0 && parent != null)
 	{
@@ -680,7 +684,7 @@ mxSwimlaneLayout.prototype.run = function(parent)
 	this.layeringStage();
 	
 	this.crossingStage(parent);
-	this.placementStage(0, parent);
+	initialX = this.placementStage(0, parent);
 };
 
 /**

@@ -75,7 +75,7 @@ mxCellHighlight.prototype.keepOnTop = false;
  * 
  * Reference to the enclosing <mxGraph>.
  */
-mxCellHighlight.prototype.graph = null;
+mxCellHighlight.prototype.graph = true;
 
 /**
  * Variable: state
@@ -169,9 +169,9 @@ mxCellHighlight.prototype.createShape = function()
 };
 
 /**
- * Function: getStrokeWidth
+ * Function: repaint
  * 
- * Returns the stroke width.
+ * Updates the highlight after a change of the model or view.
  */
 mxCellHighlight.prototype.getStrokeWidth = function(state)
 {

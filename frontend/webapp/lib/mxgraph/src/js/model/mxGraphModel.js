@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2006-2018, JGraph Ltd
- * Copyright (c) 2006-2018, Gaudenz Alder
+ * Copyright (c) 2006-2015, JGraph Ltd
+ * Copyright (c) 2006-2015, Gaudenz Alder
  */
 /**
  * Class: mxGraphModel
@@ -556,8 +556,7 @@ mxGraphModel.prototype.isLayer = function(cell)
 /**
  * Function: isAncestor
  * 
- * Returns true if the given parent is an ancestor of the given child. Note 
- * returns true if child == parent.
+ * Returns true if the given parent is an ancestor of the given child.
  *
  * Parameters:
  * 
@@ -630,7 +629,8 @@ mxGraphModel.prototype.add = function(parent, child, index)
 		this.execute(new mxChildChange(this, parent, child, index));
 
 		// Maintains the edges parents by moving the edges
-		// into the nearest common ancestor of its terminals
+		// into the nearest common ancestor of its
+		// terminals
 		if (this.maintainEdgeParent && parentChanged)
 		{
 			this.updateEdgeParents(child);
@@ -1010,15 +1010,13 @@ mxGraphModel.prototype.parentForCellChanged = function(cell, parent, index)
 		previous.remove(oldIndex);
 	}
 	
-	// Adds or removes the cell from the model
-	var par = this.contains(parent);
-	var pre = this.contains(previous);
-	
-	if (par && !pre)
+	// Checks if the previous parent was already in the
+	// model and avoids calling cellAdded if it was.
+	if (!this.contains(previous) && parent != null)
 	{
 		this.cellAdded(cell);
 	}
-	else if (pre && !par)
+	else if (parent == null)
 	{
 		this.cellRemoved(cell);
 	}
@@ -1981,15 +1979,10 @@ mxGraphModel.prototype.endUpdate = function()
  * Creates a new <mxUndoableEdit> that implements the
  * notify function to fire a <change> and <notify> event
  * through the <mxUndoableEdit>'s source.
- * 
- * Parameters:
- * 
- * significant - Optional boolean that specifies if the edit to be created is
- * significant. Default is true.
  */
-mxGraphModel.prototype.createUndoableEdit = function(significant)
+mxGraphModel.prototype.createUndoableEdit = function()
 {
-	var edit = new mxUndoableEdit(this, (significant != null) ? significant : true);
+	var edit = new mxUndoableEdit(this, true);
 	
 	edit.notify = function()
 	{
@@ -2157,14 +2150,12 @@ mxGraphModel.prototype.getParents = function(cells)
  * Parameters:
  * 
  * cell - <mxCell> to be cloned.
- * includeChildren - Optional boolean indicating if the cells should be cloned
- * with all descendants. Default is true.
  */
-mxGraphModel.prototype.cloneCell = function(cell, includeChildren)
+mxGraphModel.prototype.cloneCell = function(cell)
 {
 	if (cell != null)
 	{
-		return this.cloneCells([cell], includeChildren)[0];
+		return this.cloneCells([cell], true)[0];
 	}
 	
 	return null;
@@ -2181,13 +2172,12 @@ mxGraphModel.prototype.cloneCell = function(cell, includeChildren)
  * Parameters:
  * 
  * cells - Array of <mxCell> to be cloned.
- * includeChildren - Optional boolean indicating if the cells should be cloned
- * with all descendants. Default is true.
+ * includeChildren - Boolean indicating if the cells should be cloned
+ * with all descendants.
  * mapping - Optional mapping for existing clones.
  */
 mxGraphModel.prototype.cloneCells = function(cells, includeChildren, mapping)
 {
-	includeChildren = (includeChildren != null) ? includeChildren : true;
 	mapping = (mapping != null) ? mapping : new Object();
 	var clones = [];
 	
@@ -2221,24 +2211,20 @@ mxGraphModel.prototype.cloneCells = function(cells, includeChildren, mapping)
  */
 mxGraphModel.prototype.cloneCellImpl = function(cell, mapping, includeChildren)
 {
-	var ident = mxObjectIdentity.get(cell);
-	var clone = mapping[ident];
+	var clone = this.cellCloned(cell);
 	
-	if (clone == null)
+	// Stores the clone in the lookup table
+	mapping[mxObjectIdentity.get(cell)] = clone;
+	
+	if (includeChildren)
 	{
-		clone = this.cellCloned(cell);
-		mapping[ident] = clone;
-
-		if (includeChildren)
+		var childCount = this.getChildCount(cell);
+		
+		for (var i = 0; i < childCount; i++)
 		{
-			var childCount = this.getChildCount(cell);
-			
-			for (var i = 0; i < childCount; i++)
-			{
-				var cloneChild = this.cloneCellImpl(
-					this.getChildAt(cell, i), mapping, true);
-				clone.insert(cloneChild);
-			}
+			var cloneChild = this.cloneCellImpl(
+				this.getChildAt(cell, i), mapping, true);
+			clone.insert(cloneChild);
 		}
 	}
 	
@@ -2360,29 +2346,26 @@ function mxChildChange(model, parent, child, index)
  */
 mxChildChange.prototype.execute = function()
 {
-	if (this.child != null)
+	var tmp = this.model.getParent(this.child);
+	var tmp2 = (tmp != null) ? tmp.getIndex(this.child) : 0;
+	
+	if (this.previous == null)
 	{
-		var tmp = this.model.getParent(this.child);
-		var tmp2 = (tmp != null) ? tmp.getIndex(this.child) : 0;
-		
-		if (this.previous == null)
-		{
-			this.connect(this.child, false);
-		}
-		
-		tmp = this.model.parentForCellChanged(
-			this.child, this.previous, this.previousIndex);
-			
-		if (this.previous != null)
-		{
-			this.connect(this.child, true);
-		}
-		
-		this.parent = this.previous;
-		this.previous = tmp;
-		this.index = this.previousIndex;
-		this.previousIndex = tmp2;
+		this.connect(this.child, false);
 	}
+	
+	tmp = this.model.parentForCellChanged(
+		this.child, this.previous, this.previousIndex);
+		
+	if (this.previous != null)
+	{
+		this.connect(this.child, true);
+	}
+	
+	this.parent = this.previous;
+	this.previous = tmp;
+	this.index = this.previousIndex;
+	this.previousIndex = tmp2;
 };
 
 /**
@@ -2461,12 +2444,9 @@ function mxTerminalChange(model, cell, terminal, source)
  */
 mxTerminalChange.prototype.execute = function()
 {
-	if (this.cell != null)
-	{
-		this.terminal = this.previous;
-		this.previous = this.model.terminalForCellChanged(
-			this.cell, this.previous, this.source);
-	}
+	this.terminal = this.previous;
+	this.previous = this.model.terminalForCellChanged(
+		this.cell, this.previous, this.source);
 };
 
 /**
@@ -2495,12 +2475,9 @@ function mxValueChange(model, cell, value)
  */
 mxValueChange.prototype.execute = function()
 {
-	if (this.cell != null)
-	{
-		this.value = this.previous;
-		this.previous = this.model.valueForCellChanged(
-			this.cell, this.previous);
-	}
+	this.value = this.previous;
+	this.previous = this.model.valueForCellChanged(
+		this.cell, this.previous);
 };
 
 /**
@@ -2529,12 +2506,9 @@ function mxStyleChange(model, cell, style)
  */
 mxStyleChange.prototype.execute = function()
 {
-	if (this.cell != null)
-	{
-		this.style = this.previous;
-		this.previous = this.model.styleForCellChanged(
-			this.cell, this.previous);
-	}
+	this.style = this.previous;
+	this.previous = this.model.styleForCellChanged(
+		this.cell, this.previous);
 };
 
 /**
@@ -2563,12 +2537,9 @@ function mxGeometryChange(model, cell, geometry)
  */
 mxGeometryChange.prototype.execute = function()
 {
-	if (this.cell != null)
-	{
-		this.geometry = this.previous;
-		this.previous = this.model.geometryForCellChanged(
-			this.cell, this.previous);
-	}
+	this.geometry = this.previous;
+	this.previous = this.model.geometryForCellChanged(
+		this.cell, this.previous);
 };
 
 /**
@@ -2597,12 +2568,9 @@ function mxCollapseChange(model, cell, collapsed)
  */
 mxCollapseChange.prototype.execute = function()
 {
-	if (this.cell != null)
-	{
-		this.collapsed = this.previous;
-		this.previous = this.model.collapsedStateForCellChanged(
-			this.cell, this.previous);
-	}
+	this.collapsed = this.previous;
+	this.previous = this.model.collapsedStateForCellChanged(
+		this.cell, this.previous);
 };
 
 /**
@@ -2631,12 +2599,9 @@ function mxVisibleChange(model, cell, visible)
  */
 mxVisibleChange.prototype.execute = function()
 {
-	if (this.cell != null)
-	{
-		this.visible = this.previous;
-		this.previous = this.model.visibleStateForCellChanged(
-			this.cell, this.previous);
-	}
+	this.visible = this.previous;
+	this.previous = this.model.visibleStateForCellChanged(
+		this.cell, this.previous);
 };
 
 /**
@@ -2687,19 +2652,16 @@ function mxCellAttributeChange(cell, attribute, value)
  */
 mxCellAttributeChange.prototype.execute = function()
 {
-	if (this.cell != null)
+	var tmp = this.cell.getAttribute(this.attribute);
+	
+	if (this.previous == null)
 	{
-		var tmp = this.cell.getAttribute(this.attribute);
-		
-		if (this.previous == null)
-		{
-			this.cell.value.removeAttribute(this.attribute);
-		}
-		else
-		{
-			this.cell.setAttribute(this.attribute, this.previous);
-		}
-		
-		this.previous = tmp;
+		this.cell.value.removeAttribute(this.attribute);
 	}
+	else
+	{
+		this.cell.setAttribute(this.attribute, this.previous);
+	}
+	
+	this.previous = tmp;
 };

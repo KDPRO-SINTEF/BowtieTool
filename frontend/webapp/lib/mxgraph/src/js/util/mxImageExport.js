@@ -67,9 +67,9 @@ mxImageExport.prototype.drawState = function(state, canvas)
 };
 
 /**
- * Function: visitStatesRecursive
+ * Function: drawState
  * 
- * Visits the given state and all its descendants to the given canvas recursively.
+ * Draws the given state and all its descendants to the given canvas.
  */
 mxImageExport.prototype.visitStatesRecursive = function(state, canvas, visitor)
 {
@@ -133,11 +133,7 @@ mxImageExport.prototype.drawShape = function(state, canvas)
 	if (state.shape instanceof mxShape && state.shape.checkBounds())
 	{
 		canvas.save();
-		
-		state.shape.beforePaint(canvas);
 		state.shape.paint(canvas);
-		state.shape.afterPaint(canvas);
-		
 		canvas.restore();
 	}
 };
@@ -152,11 +148,7 @@ mxImageExport.prototype.drawText = function(state, canvas)
 	if (state.text != null && state.text.checkBounds())
 	{
 		canvas.save();
-		
-		state.text.beforePaint(canvas);
 		state.text.paint(canvas);
-		state.text.afterPaint(canvas);
-		
 		canvas.restore();
 	}
 };

@@ -138,7 +138,7 @@ mxOutline.prototype.sizerImage = null;
 /**
  * Variable: minScale
  * 
- * Minimum scale to be used. Default is 0.0001.
+ * Minimum scale to be used. Default is 0.001.
  */
 mxOutline.prototype.minScale = 0.0001;
 
@@ -419,9 +419,9 @@ mxOutline.prototype.getOutlineOffset = function(scale)
 };
 
 /**
- * Function: getSourceGraphBounds
+ * Function: getOutlineOffset
  * 
- * Returns the graph bound boxing of the source.
+ * Returns the offset for drawing the outline graph.
  */
 mxOutline.prototype.getSourceGraphBounds = function()
 {
@@ -435,8 +435,7 @@ mxOutline.prototype.getSourceGraphBounds = function()
  */
 mxOutline.prototype.update = function(revalidate)
 {
-	if (this.source != null && this.source.container != null &&
-		this.outline != null && this.outline.container != null)
+	if (this.source != null && this.outline != null)
 	{
 		var sourceScale = this.source.view.scale;
 		var scaledGraphBounds = this.getSourceGraphBounds();
@@ -737,7 +736,7 @@ mxOutline.prototype.destroy = function()
 		this.source.removeListener(this.refreshHandler);
 		this.source.getModel().removeListener(this.updateHandler);
 		this.source.getView().removeListener(this.updateHandler);
-		mxEvent.removeListener(this.source.container, 'scroll', this.updateHandler);
+		mxEvent.addListener(this.source.container, 'scroll', this.updateHandler);
 		this.source = null;
 	}
 	

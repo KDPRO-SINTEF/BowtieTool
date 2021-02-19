@@ -121,13 +121,6 @@ mxRubberband.prototype.currentX = 0;
 mxRubberband.prototype.currentY = 0;
 
 /**
- * Variable: fadeOut
- * 
- * Optional fade out effect. Default is false.
- */
-mxRubberband.prototype.fadeOut = false;
-
-/**
  * Function: isEnabled
  * 
  * Returns true if events are handled. This implementation returns
@@ -277,14 +270,8 @@ mxRubberband.prototype.createShape = function()
 	}
 
 	this.graph.container.appendChild(this.sharedDiv);
-	var result = this.sharedDiv;
-	
-	if (mxClient.IS_SVG && (!mxClient.IS_IE || document.documentMode >= 10) && this.fadeOut)
-	{
-		this.sharedDiv = null;
-	}
 		
-	return result;
+	return this.sharedDiv;
 };
 
 /**
@@ -336,22 +323,7 @@ mxRubberband.prototype.reset = function()
 {
 	if (this.div != null)
 	{
-		if (mxClient.IS_SVG && (!mxClient.IS_IE || document.documentMode >= 10) && this.fadeOut)
-		{
-			var temp = this.div;
-			mxUtils.setPrefixedStyle(temp.style, 'transition', 'all 0.2s linear');
-			temp.style.pointerEvents = 'none';
-			temp.style.opacity = 0;
-		    
-		    window.setTimeout(function()
-		    	{
-		    		temp.parentNode.removeChild(temp);
-		    	}, 200);	
-		}
-		else
-		{
-			this.div.parentNode.removeChild(this.div);
-		}
+		this.div.parentNode.removeChild(this.div);
 	}
 
 	mxEvent.removeGestureListeners(document, null, this.dragHandler, this.dropHandler);

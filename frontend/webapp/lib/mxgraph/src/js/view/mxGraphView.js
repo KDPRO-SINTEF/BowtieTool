@@ -281,7 +281,7 @@ mxGraphView.prototype.setCurrentRoot = function(root)
 	{
 		var change = new mxCurrentRootChange(this, root);
 		change.execute();
-		var edit = new mxUndoableEdit(this, true);
+		var edit = new mxUndoableEdit(this, false);
 		edit.add(change);
 		this.fireEvent(new mxEventObject(mxEvent.UNDO, 'edit', edit));
 		this.graph.sizeDidChange();
@@ -316,7 +316,8 @@ mxGraphView.prototype.scaleAndTranslate = function(scale, dx, dy)
 
 		if (this.isEventsEnabled())
 		{
-			this.viewStateChanged();
+			this.revalidate();
+			this.graph.sizeDidChange();
 		}
 	}
 	
@@ -355,7 +356,8 @@ mxGraphView.prototype.setScale = function(value)
 
 		if (this.isEventsEnabled())
 		{
-			this.viewStateChanged();
+			this.revalidate();
+			this.graph.sizeDidChange();
 		}
 	}
 	
@@ -396,23 +398,13 @@ mxGraphView.prototype.setTranslate = function(dx, dy)
 
 		if (this.isEventsEnabled())
 		{
-			this.viewStateChanged();
+			this.revalidate();
+			this.graph.sizeDidChange();
 		}
 	}
 	
 	this.fireEvent(new mxEventObject(mxEvent.TRANSLATE,
 		'translate', this.translate, 'previousTranslate', previousTranslate));
-};
-
-/**
- * Function: viewStateChanged
- * 
- * Invoked after <scale> and/or <translate> has changed.
- */
-mxGraphView.prototype.viewStateChanged = function()
-{
-	this.revalidate();
-	this.graph.sizeDidChange();
 };
 
 /**
@@ -955,10 +947,9 @@ mxGraphView.prototype.validateCellState = function(cell, recurse)
 			{
 				state.invalid = false;
 				
-				if (state.style == null || state.invalidStyle)
+				if (state.style == null)
 				{
 					state.style = this.graph.getCellStyle(state.cell);
-					state.invalidStyle = false;
 				}
 				
 				if (cell != this.currentRoot)
@@ -1044,7 +1035,7 @@ mxGraphView.prototype.updateCellState = function(state)
 		{
 			if (!model.isEdge(state.cell))
 			{
-				offset = (geo.offset != null) ? geo.offset : this.EMPTY_POINT;
+				offset = geo.offset || this.EMPTY_POINT;
 	
 				if (geo.relative && pState != null)
 				{
@@ -1060,8 +1051,8 @@ mxGraphView.prototype.updateCellState = function(state)
 					}
 					else
 					{
-						state.origin.x += geo.x * pState.unscaledWidth + offset.x;
-						state.origin.y += geo.y * pState.unscaledHeight + offset.y;
+						state.origin.x += geo.x * pState.width / this.scale + offset.x;
+						state.origin.y += geo.y * pState.height / this.scale + offset.y;
 					}
 				}
 				else
@@ -1078,7 +1069,6 @@ mxGraphView.prototype.updateCellState = function(state)
 			state.width = this.scale * geo.width;
 			state.unscaledWidth = geo.width;
 			state.height = this.scale * geo.height;
-			state.unscaledHeight = geo.height;
 			
 			if (model.isVertex(state.cell))
 			{
@@ -1349,7 +1339,7 @@ mxGraphView.prototype.getFixedTerminalPoint = function(edge, terminal, source, c
 	
 	if (constraint != null)
 	{
-		pt = this.graph.getConnectionPoint(terminal, constraint, false); // FIXME Rounding introduced bugs when calculating label positions -> , this.graph.isOrthogonal(edge));
+		pt = this.graph.getConnectionPoint(terminal, constraint);
 	}
 	
 	if (pt == null && terminal == null)
@@ -1462,15 +1452,14 @@ mxGraphView.prototype.updatePoints = function(edge, points, source, target)
  *
  * Transforms the given control point to an absolute point.
  */
-mxGraphView.prototype.transformControlPoint = function(state, pt, ignoreScale)
+mxGraphView.prototype.transformControlPoint = function(state, pt)
 {
 	if (state != null && pt != null)
 	{
 		var orig = state.origin;
-		var scale = ignoreScale ? 1 : this.scale
 		
-	    return new mxPoint(scale * (pt.x + this.translate.x + orig.x),
-	    		scale * (pt.y + this.translate.y + orig.y));
+	    return new mxPoint(this.scale * (pt.x + this.translate.x + orig.x),
+	    	this.scale * (pt.y + this.translate.y + orig.y));
 	}
 	
 	return null;
@@ -1481,17 +1470,15 @@ mxGraphView.prototype.transformControlPoint = function(state, pt, ignoreScale)
  * 
  * Returns true if the given edge should be routed with <mxGraph.defaultLoopStyle>
  * or the <mxConstants.STYLE_LOOP> defined for the given edge. This implementation
- * returns true if the given edge is a loop and does not have connections constraints
- * associated.
+ * returns true if the given edge is a loop and does not 
  */
 mxGraphView.prototype.isLoopStyleEnabled = function(edge, points, source, target)
 {
 	var sc = this.graph.getConnectionConstraint(edge, source, true);
 	var tc = this.graph.getConnectionConstraint(edge, target, false);
 	
-	if ((points == null || points.length < 2) &&
-		(!mxUtils.getValue(edge.style, mxConstants.STYLE_ORTHOGONAL_LOOP, false) ||
-		((sc == null || sc.point == null) && (tc == null || tc.point == null))))
+	if (!mxUtils.getValue(edge.style, mxConstants.STYLE_ORTHOGONAL_LOOP, false) ||
+		((sc == null || sc.point == null) && (tc == null || tc.point == null)))
 	{
 		return source != null && source == target;
 	}
@@ -1620,7 +1607,7 @@ mxGraphView.prototype.getFloatingTerminalPoint = function(edge, start, end, sour
 		var sin = Math.sin(alpha);
 		pt = mxUtils.getRotatedPoint(pt, cos, sin, center);
 	}
-
+	
 	return pt;
 };
 
@@ -1911,10 +1898,8 @@ mxGraphView.prototype.getVisibleTerminal = function(edge, source)
 		result = model.getParent(result);
 	}
 
-	// Checks if the result is valid for the current view state
-	if (best != null && (!model.contains(best) ||
-		model.getParent(best) == model.getRoot() ||
-		best == this.currentRoot))
+	// Checks if the result is not a layer
+	if (model.getParent(best) == model.getRoot())
 	{
 		best = null;
 	}
@@ -2099,27 +2084,29 @@ mxGraphView.prototype.getRelativePoint = function(edgeState, x, y)
 			var totalLength = edgeState.length;
 			var segments = edgeState.segments;
 
-			// Works out which line segment the point of the label is closest to
+			// Works which line segment the point of the label is closest to
 			var p0 = edgeState.absolutePoints[0];
 			var pe = edgeState.absolutePoints[1];
 			var minDist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
-			var length = 0;
+
 			var index = 0;
 			var tmp = 0;
+			var length = 0;
 			
 			for (var i = 2; i < pointCount; i++)
 			{
-				p0 = pe;
+				tmp += segments[i - 2];
 				pe = edgeState.absolutePoints[i];
 				var dist = mxUtils.ptSegDistSq(p0.x, p0.y, pe.x, pe.y, x, y);
-				tmp += segments[i - 2];
-				
+
 				if (dist <= minDist)
 				{
 					minDist = dist;
 					index = i - 1;
 					length = tmp;
 				}
+				
+				p0 = pe;
 			}
 			
 			var seg = segments[index];
@@ -2583,9 +2570,6 @@ mxGraphView.prototype.installListeners = function()
 			}));
 		}
 		
-		// Fires event only for one pointer per gesture
-		var pointerId = null;
-		
 		// Adds basic listeners for graph event dispatching
 		mxEvent.addGestureListeners(container, mxUtils.bind(this, function(evt)
 		{
@@ -2594,12 +2578,11 @@ mxGraphView.prototype.installListeners = function()
 				!mxClient.IS_OP && !mxClient.IS_SF) || !this.isScrollEvent(evt)))
 			{
 				graph.fireMouseEvent(mxEvent.MOUSE_DOWN, new mxMouseEvent(evt));
-				pointerId = evt.pointerId;
 			}
 		}),
 		mxUtils.bind(this, function(evt)
 		{
-			if (this.isContainerEvent(evt) && (pointerId == null || evt.pointerId == pointerId))
+			if (this.isContainerEvent(evt))
 			{
 				graph.fireMouseEvent(mxEvent.MOUSE_MOVE, new mxMouseEvent(evt));
 			}
@@ -2610,8 +2593,6 @@ mxGraphView.prototype.installListeners = function()
 			{
 				graph.fireMouseEvent(mxEvent.MOUSE_UP, new mxMouseEvent(evt));
 			}
-			
-			pointerId = null;
 		}));
 		
 		// Adds listener for double click handling on background, this does always
@@ -2694,7 +2675,7 @@ mxGraphView.prototype.installListeners = function()
 };
 
 /**
- * Function: createHtml
+ * Function: create
  *
  * Creates the DOM nodes for the HTML display.
  */
@@ -2799,7 +2780,7 @@ mxGraphView.prototype.createHtmlPane = function(width, height)
 };
 
 /**
- * Function: createVml
+ * Function: create
  *
  * Creates the DOM nodes for the VML display.
  */
@@ -2853,7 +2834,7 @@ mxGraphView.prototype.createVmlPane = function(width, height)
 };
 
 /**
- * Function: createSvg
+ * Function: create
  *
  * Creates and returns the DOM nodes for the SVG display.
  */
@@ -2877,8 +2858,6 @@ mxGraphView.prototype.createSvg = function()
 	this.canvas.appendChild(this.decoratorPane);
 	
 	var root = document.createElementNS(mxConstants.NS_SVG, 'svg');
-	root.style.left = '0px';
-	root.style.top = '0px';
 	root.style.width = '100%';
 	root.style.height = '100%';
 	

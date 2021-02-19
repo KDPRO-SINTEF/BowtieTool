@@ -38,8 +38,6 @@ function mxConstraintHandler(graph)
 	});
 	
 	this.graph.model.addListener(mxEvent.CHANGE, this.resetHandler);
-	this.graph.view.addListener(mxEvent.SCALE_AND_TRANSLATE, this.resetHandler);
-	this.graph.view.addListener(mxEvent.TRANSLATE, this.resetHandler);
 	this.graph.view.addListener(mxEvent.SCALE, this.resetHandler);
 	this.graph.addListener(mxEvent.ROOT, this.resetHandler);
 };
@@ -244,7 +242,7 @@ mxConstraintHandler.prototype.getCellForEvent = function(me, point)
 		}
 	}
 	
-	return (this.graph.isCellLocked(cell)) ? null : cell;
+	return cell;
 };
 
 /**
@@ -310,9 +308,14 @@ mxConstraintHandler.prototype.update = function(me, source, existingEdge, point)
 					minDistSq = tmp;
 					
 					var tmp = this.focusIcons[i].bounds.clone();
-					tmp.grow(mxConstants.HIGHLIGHT_SIZE + 1);
-					tmp.width -= 1;
-					tmp.height -= 1;
+					tmp.grow(mxConstants.HIGHLIGHT_SIZE);
+					
+					if (mxClient.IS_IE)
+					{
+						tmp.grow(1);
+						tmp.width -= 1;
+						tmp.height -= 1;
+					}
 					
 					if (this.focusHighlight == null)
 					{

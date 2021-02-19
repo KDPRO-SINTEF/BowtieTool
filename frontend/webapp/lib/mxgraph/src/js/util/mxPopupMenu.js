@@ -54,7 +54,7 @@ mxPopupMenu.prototype.submenuImage = mxClient.imageBasePath + '/submenu.gif';
 /**
  * Variable: zIndex
  * 
- * Specifies the zIndex for the popupmenu and its shadow. Default is 10006.
+ * Specifies the zIndex for the popupmenu and its shadow. Default is 1006.
  */
 mxPopupMenu.prototype.zIndex = 10006;
 
@@ -192,9 +192,8 @@ mxPopupMenu.prototype.isPopupTrigger = function(me)
  * enabled - Optional boolean indicating if the item is enabled. Default is true.
  * active - Optional boolean indicating if the menu should implement any event handling.
  * Default is true.
- * noHover - Optional boolean to disable hover state.
  */
-mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, enabled, active, noHover)
+mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, enabled, active)
 {
 	parent = parent || this;
 	this.itemCount++;
@@ -282,7 +281,7 @@ mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, e
 				}
 				
 				// Workaround for lost current selection in page because of focus in IE
-				if (document.selection != null && (mxClient.IS_QUIRKS || document.documentMode == 8))
+				if (mxClient.IS_QUIRKS || document.documentMode == 8)
 				{
 					currentSelection = document.selection.createRange();
 				}
@@ -306,10 +305,7 @@ mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, e
 				}
 		
 				// Sets hover style because TR in IE doesn't have hover
-				if (!noHover)
-				{
-					tr.className = 'mxPopupMenuItemHover';
-				}
+				tr.className = 'mxPopupMenuItemHover';
 			}),
 			mxUtils.bind(this, function(evt)
 			{
@@ -350,15 +346,12 @@ mxPopupMenu.prototype.addItem = function(title, image, funct, parent, iconCls, e
 		);
 	
 		// Resets hover style because TR in IE doesn't have hover
-		if (!noHover)
-		{
-			mxEvent.addListener(tr, 'mouseout',
-				mxUtils.bind(this, function(evt)
-				{
-					tr.className = 'mxPopupMenuItem';
-				})
-			);
-		}
+		mxEvent.addListener(tr, 'mouseout',
+			mxUtils.bind(this, function(evt)
+			{
+				tr.className = 'mxPopupMenuItem';
+			})
+		);
 	}
 	
 	return tr;

@@ -88,7 +88,7 @@ mxDefaultToolbar.prototype.spacing = 4;
 mxDefaultToolbar.prototype.connectOnDrop = false;
 
 /**
- * Function: init
+ * Variable: init
  * 
  * Constructs the <toolbar> for the given container and installs a listener
  * that updates the <mxEditor.insertFunction> on <editor> if an item is
@@ -311,7 +311,7 @@ mxDefaultToolbar.prototype.addPrototype = function(title, icon, ptype, pressed, 
 		}
 		else if (ptype != null)
 		{
-			return this.editor.graph.cloneCell(ptype);
+			return this.editor.graph.cloneCells([ptype])[0];
 		}
 		
 		return null;

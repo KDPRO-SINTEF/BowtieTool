@@ -10,6 +10,12 @@
  * Constructor: mxGraphAbstractHierarchyCell
  *
  * Constructs a new hierarchical layout algorithm.
+ *
+ * Arguments:
+ * 
+ * graph - Reference to the enclosing <mxGraph>.
+ * deterministic - Optional boolean that specifies if this layout should be
+ * deterministic. Default is true.
  */
 function mxGraphAbstractHierarchyCell()
 {
@@ -49,14 +55,14 @@ mxGraphAbstractHierarchyCell.prototype.y = null;
 /**
  * Variable: width
  * 
- * The width of this cell. Default is 0.
+ * The width of this cell
  */
 mxGraphAbstractHierarchyCell.prototype.width = 0;
 
 /**
  * Variable: height
  * 
- * The height of this cell. Default is 0.
+ * The height of this cell
  */
 mxGraphAbstractHierarchyCell.prototype.height = 0;
 

@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2006-2018, JGraph Ltd
- * Copyright (c) 2006-2018, Gaudenz Alder
+ * Copyright (c) 2006-2015, JGraph Ltd
+ * Copyright (c) 2006-2015, Gaudenz Alder
  */
 /**
  * Class: mxCoordinateAssignment
@@ -54,7 +54,7 @@ mxCoordinateAssignment.prototype.intraCellSpacing = 30;
 /**
  * Variable: interRankCellSpacing
  * 
- * The minimum distance between cells on adjacent ranks. Default is 100.
+ * The minimum distance between cells on adjacent ranks. Default is 10.
  */
 mxCoordinateAssignment.prototype.interRankCellSpacing = 100;
 
@@ -76,21 +76,21 @@ mxCoordinateAssignment.prototype.maxIterations = 8;
 /**
  * Variable: prefHozEdgeSep
  * 
- * The preferred horizontal distance between edges exiting a vertex Default is 5.
+ * The preferred horizontal distance between edges exiting a vertex
  */
 mxCoordinateAssignment.prototype.prefHozEdgeSep = 5;
 
 /**
  * Variable: prefVertEdgeOff
  * 
- * The preferred vertical offset between edges exiting a vertex Default is 2.
+ * The preferred vertical offset between edges exiting a vertex
  */
 mxCoordinateAssignment.prototype.prefVertEdgeOff = 2;
 
 /**
  * Variable: minEdgeJetty
  * 
- * The minimum distance for an edge jetty from a vertex Default is 12.
+ * The minimum distance for an edge jetty from a vertex
  */
 mxCoordinateAssignment.prototype.minEdgeJetty = 12;
 
@@ -98,7 +98,7 @@ mxCoordinateAssignment.prototype.minEdgeJetty = 12;
  * Variable: channelBuffer
  * 
  * The size of the vertical buffer in the center of inter-rank channels
- * where edge control points should not be placed Default is 4.
+ * where edge control points should not be placed
  */
 mxCoordinateAssignment.prototype.channelBuffer = 4;
 
@@ -211,7 +211,7 @@ mxCoordinateAssignment.prototype.previousLayerConnectedCache = null;
 /**
  * Variable: groupPadding
  * 
- * Padding added to resized parents Default is 10.
+ * Padding added to resized parents
  */
 mxCoordinateAssignment.prototype.groupPadding = 10;
 
@@ -1740,4 +1740,91 @@ mxCoordinateAssignment.prototype.setVertexLocation = function(cell)
 mxCoordinateAssignment.prototype.processReversedEdge = function(graph, model)
 {
 	// hook for subclassers
+};
+
+/**
+ * Class: WeightedCellSorter
+ * 
+ * A utility class used to track cells whilst sorting occurs on the weighted
+ * sum of their connected edges. Does not violate (x.compareTo(y)==0) ==
+ * (x.equals(y))
+ *
+ * Constructor: WeightedCellSorter
+ * 
+ * Constructs a new weighted cell sorted for the given cell and weight.
+ */
+function WeightedCellSorter(cell, weightedValue)
+{
+	this.cell = cell;
+	this.weightedValue = weightedValue;
+};
+
+/**
+ * Variable: weightedValue
+ * 
+ * The weighted value of the cell stored.
+ */
+WeightedCellSorter.prototype.weightedValue = 0;
+
+/**
+ * Variable: nudge
+ * 
+ * Whether or not to flip equal weight values.
+ */
+WeightedCellSorter.prototype.nudge = false;
+
+/**
+ * Variable: visited
+ * 
+ * Whether or not this cell has been visited in the current assignment.
+ */
+WeightedCellSorter.prototype.visited = false;
+
+/**
+ * Variable: rankIndex
+ * 
+ * The index this cell is in the model rank.
+ */
+WeightedCellSorter.prototype.rankIndex = null;
+
+/**
+ * Variable: cell
+ * 
+ * The cell whose median value is being calculated.
+ */
+WeightedCellSorter.prototype.cell = null;
+
+/**
+ * Function: compare
+ * 
+ * Compares two WeightedCellSorters.
+ */
+WeightedCellSorter.prototype.compare = function(a, b)
+{
+	if (a != null && b != null)
+	{
+		if (b.weightedValue > a.weightedValue)
+		{
+			return -1;
+		}
+		else if (b.weightedValue < a.weightedValue)
+		{
+			return 1;
+		}
+		else
+		{
+			if (b.nudge)
+			{
+				return -1;
+			}
+			else
+			{
+				return 1;
+			}
+		}
+	}
+	else
+	{
+		return 0;
+	}
 };

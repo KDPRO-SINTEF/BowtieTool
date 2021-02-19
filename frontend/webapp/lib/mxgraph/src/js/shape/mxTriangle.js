@@ -22,16 +22,6 @@ function mxTriangle()
 mxUtils.extend(mxTriangle, mxActor);
 
 /**
- * Function: isRoundable
- * 
- * Adds roundable support.
- */
-mxTriangle.prototype.isRoundable = function()
-{
-	return true;
-};
-
-/**
  * Function: redrawPath
  *
  * Draws the path for this shape.

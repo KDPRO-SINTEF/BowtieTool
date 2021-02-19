@@ -442,9 +442,9 @@ mxAbstractCanvas2D.prototype.setFontColor = function(value)
 };
 
 /**
- * Function: setFontBackgroundColor
+ * Function: setFontColor
  * 
- * Sets the current font background color.
+ * Sets the current font color.
  */
 mxAbstractCanvas2D.prototype.setFontBackgroundColor = function(value)
 {
@@ -457,9 +457,9 @@ mxAbstractCanvas2D.prototype.setFontBackgroundColor = function(value)
 };
 
 /**
- * Function: setFontBorderColor
+ * Function: setFontColor
  * 
- * Sets the current font border color.
+ * Sets the current font color.
  */
 mxAbstractCanvas2D.prototype.setFontBorderColor = function(value)
 {

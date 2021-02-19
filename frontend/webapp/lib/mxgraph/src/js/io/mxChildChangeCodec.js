@@ -8,7 +8,7 @@ mxCodecRegistry.register(function()
 	 * Class: mxChildChangeCodec
 	 *
 	 * Codec for <mxChildChange>s. This class is created and registered
-	 * dynamically at load time and used implicitly via <mxCodec> and
+	 * dynamically at load time and used implicitely via <mxCodec> and
 	 * the <mxCodecRegistry>.
 	 *
 	 * Transient Fields:
@@ -36,7 +36,9 @@ mxCodecRegistry.register(function()
 	 */
 	codec.isReference = function(obj, attr, value, isWrite)
 	{
-		if (attr == 'child' && (!isWrite || obj.model.contains(obj.previous)))
+		if (attr == 'child' &&
+			(obj.previous != null ||
+			!isWrite))
 		{
 			return true;
 		}
@@ -45,18 +47,6 @@ mxCodecRegistry.register(function()
 	};
 
 	/**
-	 * Function: isExcluded
-	 *
-	 * Excludes references to parent or previous if not in the model.
-	 */
-  	codec.isExcluded = function(obj, attr, value, write)
-  	{
-  		return mxObjectCodec.prototype.isExcluded.apply(this, arguments) ||
-  			(write && value != null && (attr == 'previous' ||
-  			attr == 'parent') && !obj.model.contains(value));
-  	};
-  	
-	/**
 	 * Function: afterEncode
 	 *
 	 * Encodes the child recusively and adds the result
@@ -64,7 +54,7 @@ mxCodecRegistry.register(function()
 	 */
 	codec.afterEncode = function(enc, obj, node)
 	{
-		if (this.isReference(obj, 'child', obj.child, true))
+		if (this.isReference(obj, 'child',  obj.child, true))
 		{
 			// Encodes as reference (id)
 			node.setAttribute('child', enc.getId(obj.child));
@@ -142,22 +132,13 @@ mxCodecRegistry.register(function()
 	 */
 	codec.afterDecode = function(dec, node, obj)
 	{
-		// Cells are decoded here after a complete transaction so the previous
+		// Cells are encoded here after a complete transaction so the previous
 		// parent must be restored on the cell for the case where the cell was
 		// added. This is needed for the local model to identify the cell as a
 		// new cell and register the ID.
-        if (obj.child != null)
-        {
-            if (obj.child.parent != null && obj.previous != null &&
-                obj.child.parent != obj.previous)
-            {
-                obj.previous = obj.child.parent;
-            }
-
-            obj.child.parent = obj.previous;
-            obj.previous = obj.parent;
-            obj.previousIndex = obj.index;
-        }
+		obj.child.parent = obj.previous;
+		obj.previous = obj.parent;
+		obj.previousIndex = obj.index;
 
 		return obj;
 	};

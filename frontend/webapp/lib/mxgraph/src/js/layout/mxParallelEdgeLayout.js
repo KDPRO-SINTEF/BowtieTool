@@ -41,9 +41,9 @@
  * });
  * (end)
  * 
- * Constructor: mxParallelEdgeLayout
+ * Constructor: mxCompactTreeLayout
  * 
- * Constructs a new parallel edge layout for the specified graph.
+ * Constructs a new fast organic layout for the specified graph.
  */
 function mxParallelEdgeLayout(graph)
 {
@@ -64,21 +64,13 @@ mxParallelEdgeLayout.prototype.constructor = mxParallelEdgeLayout;
 mxParallelEdgeLayout.prototype.spacing = 20;
 
 /**
- * Variable: checkOverlap
- * 
- * Specifies if only overlapping edges should be considered
- * parallel. Default is false.
- */
-mxParallelEdgeLayout.prototype.checkOverlap = false;
-
-/**
  * Function: execute
  * 
  * Implements <mxGraphLayout.execute>.
  */
-mxParallelEdgeLayout.prototype.execute = function(parent, cells)
+mxParallelEdgeLayout.prototype.execute = function(parent)
 {
-	var lookup = this.findParallels(parent, cells);
+	var lookup = this.findParallels(parent);
 	
 	this.graph.model.beginUpdate();	
 	try
@@ -104,15 +96,19 @@ mxParallelEdgeLayout.prototype.execute = function(parent, cells)
  * 
  * Finds the parallel edges in the given parent.
  */
-mxParallelEdgeLayout.prototype.findParallels = function(parent, cells)
+mxParallelEdgeLayout.prototype.findParallels = function(parent)
 {
+	var model = this.graph.getModel();
 	var lookup = [];
+	var childCount = model.getChildCount(parent);
 	
-	var addCell = mxUtils.bind(this, function(cell)
+	for (var i = 0; i < childCount; i++)
 	{
-		if (!this.isEdgeIgnored(cell))
+		var child = model.getChildAt(parent, i);
+		
+		if (!this.isEdgeIgnored(child))
 		{
-			var id = this.getEdgeId(cell);
+			var id = this.getEdgeId(child);
 			
 			if (id != null)
 			{
@@ -121,26 +117,8 @@ mxParallelEdgeLayout.prototype.findParallels = function(parent, cells)
 					lookup[id] = [];
 				}
 				
-				lookup[id].push(cell);
+				lookup[id].push(child);
 			}
-		}
-	});
-	
-	if (cells != null)
-	{
-		for (var i = 0; i < cells.length; i++)
-		{
-			addCell(cells[i]);
-		}
-	}
-	else
-	{
-		var model = this.graph.getModel();
-		var childCount = model.getChildCount(parent);
-		
-		for (var i = 0; i < childCount; i++)
-		{
-			addCell(model.getChildAt(parent, i));
 		}
 	}
 	
@@ -161,36 +139,13 @@ mxParallelEdgeLayout.prototype.getEdgeId = function(edge)
 	// Cannot used cached visible terminal because this could be triggered in BEFORE_UNDO
 	var src = view.getVisibleTerminal(edge, true);
 	var trg = view.getVisibleTerminal(edge, false);
-	var pts = '';
 
 	if (src != null && trg != null)
 	{
 		src = mxObjectIdentity.get(src);
 		trg = mxObjectIdentity.get(trg);
 		
-		if (this.checkOverlap)
-		{
-			var state = this.graph.view.getState(edge);
-			
-			if (state != null && state.absolutePoints != null)
-			{
-				var tmp = [];
-				
-				for (var i = 0; i < state.absolutePoints.length; i++)
-				{
-					var pt = state.absolutePoints[i];
-					
-					if (pt != null)
-					{
-						tmp.push(pt.x, pt.y);
-					}
-				}
-				
-				pts = tmp.join(',');
-			}
-		};
-		
-		return ((src > trg) ? trg + '-' + src : src + '-' + trg) + pts;
+		return (src > trg) ? trg + '-' + src : src + '-' + trg;
 	}
 	
 	return null;

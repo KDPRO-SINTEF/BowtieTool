@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2006-2018, JGraph Ltd
- * Copyright (c) 2006-2018, Gaudenz Alder
+ * Copyright (c) 2006-2015, JGraph Ltd
+ * Copyright (c) 2006-2015, Gaudenz Alder
  */
 /**
  * Class: mxHierarchicalLayout
@@ -90,7 +90,7 @@ mxHierarchicalLayout.prototype.intraCellSpacing = 30;
 /**
  * Variable: interRankCellSpacing
  * 
- * The spacing buffer added between cell on adjacent layers. Default is 100.
+ * The spacing buffer added between cell on adjacent layers. Default is 50.
  */
 mxHierarchicalLayout.prototype.interRankCellSpacing = 100;
 
@@ -104,8 +104,7 @@ mxHierarchicalLayout.prototype.interHierarchySpacing = 60;
 /**
  * Variable: parallelEdgeSpacing
  * 
- * The distance between each parallel edge on each ranks for long edges.
- * Default is 10.
+ * The distance between each parallel edge on each ranks for long edges
  */
 mxHierarchicalLayout.prototype.parallelEdgeSpacing = 10;
 
@@ -130,7 +129,7 @@ mxHierarchicalLayout.prototype.fineTuning = true;
  * Variable: tightenToSource
  * 
  * Whether or not to tighten the assigned ranks of vertices up towards
- * the source cells. Default is true.
+ * the source cells.
  */
 mxHierarchicalLayout.prototype.tightenToSource = true;
 
@@ -147,8 +146,8 @@ mxHierarchicalLayout.prototype.disableEdgeStyle = true;
  * 
  * Whether or not to drill into child cells and layout in reverse
  * group order. This also cause the layout to navigate edges whose 
- * terminal vertices have different parents but are in the same 
- * ancestry chain. Default is true.
+ * terminal vertices  * have different parents but are in the same 
+ * ancestry chain
  */
 mxHierarchicalLayout.prototype.traverseAncestors = true;
 
@@ -183,8 +182,7 @@ mxHierarchicalLayout.prototype.edgesTargetTermCache = null;
 /**
  * Variable: edgeStyle
  * 
- * The style to apply between cell layers to edge segments.
- * Default is <mxHierarchicalEdgeStyle.POLYLINE>.
+ * The style to apply between cell layers to edge segments
  */
 mxHierarchicalLayout.prototype.edgeStyle = mxHierarchicalEdgeStyle.POLYLINE;
 
@@ -413,10 +411,9 @@ mxHierarchicalLayout.prototype.getEdges = function(cell)
 		var source = this.getVisibleTerminal(edges[i], true);
 		var target = this.getVisibleTerminal(edges[i], false);
 		
-		if ((source == target) ||
-				((source != target) &&
-						((target == cell && (this.parent == null || this.isAncestor(this.parent, source, this.traverseAncestors))) ||
-						 	(source == cell && (this.parent == null || this.isAncestor(this.parent, target, this.traverseAncestors))))))
+		if ((source == target) || ((source != target) && ((target == cell && (this.parent == null || this.graph.isValidAncestor(source, this.parent, this.traverseAncestors))) ||
+			(source == cell && (this.parent == null ||
+					this.graph.isValidAncestor(target, this.parent, this.traverseAncestors))))))
 		{
 			result.push(edges[i]);
 		}
@@ -629,14 +626,12 @@ mxHierarchicalLayout.prototype.filterDescendants = function(cell, result)
  */
 mxHierarchicalLayout.prototype.isPort = function(cell)
 {
-	if (cell != null && cell.geometry != null)
+	if (cell.geometry.relative)
 	{
-		return cell.geometry.relative;
+		return true;
 	}
-	else
-	{
-		return false;
-	}
+	
+	return false;
 };
 
 /**

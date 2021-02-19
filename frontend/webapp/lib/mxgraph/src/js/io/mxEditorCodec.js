@@ -8,7 +8,7 @@ mxCodecRegistry.register(function()
 	 * Class: mxEditorCodec
 	 *
 	 * Codec for <mxEditor>s. This class is created and registered
-	 * dynamically at load time and used implicitly via <mxCodec>
+	 * dynamically at load time and used implicitely via <mxCodec>
 	 * and the <mxCodecRegistry>.
 	 *
 	 * Transient Fields:
@@ -128,9 +128,9 @@ mxCodecRegistry.register(function()
 	};
 		
 	/**
-	 * Function: decodeUi
+	 * Function: decodeTemplates
 	 *
-	 * Decodes the ui elements from the given node.
+	 * Decodes the cells from the given node as templates.
 	 */
 	codec.decodeUi = function(dec, node, editor)
 	{

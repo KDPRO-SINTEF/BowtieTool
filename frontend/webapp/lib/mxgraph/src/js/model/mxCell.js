@@ -761,7 +761,7 @@ mxCell.prototype.getAttribute = function(name, defaultValue)
 		userObject.nodeType == mxConstants.NODETYPE_ELEMENT) ?
 		userObject.getAttribute(name) : null;
 		
-	return (val != null) ? val : defaultValue;
+	return val || defaultValue;
 };
 
 /**

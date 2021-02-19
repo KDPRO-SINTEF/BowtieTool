@@ -1,13 +1,19 @@
 /**
- * Copyright (c) 2006-2017, JGraph Ltd
- * Copyright (c) 2006-2017, Gaudenz Alder
+ * Copyright (c) 2006-2015, JGraph Ltd
+ * Copyright (c) 2006-2015, Gaudenz Alder
  */
 /**
  * Class: mxTemporaryCellStates
+ *
+ * Extends <mxPoint> to implement a 2-dimensional rectangle with double
+ * precision coordinates.
  * 
- * Creates a temporary set of cell states.
+ * Constructor: mxRectangle
+ *
+ * Constructs a new rectangle for the optional parameters. If no parameters
+ * are given then the respective default values are used.
  */
-function mxTemporaryCellStates(view, scale, cells, isCellVisibleFn, getLinkForCellState)
+function mxTemporaryCellStates(view, scale, cells, isCellVisibleFn)
 {
 	scale = (scale != null) ? scale : 1;
 	this.view = view;
@@ -17,40 +23,10 @@ function mxTemporaryCellStates(view, scale, cells, isCellVisibleFn, getLinkForCe
 	this.oldBounds = view.getGraphBounds();
 	this.oldStates = view.getStates();
 	this.oldScale = view.getScale();
-	this.oldDoRedrawShape = view.graph.cellRenderer.doRedrawShape;
-
-	var self = this;
-
-	// Overrides doRedrawShape and paint shape to add links on shapes
-	if (getLinkForCellState != null)
-	{
-		view.graph.cellRenderer.doRedrawShape = function(state)
-		{
-			var oldPaint = state.shape.paint;
-			
-			state.shape.paint = function(c)
-			{
-				var link = getLinkForCellState(state);
-				
-				if (link != null)
-				{
-					c.setLink(link);
-				}
-				
-				oldPaint.apply(this, arguments);
-				
-				if (link != null)
-				{
-					c.setLink(null);
-				}
-			};
-			
-			self.oldDoRedrawShape.apply(view.graph.cellRenderer, arguments);
-			state.shape.paint = oldPaint;
-		};
-	}
-
+	
 	// Overrides validateCellState to ignore invisible cells
+	var self = this;
+	
 	view.validateCellState = function(cell, resurse)
 	{
 		if (cell == null || isCellVisibleFn == null || isCellVisibleFn(cell))
@@ -129,5 +105,4 @@ mxTemporaryCellStates.prototype.destroy = function()
 	this.view.setStates(this.oldStates);
 	this.view.setGraphBounds(this.oldBounds);
 	this.view.validateCellState = this.oldValidateCellState;
-	this.view.graph.cellRenderer.doRedrawShape = this.oldDoRedrawShape;
 };

@@ -130,8 +130,6 @@ mxRectangle.prototype.grow = function(amount)
 	this.y -= amount;
 	this.width += 2 * amount;
 	this.height += 2 * amount;
-	
-	return this;
 };
 
 /**

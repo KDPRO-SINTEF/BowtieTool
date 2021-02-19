@@ -59,9 +59,9 @@ var mxResources =
 	 * 
 	 * Variable: resources
 	 * 
-	 * Object that maps from keys to values.
+	 * Associative array that maps from keys to values.
 	 */
-	resources: {},
+	resources: [],
 
 	/**
 	 * Variable: extension
