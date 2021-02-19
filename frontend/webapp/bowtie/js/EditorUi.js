@@ -3130,7 +3130,7 @@ EditorUi.prototype.getContextualLoginText = function() {
             alert('You have been disconnected.');
         }));*/
 		button.addEventListener('click', mxUtils.bind(this, function() {
-				//window.location.href = '/app/bowtie++';
+				//window.location.href = '/app/bowtie';
 				localStorage.removeItem('token');
 				localStorage.removeItem('username');
 				alert("You will be disconnected.");

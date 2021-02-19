@@ -2,7 +2,7 @@
 window.urlParams = window.urlParams || {};
 
 // Base path of the web app
-window.BASE_PATH = '/app/bowtie++'
+window.BASE_PATH = '/app/bowtie'
 
 // Public global variables
 window.MAX_REQUEST_SIZE = window.MAX_REQUEST_SIZE  || 10485760;
@@ -33,9 +33,9 @@ window.mxBasePath = window.mxBasePath || '../lib/mxgraph/src';
 window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
 
-window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie++/common/login.html';
-window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie++/common/register.html';
-window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie++/common/reset_pwd.html';
+window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie/common/login.html';
+window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie/common/register.html';
+window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie/common/reset_pwd.html';
 
 // Customer driven project specifics
 window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';
