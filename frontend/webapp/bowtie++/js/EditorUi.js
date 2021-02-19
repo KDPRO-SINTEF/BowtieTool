@@ -112,7 +112,6 @@ EditorUi = function(editor, container, lightbox)
         return mxGraph.prototype.getEdgeValidationError.apply(this, arguments);
     }
 
-
     // Pre-fetches submenu image or replaces with embedded image if supported
 	if (mxClient.IS_SVG)
 	{

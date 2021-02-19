@@ -19,6 +19,7 @@ window.IMAGE_PATH = window.IMAGE_PATH || 'images';
 window.STYLE_PATH = window.STYLE_PATH || 'styles';
 window.CSS_PATH = window.CSS_PATH || 'styles';
 window.OPEN_FORM = window.OPEN_FORM || 'templates/open.html';
+window.RISK_FORM = window.RISK_FORM || 'templates/risk_computation.html';
 
 
 // Sets the base path, the UI language via URL param and configures the

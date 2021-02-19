@@ -172,7 +172,18 @@ Toolbar.prototype.init = function()
 
 /*	var insertMenu = this.addMenu('', mxResources.get('insert') + ' (' + mxResources.get('doubleClickTooltip') + ')', true, 'insert', null, true);
 	this.addDropDownArrow(insertMenu, 'geSprite-plus', 38, 48, -4, -3, 36, -8);*/
-};
+	/*
+	Bowtie++ feature
+	Add Button to open Risk computation window
+	 */
+	showRisk = this.editorUi.actions.get('showRisk').funct;
+	this.addButton('test', 'Risk Computation' , function() {
+		showRisk();
+	});
+	this.addSeparator();
+}
+
+
 
 /**
  * Adds the toolbar elements.

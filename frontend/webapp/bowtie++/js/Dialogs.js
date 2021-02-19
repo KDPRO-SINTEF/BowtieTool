@@ -44,6 +44,23 @@ var LoginDialog = function()
 	this.container = iframe;
 };
 
+var RiskDialog = function()
+{
+	var iframe = document.createElement('iframe');
+	iframe.style.backgroundColor = 'transparent';
+	iframe.allowTransparency = 'true';
+	iframe.style.borderStyle = 'none';
+	iframe.style.borderWidth = '0px';
+	iframe.style.overflow = 'hidden';
+	iframe.frameBorder = '0';
+	// Adds padding as a workaround for box model in older IE versions
+	var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
+
+	iframe.setAttribute('width', 850 + 'px');
+	iframe.setAttribute('height', 500 + 'px');
+	iframe.setAttribute('src', RISK_FORM);
+	this.container = iframe;
+}
 /**
  * Constructs a new color dialog.
  */
