@@ -57,6 +57,16 @@ mxUtils.extend(mxArrowConnector, mxShape);
 mxArrowConnector.prototype.useSvgBoundingBox = true;
 
 /**
+ * Function: isRoundable
+ * 
+ * Hook for subclassers.
+ */
+mxArrowConnector.prototype.isRoundable = function()
+{
+	return true;
+};
+
+/**
  * Variable: resetStyles
  * 
  * Overrides mxShape to reset spacing.
@@ -225,7 +235,7 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
 			ny1 = dy1 / dist1;
 			
 			var tmp1 = nx * nx1 + ny * ny1;
-			tmp = Math.max(Math.sqrt((tmp1 + 1) / 2), 0.04);
+			var tmp = Math.max(Math.sqrt((tmp1 + 1) / 2), 0.04);
 			
 			// Work out the normal orthogonal to the line through the control point and the edge sides intersection
 			nx2 = (nx + nx1);
@@ -386,9 +396,9 @@ mxArrowConnector.prototype.paintEdgeShape = function(c, pts)
 };
 
 /**
- * Function: paintEdgeShape
+ * Function: paintMarker
  * 
- * Paints the line shape.
+ * Paints the marker.
  */
 mxArrowConnector.prototype.paintMarker = function(c, ptX, ptY, nx, ny, size, arrowWidth, edgeWidth, spacing, initialMove)
 {

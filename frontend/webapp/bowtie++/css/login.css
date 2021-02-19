@@ -23,11 +23,18 @@
 
 }*/
 
-#login-form-container, #register-form-container {
+#reset-pwd-link {
+    font-size: 0.8em;
+    text-decoration: none;
+}
+
+#reset-pwd-message {
+    color: #373837;
+}
+#login-form-container, #register-form-container, #reset-pwd-form-container {
     display: inline-block;
-    width: 400px;
-    height: 400px;
     position: absolute;
+    width: 400px;
     margin: 0;
     top: 45%;
     left: 50%;
@@ -36,7 +43,7 @@
     padding-left: 5px;
 }
 
-.login-header, .register-header{
+.login-header, .register-header, .reset-pwd-header {
     text-align: center;
 }
 
@@ -44,7 +51,7 @@
     color: #dc0000!important;
 }
 
-.btn {
+.btn-submit {
     background: #4CAF50;
     color: white;
     width: 100%;

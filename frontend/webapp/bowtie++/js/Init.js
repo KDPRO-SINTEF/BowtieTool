@@ -18,8 +18,8 @@ window.STENCIL_PATH = window.STENCIL_PATH || 'stencils';
 window.IMAGE_PATH = window.IMAGE_PATH || 'images';
 window.STYLE_PATH = window.STYLE_PATH || 'styles';
 window.CSS_PATH = window.CSS_PATH || 'styles';
-window.OPEN_FORM = window.OPEN_FORM || 'templates/open.html';
-window.RISK_FORM = window.RISK_FORM || 'templates/risk_computation.html';
+window.OPEN_FORM = window.OPEN_FORM || 'common/open.html';
+window.RISK_FORM = window.RISK_FORM || 'common/risk_computation.html';
 
 
 // Sets the base path, the UI language via URL param and configures the
@@ -33,13 +33,15 @@ window.mxBasePath = window.mxBasePath || '../lib/mxgraph/src';
 window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
 
-window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie++/templates/login.html';
-window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie++/templates/register.html'
+window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie++/common/login.html';
+window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie++/common/register.html';
+window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie++/common/reset_pwd.html';
 
 // Customer driven project specifics
 window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';
 window.USER_INFO = window.USER_INFO || 'http://localhost:8000/api/user/me/';
 window.REGISTER = window.REGISTER || 'http://localhost:8000/api/user/create/';
+window.RESET_PWD = window.RESET_PWD || 'http://localhost:8000/api/user/reset/';
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
 window.ROLE_URL = window.ROLE_URL || '/role';
 window.USER_GRAPHS = window.USER_GRAPHS || '/user/graph';

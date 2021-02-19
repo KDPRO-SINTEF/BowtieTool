@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2006-2015, JGraph Ltd
- * Copyright (c) 2006-2015, Gaudenz Alder
+ * Copyright (c) 2006-2020, JGraph Ltd
+ * Copyright (c) 2006-2020, draw.io AG
  */
 /**
  * Class: mxXmlRequest
@@ -252,16 +252,6 @@ mxXmlRequest.prototype.getXml = function()
 };
 
 /**
- * Function: getText
- * 
- * Returns the response as a string.
- */
-mxXmlRequest.prototype.getText = function()
-{
-	return this.request.responseText;
-};
-
-/**
  * Function: getStatus
  * 
  * Returns the status as a number, eg. 404 for "Not found" or 200 for "OK".
@@ -269,7 +259,7 @@ mxXmlRequest.prototype.getText = function()
  */
 mxXmlRequest.prototype.getStatus = function()
 {
-	return this.request.status;
+	return (this.request != null) ? this.request.status : null;
 };
 
 /**
@@ -310,10 +300,12 @@ mxXmlRequest.prototype.create = function()
  * Send the <request> to the target URL using the specified functions to
  * process the response asychronously.
  * 
+ * Note: Due to technical limitations, onerror is currently ignored.
+ * 
  * Parameters:
  * 
  * onload - Function to be invoked if a successful response was received.
- * onerror - Function to be called on any error.
+ * onerror - Function to be called on any error. Unused in this implementation, intended for overriden function.
  * timeout - Optional timeout in ms before calling ontimeout.
  * ontimeout - Optional function to execute on timeout.
  */
@@ -330,7 +322,7 @@ mxXmlRequest.prototype.send = function(onload, onerror, timeout, ontimeout)
 				if (this.isReady())
 				{
 					onload(this);
-					this.onreadystatechaange = null;
+					this.request.onreadystatechange = null;
 				}
 			});
 		}
