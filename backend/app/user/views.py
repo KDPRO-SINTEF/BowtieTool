@@ -24,6 +24,9 @@ import datetime
 import qrcode
 from django.utils import timezone
 from django.contrib.auth import authenticate
+import logging
+
+logger = logging.getLogger(__name__)
 
 IMAGE_PATH = "/app/media/QR/token_qr.png"
 CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/authorize.html?for=email_confirm&id=%s&token=%s"
@@ -44,6 +47,7 @@ class CreateUserView(generics.CreateAPIView):
             user = get_user_model().objects.filter(email=request.data['email']).first()
             # generate an activation token for the user
             token = AccountActivationTokenGenerator().make_token(user)
+            logger.info('Account with email : %s created on: %s', user.email, timezone.now())
             message = "To activate your account please click on the following link %s" % (
                 CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))  
             subject = 'Activate account for Bowtie++'
@@ -75,6 +79,8 @@ class CreateTokenView(ObtainAuthToken):
                 # update the created time of the token to keep it valid
                 token.created = timezone.now()
                 token.save()
+            
+            logger.info("User with email %s logs at %s", user.email, timezone.now())
             return Response({'token': token.key}, status=status.HTTP_200_OK)
 
 
@@ -150,7 +156,7 @@ class ValidatePasswordReset(APIView):
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
             user = None
-            print(e_ex)
+            logger.warning("Failed resset password for User with id %s. Exception: %s", uid, e_ex)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if user is not None and PasswordResetToken().check_token(user, token):
@@ -237,7 +243,7 @@ class TOTPAuthenticateView(APIView):
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
             user = None
-            # TODO log the exception
+            logger.warning('Unsuccessfull login with id %s. Exception: %s', uid, e_ex)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         if not TOTPValidityToken().check_token(user, token):
@@ -316,6 +322,7 @@ class DeleteUserView(APIView):
         user = request.user
         password = request.data['password']
         if authenticate(request=request, email=user.email, password=password):
+            logger.info('User with email %s is deleting its account' % (user.email))
             user.delete()
             return Response(status=status.HTTP_200_OK)
 
@@ -324,4 +331,3 @@ class DeleteUserView(APIView):
 
     def __str__(self):
         return "Delete user endpoint"
-        

@@ -3,9 +3,11 @@ from django.contrib.auth import get_user_model, login
 
 class HasConfirmedEmail(permissions.BasePermission):
     """ Permission for the user if he has validated his email"""
+    message = 'Account is not active'
+    
     def has_permission(self, request, view):
         """Check if the user has confirmed his email after account creation"""
-        
+ 
         if not 'email' in request.data:
             return False
        

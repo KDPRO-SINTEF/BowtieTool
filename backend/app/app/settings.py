@@ -183,12 +183,56 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
     ],
+
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+        'user.customPermission.HasConfirmedEmail'
+    ],
 }
+
+LOGGING = {
+    'version': 1,
+    # Version of logging
+    'disable_existing_loggers': False,
+ 
+    'filters':{
+        #information regarding filters
+    },
+ 
+    'formatters':{
+        'Simple_Format':{
+            'format': '{levelname} {message}',
+            'style': '{',
+        }
+    },
+ 
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/log_authentication.log',
+            'formatter': 'Simple_Format',
+        },
+ 
+        # 'console': {
+        #     'level': 'DEBUG',
+        #     'class': 'logging.StreamHandler',
+        # },
+    },
+ 
+    'loggers': {
+        'django': {
+            'handlers': ['file',],
+            'level': 'DEBUG',
+        },
+    },
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE ='en-us'
 
 TIME_ZONE = 'UTC'
 

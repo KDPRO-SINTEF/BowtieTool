@@ -2,4 +2,6 @@
 .idea/
 .media/
 __pycache__/
+logs
+app/logs/
 .env
