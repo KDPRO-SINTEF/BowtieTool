@@ -23,11 +23,14 @@ from django.shortcuts import redirect
 import datetime
 import qrcode
 from django.utils import timezone
+from django.contrib.auth import authenticate
 
 IMAGE_PATH = "/app/media/QR/token_qr.png"
-REDIRECT_ACCOUNT = "http://localhost:8080/app/bowtie++/templates/login.html"
+CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/authorize.html?for=email_confirm&id=%s&token=%s"
+REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/templates/login.html"
 TWO_FACTOR_URL = "http://localhost:8080/app/bowtie++/templates/validate_TOTP.html/?id=%s&token=%s"
-PASSWORD_RESET_URL = "http://serveur-ip/app/bowtie++/templates/reset_password.html/?id=%s&token=%s"
+PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/authorize.html?for=reset_pwd&id=%s&token=%s"
+
 
 # User creation and authentication logic
 class CreateUserView(generics.CreateAPIView):
@@ -41,10 +44,8 @@ class CreateUserView(generics.CreateAPIView):
             user = get_user_model().objects.filter(email=request.data['email']).first()
             # generate an activation token for the user
             token = AccountActivationTokenGenerator().make_token(user)
-            message = "To activate your account please click on the following link http://localhost:8080%s" % (
-                reverse('user:confirm',
-                    kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token': token}))
+            message = "To activate your account please click on the following link %s" % (
+                CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))  
             subject = 'Activate account for Bowtie++'
             mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
                 fail_silently=False)
@@ -109,7 +110,7 @@ class ActivateAccount(APIView):
             # and we're changing the boolean field so that the token link becomes invalid
             Profile.objects.filter(user=user).update(email_confirmed=True)
             user.profile.email_confirmed = True
-            return redirect(REDIRECT_ACCOUNT)
+            return redirect(REDIRECT_LOGIN)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -166,9 +167,9 @@ class ValidatePasswordReset(APIView):
                 data = "bad credentials"
                 return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
-        elif user is not None:
+        elif not user is None:
             user.is_active = False # User needs to be inactive for the reset password duration
-            return Response(status=status.HTTP_400_BAD_REQUEST, data="Your token has expired")
+            return Response(status=status.HTTP_400_BAD_REQUEST, data="Invalid token")
 
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -306,10 +307,21 @@ class DeleteUserView(APIView):
     thentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get(self, request):
+    def post(self, request):
         """Deletes the user of the request"""
 
+        if not "password" in request.data:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
         user = request.user
-        user.delete()
+        password = request.data['password']
+        if authenticate(request=request, email=user.email, password=password):
+            user.delete()
+            return Response(status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+    def __str__(self):
+        return "Delete user endpoint"
+        
