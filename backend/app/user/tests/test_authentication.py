@@ -80,10 +80,10 @@ class AuthenticationTests(TestCase):
         self.assertIn('token', res.data)
         # add the auth token to the header of the APIClient object 
         token = res.data['token']
-        headers = {'Authorization':'Token %s' % (token)}
         url = reverse('user:totp-create')
         time.sleep(2)
-        res = self.client.get(url, headers=headers)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        res = self.client.get(url)
         # token is expired
 
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -92,8 +92,9 @@ class AuthenticationTests(TestCase):
         """Check the validity of the authentication token"""
 
         # setting the token validity for 2 seconds
-        settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS=1
-        
+        settings.AUTHENTICATION_TOKEN_EXPIRE_SECONDS=10
+        settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS=0 
+
         payload = {
             'email': 'test@bowtie.com',
             'password': '123456789A#a'
@@ -106,10 +107,9 @@ class AuthenticationTests(TestCase):
         self.assertIn('token', res.data)
         # add the auth token to the header of the APIClient object 
         token = res.data['token']
-        headers = {'Authorization':'Token %s' % (token)}
         url = reverse('user:me')
         time.sleep(2)
-        res = self.client.get(url, headers=headers)
-        print(res)
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        res = self.client.get(url)
         # token isn't expired
         self.assertEqual(res.status_code, status.HTTP_200_OK)

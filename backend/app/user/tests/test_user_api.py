@@ -200,7 +200,7 @@ class PublicUserApiTests(TestCase):
         }
         res = self.client.post(reverse("user:reset"), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-
+ 
     
     def test_password_change_with_token(self):
         """ Test the password change with a valid token """
@@ -312,3 +312,28 @@ class PublicUserApiTests(TestCase):
 
         Profile.objects.filter(user=user).update(email_confirmed=True)
         res = self.client.post(TOKEN_URL, payload)
+
+
+    def test_delete_user_ok(self):
+        """Test for deleting user"""
+
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+        user = get_user_model().objects.create_user(**payload)
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+
+        res = self.client.post(TOKEN_URL, payload)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn('token', res.data)
+        # add the auth token to the header of the APIClient object 
+        token = res.data['token']
+        url = reverse('user:delete')
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        res = self.client.get(url)
+        # token isn't expired
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        user = get_user_model().objects.filter(email=payload['email']).first()
+        self.assertEqual(None, user)
+        

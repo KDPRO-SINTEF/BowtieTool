@@ -22,7 +22,6 @@ from django_otp.plugins.otp_totp.models import TOTPDevice
 from django.shortcuts import redirect
 import datetime
 import qrcode
-
 from django.utils import timezone
 
 IMAGE_PATH = "/app/media/QR/token_qr.png"
@@ -175,7 +174,6 @@ class ValidatePasswordReset(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 # Two factor authentication logic
-
 def get_user_totp_device(user, confirmed=None):
     """
         Find an existing user totp device and returning it
@@ -300,3 +298,18 @@ class VerifyTOTPView(APIView):
             return Response({"token": token.key}, status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteUserView(APIView):
+    """Endpoint for deleting user. The user has to be authenticated to perform this action"""
+
+    thentication_classes = (ExpiringTokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        """Deletes the user of the request"""
+
+        user = request.user
+        user.delete()
+
+        return Response(status=status.HTTP_200_OK)
