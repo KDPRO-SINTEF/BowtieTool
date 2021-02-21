@@ -2609,6 +2609,44 @@ Graph.prototype.zapGremlins = function(text)
 	
 	return checked.join('');
 };
+/*
+	Bowtie++ feature
+	returns the threats and its associated matrix cells IDs
+ */
+
+Graph.prototype.getAllThreatsInfo = function()
+{
+	let allCells = this.model.cells;
+	let threats = new Array();
+	for(const cell of Object.values(allCells)){
+		if(cell.customID == 'Threat'){
+			let matrix = '';
+			for(const edge of Object.values(cell.edges)){
+				if(edge.target.customID == 'Likelihood'){
+					matrix = edge.target;
+					break;
+				}
+			}
+			threats.push([cell,matrix]);
+		}
+	}
+	return threats;
+}
+/*
+	Bowtie++ feature
+	returns the consequences cells IDs
+ */
+Graph.prototype.getAllConsequences = function()
+{
+	let allCells = this.model.cells;
+	let consequences = new Array();
+	for(const cell of Object.values(allCells)){
+		if(cell.customID == 'Consequence'){
+			consequences.push(cell);
+		}
+	}
+	return consequences;
+}
 
 /**
  * Hover icons are used for hover, vertex handler and drag from sidebar.
