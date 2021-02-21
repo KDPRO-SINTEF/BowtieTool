@@ -97,8 +97,8 @@
 				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
 				
 				// Main
-				var myEditorUi = new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
-				window.currentGraph = myEditorUi.editor.graph;
+				var editorUi = new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+				window.currentUI = editorUi;
 			}, function()
 			{
 				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';

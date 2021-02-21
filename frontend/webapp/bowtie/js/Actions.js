@@ -154,7 +154,6 @@ Actions.prototype.init = function()
 		Add action to show risk computation dialog window
 	 */
 	this.addAction('showRisk', function(){ui.showDialog(new RiskDialog(ui).container, 850, 500, true, true);});
-
 	
 	function deleteCells(includeEdges)
 	{
