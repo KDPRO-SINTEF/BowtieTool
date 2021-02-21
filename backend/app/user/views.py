@@ -49,7 +49,7 @@ class CreateUserView(generics.CreateAPIView):
             token = AccountActivationTokenGenerator().make_token(user)
             logger.info('Account with email : %s created on: %s', user.email, timezone.now())
             message = "To activate your account please click on the following link %s" % (
-                CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))  
+                CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
             subject = 'Activate account for Bowtie++'
             mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
                 fail_silently=False)
@@ -79,7 +79,7 @@ class CreateTokenView(ObtainAuthToken):
                 # update the created time of the token to keep it valid
                 token.created = timezone.now()
                 token.save()
-            
+
             logger.info("User with email %s logs at %s", user.email, timezone.now())
             return Response({'token': token.key}, status=status.HTTP_200_OK)
 
@@ -318,7 +318,7 @@ class DeleteUserView(APIView):
 
         if not "password" in request.data:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         user = request.user
         password = request.data['password']
         if authenticate(request=request, email=user.email, password=password):

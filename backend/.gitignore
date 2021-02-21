@@ -2,6 +2,7 @@
 .idea/
 .media/
 __pycache__/
-logs
-app/logs/
+__pycache__
+app/env
+app/logs/log_authentication.log
 .env
