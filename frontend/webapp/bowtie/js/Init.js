@@ -33,9 +33,11 @@ window.mxBasePath = window.mxBasePath || '../lib/mxgraph/src';
 window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
 
+window.ROOT_PAGE = window.ROOT_PAGE || '/app/bowtie'
 window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie/common/login.html';
 window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie/common/register.html';
 window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie/common/reset_pwd.html';
+window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || '/app/bowtie/common/account.html';
 
 // Customer driven project specifics
 window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';

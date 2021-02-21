@@ -13,44 +13,55 @@ Vue.component('UserLoginComponent',  {
                 wrongCredentialsErr: {
                     message: 'Provided credentials are wrong. Please try again.',
                     show: false
+                },
+                invalidEmailErr: {
+                    message: 'Valid email is required.',
+                    show: false
+                },
+                forbiddenAccessErr: {
+                    message: 'This email is either not registered or not confirmed.',
+                    show: false
                 }
             }
         }
     },
     methods: {
-        // Submit the login by fetching the api
-        loginSubmit: function () {
-            let params = JSON.stringify({"email": this.userEmail, "password": this.userPassword});
-            axios.post(window.LOGIN, params, {
-                headers: {
-                    'Content-type': 'application/json'
-                },
-            })
-                .then(res => {
-                    this.processToken(res.data.token);
-                })
-                .catch(error => {
-                    if (error.response) {
-                        if (error.response.status === 400) {
-                            this.userPassword = '';
-                            this.errors.wrongCredentialsErr.show = true;
-                        }
-                    }
-                })
-                /*.then(res => {
-                    if (res.status == 400) {
-                        this.userPassword = '';
-                        this.errors.wrongCredentialsErr.show = true;
-                        if(!res.ok) throw new Error('Error while login.');
-                    } else {
-                        this.processToken(res.data.token);
-                    }
-                })
-            .catch(error => {
-                console.error(error.message);
-            });*/
+        // Checks if the login form is valid
+        checkLoginForm: function() {
+            for (const errorName in this.errors)  {
+                this.errors[errorName].show = false;
+            }
+            if (!this.validEmail()) {
+                this.errors.invalidEmailErr.show = true;
+                this.userEmail = '';
+                return false;
+            }
+            return true;
         },
-        // Handle the token if the login form has been correctly submitted
+        // Submits the login form
+        loginSubmit: function () {
+            if (this.checkLoginForm()) {
+                let params = JSON.stringify({"email": this.userEmail, "password": this.userPassword});
+                axios.post(window.LOGIN, params, {
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                })
+                    .then(res => {
+                        this.processToken(res.data.token);
+                    })
+                    .catch(error => {
+                        if (error.response) this.filterErrorResponse(error.response);
+                    })
+            }
+
+        },
+        // Checks if the mail matches the right pattern
+        validEmail: function() {
+            let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return mailRegex.test(this.userEmail);
+        },
+        // Handles the received token if the login form has been successfully submitted
         processToken: function (token) {
             localStorage.setItem('token', token);
             axios.get(window.USER_INFO, {
@@ -61,18 +72,36 @@ Vue.component('UserLoginComponent',  {
                 .then(res => {
                     this.processName(res.data.username);
                 })
+
         },
-        // Handle the user information after request
+        // Handles the user information received thanks to the token
         processName: function (name) {
             localStorage.setItem('username', name);
             window.location.assign(window.BASE_PATH);
 
+        },
+        // Handles the errors coming from the login form submission
+        filterErrorResponse: function(error) {
+            switch(error.status) {
+                case 400:
+                    this.errors.wrongCredentialsErr.show = true;
+                    this.userPassword = '';
+                    break;
+                case 401:
+                    this.errors.forbiddenAccessErr.show = true;
+                    break;
+                case 403:
+                    this.errors.forbiddenAccessErr.show = true;
+                    break;
+                default:
+                    alert('Error while contacting the server.');
+            }
         }
     }
 })
 
 let login_vue = new Vue({
-    el: '#login-form-container',
+    el: '#login-vue',
     data: {
         title: 'Login'
     },

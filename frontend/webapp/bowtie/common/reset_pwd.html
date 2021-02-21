@@ -30,18 +30,14 @@
                 <p id="reset-pwd-message">Please type your account's verified email address to go off the password resetting.</p>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email address</label>
-                    <input v-model="userEmail" type="email" class="form-control" id="email" placeholder="name@example.com">
+                    <input v-model="userEmail" class="form-control" id="email" placeholder="name@example.com">
+                    <p v-show="errors.invalidEmailErr.show && userEmail === ''" class="mt-1 error-message"> {{ errors.invalidEmailErr.message }}</p>
                 </div>
                 <div class="mb-3">
                     <button v-on:click="resetEmailSubmit" type="button" class="btn btn-success btn-submit">Send password reset email</button>
                 </div>
             </div>
             <div v-show="isResetEmailSent">
-                <div class="mb-3">
-                    <label for="reset-pwd-token" class="form-label">Verification token</label>
-                    <input v-model="resetPwdToken" class="form-control" id="reset-pwd-token" placeholder="Type the token received by email">
-                    <p v-show="errors.invalidTokenErr.show && resetPwdToken === ''" class="mt-1 error-message"> {{ errors.invalidTokenErr.message }}</p>
-                </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">New password</label>
                     <input v-model="userPassword" type="password" class="form-control" id="password" placeholder="Enter your new password">
@@ -50,7 +46,7 @@
                     <p v-show="errors.confirmPwdErr.show && passwordConfirm === ''" class="mt-1 error-message"> {{ errors.confirmPwdErr.message }}</p>
                 </div>
                 <div class="mb-3">
-                    <button v-on:click="newPasswordSubmit" type="button" class="btn btn-success btn-submit">Reset password</button>
+                    <button v-on:click="newPasswordSubmit" type="button" class="btn btn-success btn-submit">Update password</button>
                 </div>
                 <p v-show="errors.missingFieldsErr.show" class="error-message"> {{ errors.missingFieldsErr.message }}</p>
             </div>

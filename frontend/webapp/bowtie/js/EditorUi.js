@@ -3152,18 +3152,15 @@ EditorUi.prototype.setLoginText = function(value)
 {
 	let uinfo = localStorage.getItem('username');
 	this.loginContainer.innerHTML = '';
-	this.loginContainer.appendChild(value);
 	if (uinfo !== null) {
 		var loginButton = document.getElementById('loginButton');
-		var userProfileButton = document.createElement('button');
-		userProfileButton.setAttribute('id', 'userProfileButton');
-		mxUtils.write(userProfileButton, mxResources.get('test'));
-		this.loginContainer.insertBefore(userProfileButton, loginButton);
-		/*let userName = document.createElement('p');
+		let userName = document.createElement('a');
 		userName.setAttribute('id', 'userLoginName');
-		userName.innerHTML = 'Welcome ' + uinfo + '!';
-		this.loginContainer.appendChild(userName);*/
+		userName.innerHTML = 'My account';
+		userName.setAttribute('href', window.ACCOUNT_PAGE);
+		this.loginContainer.appendChild(userName);
 	}
+	this.loginContainer.appendChild(value);
 };
 
 /**

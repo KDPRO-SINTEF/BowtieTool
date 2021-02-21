@@ -23,6 +23,15 @@
 </div>
 <script type="text/x-template" id="user-register">
     <div class="register-form">
+        <div id="password-help">
+            <p>To be valid, a <b>password</b> needs to:
+                <ul>
+                    <li>Contain at least 9 characters;</li>
+                    <li>Be composed of uppercase and lowercase letters;</li>
+                    <li>Contain at least one special character.</li>
+                </ul>
+            </p>
+        </div>
         <form novalidate="true">
             <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
@@ -32,6 +41,7 @@
                 <label for="email" class="form-label">Email address</label>
                 <input v-model="userEmail" type="email" class="form-control" id="email" placeholder="name@example.com">
                 <p v-show="errors.existingEmailErr.show && userEmail === ''" class="mt-1 error-message"> {{ errors.existingEmailErr.message }}</p>
+                <p v-show="errors.invalidEmailErr.show" class="mt-1 error-message"> {{ errors.invalidEmailErr.message }}</p>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label">Password</label>
