@@ -4,5 +4,5 @@
 __pycache__/
 __pycache__
 app/env
-app/logs/log_authentication.log
+log_authentication.log
 .env
