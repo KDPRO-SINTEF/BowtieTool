@@ -63,7 +63,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     def __str__(self):
-        return  self.username + " " + self.email
+        return  self.username + " " + self.email + " 2FA-" + self.profile.two_factor_enabled
 
 class Profile(models.Model):
     """Profile of a user related to authentication features"""
