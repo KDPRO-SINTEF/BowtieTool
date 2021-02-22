@@ -18,4 +18,5 @@ urlpatterns = [
     	name='totp-login'),
     path('totp/verify/<slug:token>', views.VerifyTOTPView.as_view(), name='totp-activate'),
     path('delete/', views.DeleteUserView.as_view(), name='delete'),
+    path('test/', views.Test.as_view(), name='test'),
 ]
