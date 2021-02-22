@@ -41,7 +41,7 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-
+     
         response = super().create(request=request, *args, **kwargs)
         if response:
             user = get_user_model().objects.filter(email=request.data['email']).first()
