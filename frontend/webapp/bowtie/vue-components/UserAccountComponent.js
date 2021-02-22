@@ -42,7 +42,7 @@ let AccountDangerZoneComponent = {
               this.errors.emptyPasswordErr.show = true;
               return false;
           }
-          return false;
+          return true;
         },
 
         deleteAccountSubmit: function() {
@@ -52,16 +52,17 @@ let AccountDangerZoneComponent = {
             }
         },
         deleteAccountConfirm: function() {
-            let params = JSON.stringify({ password: ''})
-            axios.post(window.DELETE_ACCOUNT, {
+            let params = JSON.stringify({ password: this.userPassword })
+            axios.post(window.DELETE_ACCOUNT, params, {
                 headers: {
-                    Authorization: 'Token' + this.authToken,
+                    'Content-type': 'application/json',
+                    Authorization: 'Token ' + this.authToken
                 }
             })
                 .then(res => {
                     localStorage.removeItem('username');
                     localStorage.removeItem('token');
-                    alert('Your account has been successfully delete. You will be redirected to login page.');
+                    alert('Your account has been successfully deleted. You will be redirected to login page.');
                     window.location.assign(window.LOGIN_PAGE);
                 });
         }
