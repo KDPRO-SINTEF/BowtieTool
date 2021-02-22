@@ -9,13 +9,23 @@ Vue.component('RiskComputationComponent',  {
     template: '#risk_computation',
     data: function() {
         return {
+            editorUI: window.parent.currentUI,
+            threats: window.parent.currentUI.editor.graph.getAllThreatsInfo(),
         }
     },
     methods: {
+        /*getIndicatorColor: function(probability){
+            switch (true){
+                case (probability < 0.2):
+                    return
+                    break;
+                ...
+            }
+        }*/
     }
 })
 
-let login_vue = new Vue({
+let risk_vue = new Vue({
     el: '#risk_container',
     data: {
     }

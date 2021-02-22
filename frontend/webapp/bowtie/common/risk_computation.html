@@ -14,7 +14,9 @@
         mxBasePath = '../../lib/mxgraph/src';
     </script>
     <script type="text/javascript" src="../js/Init.js"></script>
-
+    <script type="text/javascript" src="../js/EditorUi.js"></script>
+    <script type="text/javascript" src="../js/Editor.js"></script>
+    <script type="text/javascript" src="../js/Graph.js"></script>
     <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
     <link rel="stylesheet" href="../css/risk_computation.css">
 </head>
@@ -27,6 +29,22 @@
     <script>Vue.use(VueMaterial.default)</script>
     <script type="text/x-template" id="risk_computation">
             <div>
+                <md-table>
+                    <md-table-toolbar>
+                        <h1 class="md-title">Risk Computation</h1>
+                    </md-table-toolbar>
+                    <md-table-row>
+                        <md-table-head id="description">Threat</md-table-head>
+                        <md-table-head>Indicator</md-table-head>
+                        <md-table-head md-numeric>Probability</md-table-head>
+                    </md-table-row>
+                </md-table>
+                <md-table v-for="threat in threats" v-bind:key="threat.id">
+                    <md-table-cell id="description"> {{threat[0].value}}</md-table-cell>
+                    <md-table-cell><div id="cercle" style="width: 25px; height: 25px; border-radius: 20px; background: green;"></div></md-table-cell>
+                    <md-table-cell md-numeric>0.2</md-table-cell>
+                </md-table>
+                <!--
                 <md-table>
                     <md-table-toolbar>
                         <h1 class="md-title">Risk Computation</h1>
@@ -55,6 +73,7 @@
                         <md-table-cell md-numeric>0.8</md-table-cell>
                     </md-table-row>
                 </md-table>
+                -->
             </div>
     </script>
     <script src="../vue-components/RiskComputationComponent.js"></script>
