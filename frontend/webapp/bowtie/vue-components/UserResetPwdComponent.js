@@ -123,7 +123,7 @@ Vue.component('UserResetPwdComponent', {
 })
 
 let reset_pwd_vue = new Vue({
-    el: '#reset-pwd-form-container',
+    el: '#reset-pwd-vue',
     data: {
         title: 'Reset password',
     },

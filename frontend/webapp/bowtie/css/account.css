@@ -73,13 +73,16 @@ label {
     color: white;
 }
 
-.btn-submit, .btn-dark {
+.btn-submit, .btn-dark, .btn-danger {
     width: 60%;
 }
 
-#message-2fa {
+.message-emphasis {
     border: 1px solid black;
     border-radius: 4px;
     padding: 10px 5px 0px 10px;
     font-size: 0.8em;
+}
+.error-message {
+    color: #dc0000!important;
 }

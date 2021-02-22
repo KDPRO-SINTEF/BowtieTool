@@ -13,16 +13,19 @@
 
     <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
     <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/navbar.css">
 </head>
 <body>
-<div id="reset-pwd-form-container">
-    <div class="mb-4 reset-pwd-header">
-        <img id="bwt-logo" class="mb-4" src="../images/logo.png" width="120">
-        <h1 id="reset-pwd-title" class="mb-4">{{ title }}</h1>
+<div id="reset-pwd-vue">
+    <the-navbar-component></the-navbar-component>
+    <div id="reset-pwd-form-container">
+        <div class="mb-4 reset-pwd-header">
+            <img id="bwt-logo" class="mb-4" src="../images/logo.png" width="120">
+            <h1 id="reset-pwd-title" class="mb-4">{{ title }}</h1>
+        </div>
+        <user-reset-pwd-component></user-reset-pwd-component>
     </div>
-    <user-reset-pwd-component></user-reset-pwd-component>
 </div>
-
 <script type="text/x-template" id="reset-password">
     <div class="reset-pwd-form">
         <form nonvalidate="true">
@@ -54,6 +57,7 @@
         </form>
     </div>
 </script>
+<script src="../vue-components/TheNavbarComponent.js"></script>
 <script src="../vue-components/UserResetPwdComponent.js"></script>
 
 </body>

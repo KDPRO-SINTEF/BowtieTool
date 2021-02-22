@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>My Account</title>
@@ -31,12 +31,15 @@
                         v-bind:key="tab"
                         v-bind:class="['tab-button', { active: currentTab === tab }]"
                         v-on:click="currentTab = tab"
-                >{{ tab }}</button>
+                >{{ tab.replace('-', ' ') }}</button>
             </div>
         </div>
         <div class="account-tab-content">
-            <account-profile-component v-if="currentTab === 'Profile'" :user-name="userInfo.name" :user-email="userInfo.email"></account-profile-component>
-            <account-security-component v-else></account-security-component>
+            <keep-alive>
+                <account-profile-component v-if="currentTab === 'Profile'" :user-name="userInfo.name" :user-email="userInfo.email"></account-profile-component>
+                <account-security-component v-else-if="currentTab === 'Security'"></account-security-component>
+                <account-danger-zone-component v-else="currentTab === 'Danger-Zone'" :auth-token="this.userInfo.authToken"></account-danger-zone-component>
+            </keep-alive>
         </div>
     </div>
 </div>
@@ -80,7 +83,7 @@
         </form>
         <div class="mb-3">
             <p class="menu-subtitle">Two-factor authentication</p>
-            <div id="message-2fa" class="mb-3">
+            <div class="mb-3 message-emphasis">
                 <p><b>Two factor authentication is not enabled yet.</b><br>
                     Two factor authentication allows your authentication to not just be based on a simple password.</p>
             </div>
@@ -89,6 +92,25 @@
             </div>
         </div>
     </div>
+</script>
+<script type="text/x-template" id="account-danger-zone-template">
+<div class="account-danger-zone">
+    <h2 class="mb-3">Danger zone</h2>
+    <p class="menu-subtitle">Delete my account</p>
+    <div class="mb-3 message-emphasis">
+        <p><b><span style="color:red">WARNING</span> : Delete your account is NOT reversible.</b><br>
+            By deleting your account, you assume that all your data will be erased from our database. You won't be able to recover your account after that.</p>
+    </div>
+    <form nonvalidate="true">
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input v-model="userPassword" class="form-control" type="password" id="password">
+            <p v-show="errors.emptyPasswordErr.show && userPassword === ''" class="mt-1 error-message">{{ errors.emptyPasswordErr.message }}</p>
+        </div>
+        <button type="button" class="btn btn-danger" v-on:click="deleteAccountSubmit">Delete my account</button>
+    </form>
+</div>
+
 </script>
 
 <script type="text/javascript" src="../vue-components/UserAccountComponent.js"></script>

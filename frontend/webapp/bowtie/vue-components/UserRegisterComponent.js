@@ -102,7 +102,7 @@ Vue.component('UserRegisterComponent', {
 })
 
 let register_vue = new Vue({
-    el: '#register-form-container',
+    el: '#register-vue',
     data: {
         title: 'Register'
     }

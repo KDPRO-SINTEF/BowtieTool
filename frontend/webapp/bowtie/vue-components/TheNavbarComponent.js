@@ -1,7 +1,7 @@
 Vue.component('TheNavbarComponent', {
     template: `
     <div class="navbar">
-        <img id="logo" src="../images/logo.png">
+        <img id="logo" src="../images/logo.png" onclick="window.location.assign(window.ROOT_PAGE)">
         <nav>
             <ul class="nav-links">
                 <li><a :href="home_url">Home</a></li>
@@ -16,5 +16,5 @@ Vue.component('TheNavbarComponent', {
             login_url: window.LOGIN_PAGE,
             register_url: window.REGISTER_PAGE
         }
-    }
+    },
 })

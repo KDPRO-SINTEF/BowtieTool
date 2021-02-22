@@ -12,14 +12,18 @@
     <script type="text/javascript" src="../js/Init.js"></script>
     <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
     <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/navbar.css">
 </head>
 <body>
-<div id="register-form-container">
-    <div class="mb-4 register-header">
-        <img id="bwt-logo" class="mb-4" src="../images/logo.png" width="120">
-        <h1 id="register-title" class="mb-4">{{ title }} to Bowtie++</h1>
+<div id="register-vue">
+    <the-navbar-component></the-navbar-component>
+    <div id="register-form-container">
+        <div class="mb-4 register-header">
+            <img id="bwt-logo" class="mb-4" src="../images/logo.png" width="120">
+            <h1 id="register-title" class="mb-4">{{ title }} to Bowtie++</h1>
+        </div>
+        <user-register-component v-bind:title="title"></user-register-component>
     </div>
-    <user-register-component v-bind:title="title"></user-register-component>
 </div>
 <script type="text/x-template" id="user-register">
     <div class="register-form">
@@ -57,6 +61,7 @@
         </form>
     </div>
 </script>
+<script src="../vue-components/TheNavbarComponent.js"></script>
 <script src="../vue-components/UserRegisterComponent.js"></script>
 </body>
 </html>

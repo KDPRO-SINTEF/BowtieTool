@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authorize</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="./js/Init.js"></script>
+</head>
+<body>
+<div id="authorize-vue">
+
+</div>
+<script>
+    new Vue({
+        el: '#authorize-vue',
+        data: {
+            context: null,
+            userId: null,
+            userToken: null
+        },
+        methods: {
+            processUrlParams: function(url) {
+                let result = new Object
+                let idx = url.lastIndexOf('?');
+                if (idx > 0) {
+                    let params = url.substring(idx + 1).split('&');
+                    for (let i = 0; i < params.length; i++ ) {
+                        idx = params[i].indexOf('=');
+                        if (idx > 0) {
+                            result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
+                        }
+
+                    }
+                }
+                this.context = result.for;
+                this.userId = result.id;
+                this.userToken = result.token;
+            },
+            sendAuthRequest: function() {
+                let url = '';
+                let user_info = this.userId + '/' + this.userToken + '/';
+                if (this.context === 'email_confirm') {
+                    url = window.CONFIRM_EMAIL + user_info;
+                } else if (this.context === 'reset_pwd') {
+                    url = window.RESET_PWD + user_info;
+                }
+                axios.post(url);
+            }
+        },
+        beforeMount() {
+            this.processUrlParams(window.location.href);
+        },
+        mounted() {
+            this.sendAuthRequest();
+        }
+    })
+</script>
+</body>
+</html>

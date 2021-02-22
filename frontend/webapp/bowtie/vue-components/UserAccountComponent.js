@@ -20,15 +20,62 @@ let AccountSecurityComponent = {
     }
 }
 
+let AccountDangerZoneComponent = {
+    template: '#account-danger-zone-template',
+    props: {
+        authToken: String
+    },
+    data: function() {
+        return {
+            userPassword: '',
+            errors: {
+                emptyPasswordErr: {
+                    message: 'Please type your password.',
+                    show: false
+                }
+            }
+        }
+    },
+    methods: {
+        checkDeleteAccountForm: function() {
+          if (this.userPassword === '') {
+              this.errors.emptyPasswordErr.show = true;
+              return false;
+          }
+          return false;
+        },
+
+        deleteAccountSubmit: function() {
+            if (this.checkDeleteAccountForm()) {
+                let userConfirmation = confirm('Continue by deleting your account ?');
+                if (userConfirmation) this.deleteAccountConfirm();
+            }
+        },
+        deleteAccountConfirm: function() {
+            let params = JSON.stringify({ password: ''})
+            axios.post(window.DELETE_ACCOUNT, {
+                headers: {
+                    Authorization: 'Token' + this.authToken,
+                }
+            })
+                .then(res => {
+                    alert('Your account has been successfully delete. You will be redirected to login page.');
+                    window.location.assign(window.LOGIN_PAGE);
+                });
+        }
+    }
+}
+
 let user_account_vue = new Vue({
     el: '#user-account-container',
     components: {
         'account-profile-component': AccountProfileComponent,
-        'account-security-component': AccountSecurityComponent
+        'account-security-component': AccountSecurityComponent,
+        'account-danger-zone-component': AccountDangerZoneComponent
     },
     data: {
         currentTab: 'Profile',
-        tabs: ['Profile', 'Security'],
+        tabs: ['Profile', 'Security', 'Danger-Zone'],
         isUserAuthenticated: true,
         userInfo: {
             name: null,
@@ -40,6 +87,7 @@ let user_account_vue = new Vue({
     },
     computed: {
         currentTabComponent: function() {
+            if (current)
             return 'account-' + this.currentTab.toLowerCase() + '-component';
         }
     },
@@ -60,9 +108,6 @@ let user_account_vue = new Vue({
         }
 
     },*/
-    methods: {
-
-    }
 
 })
 
