@@ -59,6 +59,8 @@ let AccountDangerZoneComponent = {
                 }
             })
                 .then(res => {
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('token');
                     alert('Your account has been successfully delete. You will be redirected to login page.');
                     window.location.assign(window.LOGIN_PAGE);
                 });
@@ -87,17 +89,16 @@ let user_account_vue = new Vue({
     },
     computed: {
         currentTabComponent: function() {
-            if (current)
             return 'account-' + this.currentTab.toLowerCase() + '-component';
         }
     },
-    /*beforeMount() {
+    beforeMount() {
         this.userInfo.name = localStorage.getItem('username');
         this.userInfo.authToken = localStorage.getItem('token');
         if (this.userInfo.name !== null && this.userInfo.authToken !== null) {
-            axios.post(window.USER_INFO, {
+            axios.get(window.USER_INFO, {
                 headers: {
-                    Authorization: 'Token' + this.userInfo.authToken
+                    Authorization: 'Token ' + this.userInfo.authToken
                 }
             })
                 .then(res => {
@@ -107,7 +108,7 @@ let user_account_vue = new Vue({
                 })
         }
 
-    },*/
+    },
 
 })
 

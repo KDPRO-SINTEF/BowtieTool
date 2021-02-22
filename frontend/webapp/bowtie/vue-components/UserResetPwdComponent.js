@@ -5,7 +5,6 @@ Vue.component('UserResetPwdComponent', {
             userEmail: '',
             userPassword: '',
             passwordConfirm: '',
-            userId: null,
             resetPwdToken: null,
             isResetEmailSent: false,
             errors: {
@@ -84,15 +83,21 @@ Vue.component('UserResetPwdComponent', {
         },
         // Submits the new passwords of the user
         newPasswordSubmit: function() {
+            this.userId = localStorage.getItem('userId');
+            this.resetPwdToken = localStorage.getItem('resetPwdToken');
             if (this.checkNewPwdForm()) {
-                let params = JSON.stringify({'password': this.userPassword});
-                axios.post(window.RESET_PWD, params, {
+                let params = JSON.stringify({'password': this.userPassword });
+                let url = window.RESET_PWD + this.userId + '/' + this.resetPwdToken;
+                axios.post(url, params, {
                     headers: {
                         'Content-type': 'application/json'
                     }
                 })
                     .then(res => {
                         alert('Your password is now reset, you will be redirected to login page.');
+                        localStorage.removeItem('userId');
+                        localStorage.removeItem('resetPwdToken');
+                        window.location.assign(window.LOGIN_PAGE);
                     })
                     .catch(error => {
                         if (error.response) this.filterPwdErrorResponse(error.response);

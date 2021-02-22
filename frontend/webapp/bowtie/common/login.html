@@ -41,7 +41,6 @@
                 <a id="reset-pwd-link" href="reset_pwd.html">Forgot password?</a>
                 <p class="mt-2 error-message" v-show="errors.wrongCredentialsErr.show && userPassword === ''">{{ errors.wrongCredentialsErr.message }}</p>
             </div>
-            <p class="error-message" v-show="errors.wrongCredentialsErr.show && userPassword === ''">{{ errors.wrongCredentialsErr.message }}</p>
             <div class="mb-3">
                 <button v-on:click="loginSubmit" type="button" class="btn btn-submit btn-success">Login</button>
             </div>

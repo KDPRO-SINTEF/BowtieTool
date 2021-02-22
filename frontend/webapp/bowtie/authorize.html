@@ -9,7 +9,8 @@
 </head>
 <body>
 <div id="authorize-vue">
-
+    <p v-if="isActionSucessfull">{{ Success }}</p>
+    <p v-else>{{ Fail }}</p>
 </div>
 <script>
     new Vue({
@@ -17,7 +18,8 @@
         data: {
             context: null,
             userId: null,
-            userToken: null
+            userToken: null,
+            isActionSucessfull: false
         },
         methods: {
             processUrlParams: function(url) {
@@ -39,13 +41,16 @@
             },
             sendAuthRequest: function() {
                 let url = '';
-                let user_info = this.userId + '/' + this.userToken + '/';
+                let user_info = this.userId + '/' + this.userToken;
                 if (this.context === 'email_confirm') {
                     url = window.CONFIRM_EMAIL + user_info;
+                    axios.get(url)
+                        .then(res => this.isActionSucessfull = true);
                 } else if (this.context === 'reset_pwd') {
-                    url = window.RESET_PWD + user_info;
+                    localStorage.setItem('resetPwdToken', this.userToken);
+                    localStorage.setItem('userId', this.userId);
+                    this.isActionSucessfull = true;
                 }
-                axios.post(url);
             }
         },
         beforeMount() {
