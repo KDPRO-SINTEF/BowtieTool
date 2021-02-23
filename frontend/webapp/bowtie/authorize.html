@@ -9,57 +9,8 @@
 </head>
 <body>
 <div id="authorize-vue">
-    <p v-if="isActionSucessfull">{{ Success }}</p>
-    <p v-else>{{ Fail }}</p>
+    <authorizations-component></authorizations-component>
 </div>
-<script>
-    new Vue({
-        el: '#authorize-vue',
-        data: {
-            context: null,
-            userId: null,
-            userToken: null,
-            isActionSucessfull: false
-        },
-        methods: {
-            processUrlParams: function(url) {
-                let result = new Object
-                let idx = url.lastIndexOf('?');
-                if (idx > 0) {
-                    let params = url.substring(idx + 1).split('&');
-                    for (let i = 0; i < params.length; i++ ) {
-                        idx = params[i].indexOf('=');
-                        if (idx > 0) {
-                            result[params[i].substring(0, idx)] = params[i].substring(idx + 1);
-                        }
-
-                    }
-                }
-                this.context = result.for;
-                this.userId = result.id;
-                this.userToken = result.token;
-            },
-            sendAuthRequest: function() {
-                let url = '';
-                let user_info = this.userId + '/' + this.userToken;
-                if (this.context === 'email_confirm') {
-                    url = window.CONFIRM_EMAIL + user_info;
-                    axios.get(url)
-                        .then(res => this.isActionSucessfull = true);
-                } else if (this.context === 'reset_pwd') {
-                    localStorage.setItem('resetPwdToken', this.userToken);
-                    localStorage.setItem('userId', this.userId);
-                    this.isActionSucessfull = true;
-                }
-            }
-        },
-        beforeMount() {
-            this.processUrlParams(window.location.href);
-        },
-        mounted() {
-            this.sendAuthRequest();
-        }
-    })
-</script>
+<script type="text/javascript" src="vue/components/auth/ConfirmationComponent.js"></script>
 </body>
 </html>

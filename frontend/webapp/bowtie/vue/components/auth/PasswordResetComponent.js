@@ -1,9 +1,9 @@
-Vue.component('UserResetPwdComponent', {
-    template: '#reset-password',
+let PasswordResetComponent = {
+    template: '#password-reset-template',
     data: function() {
         return {
-            userEmail: '',
-            userPassword: '',
+            email: '',
+            newPassword: '',
             passwordConfirm: '',
             resetPwdToken: null,
             isResetEmailSent: false,
@@ -12,8 +12,8 @@ Vue.component('UserResetPwdComponent', {
                     message: 'The two typed passwords are different.',
                     show: false
                 },
-                unsecuredPwdErr: {
-                    message: 'This password is not safe enough.',
+                weakPasswordErr: {
+                    message: 'This password is not strong enough.',
                     show: false
                 },
                 missingFieldsErr: {
@@ -40,7 +40,7 @@ Vue.component('UserResetPwdComponent', {
         checkEmailForm: function() {
             if (!this.validEmail()) {
                 this.errors.invalidEmailErr.show = true;
-                this.userEmail = '';
+                this.email = '';
                 return false;
             }
             return true;
@@ -51,29 +51,28 @@ Vue.component('UserResetPwdComponent', {
             for (const errorName in this.errors)  {
                this.errors[errorName].show = false;
             }
-            if (this.userPassword === '') {
+            if (this.newPassword === '' && this.passwordConfirm === '') {
                 this.errors.missingFieldsErr.show = true;
-                isValid = false;
-            }
-            if (this.userPassword !== this.passwordConfirm) {
+                return false;
+            } else if (this.newPassword !== this.passwordConfirm) {
                 this.errors.confirmPwdErr.show = true;
                 this.passwordConfirm = '';
-                isValid = false;
+               return  false;
             }
-            return isValid;
+            return true;
         },
         // Submits the email to reset the password
-        resetEmailSubmit: function() {
+        submitResetEmail: function() {
             if (this.checkEmailForm()) {
-                let params = JSON.stringify({'email': this.userEmail });
+                let params = JSON.stringify({'email': this.email });
                 axios.post(window.RESET_PWD, params, {
                     headers: {
                         'Content-type': 'application/json'
                     }
                 })
                     .then(res => {
-                        alert('If this email is registered, an message will be sent. Please verify your email box.');
-                        this.isResetEmailSent = true;
+                        alert('A password reset mail has been sent. You will be redirected to the login page.');
+                        location.hash = 'login';
                     })
                     .catch(error => {
                         if (error.response) this.filterMailErrorResponse(error.response);
@@ -82,11 +81,11 @@ Vue.component('UserResetPwdComponent', {
 
         },
         // Submits the new passwords of the user
-        newPasswordSubmit: function() {
+        submitNewPassword: function() {
             this.userId = localStorage.getItem('userId');
             this.resetPwdToken = localStorage.getItem('resetPwdToken');
             if (this.checkNewPwdForm()) {
-                let params = JSON.stringify({'password': this.userPassword });
+                let params = JSON.stringify({'password': this.newPassword });
                 let url = window.RESET_PWD + this.userId + '/' + this.resetPwdToken;
                 axios.post(url, params, {
                     headers: {
@@ -107,7 +106,7 @@ Vue.component('UserResetPwdComponent', {
         // Checks if the email matches the right pattern
         validEmail: function() {
             let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return mailRegex.test(this.userEmail);
+            return mailRegex.test(this.email);
         },
         // Handles the errors coming from the email form submission
         filterMailErrorResponse: function(error) {
@@ -119,17 +118,10 @@ Vue.component('UserResetPwdComponent', {
         // Handles the errors coming from the new password form submission
         filterPwdErrorResponse: function(error) {
             if (error.status === 400) {
-                this.errors.unsecuredPwdErr.show = true;
-                this.userPassword = '';
+                this.errors.weakPasswordErr.show = true;
+                this.newPassword = '';
                 this.passwordConfirm = '';
             }
         }
     }
-})
-
-let reset_pwd_vue = new Vue({
-    el: '#reset-pwd-vue',
-    data: {
-        title: 'Reset password',
-    },
-})
+}

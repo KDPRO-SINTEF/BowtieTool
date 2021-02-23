@@ -1,34 +1,27 @@
 /**
  * UserRegisterComponent
- * Description: uses to handle the registration process via the register form (see register.html)
+ * Description: uses to handle the registration process via the register form
  */
 
-Vue.component('UserRegisterComponent', {
-    props: {
-        title: String
-    },
-    template: '#user-register',
+let RegisterComponent = {
+    template: '#register-template',
     data: function () {
         return {
-            userName: '',
-            userEmail: '',
-            userPassword: '',
+            username: '',
+            email: '',
+            password: '',
             passwordConfirm: '',
             errors: {
-                existingEmailErr: {
-                    message: 'This email is already register.',
-                    show: false
-                },
-                confirmPwdErr: {
+                confirmPasswordErr: {
                     message: 'The two typed passwords are different.',
                     show: false
                 },
-                unsecuredPwdErr: {
-                    message: 'This password is not safe enough.',
+                weakPasswordErr: {
+                    message: 'This password is not strong enough.',
                     show: false
                 },
                 missingFieldsErr: {
-                    message: 'All elements are required. Please fill them.',
+                    message: 'All fields are required. Please in fill them.',
                     show: false
                 },
                 invalidEmailErr: {
@@ -45,7 +38,7 @@ Vue.component('UserRegisterComponent', {
             for (const errorName in this.errors)  {
                 this.errors[errorName].show = false;
             }
-            if (this.userName === '' || this.userEmail === '' | this.userPassword === '') {
+            if (this.username === '' || this.email === '' | this.password === '') {
                 this.errors.missingFieldsErr.show = true;
                 isValid = false;
             }
@@ -53,25 +46,26 @@ Vue.component('UserRegisterComponent', {
                 this.errors.invalidEmailErr.show = true;
                 isValid = false;
             }
-            if (this.userPassword !== this.passwordConfirm) {
-                this.errors.confirmPwdErr.show = true;
+            if (this.password !== this.passwordConfirm) {
+                this.errors.confirmPasswordErr.show = true;
                 this.passwordConfirm = '';
                 isValid = false;
             }
             return isValid;
         },
         // Submit the register by fetching the api
-        registerSubmit: function() {
+        submitRegisterForm: function() {
             if (this.checkRegisterForm()) {
-                let params = JSON.stringify({ "username": this.userName, "email": this.userEmail, "password": this.userPassword });
+                let params = JSON.stringify({ "username": this.username, "email": this.email, "password": this.password });
                 axios.post(window.REGISTER, params, {
                     headers: {
                         'Content-type': 'application/json'
                     },
                 })
-                    .then(res => {
-                        alert('Registration succeeded. You will be redirected to login page.');
-                        window.location.assign(window.LOGIN_PAGE);
+                    .then(function(res) {
+                        console.log(res);
+                        alert('An email has been sent for confirmation. You will be redirected to the login page');
+                        location.hash = 'login';
                     })
                     .catch(error => {
                         if (error.response) this.filterErrorResponse(error.response);
@@ -80,31 +74,15 @@ Vue.component('UserRegisterComponent', {
         },
         validEmail: function() {
             let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return mailRegex.test(this.userEmail);
+            return mailRegex.test(this.email) || this.email === '';
         },
         // Handles the different errors received after the above axios operation
         filterErrorResponse: function(error) {
-            if(error.status === 400) {
-                if (error.data.email !== undefined) {
-                    this.errors.existingEmailErr.show = true;
-                    this.userEmail = '';
-                }
-                if (error.data.password !== undefined) {
-                    console.log(error.data.password);
-                    this.errors.unsecuredPwdErr.show = true;
-                    this.userPassword = '';
-                    this.passwordConfirm = '';
-                }
+            if (error.status === 400) {
+                this.errors.weakPasswordErr.show = true;
+                this.password = '';
+                this.passwordConfirm = '';
             }
-
         }
     }
-})
-
-let register_vue = new Vue({
-    el: '#register-vue',
-    data: {
-        title: 'Register'
-    }
-})
-
+}

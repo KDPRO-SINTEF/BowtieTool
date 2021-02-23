@@ -3104,42 +3104,19 @@ EditorUi.prototype.getContextualLoginText = function() {
     button.setAttribute('id', 'loginButton');
 	if (user.token === null) {
 		mxUtils.write(button, mxResources.get('login'));
-		/*button.addEventListener('click', mxUtils.bind(this, function() {
-            window.updateLoginStatus = mxUtils.bind(this, function()
-            {
-                this.setLoginText(this.getContextualLoginText(), user.username);
-                this.hideDialog();
-            });
-            this.showDialog(new LoginDialog(this).container, 300, 300, true, true);
-		}));*/
-		button.addEventListener('click', mxUtils.bind(this, function() {
-				window.location.assign(window.LOGIN_PAGE);
-				/*window.updateLoginStatus = mxUtils.bind(this, function() {
-					this.setLoginText(this.getContextualLoginText());
-				});*/
-			})
-		);
+		button.addEventListener('click', function() {
+			window.location.assign(window.LOGIN_PAGE);
+		})
 	} else {
-
 		mxUtils.write(button, mxResources.get('logout'));
         button.style.backgroundColor='#f44336';
-        /*button.addEventListener('click', mxUtils.bind(this, function () {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            this.setLoginText(this.getContextualLoginText(), '');
-            alert('You have been disconnected.');
-        }));*/
-		button.addEventListener('click', mxUtils.bind(this, function() {
-				//window.location.href = '/app/bowtie';
-				localStorage.removeItem('token');
-				localStorage.removeItem('username');
-				alert("You will be disconnected.");
-				/*window.updateLoginStatus = mxUtils.bind(this, function() {
-					this.setLoginText(this.getContextualLoginText());
-				});*/
-				window.location.reload();
-			})
-		);
+
+		button.addEventListener('click', function() {
+			localStorage.removeItem('token');
+			localStorage.removeItem('username');
+			alert("You will be disconnected.");
+			window.location.reload();
+		});
 
     }
     return button;

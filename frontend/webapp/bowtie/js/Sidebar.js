@@ -1169,7 +1169,7 @@ Sidebar.prototype.addRootPalette = function(dir, expand)
         [
 			this.createVertexTemplateEntry('Hazard','shape=mxgraph.bowtie.hazard;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed', 120, 80, 'Hazard', 'Hazard', null, null, 'bowtie hazard'),
             this.createVertexTemplateEntry('Asset','shape=mxgraph.bowtie.asset;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 90, 60, 'Asset', 'Asset', null, null, 'bowtie asset'),
-            this.createVertexTemplateEntry('Event','shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie event'),
+            this.createVertexTemplateEntry('Event','shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie unwanted event'),
             ];
 
     this.addPaletteFunctions('Bowtie Root', mxResources.get('bowtieroot'), expand, fns);
@@ -1192,7 +1192,7 @@ Sidebar.prototype.addBranchPalette = function(dir, expand)
             this.createVertexTemplateEntry('Consequence','shape=mxgraph.bowtie.consequence;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Consequence', 'Consequence', null, null, 'bowtie consequence'),
             this.createVertexTemplateEntry('Cause','shape=mxgraph.bowtie.cause;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Cause', 'Cause', null, null, 'bowtie cause'),
             this.createVertexTemplateEntry('Escalation Factor','shape=mxgraph.bowtie.escalationfactor;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Escalation Factor', 'Escalation Factor', null, null, 'bowtie escalation factor'),
-        ];
+		];
 
     this.addPaletteFunctions('Bowtie Branch', mxResources.get('bowtiebranch'), expand, fns);
 }
