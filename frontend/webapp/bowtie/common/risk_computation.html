@@ -17,6 +17,8 @@
     <script type="text/javascript" src="../js/EditorUi.js"></script>
     <script type="text/javascript" src="../js/Editor.js"></script>
     <script type="text/javascript" src="../js/Graph.js"></script>
+    <script type="text/javascript" src="../js/Threat.js"></script>
+    <script type="text/javascript" src="../js/Matrix.js"></script>
     <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
     <link rel="stylesheet" href="../css/risk_computation.css">
 </head>
@@ -39,10 +41,10 @@
                         <md-table-head md-numeric>Probability</md-table-head>
                     </md-table-row>
                 </md-table>
-                <md-table v-for="threat in threats" v-bind:key="threat.id">
-                    <md-table-cell id="description"> {{threat[0].value}}</md-table-cell>
+                <md-table v-for="threat in threats" v-bind:key="threat.getName()">
+                    <md-table-cell id="description"> {{threat.getName()}}</md-table-cell>
                     <md-table-cell><div id="cercle" style="width: 25px; height: 25px; border-radius: 20px; background: green;"></div></md-table-cell>
-                    <md-table-cell md-numeric>0.2</md-table-cell>
+                    <md-table-cell md-numeric>{{threat.getMatrix().getMeanValue()/10}}</md-table-cell>
                 </md-table>
                 <!--
                 <md-table>

@@ -2614,7 +2614,7 @@ Graph.prototype.zapGremlins = function(text)
 	returns the threats and its associated matrix cells IDs
  */
 
-Graph.prototype.getAllThreatsInfo = function()
+Graph.prototype.getAllThreatsID = function()
 {
 	let allCells = this.model.cells;
 	let threats = new Array();

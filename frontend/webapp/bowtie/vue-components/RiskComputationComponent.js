@@ -10,24 +10,25 @@ Vue.component('RiskComputationComponent',  {
     data: function() {
         return {
             editorUI: window.parent.currentUI,
-            threats: window.parent.currentUI.editor.graph.getAllThreatsInfo(),
+            threats : []
         }
     },
     methods: {
-        /*getIndicatorColor: function(probability){
-            switch (true){
-                case (probability < 0.2):
-                    return
-                    break;
-                ...
+    },
+    beforeMount: function() {
+            const threatsID = window.parent.currentUI.editor.graph.getAllThreatsID();
+            for(const arrayIndex in threatsID){
+                this.threats.push(new Threat(threatsID[arrayIndex][0],new Matrix(threatsID[arrayIndex][1])));
             }
-        }*/
     }
 })
 
 let risk_vue = new Vue({
     el: '#risk_container',
     data: {
+    },
+    computed: {
+        co
     }
 })
 

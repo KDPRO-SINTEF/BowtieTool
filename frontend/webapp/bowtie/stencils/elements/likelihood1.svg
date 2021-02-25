@@ -20,9 +20,9 @@
         <text opacity="1" x="0" y="30" font-family="sans-serif" font-size="17px" fill="black">Threat actors</text>
       </g>
     <g>
-      <title>Window of opportunety</title>
+      <title>Window of opportunity</title>
       <g opacity="0.7" id="layer2">
-        <text opacity="1" x="0" y="70" font-family="sans-serif" font-size="17px" fill="black">Window of opportunety</text>
+        <text opacity="1" x="0" y="70" font-family="sans-serif" font-size="17px" fill="black">Window of opportunity</text>
       </g>
     <g>
       <title>Vulnerabilities</title>
