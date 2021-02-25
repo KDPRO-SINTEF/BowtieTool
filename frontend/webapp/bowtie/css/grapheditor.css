@@ -212,17 +212,16 @@
 	background:inherit !important;
 }
 .geMenubar a.geStatus {
-	padding-left:6px;
+	padding-left: 6px;
 	display:inline-block;
 	cursor:default !important;
 	position: absolute;
 	right: 10px;
 }
 
-.geMenubar a.geStatus p#userProfileButton {
-	float: top;
-	color: grey;
-	margin-top: 1px;
+.geMenubar a.geStatus a#userLoginName {
+	color: #0080ff;
+	padding-top: 2px;
 	float: left;
 	margin-right: 15px;
 }

@@ -41,7 +41,7 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-
+     
         response = super().create(request=request, *args, **kwargs)
         if response:
             user = get_user_model().objects.filter(email=request.data['email']).first()
@@ -107,7 +107,7 @@ class ActivateAccount(APIView):
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_valid:
-            print(e_valid)
+            logger.warning(e_valid)
             user = None
         # check the validity of the token
         if user is not None and AccountActivationTokenGenerator().check_token(user, token):
@@ -116,7 +116,7 @@ class ActivateAccount(APIView):
             # and we're changing the boolean field so that the token link becomes invalid
             Profile.objects.filter(user=user).update(email_confirmed=True)
             user.profile.email_confirmed = True
-            return redirect(REDIRECT_LOGIN)
+            return Response(status=status.HTTP_200_OK)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

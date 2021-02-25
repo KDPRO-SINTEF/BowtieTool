@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create new user and return it"""
-
+        
         user = get_user_model().objects.create_user(**validated_data)
 
         if user is None:

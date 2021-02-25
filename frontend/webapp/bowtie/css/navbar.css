@@ -1,0 +1,39 @@
+.navbar ul li a {
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none;
+    outline: 0;
+}
+
+.navbar a:visited {
+    text-decoration: none!important;
+    border: none!important;
+    outline: 0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-left: 5%;
+    padding-right: 5%;
+    height: 40px;
+    background-color: #24252A;
+}
+
+#logo {
+    margin-top: -15px;
+    width: 40px;
+    cursor: pointer;
+    margin-right: auto;
+}
+
+.nav-links {
+    list-style: none;
+}
+
+.nav-links li {
+    display: inline-block;
+    padding: 0px 20px;
+}
