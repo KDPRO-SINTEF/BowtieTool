@@ -1246,16 +1246,16 @@ Sidebar.prototype.addBranchPalette = function(dir, expand)
 			for (i = 0; i < 4; i++){		
 				switch(i){
 					case 0 :
-						title = 'THR';
+						title = 'MTV';
 						break;
 					case 1 :
-						title = 'WIN';
+						title = 'MEA';
 						break;
 					case 2 :
-						title = 'VUL';
+						title = 'OPP';
 						break;
 					case 3 :
-						title = 'SEC';
+						title = 'ACT';
 						break;
 					default:
 						title = 'no title found for lane ' + i.toString();
