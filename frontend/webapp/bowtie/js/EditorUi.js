@@ -3135,6 +3135,7 @@ EditorUi.prototype.setLoginText = function(value)
 		userName.setAttribute('id', 'userLoginName');
 		userName.innerHTML = 'My account';
 		userName.setAttribute('href', window.ACCOUNT_PAGE);
+		userName.setAttribute('target', '_blank');
 		this.loginContainer.appendChild(userName);
 	}
 	this.loginContainer.appendChild(value);

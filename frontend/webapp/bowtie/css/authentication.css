@@ -1,7 +1,8 @@
 .auth-content {
     display: block;
-    width: 24em;
+    width: 26em;
     margin: 10vh auto 10vh auto;
+    padding: 1em;
 }
 
 #auth-content-logo {

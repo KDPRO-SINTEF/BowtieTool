@@ -17,9 +17,9 @@
 <div id="validation-vue">
     <div id="validation-message">
         <p v-if="isValidationSuccessful">Success</p>
-        <p v-else-if="errors.expiredTokenErr.show">{{ errors.expiredTokenErr.message }}</p>
-        <div v-else-if="errors.invalidUrlErr.show">
-            <p>{{ errors.invalidUrlErr.message }}</p>
+        <p v-else-if="errors.ExpiredTokenErr.show">{{ errors.ExpiredTokenErr.message }}</p>
+        <div v-else-if="errors.InvalidUrlErr.show">
+            <p>{{ errors.InvalidUrlErr.message }}</p>
             <p>We are sorry, this page doesn't exist</p>
         </div>
     </div>

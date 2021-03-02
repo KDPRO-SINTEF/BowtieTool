@@ -1,30 +1,36 @@
 /**
- * UserRegisterComponent
- * Description: uses to handle the registration process via the register form
+ * RegisterComponent
+ * Handles the registration process
+ * Related template : common/authentication.html
  */
 
 let RegisterComponent = {
     template: '#register-template',
+    props: {
+        cleanErrorMessages: Function,
+    },
     data: function () {
         return {
-            username: '',
-            email: '',
-            password: '',
-            passwordConfirm: '',
+            user: {
+                username: '',
+                email: '',
+                password: '',
+                passwordConfirm: '',
+            },
             errors: {
-                confirmPasswordErr: {
+                ConfirmPasswordErr: {
                     message: 'The two typed passwords are different.',
                     show: false
                 },
-                weakPasswordErr: {
+                WeakPasswordErr: {
                     message: 'This password is not strong enough.',
                     show: false
                 },
-                missingFieldsErr: {
-                    message: 'All fields are required. Please in fill them.',
+                MissingFieldsErr: {
+                    message: 'All fields are required. Please fill in them.',
                     show: false
                 },
-                invalidEmailErr: {
+                InvalidEmailErr: {
                     message: 'Valid email is required.',
                     show: false
                 },
@@ -32,39 +38,36 @@ let RegisterComponent = {
         }
     },
     methods: {
-        // Verify if the form is correct or not
+        // Checks if the register form is valid
         checkRegisterForm: function() {
             let isValid = true;
-            for (const errorName in this.errors)  {
-                this.errors[errorName].show = false;
-            }
-            if (this.username === '' || this.email === '' | this.password === '') {
-                this.errors.missingFieldsErr.show = true;
+            this.cleanErrorMessages(this.errors);
+            if (this.user.username === '' || this.user.email === '' || this.user.password === '') {
+                this.errors.MissingFieldsErr.show = true;
                 isValid = false;
             }
             if (!this.validEmail()) {
-                this.errors.invalidEmailErr.show = true;
+                this.errors.InvalidEmailErr.show = true;
                 isValid = false;
             }
-            if (this.password !== this.passwordConfirm) {
-                this.errors.confirmPasswordErr.show = true;
-                this.passwordConfirm = '';
+            if (this.user.password !== this.user.passwordConfirm) {
+                this.errors.ConfirmPasswordErr.show = true;
+                this.user.passwordConfirm = '';
                 isValid = false;
             }
             return isValid;
         },
-        // Submit the register by fetching the api
+        // Submits the register form
         submitRegisterForm: function() {
             if (this.checkRegisterForm()) {
-                let params = JSON.stringify({ "username": this.username, "email": this.email, "password": this.password });
+                let params = JSON.stringify({ "username": this.user.username, "email": this.user.email, "password": this.user.password });
                 axios.post(window.REGISTER, params, {
                     headers: {
                         'Content-type': 'application/json'
                     },
                 })
                     .then(function(res) {
-                        console.log(res);
-                        alert('An email has been sent for confirmation. You will be redirected to the login page');
+                        alert('An email has been sent for confirmation. You will be redirected to the login page.');
                         location.hash = 'login';
                     })
                     .catch(error => {
@@ -72,16 +75,28 @@ let RegisterComponent = {
                     });
             }
         },
+        // Checks if the email matches the right pattern
         validEmail: function() {
             let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return mailRegex.test(this.email) || this.email === '';
+            return mailRegex.test(this.user.email) || this.user.email === '';
         },
-        // Handles the different errors received after the above axios operation
+        // Handles http errors coming from the register form submission
         filterErrorResponse: function(error) {
-            if (error.status === 400) {
-                this.errors.weakPasswordErr.show = true;
-                this.password = '';
-                this.passwordConfirm = '';
+            switch(error.status) {
+                case 400:
+                    if (error.data.email !== undefined) {
+                        this.errors.InvalidEmailErr.show = true;
+                    }
+                    if (error.data.password !== undefined) {
+                        this.errors.WeakPasswordErr.show = true;
+                        this.user.passwordConfirm = '';
+                    }
+                    if (error.data.username !== undefined) {
+                        this.errors.MissingFieldsErr.show = true;
+                    }
+                    break;
+                default:
+                    console.log('Error while contacting the server');
             }
         }
     }

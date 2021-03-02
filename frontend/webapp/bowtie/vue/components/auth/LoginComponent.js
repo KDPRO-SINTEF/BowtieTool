@@ -1,20 +1,26 @@
 /**
  * LoginComponent
- * Description: uses to handle the login process via the login form
+ * Handles the login process
+ * Related template : common/authentication.html
  */
 
 let LoginComponent =  {
     template: '#login-template',
+    props: {
+        cleanErrorMessages: Function
+    },
     data: function() {
         return {
-            email: '',
-            password: '',
+            user: {
+                email: '',
+                password: '',
+            },
             errors: {
-                invalidCredentialsErr: {
-                    message: 'Invalid credentials.',
+                InvalidCredentialsErr: {
+                    message: 'Invalid credentials provided.',
                     show: false
                 },
-                invalidEmailErr: {
+                InvalidEmailErr: {
                     message: 'Valid email is required.',
                     show: false
                 }
@@ -24,12 +30,10 @@ let LoginComponent =  {
     methods: {
         // Checks if the login form is valid
         checkLoginForm: function() {
-            for (const errorName in this.errors)  {
-                this.errors[errorName].show = false;
-            }
+            this.cleanErrorMessages(this.errors);
             if (!this.validEmail()) {
-                this.errors.invalidEmailErr.show = true;
-                this.email = '';
+                this.errors.InvalidEmailErr.show = true;
+                this.user.email = '';
                 return false;
             }
             return true;
@@ -37,7 +41,7 @@ let LoginComponent =  {
         // Submits the login form
         submitLoginForm: function () {
             if (this.checkLoginForm()) {
-                let params = JSON.stringify({"email": this.email, "password": this.password});
+                let params = JSON.stringify({"email": this.user.email, "password": this.user.password});
                 axios.post(window.LOGIN, params, {
                     headers: {
                         'Content-type': 'application/json'
@@ -45,7 +49,6 @@ let LoginComponent =  {
                 })
                     .then(res => {
                         this.processToken(res.data.token);
-                        this.goto();
                     })
                     .catch(error => {
                         if (error.response) this.filterErrorResponse(error.response);
@@ -53,13 +56,10 @@ let LoginComponent =  {
             }
 
         },
-        goto: function() {
-            this.$emit('registration-ok');
-        },
         // Checks if the mail matches the right pattern
         validEmail: function() {
             let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return mailRegex.test(this.email);
+            return mailRegex.test(this.user.email);
         },
         // Handles the received token if the login form has been successfully submitted
         processToken: function (token) {
@@ -80,15 +80,12 @@ let LoginComponent =  {
             window.location.assign(window.BASE_PATH);
 
         },
-        // Handles the errors coming from the login form submission
+        // Handles http errors coming from the login form submission
         filterErrorResponse: function(error) {
-            switch(error.status) {
-                case 401:
-                    this.errors.invalidCredentialsErr.show = true;
-                    this.password = '';
-                    break;
-                default:
-                    console.log('Error while loging in');
+            if (error.status === 401 || error.status === 400) {
+                this.errors.InvalidCredentialsErr.show = true;
+            } else {
+                console.log('Unexpected error while logging in');
             }
         }
     }

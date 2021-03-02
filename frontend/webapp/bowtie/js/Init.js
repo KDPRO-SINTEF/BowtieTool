@@ -34,18 +34,21 @@ window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
 
 window.ROOT_PAGE = window.ROOT_PAGE || '/app/bowtie'
-window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie/common/auth.html#login';
-window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie/common/auth.html#register';
-window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie/common/auth.html#password-reset';
-window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || '/app/bowtie/common/account.html';
+window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie/common/authentication.html#login';
+window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie/common/authentication.html#register';
+window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie/common/authentication.html#password-reset';
+window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || '/app/bowtie/common/my_account.html';
 
 // Customer driven project specifics
 window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';
 window.USER_INFO = window.USER_INFO || 'http://localhost:8000/api/user/me/';
 window.REGISTER = window.REGISTER || 'http://localhost:8000/api/user/create/';
 window.PWD_RESET = window.PWD_RESET || 'http://localhost:8000/api/user/reset/';
-window.DELETE_ACCOUNT = window.DELETE_ACCOUNT || 'http://localhost:8000/api/user/delete/'
-window.CONFIRM_EMAIL = window.CONFIRM_EMAIL || 'http://localhost:8000/api/user/confirm/'
+window.DELETE_ACCOUNT = window.DELETE_ACCOUNT || 'http://localhost:8000/api/user/delete/';
+window.CONFIRM_EMAIL = window.CONFIRM_EMAIL || 'http://localhost:8000/api/user/confirm/';
+window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || 'http://localhost:8000/api/user/totp/create/';
+window.VALIDATE_2FA = window.VALIDATE_2FA || 'http://localhost:8000/api/user/totp/verify/';
+
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
 window.ROLE_URL = window.ROLE_URL || '/role';
 window.USER_GRAPHS = window.USER_GRAPHS || '/user/graph';

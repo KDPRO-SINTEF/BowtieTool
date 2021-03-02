@@ -7,7 +7,7 @@ let auth_vue = new Vue({
     },
     data: {
         currentTab: 'login',
-        tabs: ['login', 'password-reset', 'register']
+        tabs: ['login', 'password-reset', 'register'],
     },
     computed: {
         tabTitle: function() {
@@ -35,6 +35,12 @@ let auth_vue = new Vue({
             } else {
                 location.hash = 'login';
             }
+        },
+        cleanAllErrors: function(errors) {
+            Object.values(errors).forEach(error => {
+                console.log(error.show);
+                error.show = false
+            });
         }
     },
     beforeMount() {

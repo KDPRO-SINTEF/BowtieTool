@@ -1,19 +1,27 @@
-#user-account-container {
-    display: inline-block;
-    position: absolute;
-    width: 750px;
-    height: 800px;
-    margin: 0;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px 40px 20px 40px;
-    border-radius: 10px;
-    overflow: hidden;
-    overflow-y: scroll;
+#user-account-vue {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#img-bowtie-user {
+.overlay {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+#user-account {
+    display: inline-block;
+    width: 750px;
+    height: 800px;
+    padding: 20px 40px 20px 40px;
+    border-radius: 10px;
+}
+
+#user-account-logo {
     display: block;
     width: 120px;
     margin-bottom: 50px;
@@ -41,6 +49,27 @@
     padding-bottom: 0.4em;
 }
 
+#account-2fa {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 1rem;
+    background-color: white;
+}
+
+#account-2fa-qr-img {
+    width: 40%;
+    margin-left: 30%;
+}
+
+#account-2fa-title {
+    text-align: center;
+}
+
 .tab-button {
     padding-left: 10px;
     display: block;
@@ -59,22 +88,17 @@
     background: rgb(233, 236, 239);
 }
 
-label {
-    color: rgb(85, 95, 100);
-}
-
-.menu-subtitle {
+.account-menu-subtitle {
     font-size: 1.2em;
     font-weight: 350;
 }
 
-.btn-submit {
-    background: #4CAF50;
-    color: white;
+.user-account-settings .btn {
+    width: 60%;
 }
 
-.btn-submit, .btn-dark, .btn-danger {
-    width: 60%;
+.btn-success {
+    background-color: #4CAF50;
 }
 
 .message-emphasis {
@@ -85,4 +109,13 @@ label {
 }
 .error-message {
     color: #dc0000!important;
+}
+
+.spinner-border {
+    margin-right: 1em;
+}
+
+.exit-logo {
+    cursor: pointer;
+    float: right;
 }

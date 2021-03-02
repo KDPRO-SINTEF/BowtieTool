@@ -1,37 +1,52 @@
+/**
+ * PasswordResetComponent
+ * Handles the password reset procedure
+ * Related template : common/authentication.html
+ */
+
 let PasswordResetComponent = {
     template: '#password-reset-template',
+    props: {
+        cleanErrorMessages: Function
+    },
     data: function() {
         return {
-            email: '',
-            newPassword: '',
-            passwordConfirm: '',
-            resetPwdToken: null,
+            user: {
+                email: '',
+                newPassword: '',
+                passwordConfirm: '',
+                id: null,
+                resetPwdToken: null,
+            },
             isResetEmailSent: false,
             errors: {
-                confirmPwdErr: {
+                ConfirmPwdErr: {
                     message: 'The two typed passwords are different.',
                     show: false
                 },
-                weakPasswordErr: {
+                WeakPasswordErr: {
                     message: 'This password is not strong enough.',
                     show: false
                 },
-                missingFieldsErr: {
+                MissingFieldsErr: {
                     message: 'All elements are required. Please fill them.',
                     show: false
                 },
-                invalidEmailErr: {
+                InvalidEmailErr: {
                     message: 'Valid email is required.',
                     show: false
                 },
+                InvalidTokenErr: {
+                    message: 'The token is invalid or has expired. Please, retry the procedure.'
+                }
             }
         }
     },
     // Verifies if the reset password email has already been sent
     beforeMount() {
-        this.userId = localStorage.getItem('userId');
-        this.resetPwdToken = localStorage.getItem('resetPwdToken');
-        if (this.userId !== null && this.resetPwdToken != null) {
+        this.user.id = localStorage.getItem('userId');
+        this.user.resetPwdToken = localStorage.getItem('resetPwdToken');
+        if (this.user.id !== null && this.user.resetPwdToken !== null) {
             this.isResetEmailSent = true;
         }
     },
@@ -39,24 +54,21 @@ let PasswordResetComponent = {
         // Checks if the email form is valid
         checkEmailForm: function() {
             if (!this.validEmail()) {
-                this.errors.invalidEmailErr.show = true;
-                this.email = '';
+                this.errors.InvalidEmailErr.show = true;
+                this.user.email = '';
                 return false;
             }
             return true;
         },
         // Checks if the new password form is valid
         checkNewPwdForm: function() {
-            let isValid = true;
-            for (const errorName in this.errors)  {
-               this.errors[errorName].show = false;
-            }
-            if (this.newPassword === '' && this.passwordConfirm === '') {
-                this.errors.missingFieldsErr.show = true;
+           this.cleanErrorMessages(this.errors);
+            if (this.user.newPassword === '' && this.user.passwordConfirm === '') {
+                this.errors.MissingFieldsErr.show = true;
                 return false;
-            } else if (this.newPassword !== this.passwordConfirm) {
-                this.errors.confirmPwdErr.show = true;
-                this.passwordConfirm = '';
+            } else if (this.user.newPassword !== this.user.passwordConfirm) {
+                this.errors.ConfirmPwdErr.show = true;
+                this.user.passwordConfirm = '';
                return  false;
             }
             return true;
@@ -64,8 +76,8 @@ let PasswordResetComponent = {
         // Submits the email to reset the password
         submitResetEmail: function() {
             if (this.checkEmailForm()) {
-                let params = JSON.stringify({'email': this.email });
-                axios.post(window.RESET_PWD, params, {
+                let params = JSON.stringify({'email': this.user.email });
+                axios.post(window.PWD_RESET, params, {
                     headers: {
                         'Content-type': 'application/json'
                     }
@@ -82,11 +94,13 @@ let PasswordResetComponent = {
         },
         // Submits the new passwords of the user
         submitNewPassword: function() {
-            this.userId = localStorage.getItem('userId');
-            this.resetPwdToken = localStorage.getItem('resetPwdToken');
+            if (this.user.id === null && this.user.resetPwdToken === null) {
+                this.user.id = localStorage.getItem('userId');
+                this.user.resetPwdToken = localStorage.getItem('resetPwdToken');
+            }
             if (this.checkNewPwdForm()) {
-                let params = JSON.stringify({'password': this.newPassword });
-                let url = window.RESET_PWD + this.userId + '/' + this.resetPwdToken;
+                let params = JSON.stringify({'password': this.user.newPassword });
+                let url = window.PWD_RESET + this.user.id + '/' + this.user.resetPwdToken;
                 axios.post(url, params, {
                     headers: {
                         'Content-type': 'application/json'
@@ -106,21 +120,32 @@ let PasswordResetComponent = {
         // Checks if the email matches the right pattern
         validEmail: function() {
             let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            return mailRegex.test(this.email);
+            return mailRegex.test(this.user.email);
         },
-        // Handles the errors coming from the email form submission
+        // Handles http errors coming from the email form submission
         filterMailErrorResponse: function(error) {
             if (error.status === 403) {
                 alert('If this email is registered, an message will be sent. Please verify your email box.');
                 this.isResetEmailSent = true;
             }
         },
-        // Handles the errors coming from the new password form submission
+        // Handles http errors coming from the new password form submission
         filterPwdErrorResponse: function(error) {
-            if (error.status === 400) {
-                this.errors.weakPasswordErr.show = true;
-                this.newPassword = '';
-                this.passwordConfirm = '';
+            console.log(error.data);
+            switch (error.status) {
+                case 400:
+                    if (error.data === 'bad credentials') {
+                        this.errors.WeakPasswordErr.show = true;
+                        this.user.passwordConfirm = '';
+                    } else if (error.data === 'Invalid token') {
+                        alert('The token is invalid or has expired. Please, enter your email again.');
+                        localStorage.removeItem('userId');
+                        localStorage.removeItem('resetPwdToken');
+                        window.location.reload();
+                    }
+                    break;
+                default:
+                    console.log('Error while contacting the server.');
             }
         }
     }
