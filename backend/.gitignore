@@ -1,9 +1,5 @@
 .venv/
 .idea/
 .media/
-__pycache__/
 __pycache__
-app/env
-log_authentication.log
 .env
-app/media/
