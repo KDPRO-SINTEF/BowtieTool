@@ -9,6 +9,8 @@ import django.contrib.auth.password_validation as validators
 from django.utils import timezone
 from xml.dom import minidom
 
+import django.forms
+from django.forms import ValidationError
 
 class UserManager(BaseUserManager):
     """ A manager class for instantiating and updting users
@@ -22,9 +24,8 @@ class UserManager(BaseUserManager):
         try:
             validators.validate_password(password=password, user=user)
         except exceptions.ValidationError as e_valid:
-            print(e_valid)
-            return None
-
+            raise ValidationError(e_valid) from django.forms
+      
         user.username = username
         user.set_password(password)
         user.save(using=self._db)
@@ -63,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     def __str__(self):
-        return  self.username + " " + self.email + " 2FA-" + self.profile.two_factor_enabled
+        return  self.username + " " + self.email + " 2FA-" + str(self.profile.two_factor_enabled)
 
 class Profile(models.Model):
     """Profile of a user related to authentication features"""

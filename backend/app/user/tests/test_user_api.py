@@ -202,6 +202,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
  
     
+
     def test_password_change_with_token(self):
         """ Test the password change with a valid token """
         payload = {
@@ -236,6 +237,34 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(url, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_password_change_with_no_token(self):
+        """ Test the password change without token """
+        payload = {
+            'email': 'mkirov@insa-rennes.fr',
+            'password': '123456789Aa#',
+            'username': 'Test name'
+        }
+        self.client.post(CREATE_USER_URL, payload)
+        user = get_user_model().objects.filter(email=payload['email']).first()
+
+        user.profile.email_confirmed = True
+        user.save()
+        user.profile.save()
+        payload = {
+            'email': 'mkirov@insa-rennes.fr'
+        }
+        self.client.post(reverse("user:reset"), payload)
+        user = get_user_model().objects.filter(email='mkirov@insa-rennes.fr').first()
+        url = "http://localhost:8000/api/user/reset/%s/%s" % (urlsafe_base64_encode(
+            force_bytes(user.pk)), "")
+        payload = {
+            'password': '123456789Aa#1',
+        }
+
+        res = self.client.post(url, payload)
+        user = get_user_model().objects.filter(email='mkirov@insa-rennes.fr').first()
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertFalse(user.check_password('123456789Aa#1'))
 
     def test_password_change_with_token_fail(self):
         """ Test the password change with invlid passwords"""

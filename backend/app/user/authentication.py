@@ -9,13 +9,13 @@ from rest_framework.authentication import TokenAuthentication, get_authorization
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import exceptions
 from datetime import timedelta
-import pytz 
+import pytz
 
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
     """ Generation of tokens for email confirmation.
        An  email confirmation will invalidate the token
     """
-    
+
     def __init__(self):
         super()
         self.key_salt = settings.SALT_CONFIRM_MAIL
@@ -105,9 +105,8 @@ class TOTPValidityToken(PasswordResetTokenGenerator):
 
     def _num_seconds(self, dt):
         return int((dt - datetime(2001, 1, 1)).total_seconds())
-    
+
     def _now(self):
-        # Used for mocking in tests
         return datetime.now()
 
 
@@ -115,7 +114,7 @@ class ExpiringTokenAuthentication(TokenAuthentication):
     """Class extending the normal token authentication in RESTFUL Django
        by adding a validity time defined in the settings module
     """
-      
+
     def authenticate_credentials(self, key):
         """Check the validity of the token used for authentication"""
         model = self.get_model()
@@ -130,8 +129,12 @@ class ExpiringTokenAuthentication(TokenAuthentication):
         # This is required for the time comparison
         utc_now = datetime.utcnow()
         utc_now = utc_now.replace(tzinfo=pytz.UTC)
-        if token.created < utc_now - timedelta(hours=int(settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS), 
+        if token.created < utc_now - timedelta(
+            hours=int(settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS),
             seconds=int(settings.AUTHENTICATION_TOKEN_EXPIRE_SECONDS)):
             raise exceptions.AuthenticationFailed('Token has expired')
 
         return token.user, token
+
+    def __str__(self):
+        return "Expiring token class"
