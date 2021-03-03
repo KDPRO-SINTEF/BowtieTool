@@ -1,0 +1,33 @@
+#body{
+    background-color: white;
+}
+#threats_button{
+    float: left;
+}
+#consequences_button{
+    float: right;
+}
+.buttons_container{
+    height: 50px;
+    display: block;
+}
+.description {
+    width: 70%;
+}
+
+.md-field {
+    padding-top: 0;
+    padding-right: 0;
+    margin: 0 0 4px;
+    min-height: 32px;
+    width: 32px;
+}
+.md-field.md-has-value .md-input{
+    font-size: 13px;
+}
+
+.numeric_input{
+    text-align: right;
+    width: inherit;
+}
+

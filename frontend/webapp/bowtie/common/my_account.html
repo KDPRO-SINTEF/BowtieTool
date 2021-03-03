@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>My Account</title>
+    <meta name="viewport" content="width=device-width, init-scale=1.0">
+
+    <!-- scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <script type="text/javascript" src="../js/Init.js"></script>
+    <script type="text/javascript" src="../vue/components/account/AccountSettingsComponent.js"></script>
+    <script type="text/javascript" src="../vue/components/account/Account2faComponent.js"></script>
+
+
+    <!-- styles -->
+    <link rel="stylesheet" href="../css/account.css">
+</head>
+<body>
+<div id="user-account-vue">
+    <div class="overlay" v-if="currentAccountTab === '2fa'"></div>
+    <div v-if="isUserAuthenticated" id="user-account">
+        <div id="user-account-logo">
+            <img src="../images/bowtie-user.svg">
+        </div>
+        <account-settings v-if="true" v-on:activate-2fa="switchToTab('2fa')" :username="userInfo.name" :email="userInfo.email" :auth-token="userInfo.authToken" class="user-account-settings"></account-settings>
+        <account-2fa v-if="currentAccountTab === '2fa'" v-on:quit-2fa-window="switchToTab('settings')" :auth-token="userInfo.authToken"></account-2fa>
+    </div>
+    <p v-else>Sorry, you can't access this page : you are not connected.</p>
+</div>
+
+<script type="text/javascript">
+    window.addEventListener('hashchange', () => {
+        user_account_vue.processUrlHash(location.hash.substring(1));
+    })
+</script>
+
+<!-- Component templates -->
+
+<script type="text/x-template" id="account-settings-template">
+    <div id="account-settings">
+        <div class="account-menu-container">
+            <div class="account-menu">
+                <div id="account-menu-title"><b>Account settings</b></div>
+                <button
+                        v-for="tab in tabs"
+                        v-bind:key="tab"
+                        v-bind:class="['tab-button', { active: currentTab === tab }]"
+                        v-on:click="currentTab = tab"
+                >{{ tab.replace('-', ' ') }}
+                </button>
+            </div>
+        </div>
+        <div class="account-tab-content">
+            <keep-alive>
+                <account-profile v-if="currentTab === 'Profile'" :username="username" :email="email"></account-profile>
+                <account-security v-else-if="currentTab === 'Security'" v-on:activate-2fa="$emit('activate-2fa')"></account-security>
+                <account-danger-zone v-else="currentTab === 'Danger-Zone'"
+                                     :auth-token="authToken"></account-danger-zone>
+            </keep-alive>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="account-2fa-template">
+    <div id="account-2fa">
+        <img class="exit-logo" src="../images/clear.gif" v-on:click="$emit('quit-2fa-window')">
+        <h2 id="account-2fa-title" class="mb-4">Two authentication factor</h2>
+        <div v-if="qrImage == null" class="d-flex justify-content-center">
+            <div class="spinner-border text-secondary" role="status"></div>
+            <span>Waiting for QR code ...</span>
+        </div>
+        <div v-else class="mb-3">
+            <p class="mb-2">Scan the QR code below with the Google Authenticator app.<br> Then, type it in the following input.</p>
+            <img v-bind:src="'data:image/png;base64,' + qrImage" id="account-2fa-qr-img">
+        </div>
+        <form class="row g-2">
+            <div class="col-auto">
+                <input v-model="qrCode" class="form-control" id="2fa-code" placeholder="2FA code">
+            </div>
+            <div class="col-auto">
+                <button v-on:click="submit2faActivation" type="button" class="btn btn-success">Send code</button>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script type="text/x-template" id="account-profile-template">
+    <div class="account-profile">
+        <h2 class="mb-3">Profile</h2>
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input v-model="username" class="form-control" id="username" disabled>
+        </div>
+        <div>
+            <label for="email" class="form-label">Email address</label>
+            <input v-model="email" class="form-control" id="email" disabled>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="account-security-template">
+    <div class="account-security">
+        <h2 class="mb-3">Security</h2>
+        <form nonvalidate="true">
+            <div class="mb-3">
+                <p class="account-menu-subtitle">Password</p>
+                <div class="mb-2">
+                    <label class="form-label" for="user-password">Actual password</label>
+                    <input v-model="password" class="form-control" type="password" id="user-password">
+                </div>
+                <div class="mb-2">
+                    <label class="form-label" for="new-password">New password</label>
+                    <input v-model="newPassword" class="form-control" type="password" id="new-password">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="confirm-password">Confirm new password</label>
+                    <input v-model="confirmPassword" class="form-control" type="password" id="confirm-password">
+                </div>
+                <div class="mb-4">
+                    <button type="button" class="btn btn-dark">Update password</button>
+                </div>
+            </div>
+        </form>
+        <div class="mb-3">
+            <p class="account-menu-subtitle">Two-factor authentication</p>
+            <div class="mb-3 message-emphasis">
+                <p><b>Two factor authentication is not enabled yet.</b><br>
+                    Two factor authentication allows your authentication to not just be based on a simple password.</p>
+            </div>
+            <div class="mb-3">
+                <button v-on:click="$emit('activate-2fa')" type="button" class="btn btn-success">Activate 2FA</button>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/x-template" id="account-danger-zone-template">
+<div class="account-danger-zone">
+    <h2 class="mb-3">Danger zone</h2>
+    <p class="account-menu-subtitle">Delete my account</p>
+    <div class="mb-3 message-emphasis">
+        <p><b><span style="color:red">WARNING</span> : Delete your account is NOT reversible.</b><br>
+            If you delete your account, all associated data will be erased from our database. You won't be able to retrieve them in the future.</p>
+    </div>
+    <form nonvalidate="true">
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input v-model="password" class="form-control" type="password" id="password">
+            <p v-show="errors.emptyPasswordErr.show" class="mt-1 error-message">{{ errors.emptyPasswordErr.message }}</p>
+        </div>
+        <button type="button" class="btn btn-danger" v-on:click="submitAccountDeletionForm">Delete my account</button>
+    </form>
+</div>
+
+</script>
+
+<script type="text/javascript" src="../vue/views/UserAccountVue.js"></script>
+</body>
+</html>

@@ -30,10 +30,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 IMAGE_PATH = "/app/media/QR/token_qr.png"
-CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/authorize.html?for=email_confirm&id=%s&token=%s"
-REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/templates/login.html"
-TWO_FACTOR_URL = "http://localhost:8080/app/bowtie++/templates/validate_TOTP.html/?id=%s&token=%s"
-PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/authorize.html?for=reset_pwd&id=%s&token=%s"
+CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validate.html?for=email_confirm&id=%s&token=%s"
+REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/common/authentication.html#login"
+TWO_FACTOR_URL = "http://localhost:8080/app/bowtie++/validate.html?id=%s&token=%s"
+PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validate.html?for=reset_pwd&id=%s&token=%s"
 
 
 # User creation and authentication logic
@@ -318,11 +318,10 @@ class VerifyTOTPView(APIView):
         """Activate the device of authenticated user given a totp token in the post request
            which validation period is defined by token
         """
-
+        
         user = request.user
-
         if not TOTPValidityToken().check_token(user, token):
-            return Response(dict(
+                return Response(dict(
            errors=['Validation token expired']),
                 status=status.HTTP_400_BAD_REQUEST
             )

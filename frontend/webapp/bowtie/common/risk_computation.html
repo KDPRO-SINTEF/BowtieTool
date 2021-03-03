@@ -5,11 +5,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
     <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
-    <title>Login</title>
+    <title>Risk computation</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+
     <script type="text/javascript">
         mxBasePath = '../../lib/mxgraph/src';
     </script>
@@ -17,65 +17,61 @@
     <script type="text/javascript" src="../js/EditorUi.js"></script>
     <script type="text/javascript" src="../js/Editor.js"></script>
     <script type="text/javascript" src="../js/Graph.js"></script>
+    <script type="text/javascript" src="../js/Threat.js"></script>
+    <script type="text/javascript" src="../js/Matrix.js"></script>
     <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
     <link rel="stylesheet" href="../css/risk_computation.css">
 </head>
-<body>
+<body id="body">
     <div id="risk_container">
-        <risk-computation-component></risk-computation-component>
+        <div class="buttons_container">
+            <md-button id="threats_button" v-on:click="currentTab = 'Threats'" :disabled="currentTab === 'Threats'">Threats</md-button>
+            <md-button id="consequences_button" v-on:click="currentTab = 'Consequences'" :disabled="currentTab === 'Consequences'">Consequences</md-button>
+        </div>
+        <div class="table_container">
+            <keep-alive>
+                <threats-component v-if="currentTab === 'Threats'"></threats-component>
+                <consequences-component v-else="currentTab === 'Consequences'"></consequences-component>
+            </keep-alive>
+        </div>
     </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/vue-material"></script>
     <script>Vue.use(VueMaterial.default)</script>
-    <script type="text/x-template" id="risk_computation">
+
+    <script type="text/x-template" id="threats">
             <div>
                 <md-table>
-                    <md-table-toolbar>
-                        <h1 class="md-title">Risk Computation</h1>
-                    </md-table-toolbar>
                     <md-table-row>
-                        <md-table-head id="description">Threat</md-table-head>
-                        <md-table-head>Indicator</md-table-head>
-                        <md-table-head md-numeric>Probability</md-table-head>
+                        <md-table-head class="description">Threat</md-table-head>
+                        <md-table-head class="indicator">Indicator</md-table-head>
+                        <md-table-head class="probability" md-numeric>Probability</md-table-head>
+                    </md-table-row >
+                    <md-table-row v-for="threat in threats" v-bind:key="threat.getName()">
+                        <md-table-cell class="description"> {{threat.getName()}}</md-table-cell>
+                        <md-table-cell class="indicator" ><div class="indicatorDot" style="width: 25px; height: 25px; border-radius: 20px;" :style="{background: threat.getMatrix().getColorIndicator()}"></div></md-table-cell>
+                        <md-table-cell class="probability" md-numeric>{{threat.getMatrix().getMeanValue()/10}}</md-table-cell>
                     </md-table-row>
                 </md-table>
-                <md-table v-for="threat in threats" v-bind:key="threat.id">
-                    <md-table-cell id="description"> {{threat[0].value}}</md-table-cell>
-                    <md-table-cell><div id="cercle" style="width: 25px; height: 25px; border-radius: 20px; background: green;"></div></md-table-cell>
-                    <md-table-cell md-numeric>0.2</md-table-cell>
-                </md-table>
-                <!--
-                <md-table>
-                    <md-table-toolbar>
-                        <h1 class="md-title">Risk Computation</h1>
-                    </md-table-toolbar>
-                    <md-table-row>
-                        <md-table-head id="description">Threat</md-table-head>
-                        <md-table-head>Indicator</md-table-head>
-                        <md-table-head md-numeric>Probability</md-table-head>
-                    </md-table-row>
-
-                    <md-table-row>
-                        <md-table-cell id="description">Threat 1</md-table-cell>
-                        <md-table-cell><div id="cercle" style="width: 25px; height: 25px; border-radius: 20px; background: green;"></div></md-table-cell>
-                        <md-table-cell md-numeric>0.2</md-table-cell>
-                    </md-table-row>
-
-                    <md-table-row>
-                        <md-table-cell id="description"> Threat 2</md-table-cell>
-                        <md-table-cell><div id="cercle" style="width: 25px; height: 25px; border-radius: 20px; background: yellow;"></div></md-table-cell>
-                        <md-table-cell md-numeric>0.5</md-table-cell>
-                    </md-table-row>
-
-                    <md-table-row>
-                        <md-table-cell id="description"> Threat 3</md-table-cell>
-                        <md-table-cell><div id="cercle" style="width: 25px; height: 25px; border-radius: 20px; background: red;"></div></md-table-cell>
-                        <md-table-cell md-numeric>0.8</md-table-cell>
-                    </md-table-row>
-                </md-table>
-                -->
             </div>
     </script>
-    <script src="../vue-components/RiskComputationComponent.js"></script>
+
+    <script type="text/x-template" id="consequences">
+        <div>
+            <md-table>
+                <md-table-row>
+                    <md-table-head class="description">Consequence</md-table-head>
+                    <md-table-head class="impact_value" md-numeric>Impact Value</md-table-head>
+                    <md-table-head class="probability" md-numeric>Probability</md-table-head>
+                </md-table-row >
+                <md-table-row v-for="consequence in consequences" v-bind:key="consequences.indexOf(consequence)">
+                    <md-table-cell class="description"> {{consequence}}</md-table-cell>
+                    <md-table-cell class="impact_value" md-numeric><md-field><md-input class="numeric_input" v-model="type"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="probability" md-numeric><md-field><md-input class="numeric_input" v-model="type"></md-input></md-field></md-table-cell>
+                </md-table-row>
+            </md-table>
+        </div>
+    </script>
+    <script src="../vue/components/risk/RiskComputationComponent.js"></script>
 </body>
 </html>
