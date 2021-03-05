@@ -23,7 +23,14 @@ class DiagramList(APIView):
 
     def get(self, request):
         """Return all diagrams of the current authenticated user only"""
-        serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(owner=self.request.user), many=True)
+        search = request.GET.get("search")
+        if search:
+            serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(
+                Q(owner=self.request.user) | reduce(operator.and_,
+                                                    (Q(description__icontains=x) for x in search.split()))), many=True)
+        else:
+            serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(owner=self.request.user), many=True)
+
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     # TODO: make filename safe (handles accents)
@@ -93,7 +100,15 @@ class PublicDiagrams(APIView):
 
     def get(self, request):
         """Returns all public diagrams"""
-        serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(is_public=True), many=True)
+        search = request.GET.get("search")
+        if search:
+            serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(
+                Q(public=True) | reduce(operator.and_, (Q(description__icontains=x) for x in search.split()))),
+                many=True
+            )
+        else:
+            serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(public=True), many=True)
+
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

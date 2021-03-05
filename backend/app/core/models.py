@@ -110,6 +110,8 @@ class Diagram(models.Model):
 
     diagramStat = models.ForeignKey(DiagramStat,
                                     on_delete=models.CASCADE)
+    riskTable = models.TextField(default="")
+
 
     def get_tags(self):
         return self.tags.names()

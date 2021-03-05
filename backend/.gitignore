@@ -1,10 +1,14 @@
 .venv/
 .idea/
 .media/
-__pycache__/
 __pycache__
+env
+log_authentication.log
+.env
+app/media/
 app/env
 log_authentication.log
 .env
-env
 app/media/
+.env
+
