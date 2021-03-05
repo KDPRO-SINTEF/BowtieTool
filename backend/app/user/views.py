@@ -32,8 +32,7 @@ logger = logging.getLogger(__name__)
 IMAGE_PATH = "/app/media/QR/token_qr.png"
 CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validation.html?for=email_confirm&id=%s&token=%s"
 REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/common/authentication.html#login"
-TWO_FACTOR_URL = "http://localhost:8080/app/bowtie++/validation.html?for=totp_login&id=%s&token=%s"
-PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validation.html?for=reset_pwd&id=%s&token=%s"
+PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validate.html?for=reset_pwd&id=%s&token=%s"
 
 
 # User creation and authentication logic
@@ -62,12 +61,11 @@ class CreateUserView(generics.CreateAPIView):
 
                 if "password" in error_codes or "username" in error_codes or \
                     ("email" in error_codes and "required" in error_codes["email"]):
-            
+           
                     return Response(dict(errors="Username, email and password are required"),
                         status=status.HTTP_400_BAD_REQUEST)
 
                 if "email" in error_codes and "unique" in error_codes["email"]:
-
                     logger.warning("Attempt to create account with existing email %s", "")
                     message = "Someone tried to create an account into Bowtie++ using " + \
                     "this email who is already registered." + \
@@ -100,7 +98,8 @@ class CreateTokenView(ObtainAuthToken):
         # if user has enabled 2 fa redirect the login
         if user.profile.two_factor_enabled:
             token = TOTPValidityToken().make_token(user)
-            return redirect(TWO_FACTOR_URL % (urlsafe_base64_encode(force_bytes(user.pk)), token))
+            return Response({"uidb64": urlsafe_base64_encode(force_bytes(user.pk)), "token": token},
+                status=status.HTTP_200_OK)
 
         
         token, created = Token.objects.get_or_create(user=user)
@@ -308,6 +307,23 @@ class TOTPAuthenticateView(APIView):
             
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
+class UpdatePasswordView(APIView):
+    """Update user password view"""
+
+    authentication_classes = (ExpiringTokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def post(self, request):
+        user = request.user
+
+        if "old_password" in request.data or "new_password" not in request.data:
+            return Response(dict(errors=["Need new and old password"]),
+                status=status.HTTP_400_BAD_REQUEST)
+        
+        old_password = request.data["old_password"]
+        new_password = request.data["new_password"]
+
+        return Response(status=status.HTTP_200_OK)
 class VerifyTOTPView(APIView):
     """Endpoint for validation of TOTP otpion"""
 

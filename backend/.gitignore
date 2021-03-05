@@ -2,4 +2,13 @@
 .idea/
 .media/
 __pycache__
+env
+log_authentication.log
 .env
+app/media/
+app/env
+log_authentication.log
+.env
+app/media/
+.env
+
