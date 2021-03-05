@@ -6,4 +6,5 @@ __pycache__
 app/env
 log_authentication.log
 .env
+env
 app/media/

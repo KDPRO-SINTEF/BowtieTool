@@ -8,7 +8,6 @@ from django.core import exceptions
 import django.contrib.auth.password_validation as validators
 from django.utils import timezone
 from xml.dom import minidom
-
 import django.forms
 from django.forms import ValidationError
 
