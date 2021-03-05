@@ -30,10 +30,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 IMAGE_PATH = "/app/media/QR/token_qr.png"
-CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validate.html?for=email_confirm&id=%s&token=%s"
+CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validation.html?for=email_confirm&id=%s&token=%s"
 REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/common/authentication.html#login"
-TWO_FACTOR_URL = "http://localhost:8080/app/bowtie++/validate.html?id=%s&token=%s"
-PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validate.html?for=reset_pwd&id=%s&token=%s"
+TWO_FACTOR_URL = "http://localhost:8080/app/bowtie++/validation.html?for=totp_login&id=%s&token=%s"
+PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validation.html?for=reset_pwd&id=%s&token=%s"
 
 
 # User creation and authentication logic

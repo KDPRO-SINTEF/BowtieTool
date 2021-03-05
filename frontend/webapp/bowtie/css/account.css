@@ -59,6 +59,7 @@
     border-radius: 5px;
     padding: 1rem;
     background-color: white;
+    min-width: 400px;
 }
 
 #account-2fa-qr-img {
