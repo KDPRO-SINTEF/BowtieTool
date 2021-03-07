@@ -50,7 +50,7 @@ class CreateUserView(generics.CreateAPIView):
             logger.info('Account with email : %s created on: %s', user.email, timezone.now())
             message = "To activate your account please click on the following link %s" % (
                 CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
-            subject = 'Activate account for Bowtie++'
+            subject = 'Activate account for no-reply-Bowtieowtie++'
             mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
                 fail_silently=False)
             return response
