@@ -17,4 +17,5 @@ urlpatterns = [
     path('totp/login/<slug:uidb64>/<slug:token>', views.TOTPAuthenticateView.as_view(),
     	name='totp-login'),
     path('totp/verify/<slug:token>', views.VerifyTOTPView.as_view(), name='totp-activate'),
-    path('delete/', views.DeleteUserView.as_view(), name='delete'),]
+    path('delete/', views.DeleteUserView.as_view(), name='delete'),
+    path('test/totp', views.Two_fa_test.as_view(), name='test-2fa'),]
