@@ -15,7 +15,7 @@ let user_account_vue = new Vue ({
             twoFactorAuth: false
         },
         toast: {
-            message: 'Two factor authentication is now enabled',
+            message: 'Two-factor authentication is now enabled.',
             show: false
         }
     },
@@ -57,6 +57,11 @@ let user_account_vue = new Vue ({
         on2faActivation: function() {
             this.toast.show = true;
             this.userInfo.twoFactorAuth = true;
+        },
+        cleanAllErrors: function(errors) {
+            Object.values(errors).forEach(error => {
+                error.show = false
+            });
         }
     }
 })

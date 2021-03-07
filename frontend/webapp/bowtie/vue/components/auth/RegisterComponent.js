@@ -1,7 +1,7 @@
 /**
  * RegisterComponent
  * Handles the registration process
- * Related template : common/authentication.html
+ * Related template: common/authentication.html
  */
 
 let RegisterComponent = {

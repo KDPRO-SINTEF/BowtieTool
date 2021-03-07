@@ -57,9 +57,10 @@
     z-index: 10;
     border: 1px solid white;
     border-radius: 5px;
-    padding: 1rem;
+    padding: 20px;
     background-color: white;
-    min-width: 400px;
+    width: 550px;
+    height: 440px;
 }
 
 #account-2fa-qr-img {
