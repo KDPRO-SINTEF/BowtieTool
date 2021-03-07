@@ -176,7 +176,7 @@ Toolbar.prototype.init = function()
 	Bowtie++ feature
 	Add Button to open Risk computation window
 	 */
-	showRisk = this.editorUi.actions.get('showRisk').funct;
+	let showRisk = this.editorUi.actions.get('showRisk').funct;
 	this.addButton('test', 'Risk Computation' , function() {
 		showRisk();
 	});

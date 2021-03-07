@@ -66,23 +66,26 @@
 <script type="text/x-template" id="account-2fa-template">
     <div id="account-2fa">
         <img class="exit-logo" src="../images/clear.gif" v-on:click="$emit('quit-2fa-window')">
-        <h2 id="account-2fa-title" class="mb-4">Two authentication factor</h2>
-        <div v-if="qrImage == null" class="d-flex justify-content-center">
-            <div class="spinner-border text-secondary" role="status"></div>
-            <span>Waiting for QR code ...</span>
+        <div v-if="qrImage === null && errors.UnauthorizedTotpCreationErr.show === false">
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border text-secondary" role="status"></div>
+                <span>Waiting for QR code ...</span>
+            </div>
         </div>
-        <div v-else class="mb-3">
+        <p v-else-if="errors.UnauthorizedTotpCreationErr.show" class="error-message mt-3">{{ errors.UnauthorizedTotpCreationErr.message }}</p>
+        <div v-else="qrImage !== null" class="mb-3">
+            <h2 id="account-2fa-title" class="mb-4">Two authentication factor</h2>
             <p class="mb-2">Scan the QR code below with the Google Authenticator app.<br> Then, type it in the following input.</p>
             <img v-bind:src="'data:image/png;base64,' + qrImage" id="account-2fa-qr-img">
+            <form class="row g-2">
+                <div class="col-auto">
+                    <input v-model="qrCode" class="form-control" id="2fa-code" placeholder="2FA code">
+                </div>
+                <div class="col-auto">
+                    <button v-on:click="submit2faActivation" type="button" class="btn btn-success">Send code</button>
+                </div>
+            </form>
         </div>
-        <form class="row g-2">
-            <div class="col-auto">
-                <input v-model="qrCode" class="form-control" id="2fa-code" placeholder="2FA code">
-            </div>
-            <div class="col-auto">
-                <button v-on:click="submit2faActivation" type="button" class="btn btn-success">Send code</button>
-            </div>
-        </form>
     </div>
 </script>
 

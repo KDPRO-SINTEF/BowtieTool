@@ -9,7 +9,10 @@ let Account2faComponent = {
             totpToken: null,
             qrCode: '',
             errors: {
-
+                UnauthorizedTotpCreationErr: {
+                    message: "An error occurred - invalid authentication token.",
+                    show: false
+                }
             }
         }
     },
@@ -23,18 +26,30 @@ let Account2faComponent = {
                 this.qrImage = res.data.qrImg;
                 this.totpToken = res.data.token;
             })
+            .catch(error => {
+                if (error.response) this.filterTotpCreateErrors(error.response);
+            })
     },
     methods: {
-        submit2faActivation: function() {
-            let validate2faUrl = window.VALIDATE_2FA + this.qrCode;
-            axios.post(validate2faUrl, {
+        submit2faActivation: function () {
+            let params = JSON.stringify({"token_totp": this.qrCode});
+            let validate2faUrl = window.VALIDATE_2FA + this.totpToken;
+            axios.post(validate2faUrl, params, {
                 headers: {
-                    Authorization: 'Token ' + this.totpToken
+                    Authorization: 'Token ' + this.authToken,
+                    'Content-Type': 'application/json'
                 }
             })
                 .then(res => {
-                    alert('OK');
-                })
+                    location.hash = "settings";
+                });
+        },
+        filterTotpCreateErrors: function(error) {
+            switch(error.status) {
+                case 401:
+                    this.errors.UnauthorizedTotpCreationErr.show = true;
+                    break;
+            }
         }
     }
 }

@@ -617,6 +617,12 @@ Actions.prototype.init = function () {
         dlg.init();
     }));
 
+    /*
+        Bowtie++ feature
+        add Action to show Risk computation dialog
+     */
+    this.addAction('showRisk', function(){ui.showDialog(new RiskDialog(ui).container, 850, 500, true, true);});
+
     // Option actions
     var action = null;
     action = this.addAction('grid', function () {

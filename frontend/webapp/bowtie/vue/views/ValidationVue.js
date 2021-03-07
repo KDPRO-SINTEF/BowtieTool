@@ -2,7 +2,7 @@
  * ValidationVue
  * Handles different validations linked to sent email
  * For : email verification, password reset, totp validation
- * Related template : validate.html
+ * Related template : validation.html
  */
 
 let validation_vue = new Vue({
@@ -60,8 +60,7 @@ let validation_vue = new Vue({
                     .then(res => {
                         if (res.status === 200) {
                             this.isValidationSuccessful = true;
-                            alert('Your email is now confirmed. You will be redirected to the login page.')
-                            location.assign(window.LOGIN_PAGE);
+                            alert('Your email is now confirmed.')
                         }
                     })
                     .catch(error => {
