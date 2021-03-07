@@ -14,6 +14,7 @@ let LoginComponent =  {
             user: {
                 email: '',
                 password: '',
+                twoFactorAuth: false
             },
             errors: {
                 InvalidCredentialsErr: {
@@ -48,7 +49,7 @@ let LoginComponent =  {
                     },
                 })
                     .then(res => {
-                        this.processToken(res.data.token);
+                        this.setLoginMode(res.data);
                     })
                     .catch(error => {
                         if (error.response) this.filterErrorResponse(error.response);
@@ -61,6 +62,16 @@ let LoginComponent =  {
             let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return mailRegex.test(this.user.email);
         },
+        setLoginMode: function(data) {
+            if (data.uidb64 !== undefined && data.token !== undefined) {
+                localStorage.setItem('userId', data.uidb64);
+                localStorage.setItem('totpToken', data.token);
+                this.user.twoFactorAuth = true;
+            } else {
+                this.processToken(data.token);
+            }
+        },
+
         // Handles the received token if the login form has been successfully submitted
         processToken: function (token) {
             localStorage.setItem('token', token);

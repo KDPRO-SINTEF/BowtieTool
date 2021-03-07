@@ -74,7 +74,8 @@ let AccountSettingsComponent = {
     props: {
         username: String,
         email: String,
-        authToken: String
+        authToken: String,
+        is2faActivated: Boolean
     },
     components: {
         'account-profile': AccountProfileComponent,

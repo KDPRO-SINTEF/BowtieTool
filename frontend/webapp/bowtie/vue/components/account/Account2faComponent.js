@@ -41,6 +41,7 @@ let Account2faComponent = {
                 }
             })
                 .then(res => {
+                    this.$emit('2fa-enabled');
                     location.hash = "settings";
                 });
         },
