@@ -295,7 +295,8 @@ class TOTPAuthenticateView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        if device.verify_token(token):
+        token_totp = request.data["token_totp"]
+        if device.verify_token(token_totp):
             token, created = Token.objects.get_or_create(user=user)
             if not created:
                 # update the created time of the token to keep it valid
@@ -319,11 +320,12 @@ class UpdatePasswordView(APIView):
         if "old_password" in request.data or "new_password" not in request.data:
             return Response(dict(errors=["Need new and old password"]),
                 status=status.HTTP_400_BAD_REQUEST)
-        
+  
         old_password = request.data["old_password"]
         new_password = request.data["new_password"]
 
         return Response(status=status.HTTP_200_OK)
+
 class VerifyTOTPView(APIView):
     """Endpoint for validation of TOTP otpion"""
 
@@ -350,7 +352,8 @@ class VerifyTOTPView(APIView):
             )
     
         if not "token_totp" in request.data:
-            return Response(dict(errors=["Need authentication app code"]), status=status.HTTP_400_BAD_REQUEST)
+            return Response(dict(errors=["Need authentication app code"]),
+                status=status.HTTP_400_BAD_REQUEST)
 
         token_totp = request.data["token_totp"]
         
@@ -390,3 +393,16 @@ class DeleteUserView(APIView):
 
     def __str__(self):
         return "Delete user endpoint"
+
+
+
+class Two_fa_test(APIView):
+    
+    authentication_classes = (ExpiringTokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        
+        user = request.user
+        enabled = user.profile.two_factor_enabled
+        return Response(dict(two_fa=enabled), status=status.HTTP_200_OK)
