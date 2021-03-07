@@ -26,20 +26,31 @@ class UserSerializer(serializers.ModelSerializer):
 
         return user
 
-    def update(self, instance, validated_data):
-        """Update a user, setting its new password correctly """
 
-        password = validated_data.pop('password', None)  # None is the default arg
-        user = super().update(instance, validated_data)
 
-        if password:
-            try:
-                validators.validate_password(password)
-                user.set_password(password)
-                user.save()
-            except ValidationError as err_valid:
-                serializers.ValidationError(err_valid, code='authentication')
-        return user
+class UserUpdateSerialize(serializers.Serializer):
+    """ Serializer for update password """
+
+
+    new_password = serializers.CharField()
+    old_password = serializers.CharField()
+
+  
+    def validate(self, attrs):
+
+        new_password = attrs.get("new_password")
+        old_password = attrs.get("old_password")
+
+
+        validators.validate_password(new_password)
+        validators.validate_password(old_password)
+        if new_password == old_password:
+            raise serializers.ValidationError("The two passwords must be different")
+        
+        return attrs
+
+    def __str__(self):
+        return "required fields old_password and new_password"
 
 
 class AuthTokenSerialize(serializers.Serializer):
