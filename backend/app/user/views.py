@@ -18,7 +18,7 @@ from rest_framework.exceptions import ValidationError as ValidErr
 import django.contrib.auth.password_validation as validators
 from core.models import Profile, User
 from rest_framework.authtoken.models import Token
-from django_otp import devices_for_user
+from django_otp import devices_for_user, user_has_device
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django.shortcuts import redirect
 import datetime
@@ -108,25 +108,30 @@ class CreateTokenView(ObtainAuthToken):
     def post(self, request, *args, **kwargs):
 
         serializer = AuthTokenSerialize(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        try:
+            serializer.is_valid(raise_exception=True)
+            user = serializer.validated_data['user']
 
-        # if user has enabled 2 fa redirect the login
-        if user.profile.two_factor_enabled:
-            token = TOTPValidityToken().make_token(user)
-            return Response({"uidb64": urlsafe_base64_encode(force_bytes(user.pk)), "token": token},
-                status=status.HTTP_200_OK)
+            # if user has enabled 2 fa redirect the login
+            if user.profile.two_factor_enabled:
+                token = TOTPValidityToken().make_token(user)
+                return Response({"uidb64": urlsafe_base64_encode(force_bytes(user.pk)), "token": token},
+                    status=status.HTTP_200_OK)
 
 
-        token, created = Token.objects.get_or_create(user=user)
-        if not created:
-            # update the created time of the token to keep it valid
-            token.created = timezone.now()
-            token.save()
+            token, created = Token.objects.get_or_create(user=user)
+            if not created:
+                # update the created time of the token to keep it valid
+                token.created = timezone.now()
+                token.save()
 
-        logger.info("User with email %s logs at %s", user.email, timezone.now())
-        return Response({'token': token.key}, status=status.HTTP_200_OK)
-
+            logger.info("User with email %s logs at %s", user.email, timezone.now())
+          
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+        except ValidErr as e:
+    
+            return Response(dict(errors=["Invalid credentials"]), 
+                status=status.HTTP_401_UNAUTHORIZED)
 
 
 class ManageUserViews(generics.RetrieveAPIView):
@@ -157,6 +162,7 @@ class UpdatePassword(APIView):
                             username=user.email,
                             password=old_password):
             user.set_password(new_password)
+            user.save()
             return Response(status=status.HTTP_200_OK)
 
         return Response(dict(errors=["Wrong password"]), status=status.HTTP_400_BAD_REQUEST)
@@ -172,7 +178,7 @@ class ActivateAccount(APIView):
         """ Confirm the creation of an user account"""
 
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            uid = force_text(urlsafef_base64_decode(uidb64))
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_valid:
@@ -278,14 +284,15 @@ class TOTPCreateAPIView(APIView):
         """TOPT generaton"""
 
         user = request.user
-        device = get_user_totp_device(user)
+        if user_has_device(user, confirmed=True):
+            return Response(dict(errors=["2FA is already activated on this account"]),
+                status=status.HTTP_400_BAD_REQUEST)
+        
+        device = get_user_totp_device(user, False)
         if not device:
             device = user.totpdevice_set.create(confirmed=False)
             user.save()
-        elif device.confirmed:
-            return Response(dict(errors=["2FA is already activated on this account"]),
-                status=status.HTTP_400_BAD_REQUEST)
-        # url = device.config_url
+        
         img = qrcode.make(device.config_url)
         img.save(IMAGE_PATH) # save for further byte reading
 
@@ -326,6 +333,7 @@ class TOTPAuthenticateView(APIView):
            errors=['Expired token']),
                 status=status.HTTP_400_BAD_REQUEST
             )
+
 
         device = get_user_totp_device(user, True)
         if not device:
@@ -372,18 +380,17 @@ class VerifyTOTPView(APIView):
            errors=['This user has not setup two factor authentication']),
                 status=status.HTTP_400_BAD_REQUEST
             )
-    
+        
         if not "token_totp" in request.data:
             return Response(dict(errors=["Need authentication app code"]),
                 status=status.HTTP_400_BAD_REQUEST)
 
         token_totp = request.data["token_totp"]
-        
+        print(device.confirmed)
         if device.verify_token(token_totp):
-
             device.confirmed = True
             user.profile.two_factor_enabled = True
-            user.totpdevice_set.save()
+            device.save()
             user.profile.save()
             user.save()
             return Response(status=status.HTTP_200_OK)
@@ -418,11 +425,26 @@ class DeleteUserView(APIView):
 
 
 class DisableTOTP(APIView):
+    """Endpoing for disabling 2fa service"""
+
     authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
-    
+
     def post(self, request):
-        
+        user = request.user
+        device = get_user_totp_device(user, True)
+
+        if not device or device.confirmed:
+            logger.warning("Suspicious 2FA desactivation - no 2FA or 2FA not activated for user %s", user)
+            return Response(dict(errors=["Ivalid operation"], status=status.HTTP_400_BAD_REQUEST))
+
+        token_totp = request.data["token_totp"]
+        if not device.verify_token(token_totp):
+            return Response(dict(errors=["Invalid code"]), status=status.HTTP_400_BAD_REQUEST)
+
+        user.totpdevice_set.delete()
+        user.save()
+        return Response(status=status.HTTP_200_OK)
 
 class Two_fa_test(APIView):
     
@@ -430,7 +452,10 @@ class Two_fa_test(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        
+      
         user = request.user
         enabled = user.profile.two_factor_enabled
-        return Response(dict(two_fa=enabled), status=status.HTTP_200_OK)
+        device = get_user_totp_device(user, True)
+        confirmed = device.confirmed if device else False
+
+        return Response(dict(two_fa=enabled, confirmed=confirmed), status=status.HTTP_200_OK)

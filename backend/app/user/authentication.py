@@ -118,9 +118,11 @@ class ExpiringTokenAuthentication(TokenAuthentication):
     def authenticate_credentials(self, key):
         """Check the validity of the token used for authentication"""
         model = self.get_model()
+    
         try:
             token = model.objects.get(key=key)
         except model.DoesNotExist as not_exist_mod:
+           
             raise exceptions.AuthenticationFailed('Invalid token')
 
         if not token.user.is_active:

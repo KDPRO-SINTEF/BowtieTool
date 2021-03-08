@@ -44,6 +44,7 @@ class UserUpdateSerialize(serializers.Serializer):
 
         validators.validate_password(new_password)
         validators.validate_password(old_password)
+        
         if new_password == old_password:
             raise serializers.ValidationError("The two passwords must be different")
         
@@ -73,7 +74,7 @@ class AuthTokenSerialize(serializers.Serializer):
                             username=email,
                             password=password
         )
-
+         
         if user :
             attrs['user'] = user
             Profile.objects.filter(user=user).update(last_login=timezone.now())
