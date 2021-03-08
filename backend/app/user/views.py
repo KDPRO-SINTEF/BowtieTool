@@ -442,7 +442,7 @@ class DisableTOTP(APIView):
         if not device.verify_token(token_totp):
             return Response(dict(errors=["Invalid code"]), status=status.HTTP_400_BAD_REQUEST)
 
-        user.totpdevice_set.delete()
+        TOTPDevice.objects.filter(user=user).delete()
         user.save()
         return Response(status=status.HTTP_200_OK)
 
