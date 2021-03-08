@@ -1,3 +1,0 @@
-s -> if expr then s 
-   | if expr then s else s
-   | Epsilon
