@@ -12,4 +12,5 @@ Just clone the repository on your machine.
 - **./start.sh** -> launch the entire app
 - **./start.sh frontend** -> launch the frontend part
 - **./start.sh backend** -> launch the backend part
-2. Visit your favorite web browser at http://localhost:8080/app/bowtie
+2. Visit your favorite web browser at http://localhost:8080/app/bowtie.
+
