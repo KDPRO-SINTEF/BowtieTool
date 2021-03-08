@@ -174,10 +174,10 @@ Toolbar.prototype.init = function()
 	this.addDropDownArrow(insertMenu, 'geSprite-plus', 38, 48, -4, -3, 36, -8);*/
 	/*
 	Bowtie++ feature
-	Add Button to open Risk computation window
+	Add button to open Risk computation window
 	 */
 	let showRisk = this.editorUi.actions.get('showRisk').funct;
-	this.addButton('test', 'Risk Computation' , function() {
+	this.addButton('risk', 'Risk Computation' , function() {
 		showRisk();
 	});
 	this.addSeparator();

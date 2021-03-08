@@ -18,6 +18,7 @@
     <script type="text/javascript" src="../js/Editor.js"></script>
     <script type="text/javascript" src="../js/Graph.js"></script>
     <script type="text/javascript" src="../js/Threat.js"></script>
+    <script type="text/javascript" src="../js/Consequence.js"></script>
     <script type="text/javascript" src="../js/Matrix.js"></script>
     <script type="text/javascript" src="../../lib/mxgraph/src/js/mxClient.js"></script>
     <link rel="stylesheet" href="../css/risk_computation.css">
@@ -64,12 +65,13 @@
                     <md-table-head class="impact_value" md-numeric>Impact Value</md-table-head>
                     <md-table-head class="probability" md-numeric>Probability</md-table-head>
                 </md-table-row >
-                <md-table-row v-for="consequence in consequences" v-bind:key="consequences.indexOf(consequence)">
-                    <md-table-cell class="description"> {{consequence}}</md-table-cell>
-                    <md-table-cell class="impact_value" md-numeric><md-field><md-input class="numeric_input" v-model="type"></md-input></md-field></md-table-cell>
-                    <md-table-cell class="probability" md-numeric><md-field><md-input class="numeric_input" v-model="type"></md-input></md-field></md-table-cell>
+                <md-table-row v-for="consequence in consequences" v-bind:key="consequence.name">
+                    <md-table-cell class="description"> {{consequence.name}}</md-table-cell>
+                    <md-table-cell class="impact_value" md-numeric><md-field><md-input ref="consequence" class="numeric_input" v-model="number" v-on:change="updateImpactValue(consequence, $event)"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="probability" md-numeric><md-field><md-input ref="" class="numeric_input" v-model="number" v-on:change="updateProbability(consequence, $event)"></md-input></md-field></md-table-cell>
                 </md-table-row>
             </md-table>
+            <button v-on:click="test()">Test</button>
         </div>
     </script>
     <script src="../vue/components/risk/RiskComputationComponent.js"></script>

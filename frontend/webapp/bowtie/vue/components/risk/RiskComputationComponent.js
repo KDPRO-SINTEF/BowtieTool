@@ -27,13 +27,24 @@ let ConsequencesComponent = {
     template: '#consequences',
     data: function() {
         return {
-            consequences : []
+            consequences : [],
         }
     },
     beforeMount: function () {
         //Initialize consequences array
         const consID = window.parent.currentUI.editor.graph.getAllConsequences();
-        consID.forEach(elem => this.consequences.push(elem.value));
+        consID.forEach(elem => this.consequences.push(new Consequence(elem.value,0,0)));
+    },
+    methods: {
+        test: function() {
+            console.log(this.consequences);
+        },
+        updateImpactValue: function(consequence, event) {
+            consequence.impactValue = parseInt(event.target.value);
+        },
+        updateProbability: function(consequence, event) {
+            consequence.probability = parseInt(event.target.value);
+        }
     }
 }
 
