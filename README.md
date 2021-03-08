@@ -9,7 +9,7 @@ Just clone the repository on your machine.
 ## Launch the app
 
 1. Use the "start.sh" script.
-- ./start.sh -> launch the entire app (via 'docker-compose up' from the root folder)
-- ./start.sh frontend -> launch the frontend part (via 'docker-compose up' from the frontend folder)
-- ./start.sh backend -> launch the backend part (via 'docker-compose up' from the backend folder)
+- **./start.sh** -> launch the entire app
+- **./start.sh frontend** -> launch the frontend part
+- **./start.sh backend** -> launch the backend part
 2. Visit your favorite web browser at http://localhost:8080/app/bowtie
