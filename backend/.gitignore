@@ -3,12 +3,6 @@
 .media/
 __pycache__
 env
-log_authentication.log
+*.log
 .env
-app/media/
-app/env
-log_authentication.log
-.env
-app/media/
-.env
-
+env
