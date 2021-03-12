@@ -434,14 +434,20 @@ class DisableTOTP(APIView):
         device = get_user_totp_device(user, True)
 
         if not device or not device.confirmed:
-            logger.warning("Suspicious 2FA desactivation - no 2FA or 2FA not activated for user %s", user)
+            logger.warning("Suspicious 2FA desactivation - no 2FA or 2FA not activated for user %s",
+                user)
             return Response(dict(errors=["Ivalid operation"]), status=status.HTTP_400_BAD_REQUEST)
 
-        token_totp = request.data["token_totp"]
+        if not "token_totp" in request.data:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        token_totp = request.data["token_totp"] 
         if not device.verify_token(token_totp):
             return Response(dict(errors=["Invalid code"]), status=status.HTTP_400_BAD_REQUEST)
 
         TOTPDevice.objects.filter(user=user).delete()
+        user.profile.two_factor_enabled = False
+        user.profile.save()
         user.save()
         return Response(status=status.HTTP_200_OK)
 
