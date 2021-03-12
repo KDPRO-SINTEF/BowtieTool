@@ -38,7 +38,6 @@ let auth_vue = new Vue({
         },
         cleanAllErrors: function(errors) {
             Object.values(errors).forEach(error => {
-                console.log(error.show);
                 error.show = false
             });
         }

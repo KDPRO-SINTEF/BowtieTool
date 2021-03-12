@@ -12,7 +12,11 @@ let user_account_vue = new Vue ({
             name: null,
             email: null,
             authToken: null,
-            is2faActivated: false
+            twoFactorAuth: false
+        },
+        toast: {
+            message: 'Two-factor authentication is now enabled.',
+            show: false
         }
     },
     beforeMount() {
@@ -27,10 +31,16 @@ let user_account_vue = new Vue ({
             })
                 .then(res => {
                     this.userInfo.email = res.data.email;
-                    this.userInfo.is2faActivated = false;
+                    this.userInfo.twoFactorAuth = false;
                     this.isUserAuthenticated = true;
                 })
         }
+        axios.get(window.CHECK_2FA_STATUS, {
+            headers: {
+                Authorization: 'Token ' + this.userInfo.authToken
+            }
+        })
+            .then(res => console.log(res))
     },
     methods: {
         switchToTab: function(tab) {
@@ -43,6 +53,15 @@ let user_account_vue = new Vue ({
             } else {
                 location.hash = 'settings';
             }
+        },
+        on2faActivation: function() {
+            this.toast.show = true;
+            this.userInfo.twoFactorAuth = true;
+        },
+        cleanAllErrors: function(errors) {
+            Object.values(errors).forEach(error => {
+                error.show = false
+            });
         }
     }
 })

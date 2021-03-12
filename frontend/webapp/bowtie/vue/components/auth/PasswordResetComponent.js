@@ -1,7 +1,7 @@
 /**
  * PasswordResetComponent
  * Handles the password reset procedure
- * Related template : common/authentication.html
+ * Related template: common/authentication.html
  */
 
 let PasswordResetComponent = {

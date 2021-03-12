@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>My Account</title>
+    <title>My bowtie++ account</title>
     <meta name="viewport" content="width=device-width, init-scale=1.0">
 
     <!-- scripts -->
@@ -20,12 +20,25 @@
 <body>
 <div id="user-account-vue">
     <div class="overlay" v-if="currentAccountTab === '2fa'"></div>
-    <div v-if="isUserAuthenticated" id="user-account">
-        <div id="user-account-logo">
-            <img src="../images/bowtie-user.svg">
+    <div v-if="isUserAuthenticated" >
+        <div id="user-account">
+            <div id="user-account-logo">
+                <img src="../images/bowtie-user.svg">
+            </div>
+            <account-settings v-if="true" v-on:activate-2fa="switchToTab('2fa')" :username="userInfo.name" :email="userInfo.email" :auth-token="userInfo.authToken" :is2fa-activated="userInfo.twoFactorAuth" class="user-account-settings"></account-settings>
+            <account-2fa v-if="currentAccountTab === '2fa'" v-on:quit-2fa-window="switchToTab('settings')" v-on:2fa-enabled="on2faActivation" v-bind:clean-error-messages="cleanAllErrors" :auth-token="userInfo.authToken"></account-2fa>
         </div>
-        <account-settings v-if="true" v-on:activate-2fa="switchToTab('2fa')" :username="userInfo.name" :email="userInfo.email" :auth-token="userInfo.authToken" class="user-account-settings"></account-settings>
-        <account-2fa v-if="currentAccountTab === '2fa'" v-on:quit-2fa-window="switchToTab('settings')" :auth-token="userInfo.authToken"></account-2fa>
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+            <div id="liveToast" v-bind:class="['toast', { show: toast.show, hide: !toast.show }]" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto">Bowtie++ app</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" v-on:click="toast.show = false"></button>
+                </div>
+                <div class="toast-body">
+                    {{ toast.message }}
+                </div>
+            </div>
+        </div>
     </div>
     <p v-else>Sorry, you can't access this page : you are not connected.</p>
 </div>
@@ -55,7 +68,7 @@
         <div class="account-tab-content">
             <keep-alive>
                 <account-profile v-if="currentTab === 'Profile'" :username="username" :email="email"></account-profile>
-                <account-security v-else-if="currentTab === 'Security'" v-on:activate-2fa="$emit('activate-2fa')"></account-security>
+                <account-security v-else-if="currentTab === 'Security'" v-on:activate-2fa="$emit('activate-2fa')" v-bind:is2fa-activated="is2faActivated"></account-security>
                 <account-danger-zone v-else="currentTab === 'Danger-Zone'"
                                      :auth-token="authToken"></account-danger-zone>
             </keep-alive>
@@ -73,17 +86,18 @@
             </div>
         </div>
         <p v-else-if="errors.UnauthorizedTotpCreationErr.show" class="error-message mt-3">{{ errors.UnauthorizedTotpCreationErr.message }}</p>
-        <div v-else="qrImage !== null" class="mb-3">
-            <h2 id="account-2fa-title" class="mb-4">Two authentication factor</h2>
+        <div v-else-if="qrImage !== null" class="mb-3">
+            <h2 id="account-2fa-title" class="mb-4">Two-factor authentication</h2>
             <p class="mb-2">Scan the QR code below with the Google Authenticator app.<br> Then, type it in the following input.</p>
-            <img v-bind:src="'data:image/png;base64,' + qrImage" id="account-2fa-qr-img">
+            <img v-bind:src="'data:image/png;base64,' + qrImage" id="account-2fa-qr-img" class="mb-2">
             <form class="row g-2">
                 <div class="col-auto">
-                    <input v-model="qrCode" class="form-control" id="2fa-code" placeholder="2FA code">
+                    <input v-model="qrCode" class="form-control" id="2fa-code" placeholder="Ex. 123456">
                 </div>
                 <div class="col-auto">
                     <button v-on:click="submit2faActivation" type="button" class="btn btn-success">Send code</button>
                 </div>
+                <p v-for="error in activeErrors" class="error-message">{{ error.message }}</p>
             </form>
         </div>
     </div>
@@ -128,12 +142,20 @@
         </form>
         <div class="mb-3">
             <p class="account-menu-subtitle">Two-factor authentication</p>
-            <div class="mb-3 message-emphasis">
-                <p><b>Two factor authentication is not enabled yet.</b><br>
-                    Two factor authentication allows your authentication to not just be based on a simple password.</p>
+            <div v-if="!is2faActivated">
+                <div class="mb-3 message-emphasis">
+                    <p><b>Two-factor authentication is not enabled yet.</b><br>
+                        Two-factor authentication adds a layer of security to your authentication process Enabling it is really recommended.</p>
+                </div>
+                <div class="mb-3">
+                    <button v-on:click="$emit('activate-2fa')" type="button" class="btn btn-success">Activate 2FA</button>
+                </div>
             </div>
-            <div class="mb-3">
-                <button v-on:click="$emit('activate-2fa')" type="button" class="btn btn-success">Activate 2FA</button>
+            <div v-else>
+                <div class="mb-3">
+                    <p>Two-factor authentication is already <b>enabled</b>.</p>
+                </div>
+                <button type="button" class="btn btn-danger">Disable 2FA</button>
             </div>
         </div>
     </div>

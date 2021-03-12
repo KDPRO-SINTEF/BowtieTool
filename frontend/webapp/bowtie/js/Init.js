@@ -48,6 +48,8 @@ window.DELETE_ACCOUNT = window.DELETE_ACCOUNT || 'http://localhost:8000/api/user
 window.CONFIRM_EMAIL = window.CONFIRM_EMAIL || 'http://localhost:8000/api/user/confirm/';
 window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || 'http://localhost:8000/api/user/totp/create/';
 window.VALIDATE_2FA = window.VALIDATE_2FA || 'http://localhost:8000/api/user/totp/verify/';
+window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || 'http://localhost:8000/api/user/test/totp/';
+window.LOGIN_2FA = window.LOGIN_2FA || 'http://localhost:8000/api/user/totp/login/';
 
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
 window.ROLE_URL = window.ROLE_URL || '/role';

@@ -283,6 +283,18 @@
 	opacity:0.6;
 	filter:alpha(opacity=60);
 }
+
+.geToolbarContainer .geButton . {
+	float:left;
+	width:20px;
+	padding:0px 2px 4px 2px;
+	margin:2px;
+	border:1px solid transparent;
+	cursor:pointer;
+	opacity:0.6;
+	filter:alpha(opacity=60);
+}
+
 .geToolbarContainer .geButton:hover {
 	border:1px solid gray;
 	border-radius:2px;

@@ -62,7 +62,7 @@ let AccountDangerZoneComponent = {
                 .then(res => {
                     localStorage.removeItem('username');
                     localStorage.removeItem('token');
-                    alert('Your account has been successfully deleted. You will be redirected to login page.');
+                    alert('Your account has been successfully deleted.');
                     window.location.assign(window.LOGIN_PAGE);
                 });
         }
@@ -74,7 +74,9 @@ let AccountSettingsComponent = {
     props: {
         username: String,
         email: String,
-        authToken: String
+        authToken: String,
+        is2faActivated: Boolean,
+        cleanErrorMessages: Function
     },
     components: {
         'account-profile': AccountProfileComponent,

@@ -44,16 +44,21 @@
         <form>
             <div class="mb-3">
                 <label for="login-email" class="form-label">Email address</label>
-                <input v-model="user.email" id="login-email" class="form-control" placeholder="name@example.com">
+                <input v-model="user.email" id="login-email" class="form-control" placeholder="name@example.com" :disabled="user.twoFactorAuth">
                 <p v-show="errors.InvalidEmailErr.show" class="error-message mt-1">{{ errors.InvalidEmailErr.message }}</p>
             </div>
             <div class="mb-3">
                 <label for="login-password" class="form-label">Password</label>
-                <input v-model="user.password" type="password" id="login-password" class="form-control">
+                <input v-model="user.password" type="password" id="login-password" class="form-control" :disabled="user.twoFactorAuth">
                 <button v-on:click="$emit('switch-to-tab', 'password-reset')" id="pwd-reset-link" type="button" class="btn-tab">Forgot password?</button>
                 <p v-show="errors.InvalidCredentialsErr.show" class="error-message mt-2">{{ errors.InvalidCredentialsErr.message }}</p>
             </div>
-
+            <div v-if="user.twoFactorAuth" class="mb-3">
+                <label for="login-totp-code" class="form-label">Enter your 6-digit code</label>
+                <input v-model="user.totpToken" id="login-totp-code" class="form-control">
+                <p v-show="errors.InvalidTotpCodeErr.show" class="error-message mt-2">{{ errors.InvalidTotpCodeErr.message }}</p>
+                <p v-show="errors.ExpiredTotpTokenErr.show" class="error-message mt-2">{{ errors.ExpiredTotpTokenErr.message }}</p>
+            </div>
             <button v-on:click="submitLoginForm" type="button" class="btn btn-success">Login</button>
         </form>
         <p class="mt-3">Don't have an account yet ? Please <button v-on:click="$emit('switch-to-tab', 'register')" type="button" class="btn-tab btn-tab--underlined">register</button>.</p>
