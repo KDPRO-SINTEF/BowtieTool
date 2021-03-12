@@ -1,17 +1,16 @@
 # BowtieTool
 
-Docker is required to run this application. Please refer to the official website at https://www.docker.com/.
+Docker engine and docker compose are required to run this application. Please refer to the official website at https://www.docker.com/.
 
-## Front-end installation steps
+## Installation
 
-1. Clone the repository
-2. Go to the 'frontend' directory
-3. Type 'docker-compose up'
-4. Visit localhost:8080/app/bowtie on your favorite web browser
+Just clone the repository on your machine.
 
-## Back-end installation steps
+## Launch the app
 
-1. Clone the repository
-2. Go to the 'backend' directory
-3. Type 'docker-compose up'
-4. The API is listening on localhost:8000
+1. Use the "start.sh" script.
+- **./start.sh** -> launch the entire app
+- **./start.sh frontend** -> launch the frontend part
+- **./start.sh backend** -> launch the backend part
+2. Visit your favorite web browser at http://localhost:8080/app/bowtie.
+

@@ -2,7 +2,7 @@ import base64
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from user.serializers import UserSerializer, AuthTokenSerialize
+from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize
 from user.customPermission import HasConfirmedEmail
 from django.core import mail
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken, TOTPValidityToken, ExpiringTokenAuthentication
@@ -18,7 +18,7 @@ from rest_framework.exceptions import ValidationError as ValidErr
 import django.contrib.auth.password_validation as validators
 from core.models import Profile, User
 from rest_framework.authtoken.models import Token
-from django_otp import devices_for_user
+from django_otp import devices_for_user, user_has_device
 from django_otp.plugins.otp_totp.models import TOTPDevice
 from django.shortcuts import redirect
 import datetime
@@ -55,7 +55,7 @@ class CreateUserView(generics.CreateAPIView):
                 fail_silently=False)
             return response
         except (ValidErr, ValidationError, AssertionError) as e:
-
+        
             if isinstance(e, ValidErr):
                 error_codes = e.get_codes()
 
@@ -66,14 +66,27 @@ class CreateUserView(generics.CreateAPIView):
                         status=status.HTTP_400_BAD_REQUEST)
 
                 if "email" in error_codes and "unique" in error_codes["email"]:
-                    logger.warning("Attempt to create account with existing email %s", "")
-                    message = "Someone tried to create an account into Bowtie++ using " + \
-                    "this email who is already registered." + \
-                    " If you forgot your password please use the reset link on our login page.\n"+\
-                    "Sincerly, \n Bowtie++ team"
-                    subject = 'Account creation with existing email'
-                    mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                        fail_silently=False)
+                    user = get_user_model().objects.filter(email=request.data['email']).first()
+                    if user.profile.email_confirmed:
+                        # creation of an account that has not been confirmed
+                        logger.warning("Attempt to create account with existing email %s", "")
+                        message = "Someone tried to create an account into Bowtie++ using " + \
+                        "this email who is already registered." + \
+                        " If you forgot your password please use the reset link on our login page.\n" + \
+                        "Sincerly, \n Bowtie++ team"
+                        subject = 'Account creation with existing email'
+
+                    else:
+                        token = AccountActivationTokenGenerator().make_token(user)
+                        logger.info('Account with email : %s created on: %s', user.email,
+                            timezone.now())
+                        message = "To activate your account please click on the following link %s" % (
+                            CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
+                        subject = 'Activate account for no-reply-Bowtieowtie++'
+                        mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
+                            fail_silently=False)        
+                        mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
+                            fail_silently=False)
                     return Response(status=status.HTTP_201_CREATED)
 
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -83,46 +96,77 @@ class CreateUserView(generics.CreateAPIView):
 
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+
+
 class CreateTokenView(ObtainAuthToken):
     """Create a new authentication token for user"""
-    serializer_class = AuthTokenSerialize
+    serializer_class = AuthTokenSerialize   
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
     permission_classes = (HasConfirmedEmail,)
 
     def post(self, request, *args, **kwargs):
 
         serializer = AuthTokenSerialize(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        try:
+            serializer.is_valid(raise_exception=True)
+            user = serializer.validated_data['user']
 
-        # if user has enabled 2 fa redirect the login
-        if user.profile.two_factor_enabled:
-            token = TOTPValidityToken().make_token(user)
-            return Response({"uidb64": urlsafe_base64_encode(force_bytes(user.pk)), "token": token},
-                status=status.HTTP_200_OK)
-
-        
-        token, created = Token.objects.get_or_create(user=user)
-        if not created:
-            # update the created time of the token to keep it valid
-            token.created = timezone.now()
-            token.save()
-
-        logger.info("User with email %s logs at %s", user.email, timezone.now())
-        return Response({'token': token.key}, status=status.HTTP_200_OK)
+            # if user has enabled 2 fa redirect the login
+            if user.profile.two_factor_enabled:
+                token = TOTPValidityToken().make_token(user)
+                return Response({"uidb64": urlsafe_base64_encode(force_bytes(user.pk)), "token": token},
+                    status=status.HTTP_200_OK)
 
 
-class ManageUserViews(generics.RetrieveUpdateAPIView):
+            token, created = Token.objects.get_or_create(user=user)
+            if not created:
+                # update the created time of the token to keep it valid
+                token.created = timezone.now()
+                token.save()
+
+            logger.info("User with email %s logs at %s", user.email, timezone.now())
+          
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+        except ValidErr as e:
+            return Response(dict(errors=["Invalid credentials"]), 
+                status=status.HTTP_401_UNAUTHORIZED)
+
+
+class ManageUserViews(generics.RetrieveAPIView):
     """Manage the authenticated user"""
     serializer_class = UserSerializer
     authentication_classes = (ExpiringTokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)    
 
     def get_object(self):
-        """Retrieve and return authenticated user"""
+        """Retrieve and return an authenticated user"""
         return self.request.user
-    def __str__(self):
 
+class UpdatePassword(APIView):
+    """Manage the authenticated user"""
+  
+    authentication_classes = (ExpiringTokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+
+    def put(self, request):
+        user = request.user
+        serializer = UserUpdateSerialize(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        new_password = serializer.validated_data['new_password']
+        old_password = serializer.validated_data['old_password']
+
+        if authenticate(request=request,
+                            username=user.email,
+                            password=old_password):
+            user.set_password(new_password)
+            user.save()
+            return Response(status=status.HTTP_200_OK)
+
+        return Response(dict(errors=["Wrong password"]), status=status.HTTP_400_BAD_REQUEST)
+    
+    def __str__(self):
         return "Retrieve authenticated user from an API request"
 
 # User account confirmation and password reset logic
@@ -239,14 +283,15 @@ class TOTPCreateAPIView(APIView):
         """TOPT generaton"""
 
         user = request.user
-        device = get_user_totp_device(user)
+        if user_has_device(user, confirmed=True):
+            return Response(dict(errors=["2FA is already activated on this account"]),
+                status=status.HTTP_400_BAD_REQUEST)
+        
+        device = get_user_totp_device(user, False)
         if not device:
             device = user.totpdevice_set.create(confirmed=False)
             user.save()
-        elif device.confirmed:
-            return Response(dict(errors=["2FA is already activated on this account"]),
-                status=status.HTTP_400_BAD_REQUEST)
-        # url = device.config_url
+        
         img = qrcode.make(device.config_url)
         img.save(IMAGE_PATH) # save for further byte reading
 
@@ -288,6 +333,7 @@ class TOTPAuthenticateView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+
         device = get_user_totp_device(user, True)
         if not device:
             return Response(dict(
@@ -305,29 +351,12 @@ class TOTPAuthenticateView(APIView):
 
             logger.info("User with email %s logs at %s", user.email, timezone.now())
             return Response({'token': token.key}, status=status.HTTP_200_OK)
-            
+
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-class UpdatePasswordView(APIView):
-    """Update user password view"""
-
-    authentication_classes = (ExpiringTokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-    
-    def post(self, request):
-        user = request.user
-
-        if "old_password" in request.data or "new_password" not in request.data:
-            return Response(dict(errors=["Need new and old password"]),
-                status=status.HTTP_400_BAD_REQUEST)
-  
-        old_password = request.data["old_password"]
-        new_password = request.data["new_password"]
-
-        return Response(status=status.HTTP_200_OK)
 
 class VerifyTOTPView(APIView):
-    """Endpoint for validation of TOTP otpion"""
+    """Endpoint for validation of TOTP service"""
 
     authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
@@ -336,12 +365,12 @@ class VerifyTOTPView(APIView):
         """Activate the device of authenticated user given a totp token in the post request
            which validation period is defined by token
         """
-        
+  
         user = request.user
         if not TOTPValidityToken().check_token(user, token):
-                return Response(dict(
+            return Response(dict(
            errors=['Validation token expired']),
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_401_UNAUTHORIZED
             )
 
         device = get_user_totp_device(user, False)
@@ -350,22 +379,20 @@ class VerifyTOTPView(APIView):
            errors=['This user has not setup two factor authentication']),
                 status=status.HTTP_400_BAD_REQUEST
             )
-    
+
         if not "token_totp" in request.data:
             return Response(dict(errors=["Need authentication app code"]),
                 status=status.HTTP_400_BAD_REQUEST)
 
         token_totp = request.data["token_totp"]
-        
         if device.verify_token(token_totp):
-
             device.confirmed = True
-            device.save()
             user.profile.two_factor_enabled = True
-            user.save()
+            device.save()
             user.profile.save()
+            user.save()
             return Response(status=status.HTTP_200_OK)
-        
+
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -395,6 +422,34 @@ class DeleteUserView(APIView):
         return "Delete user endpoint"
 
 
+class DisableTOTP(APIView):
+    """Endpoing for disabling 2fa service"""
+
+    authentication_classes = (ExpiringTokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        """Disable device"""
+        user = request.user
+        device = get_user_totp_device(user, True)
+
+        if not device or not device.confirmed:
+            logger.warning("Suspicious 2FA desactivation - no 2FA or 2FA not activated for user %s",
+                user)
+            return Response(dict(errors=["Ivalid operation"]), status=status.HTTP_400_BAD_REQUEST)
+
+        if not "token_totp" in request.data:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+        token_totp = request.data["token_totp"] 
+        if not device.verify_token(token_totp):
+            return Response(dict(errors=["Invalid code"]), status=status.HTTP_400_BAD_REQUEST)
+
+        TOTPDevice.objects.filter(user=user).delete()
+        user.profile.two_factor_enabled = False
+        user.profile.save()
+        user.save()
+        return Response(status=status.HTTP_200_OK)
 
 class Two_fa_test(APIView):
     
@@ -402,7 +457,10 @@ class Two_fa_test(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        
+      
         user = request.user
         enabled = user.profile.two_factor_enabled
-        return Response(dict(two_fa=enabled), status=status.HTTP_200_OK)
+        device = get_user_totp_device(user, True)
+        confirmed = device.confirmed if device else False
+
+        return Response(dict(two_fa=enabled, confirmed=confirmed), status=status.HTTP_200_OK)

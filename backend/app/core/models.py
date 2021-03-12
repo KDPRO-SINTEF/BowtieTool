@@ -23,7 +23,7 @@ class UserManager(BaseUserManager):
         try:
             validators.validate_password(password=password, user=user)
         except exceptions.ValidationError as e_valid:
-            raise ValidationError(e_valid) from django.forms
+            raise ValidationError(e_valid)
       
         user.username = username
         user.set_password(password)

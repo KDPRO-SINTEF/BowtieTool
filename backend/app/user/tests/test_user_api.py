@@ -11,6 +11,9 @@ from user.authentication import AccountActivationTokenGenerator, PasswordResetTo
 # to get human readable form of status codes
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from rest_framework.settings import api_settings as settings
+import time
+from django_otp import devices_for_user
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
@@ -114,7 +117,7 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(TOKEN_URL, payload)
 
         self.assertNotIn('token', res.data)
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_token_no_user(self):
         """Token is not created for nonexistent user"""
@@ -203,7 +206,7 @@ class PublicUserApiTests(TestCase):
  
     
 
-    def test_password_change_with_token(self):
+    def test_password_reset_with_token(self):
         """ Test the password change with a valid token """
         payload = {
             'email': 'mkirov@insa-rennes.fr',
@@ -237,7 +240,7 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(url, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_password_change_with_no_token(self):
+    def test_password_reset_with_no_token(self):
         """ Test the password change without token """
         payload = {
             'email': 'mkirov@insa-rennes.fr',
@@ -331,16 +334,16 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(url, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def totp_token_create_test(self):
-        """Creating an TOTP token"""
-        payload = {
-            'email': 'test@bowtie.com',
-            'password': '123456789A#a'
-        }
-        user = create_user(**payload)
+    # def totp_token_create_test(self):
+    #     """Creating an TOTP token"""
+    #     payload = {
+    #         'email': 'test@bowtie.com',
+    #         'password': '123456789A#a'
+    #     }
+    #     user = create_user(**payload)
 
-        Profile.objects.filter(user=user).update(email_confirmed=True)
-        res = self.client.post(TOKEN_URL, payload)
+    #     Profile.objects.filter(user=user).update(email_confirmed=True)
+    #     res = self.client.post(TOKEN_URL, payload)
 
 
     def test_delete_user_ok(self):
@@ -392,3 +395,195 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         user = get_user_model().objects.filter(email=payload['email']).first()
         self.assertNotEqual(None, user)
+
+
+
+    def test_update_password_user_nok1(self):
+        """Update psasword for not unauthenticated user 
+            or incorrect method"""
+
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+        user = create_user(**payload)
+
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+        res = self.client.post(TOKEN_URL, payload)
+
+        self.assertIn('token', res.data)
+        token = res.data['token']
+
+        url = reverse('user:update-password-view')
+       
+        # request without token authentication
+        res = self.client.put(url, {'old_password':'what'})
+        self.assertEqual(status.HTTP_401_UNAUTHORIZED, res.status_code)
+
+
+        # bad request - post
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        res = self.client.post(url, {'old_password':'what'})
+        self.assertEqual(status.HTTP_405_METHOD_NOT_ALLOWED, res.status_code)
+
+
+
+    def test_update_password_user_nok2(self):
+        """Update password with invalid JSON data"""
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+
+        user = create_user(**payload)
+
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+        res = self.client.post(TOKEN_URL, payload)
+
+        self.assertIn('token', res.data)
+        token = res.data['token']
+        url = reverse('user:update-password-view')
+        # request with incorrect JSON format 
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        
+        # invalid field names
+        res = self.client.put(url, {'old_passwordd':'what', 'new_password': "what" })
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, res.status_code)
+
+        # invalid number of fields
+        res = self.client.put(url, {'old_password':'what' })
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, res.status_code)
+        res = self.client.put(url, {'new_password': "what" })
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, res.status_code)
+
+        # invalid old password
+        res = self.client.put(url, {'old_passwordd':'123456789A#aa', 'new_password': "what" })
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, res.status_code)
+
+        #invalid new password 
+        res = self.client.put(url, {'old_passwordd':'123456789A#a', 'new_password': "123456789A#" })
+        self.assertEqual(status.HTTP_400_BAD_REQUEST, res.status_code)
+
+
+    def test_update_password_ok(self):
+        """Successfully updated password"""
+
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+
+        user = create_user(**payload)
+
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+        res = self.client.post(TOKEN_URL, payload)
+
+        token = res.data['token']
+        url = reverse('user:update-password-view')
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        res = self.client.put(url, {'old_password':'123456789A#a', 'new_password': "123456789A#a!"})
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        user = get_user_model().objects.filter(email=payload['email']).first()
+        
+
+        # old password
+        
+        self.assertFalse(user.check_password("123456789A#a"))
+        self.assertTrue(user.check_password('123456789A#a!'))
+
+
+    def test_enable_two_fa_user_nok(self):
+        """Unauthenticated user can't enable two fa"""
+
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+
+        user = create_user(**payload)
+
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+        # res = self.client.post(TOKEN_URL, payload)
+        # token = res.data['token']
+
+        url = reverse("user:totp-create")
+        res = self.client.get(url)        
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+
+
+    def test_enable_two_fa_user_data_ok(self):
+        """Test if all data returned by two fa activation method is present"""
+
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+
+        user = create_user(**payload)
+
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+        res = self.client.post(TOKEN_URL, payload)
+        token = res.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+
+        url = reverse("user:totp-create")
+        res = self.client.get(url)        
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        # temporary token present
+        self.assertIn('token', res.data)
+        # image present
+        self.assertIn('qrImg', res.data)
+        devices = devices_for_user(user, confirmed=False)
+        self.assertNotEqual(None, devices)
+
+    def test_enable_two_fa_validate_token_validity(self):
+        """Test validity of token for validation of user totp device"""
+        settings.TOTP_CONFIRM_RESET_TIMEOUT=2
+        
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+
+        user = create_user(**payload)
+
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+        res = self.client.post(TOKEN_URL, payload)
+        token = res.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+
+        url = reverse("user:totp-create")
+        res = self.client.get(url)           
+        time.sleep(3)
+        token_totp_validate = res.data["token"]
+
+        url2 = reverse("user:totp-activate", kwargs={'token':token_totp_validate})
+        res2 = self.client.post(url2, {})
+        self.assertIn('errors', res2.data)
+        self.assertEqual(res2.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_enable_two_fa_validate_invalid_totp_token(self):
+        """Test validity of token for validation of user totp device"""
+        
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+
+        user = create_user(**payload)
+
+        Profile.objects.filter(user=user).update(email_confirmed=True)
+        res = self.client.post(TOKEN_URL, payload)
+        token = res.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+
+        url = reverse("user:totp-create")
+        res = self.client.get(url)           
+        token_totp_validate = res.data["token"]
+
+        url2 = reverse("user:totp-activate", kwargs={'token':token_totp_validate})
+        res2 = self.client.post(url2, {"token_totp": "1234"})
+        self.assertEqual(res2.status_code, status.HTTP_400_BAD_REQUEST)
+# todo test update password, enable, disable two fa, new login logic 
