@@ -219,11 +219,20 @@
 	right: 10px;
 }
 
-.geMenubar a.geStatus a#userLoginName {
+.geMenubar a.geStatus a#userLoginName{
 	color: #0080ff;
 	padding-top: 2px;
 	float: left;
 	margin-right: 15px;
+}
+
+.geMenubar #statisticsButton {
+	color: white;
+	background-color: black;
+	border: none;
+	border-radius: 5px;
+	padding: 1% 5%;
+	margin : 0 15px;
 }
 
 .geMenubar a.geStatus button#loginButton {

@@ -38,6 +38,7 @@ window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie/common/authentication.html
 window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie/common/authentication.html#register';
 window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie/common/authentication.html#password-reset';
 window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || '/app/bowtie/common/my_account.html';
+window.STATISTICS_PAGE = window.STATISTICS_PAGE || '/app/bowtie/common/statistics.html';
 
 // Customer driven project specifics
 window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';
