@@ -129,7 +129,6 @@ class CreateTokenView(ObtainAuthToken):
           
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         except ValidErr as e:
-    
             return Response(dict(errors=["Invalid credentials"]), 
                 status=status.HTTP_401_UNAUTHORIZED)
 
@@ -178,7 +177,7 @@ class ActivateAccount(APIView):
         """ Confirm the creation of an user account"""
 
         try:
-            uid = force_text(urlsafef_base64_decode(uidb64))
+            uid = force_text(urlsafe_base64_decode(uidb64))
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_valid:
@@ -352,7 +351,7 @@ class TOTPAuthenticateView(APIView):
 
             logger.info("User with email %s logs at %s", user.email, timezone.now())
             return Response({'token': token.key}, status=status.HTTP_200_OK)
-            
+
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -366,12 +365,12 @@ class VerifyTOTPView(APIView):
         """Activate the device of authenticated user given a totp token in the post request
            which validation period is defined by token
         """
-        
+  
         user = request.user
         if not TOTPValidityToken().check_token(user, token):
-                return Response(dict(
+            return Response(dict(
            errors=['Validation token expired']),
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_401_UNAUTHORIZED
             )
 
         device = get_user_totp_device(user, False)
@@ -380,13 +379,12 @@ class VerifyTOTPView(APIView):
            errors=['This user has not setup two factor authentication']),
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         if not "token_totp" in request.data:
             return Response(dict(errors=["Need authentication app code"]),
                 status=status.HTTP_400_BAD_REQUEST)
 
         token_totp = request.data["token_totp"]
-        print(device.confirmed)
         if device.verify_token(token_totp):
             device.confirmed = True
             user.profile.two_factor_enabled = True
@@ -394,7 +392,7 @@ class VerifyTOTPView(APIView):
             user.profile.save()
             user.save()
             return Response(status=status.HTTP_200_OK)
-        
+
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -431,6 +429,7 @@ class DisableTOTP(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
+        """Disable device"""
         user = request.user
         device = get_user_totp_device(user, True)
 

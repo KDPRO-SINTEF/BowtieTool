@@ -1,9 +1,14 @@
 from django.urls import path
 
+
 from user import views
 # Name for reverse function
 
+
+
+
 app_name = 'user'
+
 
 urlpatterns = [
     path('create/', views.CreateUserView.as_view(), name='create'),
@@ -20,4 +25,5 @@ urlpatterns = [
     path('delete/', views.DeleteUserView.as_view(), name='delete'),
     path('test/totp', views.Two_fa_test.as_view(), name='test-2fa'),
     path('updatepassword/', views.UpdatePassword.as_view(), name='update-password-view'),
-    path('disable/', views.DisableTOTP.as_view(), name="reset-2fa")]
+    path('disable/', views.DisableTOTP.as_view(), name="reset-2fa"),
+]

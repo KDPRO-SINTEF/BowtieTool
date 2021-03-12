@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'pydot',
     'pydotplus',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -104,7 +105,6 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    # 'django_otp.middleware.OTPMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]

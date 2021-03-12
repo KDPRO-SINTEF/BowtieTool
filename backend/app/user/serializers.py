@@ -41,7 +41,6 @@ class UserUpdateSerialize(serializers.Serializer):
         new_password = attrs.get("new_password")
         old_password = attrs.get("old_password")
 
-
         validators.validate_password(new_password)
         validators.validate_password(old_password)
         
