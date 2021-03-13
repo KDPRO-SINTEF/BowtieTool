@@ -18,6 +18,10 @@ let ThreatsComponent = {
             //Initialize threats array
             const threatsID = window.parent.currentUI.editor.graph.getAllThreatsID();
             threatsID.forEach(elem => this.threats.push(new Threat(elem[0], new Matrix(elem[1]))));
+
+    },
+    mounted() {
+        this.$emit("threats", this.threats);
     }
 }
 
@@ -36,15 +40,20 @@ let ConsequencesComponent = {
         consID.forEach(elem => this.consequences.push(new Consequence(elem.value,0,0)));
     },
     methods: {
-        test: function() {
-            console.log(this.consequences);
-        },
         updateImpactValue: function(consequence, event) {
-            consequence.impactValue = parseInt(event.target.value);
+            consequence.impactValue = parseFloat(event.target.value);
+            this.emitConsequences();
         },
         updateProbability: function(consequence, event) {
-            consequence.probability = parseInt(event.target.value);
+            consequence.probability = parseFloat(event.target.value);
+            this.emitConsequences();
+        },
+        emitConsequences: function() {
+            this.$emit("consequences", this.consequences);
         }
+    },
+    mounted() {
+        this.$emit("consequences", this.consequences);
     }
 }
 
@@ -54,12 +63,53 @@ let risk_vue = new Vue({
         'threats-component': ThreatsComponent,
         'consequences-component': ConsequencesComponent
     },
-    data: {
-        currentTab: 'Threats',
-        tabs: ['Threats','Consequences']
+    data: function(){
+        return {
+            currentTab: 'Threats',
+            tabs: ['Threats', 'Consequences'],
+            threats: [],
+            resultMax: '',
+            result2: '',
+            result3: '',
+            event_probability: 1,
+            consequences : []
+        }
     },
-    computed: {
+    methods: {
+        processThreats: function(input) {
 
+            this.threats = input;
+
+            let inter_res = 1;
+            for(let i = 0; i < this.threats.length; i++){
+                inter_res *= (1.0 - this.threats[i].getMatrix().getMeanValue()/10);
+            }
+
+            this.event_probability = 1 - inter_res;
+        },
+
+        processConsequences: function(input){
+            this.consequences = input;
+            this.computeAllResults();
+        },
+
+        computeAllResults: function (){
+            this.computeMax();
+            //this.compute2();
+            //this.compute3();
+        },
+
+        computeMax: function (){
+            let max_iv = 0;
+            let max_prob = 0;
+            for(let i = 0; i < this.consequences.length; i++){
+                if(this.consequences[i].impactValue > max_iv){
+                    max_iv = this.consequences[i].impactValue;
+                    max_prob = this.consequences[i].probability;
+                }
+            }
+            this.resultMax = this.event_probability * max_iv * max_prob;
+        }
     }
 })
 

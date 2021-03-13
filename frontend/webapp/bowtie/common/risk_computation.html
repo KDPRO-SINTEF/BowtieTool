@@ -31,9 +31,12 @@
         </div>
         <div class="table_container">
             <keep-alive>
-                <threats-component v-if="currentTab === 'Threats'"></threats-component>
-                <consequences-component v-else="currentTab === 'Consequences'"></consequences-component>
+                <threats-component @threats="processThreats" v-if="currentTab === 'Threats'"></threats-component>
+                <consequences-component @consequences="processConsequences" v-else="currentTab === 'Consequences'"></consequences-component>
             </keep-alive>
+        </div>
+        <div>
+            {{resultMax}}
         </div>
     </div>
     <script src="https://unpkg.com/vue"></script>
@@ -67,11 +70,10 @@
                 </md-table-row >
                 <md-table-row v-for="consequence in consequences" v-bind:key="consequence.name">
                     <md-table-cell class="description"> {{consequence.name}}</md-table-cell>
-                    <md-table-cell class="impact_value" md-numeric><md-field><md-input ref="consequence" class="numeric_input" v-model="number" v-on:change="updateImpactValue(consequence, $event)"></md-input></md-field></md-table-cell>
-                    <md-table-cell class="probability" md-numeric><md-field><md-input ref="" class="numeric_input" v-model="number" v-on:change="updateProbability(consequence, $event)"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="impact_value" md-numeric><md-field><md-input  class="numeric_input" v-on:change="updateImpactValue(consequence, $event)" type="number" min ="0" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="probability" md-numeric><md-field><md-input  class="numeric_input" v-on:change="updateProbability(consequence, $event)" type="number" min ="0" max="1" step="0.01"></md-input></md-field></md-table-cell>
                 </md-table-row>
             </md-table>
-            <button v-on:click="test()">Test</button>
         </div>
     </script>
     <script src="../vue/components/risk/RiskComputationComponent.js"></script>
