@@ -141,7 +141,7 @@ class StatsView(APIView):
 
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
-                                  Avg('barriers_per_stuff'))
+                                  Avg('barriers_per_consequences/threats'))
 
         return Response(resp)
 
