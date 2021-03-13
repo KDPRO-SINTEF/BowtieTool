@@ -55,7 +55,7 @@ window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || 'http://localhost:8000/
 
 
 // URLs for diagram save & get from backend
-window.SAVE_URL = window.SAVE_URL || '/diagram/private';
+window.SAVE_URL = window.SAVE_URL || 'http://localhost:8000/api/diagram/private';
 
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
 window.ROLE_URL = window.ROLE_URL || '/role';

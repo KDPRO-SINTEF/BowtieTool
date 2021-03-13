@@ -80,8 +80,7 @@ Actions.prototype.init = function () {
     }).isEnabled = isGraphEnabled;
     this.addAction('save', function () {
         ui.saveFile(false);
-    }, null, null, Editor.ctrlKey + '+S').isEnabled = isGraphEnabled;
-    // TODO upper and bellow should be 'allEnabled' instead of 'isGraphEnabled'
+    }, null, null, Editor.ctrlKey + '+S').isEnabled = allEnabled;
     this.addAction('saveAs...', function () {
         ui.saveFile(true);
     }, null, null, Editor.ctrlKey + '+Shift+S').isEnabled = allEnabled;
