@@ -3087,45 +3087,62 @@ EditorUi.prototype.save = function (name) {
                                 console.log(res)
                                 var id = res.data['id']
                                 this.editor.setGraphId(id);
-                                console.log('Inserted with id', id, 'and', this.editor.getGraphId());
+                                console.log('Posted new diagram with id', id, 'and', this.editor.getGraphId());
                             })
                             .catch(error => {
                                 if (error.response) {
                                     console.log(error)
                                 }
                             })
-                        // mxUtils.post(window.SAVE_URL, postdata, mxUtils.bind(this, function (req) {
-                        //     switch (req.getStatus()) {
-                        //         case 400:
-                        //             mxUtils.alert(mxResources.get('serverBadRequest'));
-                        //             break;
-                        //         case 401:
-                        //             mxUtils.alert(mxResources.get('serverUnauthorized'));
-                        //             break;
-                        //         case 403:
-                        //             mxUtils.alert(mxResources.get('serverForbidden'));
-                        //             break;
-                        //         default:
-                        //             break;
-                        //
-                        //     }
-                        //
-                        //     var id = JSON.parse(req.getText()).id;
-                        //     this.editor.setGraphId(id);
-                        //     console.log('Inserted with id', id, 'and', this.editor.getGraphId());
-                        //
-                        // }));
+                        /*mxUtils.post(window.SAVE_URL, postdata, mxUtils.bind(this, function (req) {
+                            switch (req.getStatus()) {
+                                case 400:
+                                    mxUtils.alert(mxResources.get('serverBadRequest'));
+                                    break;
+                                case 401:
+                                    mxUtils.alert(mxResources.get('serverUnauthorized'));
+                                    break;
+                                case 403:
+                                    mxUtils.alert(mxResources.get('serverForbidden'));
+                                    break;
+                                default:
+                                    break;
+
+                            }
+
+                            var id = JSON.parse(req.getText()).id;
+                            this.editor.setGraphId(id);
+                            console.log('Inserted with id', id, 'and', this.editor.getGraphId());
+
+                        }));*/
                     } else {
                         // In that case the id is already defined meaning the diagram was already stored once in the backend
                         console.log('Existing with id', this.editor.getGraphId());
-                        var postdata = JSON.stringify({
+                        var putData = JSON.stringify({
                             'id': this.editor.getGraphId(),
-                            'title': name,
-                            'token': token,
-                            'graph_data': xml,
-                            'is_public': false
+                            'name': name,
+                            'diagram': xml,
+                            'is_public': false,
+                            'tags': '',
+                            'lastTimeSpent': 20
                         });
-                        mxUtils.post(window.SAVE_URL, postdata, mxUtils.bind(this, function (req) {
+                        axios.put(window.UPDATE_URL+this.editor.getGraphId(),putData, {
+                            headers: {
+                                'Content-type': 'application/json',
+                                'Authorization': 'Token ' + token
+                            }
+                        })
+                            .then(res => {
+                                console.log(res)
+                                var id = res.data['id']
+                                console.log('Updated diagram with id', id, ' == ', this.editor.getGraphId());
+                            })
+                            .catch(error => {
+                                if (error.response) {
+                                    console.log(error)
+                                }
+                            })
+                        /*mxUtils.post(window.UPDATE_URL+'/'+this.editor.getGraphId(), postdata, mxUtils.bind(this, function (req) {
                             switch (req.getStatus()) {
                                 case 400:
                                     mxUtils.alert(mxResources.get('serverBadRequest'));
@@ -3142,7 +3159,7 @@ EditorUi.prototype.save = function (name) {
                             }
 
                             console.log('Updated with response', req.getText());
-                        }));
+                        }));*/
                     }
                 } else {
                     mxUtils.alert(mxResources.get('drawingTooLarge'));

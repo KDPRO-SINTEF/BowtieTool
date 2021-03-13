@@ -57,6 +57,7 @@ window.DISABLE_2FA = window.DISABLE_2FA || 'http://localhost:8000/api/user/totp/
 
 // URLs for diagram save & get from backend
 window.SAVE_URL = window.SAVE_URL || 'http://localhost:8000/api/diagram/private';
+window.UPDATE_URL = window.UPDATE_URL || 'http://localhost:8000/api/diagram/'; // {id}
 
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
 window.ROLE_URL = window.ROLE_URL || '/role';
