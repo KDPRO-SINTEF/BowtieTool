@@ -8,7 +8,7 @@ window.BASE_PATH = '/app/bowtie'
 window.MAX_REQUEST_SIZE = window.MAX_REQUEST_SIZE  || 10485760;
 window.MAX_AREA = window.MAX_AREA || 15000 * 15000;
 
-// URLs for save and export
+// URLs for local save and export
 window.EXPORT_URL = window.EXPORT_URL || '/export';
 window.LOCAL_SAVE_URL = window.LOCAL_SAVE_URL || '/save';
 window.OPEN_URL = window.OPEN_URL || '/open';
@@ -50,6 +50,10 @@ window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || 'http://localhost:8000/api/us
 window.VALIDATE_2FA = window.VALIDATE_2FA || 'http://localhost:8000/api/user/totp/verify/';
 window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || 'http://localhost:8000/api/user/test/totp/';
 window.LOGIN_2FA = window.LOGIN_2FA || 'http://localhost:8000/api/user/totp/login/';
+
+
+// URLs for diagram save & get from backend
+window.SAVE_URL = window.SAVE_URL || '/diagram/private';
 
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
 window.ROLE_URL = window.ROLE_URL || '/role';
