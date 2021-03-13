@@ -25,7 +25,7 @@
             <div id="user-account-logo">
                 <img src="../images/bowtie-user.svg">
             </div>
-            <account-settings v-if="true" v-on:activate-2fa="switchToTab('2fa')" v-on:disable-2fa="on2faDisabling" username="userInfo.name" :email="userInfo.email" :auth-token="userInfo.authToken" :is2fa-activated="userInfo.twoFactorAuth" v-bind:clean-error-messages="cleanAllErrors" class="user-account-settings"></account-settings>
+            <account-settings v-if="true" v-on:activate-2fa="switchToTab('2fa')" v-on:disable-2fa="on2faDisabling" :username="userInfo.name" :email="userInfo.email" :auth-token="userInfo.authToken" :is2fa-activated="userInfo.twoFactorAuth" v-bind:clean-error-messages="cleanAllErrors" class="user-account-settings"></account-settings>
             <account-2fa v-if="currentAccountTab === '2fa'" v-on:quit-2fa-window="switchToTab('settings')" v-on:2fa-enabled="on2faActivation" v-bind:clean-error-messages="cleanAllErrors" :auth-token="userInfo.authToken"></account-2fa>
         </div>
         <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
