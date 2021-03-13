@@ -3100,7 +3100,6 @@ EditorUi.prototype.getContextualLoginText = function() {
 		'token': localStorage.getItem('token'),
 		'username': localStorage.getItem('username'),
 		//'isResearcher' : localStorage.getItem('isResearcher')
-		'isResearcher' : true
     };
     var button = document.createElement('button');
     button.setAttribute('id', 'loginButton');
@@ -3139,7 +3138,7 @@ EditorUi.prototype.setLoginText = function(value)
 {
 	let uinfo = localStorage.getItem('username');
 	//let isResearcher = localStorage.getItem('isResearcher');
-	let isResearcher = true;
+	let isResearcher = false;
 	this.loginContainer.innerHTML = '';
 
 	if (uinfo !== null) {
