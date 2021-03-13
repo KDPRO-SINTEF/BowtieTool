@@ -52,6 +52,7 @@ window.VALIDATE_2FA = window.VALIDATE_2FA || 'http://localhost:8000/api/user/tot
 window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || 'http://localhost:8000/api/user/test/totp/';
 window.LOGIN_2FA = window.LOGIN_2FA || 'http://localhost:8000/api/user/totp/login/';
 window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || 'http://localhost:8000/api/user/totp/verify/';
+window.DISABLE_2FA = window.DISABLE_2FA || 'http://localhost:8000/api/user/totp/disable/';
 
 
 // URLs for diagram save & get from backend

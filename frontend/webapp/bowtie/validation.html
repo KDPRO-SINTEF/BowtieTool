@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Authorize</title>
+    <title>Bowtie++ authorizations</title>
 
     <!-- scipts -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -15,12 +15,12 @@
 </head>
 <body>
 <div id="validation-vue">
-    <div id="validation-message">
+    <div id="validation-message" class="m-3">
         <p v-if="isValidationSuccessful">Success</p>
         <p v-else-if="errors.ExpiredTokenErr.show">{{ errors.ExpiredTokenErr.message }}</p>
         <div v-else-if="errors.InvalidUrlErr.show">
             <p>{{ errors.InvalidUrlErr.message }}</p>
-            <p>We are sorry, this page doesn't exist</p>
+            <p>We are sorry, this page doesn't exist.</p>
         </div>
     </div>
 </div>
