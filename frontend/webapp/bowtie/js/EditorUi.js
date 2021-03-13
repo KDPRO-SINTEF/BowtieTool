@@ -3098,7 +3098,9 @@ EditorUi.prototype.createStatusContainer = function()
 EditorUi.prototype.getContextualLoginText = function() {
 	var user = {
 		'token': localStorage.getItem('token'),
-		'username': localStorage.getItem('username')
+		'username': localStorage.getItem('username'),
+		//'isResearcher' : localStorage.getItem('isResearcher')
+		'isResearcher' : true
     };
     var button = document.createElement('button');
     button.setAttribute('id', 'loginButton');
@@ -3123,14 +3125,35 @@ EditorUi.prototype.getContextualLoginText = function() {
 };
 
 /**
+ * Creates the statistics button and bind it to the statistics window
+ */
+EditorUi.prototype.getStatisticsWindow = function () {
+
+}
+
+
+/**
  * Creates a new toolbar for the given container.
  */
 EditorUi.prototype.setLoginText = function(value)
 {
 	let uinfo = localStorage.getItem('username');
+	//let isResearcher = localStorage.getItem('isResearcher');
+	let isResearcher = true;
 	this.loginContainer.innerHTML = '';
+
 	if (uinfo !== null) {
-		var loginButton = document.getElementById('loginButton');
+		/* Researcher button */
+		if (isResearcher) {
+			let statisticsButton = document.createElement('a');
+			statisticsButton.setAttribute('id', 'statisticsButton');
+			statisticsButton.innerHTML = 'Statistics';
+			statisticsButton.setAttribute('href', window.STATISTICS_PAGE);
+			statisticsButton.setAttribute('target', '_blank');
+			this.loginContainer.appendChild(statisticsButton);
+		}
+
+		/* My account button */
 		let userName = document.createElement('a');
 		userName.setAttribute('id', 'userLoginName');
 		userName.innerHTML = 'My account';
@@ -3139,6 +3162,7 @@ EditorUi.prototype.setLoginText = function(value)
 		this.loginContainer.appendChild(userName);
 	}
 	this.loginContainer.appendChild(value);
+
 };
 
 /**

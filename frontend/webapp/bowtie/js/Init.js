@@ -38,6 +38,7 @@ window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie/common/authentication.html
 window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie/common/authentication.html#register';
 window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie/common/authentication.html#password-reset';
 window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || '/app/bowtie/common/my_account.html';
+window.STATISTICS_PAGE = window.STATISTICS_PAGE || '/app/bowtie/common/statistics.html';
 
 // Customer driven project specifics
 window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';
@@ -50,6 +51,7 @@ window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || 'http://localhost:8000/api/us
 window.VALIDATE_2FA = window.VALIDATE_2FA || 'http://localhost:8000/api/user/totp/verify/';
 window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || 'http://localhost:8000/api/user/test/totp/';
 window.LOGIN_2FA = window.LOGIN_2FA || 'http://localhost:8000/api/user/totp/login/';
+window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || 'http://localhost:8000/api/user/totp/verify/';
 
 
 // URLs for diagram save & get from backend
