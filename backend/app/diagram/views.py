@@ -137,11 +137,11 @@ class StatsView(APIView):
 
     def get(self, request):
 
-        queryset = DiagramStat.objects.all().annotate(barriers_per_stuff=F('barriers')/(F('threats')+F('consequences')))
+        queryset = DiagramStat.objects.all().annotate(barriers_per_consequences_threats=F('barriers')/(F('threats')+F('consequences')))
 
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
-                                  Avg('barriers_per_consequences/threats'))
+                                  Avg('barriers_per_consequences_threats'))
 
         return Response(resp)
 
