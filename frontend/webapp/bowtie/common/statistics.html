@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">*
     <script type="text/javascript" src="../js/Init.js"></script>
-    <script type="text/javascript" src="../vue/components/stats/StatsItemComponent.js.js"></script>
+    <script type="text/javascript" src="../vue/components/stats/StatsItemComponent.js"></script>
 
     <!-- styles -->
     <!--link rel="stylesheet" href="../css/account.css"-->
@@ -21,10 +21,7 @@
             <div id="statistics-title">
                 <h1>Statistics about the database for research purposes.</h1>
             </div>
-            <div v-if="false">
-                <p> Sorry, you're not authorized to access to those datas, please contact an admin.</p>
-            </div>
-            <div v-else>
+            <div>
                 <div class="statistics-components">
                     <statistics-item :label="bowtie.label" :number="bowtie.number"></statistics-item>
                 </div>
