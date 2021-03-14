@@ -1,0 +1,28 @@
+#statistics-title{
+    text-align: center;
+}
+
+.image {
+    text-align: center;
+    vertical-align: center;
+}
+
+.img {
+    margin-top: 60%;
+    transform: translateY(-50%);
+}
+
+p {
+    margin-top: 8%;
+    transform: translateY(-50%);
+}
+
+.statistics-components {
+    background-color: #82E0AA;
+    border-radius: 10px;
+    margin : 30px;
+    box-shadow: 10px 5px 10px #585858C4;
+    vertical-align: center;
+    text-align: center;
+    font-size : 30px;
+}

@@ -55,7 +55,7 @@ window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || 'http://localhost:8000/
 window.DISABLE_2FA = window.DISABLE_2FA || 'http://localhost:8000/api/user/totp/disable/';
 
 //URL for statistics
-window.STATISTICS = window.STATISTICS || 'http://localhost:8000/api/diagram/stats/';
+window.STATISTICS = window.STATISTICS || 'http://localhost:8000/api/diagram/stats';
 
 // URLs for diagram save & get from backend
 window.SAVE_URL = window.SAVE_URL || 'http://localhost:8000/api/diagram/private';

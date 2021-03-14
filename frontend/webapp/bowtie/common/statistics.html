@@ -13,26 +13,48 @@
     <script type="text/javascript" src="../vue/components/stats/StatsItemComponent.js"></script>
 
     <!-- styles -->
-    <!--link rel="stylesheet" href="../css/account.css"-->
+    <link rel="stylesheet" href="../css/statistics.css">
 </head>
 <body>
-    <div id="statistics-vue">
+    <div class="container-lg" id="statistics-vue">
         <div class="statistics-overlay">
             <div id="statistics-title">
                 <h1>Statistics about the database for research purposes.</h1>
             </div>
-            <div>
-                <div class="statistics-components">
-                    <statistics-item :label="bowtie.label" :number="bowtie.number"></statistics-item>
+            <div class="container-md">
+                <div class="row align-item-center justify-content-center">
+                    <div class="col-md-2 image align-item-center justify-content-center"><img class="img" src="../images/statistics/statistics-horloge.png" height="90px"/></div>
+                    <div class="col-md-8 statistics-components justify-content-center">
+                        <statistics-item :label="totalTimeSpent.label" :number="totalTimeSpent.number"></statistics-item>
+                    </div>
                 </div>
-                <div class="statistics-components">
-                    <statistics-item :label="threats.label" :number="threats.number"></statistics-item>
+
+                <div class="row align-item-center justify-content-center">
+                    <div class="col-md-2 image"><img class="img" src="../images/statistics/statistics-threats.png" height="90px"/></div>
+                    <div class="col-md-8 statistics-components justify-content-center">
+                        <statistics-item :label="threats.label" :number="threats.number"></statistics-item>
+                    </div>
                 </div>
-                <div class="statistics-components">
-                    <statistics-item :label="causes.label" :number="causes.number"></statistics-item>
+
+                <div class="row align-item-center justify-content-center">
+                    <div class="col-md-2 image"><img class="img" src="../images/statistics/statistics-causes.png" height="90px"/></div>
+                    <div class="col-md-8 statistics-components justify-content-center">
+                        <statistics-item :label="causes.label" :number="causes.number"></statistics-item>
+                    </div>
                 </div>
-                <div class="statistics-components">
-                    <statistics-item :label="consequences.label" :number="consequences.number"></statistics-item>
+
+                <div class="row align-item-center justify-content-center">
+                    <div class="col-md-2 image"><img class="img" src="../images/statistics/statistics-consequences.png" height="90px"/></div>
+                    <div class="col-md-8 statistics-components justify-content-center">
+                        <statistics-item :label="consequences.label" :number="consequences.number"></statistics-item>
+                    </div>
+                </div>
+
+                <div class="row align-item-center justify-content-center">
+                    <div class="col-md-2 image"><img class="img" src="../images/statistics/statistics-barrier.png" height="90px"/></div>
+                    <div class="col-md-8 statistics-components justify-content-center">
+                        <statistics-item :label="barriers.label" :number="barriers.number"></statistics-item>
+                    </div>
                 </div>
             </div>
         </div>
