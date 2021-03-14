@@ -23,10 +23,21 @@ let statistics_vue = new Vue({
         }
     },
     beforeMount() {
-        this.bowtie.number = 100;
-        this.threats.number = 20;
-        this.causes.number = 67;
-        this.consequences.number = 89;
+        axios.get(window.STATISTICS, {
+            headers: {
+                'Content-type': 'application/json', //Si param contient un json
+                //'Authorization': 'Token ' + token //Si authorization nécessaire avec le token d'auth
+            }
+        }).then(res => {
+            console.log(res.data);
+            this.bowtie.number = res.bowtie;
+            this.threats.number = res.threats;
+            this.causes.number = res.causes;
+            this.consequences.number = res.consequences;
+        }).catch(error => {
+            if(error.response) console.log(error);
+        })
+
     }
 })
 
