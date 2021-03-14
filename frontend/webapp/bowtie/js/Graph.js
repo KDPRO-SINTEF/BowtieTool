@@ -2630,7 +2630,6 @@ Graph.prototype.getAllThreatsID = function()
 			threats.push([cell,matrix]);
 		}
 	}
-	console.log(threats);
 	return threats;
 }
 /*

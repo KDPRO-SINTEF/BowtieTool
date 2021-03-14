@@ -6,13 +6,5 @@ env
 *.log
 .env
 app/env
-log_authentication.log
-.env
-app/media/
-.env
-app/media/
-app/env
-log_authentication.log
-.env
-app/media/
-.env
+app/logs/*
+app/media/QR/*
