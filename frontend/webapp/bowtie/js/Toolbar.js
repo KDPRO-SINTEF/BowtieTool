@@ -172,15 +172,22 @@ Toolbar.prototype.init = function()
 
 /*	var insertMenu = this.addMenu('', mxResources.get('insert') + ' (' + mxResources.get('doubleClickTooltip') + ')', true, 'insert', null, true);
 	this.addDropDownArrow(insertMenu, 'geSprite-plus', 38, 48, -4, -3, 36, -8);*/
+
 	/*
 	Bowtie++ feature
 	Add button to open Risk computation window
-	 */
-	let showRisk = this.editorUi.actions.get('showRisk').funct;
-	this.addButton('risk', 'Risk Computation' , function() {
+
+
+	let riskButton = this.addButton('risk', 'Risk Computation' , function() {
 		showRisk();
 	});
-	this.addSeparator();
+	mxUtils.write(riskButton, mxResources.get('riskComputation'));*/
+	let showRisk = this.editorUi.actions.get('showRisk').funct;
+	var riskButton = document.createElement('button');
+	riskButton.setAttribute('id', 'riskButton');
+	mxUtils.write(riskButton, mxResources.get('riskComputation'));
+	riskButton.addEventListener('click', showRisk);
+	this.container.appendChild(riskButton);
 }
 
 
