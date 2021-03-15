@@ -57,7 +57,7 @@ class CreateUserView(generics.CreateAPIView):
         except (ValidErr, ValidationError, AssertionError) as e:
         
             if isinstance(e, ValidErr):
-                # error_codes = e.get_codes()
+                error_codes = e.get_codes()
                 # print(e.__dict__)
                 if "password" in error_codes or "username" in error_codes or \
                     ("email" in error_codes and "required" in error_codes["email"]):
