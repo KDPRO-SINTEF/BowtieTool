@@ -1,8 +1,11 @@
 class Consequence{
     constructor(name, impactValue, probability){
-        this._impactValue = (impactValue != null) ? impactValue : 0;
-        this._probability = (probability != null) ? probability : 0;
+        this._impactValue = (impactValue != null) ? impactValue : -1;
+        this._probability = (probability != null) ? probability : -1;
         this._name = name;
+    }
+    allDefined(){
+        return (this._impactValue !== -1) && (this._probability !== -1);
     }
 
     get name() {

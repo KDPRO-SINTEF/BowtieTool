@@ -5,8 +5,8 @@ let statistics_vue = new Vue({
         'statistics-item' : StatsItemComponent
     },
     data: {
-        bowtie : {
-            label : 'Bowtie diagrams',
+        totalTimeSpent : {
+            label : 'Total time spent (in minutes)',
             number : Number
         },
         threats : {
@@ -20,6 +20,10 @@ let statistics_vue = new Vue({
         consequences : {
             label : 'Consequences',
             number : Number
+        },
+        barriers : {
+            label : 'Barriers',
+            number : Number
         }
     },
     beforeMount() {
@@ -30,10 +34,37 @@ let statistics_vue = new Vue({
             }
         }).then(res => {
             console.log(res.data);
-            this.bowtie.number = res.bowtie;
-            this.threats.number = res.threats;
-            this.causes.number = res.causes;
-            this.consequences.number = res.consequences;
+
+            //Total time spent
+            if (res.totalTimeSpent__avg == null)
+                this.totalTimeSpent.number = 0;
+            else
+                this.totalTimeSpent.number = res.totalTimeSpent__avg;
+
+            //Threats
+            if (res.threats__avg == null)
+                this.threats.number = 0;
+            else
+                this.threats.number = res.threats__avg;
+
+            //Barriers
+            if (res.barriers__avg == null)
+                this.barriers.number = 0;
+            else
+                this.barriers.number = res.barriers__avg;
+
+            //Consequences
+            if (res.consequences__avg == null)
+                this.consequences.number = 0;
+            else
+                this.consequences.number = res.consequences__avg;
+
+            //Causes
+            if (res.causes__avg == null)
+                this.causes.number = 0;
+            else
+                this.causes.number = res.causes__avg;
+
         }).catch(error => {
             if(error.response) console.log(error);
         })
