@@ -5,7 +5,7 @@
 
 let StatsItemComponent = {
     template :
-        `<p>Number of {{label}} : {{number}}</p>`,
+        `<p class="text-center">Number of {{label}} : {{number}}</p>`,
     props: {
         label : String,
         number : Number
