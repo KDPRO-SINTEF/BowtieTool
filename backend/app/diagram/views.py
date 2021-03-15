@@ -134,7 +134,7 @@ class PrivateDiagrams(APIView):
 
 class StatsView(APIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsResearcher,)
 
     def get(self, request):
 
@@ -142,7 +142,7 @@ class StatsView(APIView):
 
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
-                                  Avg('barriers_per_consequences_threats'),
+                                  Avg('barriers_per_consequences_threats')
                                   )
 
         return Response(resp)
