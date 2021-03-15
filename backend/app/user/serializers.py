@@ -18,14 +18,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         """Create new user and return it"""
-        
-        user = get_user_model().objects.create_user(**validated_data)
-
-        if user is None:
-            serializers.ValidationError("Validation error", code='authentication')
-
-        return user
-
+        try:
+            user = get_user_model().objects.create_user(**validated_data)
+            if user is None:
+                serializers.ValidationError("Validation error", code='authentication')
+            return user
+        except Exception as e:
+            print(type(e))
 
 
 class UserUpdateSerialize(serializers.Serializer):
@@ -42,7 +41,6 @@ class UserUpdateSerialize(serializers.Serializer):
         old_password = attrs.get("old_password")
 
         validators.validate_password(new_password)
-        validators.validate_password(old_password)
         
         if new_password == old_password:
             raise serializers.ValidationError("The two passwords must be different")
