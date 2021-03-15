@@ -13,8 +13,7 @@ from django.contrib.auth import get_user_model, login
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.urls import reverse
-from django.forms import ValidationError
-from rest_framework.exceptions import ValidationError as ValidErr
+from rest_framework.exceptions import ValidationError 
 import django.contrib.auth.password_validation as validators
 from core.models import Profile, User
 from rest_framework.authtoken.models import Token
@@ -26,6 +25,7 @@ import qrcode
 from django.utils import timezone
 from django.contrib.auth import authenticate
 import logging
+from django.db.utils import IntegrityError
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +41,15 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-
+        """Create a user endpoint"""
+        
         try:
-            response = super().create(request=request, *args, **kwargs)
+          
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            
             user = get_user_model().objects.filter(email=request.data['email']).first()
             # generate an activation token for the user
             token = AccountActivationTokenGenerator().make_token(user)
@@ -53,49 +59,35 @@ class CreateUserView(generics.CreateAPIView):
             subject = 'Activate account for no-reply-Bowtieowtie++'
             mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
                 fail_silently=False)
-            return response
-        except (ValidErr, ValidationError, AssertionError) as e:
-        
-            if isinstance(e, ValidErr):
-                error_codes = e.get_codes()
-                # print(e.__dict__)
-                if "password" in error_codes or "username" in error_codes or \
-                    ("email" in error_codes and "required" in error_codes["email"]):
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+        except (ValidationError, AssertionError, IntegrityError) as e:
            
-                    return Response(dict(errors="Username, email and password are required"),
-                        status=status.HTTP_400_BAD_REQUEST)
+            if isinstance(e, IntegrityError):   # duplication  
+                user = get_user_model().objects.filter(email=request.data['email']).first()
+                if user.profile.email_confirmed:
+                    # creation of an account that has not been confirmed
+                    logger.warning("Attempt to create account with existing email %s", "")
+                    message = "Someone tried to create an account into Bowtie++ using " + \
+                    "this email who is already registered." + \
+                    " If you forgot your password please use the reset link on our login page.\n" + \
+                    "Sincerly, \n Bowtie++ team"
+                    subject = 'Account creation with existing email'
+                    mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
+                        fail_silently=False)
+                else:
+                    token = AccountActivationTokenGenerator().make_token(user)
+                    logger.info('Account with email : %s created on: %s', user.email,
+                        timezone.now())
+                    message = "To activate your account please click on the following link %s" % (
+                        CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
+                    subject = 'Activate account for no-reply-Bowtieowtie++'
+                    mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
+                        fail_silently=False)        
+                
+                return Response(status=status.HTTP_201_CREATED)
 
-                if "email" in error_codes and "unique" in error_codes["email"]:
-                    user = get_user_model().objects.filter(email=request.data['email']).first()
-                    if user.profile.email_confirmed:
-                        # creation of an account that has not been confirmed
-                        logger.warning("Attempt to create account with existing email %s", "")
-                        message = "Someone tried to create an account into Bowtie++ using " + \
-                        "this email who is already registered." + \
-                        " If you forgot your password please use the reset link on our login page.\n" + \
-                        "Sincerly, \n Bowtie++ team"
-                        subject = 'Account creation with existing email'
-                        mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                            fail_silently=False)
-                    else:
-                        token = AccountActivationTokenGenerator().make_token(user)
-                        logger.info('Account with email : %s created on: %s', user.email,
-                            timezone.now())
-                        message = "To activate your account please click on the following link %s" % (
-                            CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
-                        subject = 'Activate account for no-reply-Bowtieowtie++'
-                        mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                            fail_silently=False)        
-                    return Response(status=status.HTTP_201_CREATED)
-
-                return Response(status=status.HTTP_400_BAD_REQUEST)
-
-            if isinstance(e, ValidationError):
-                return Response(dict(errors=[e]), status=status.HTTP_400_BAD_REQUEST)
-
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
+            return Response(dict(errors=e.detail), status=status.HTTP_400_BAD_REQUEST)
 
 
 class CreateTokenView(ObtainAuthToken):
@@ -127,7 +119,7 @@ class CreateTokenView(ObtainAuthToken):
             logger.info("User with email %s logs at %s", user.email, timezone.now())
     
             return Response({'token': token.key}, status=status.HTTP_200_OK)
-        except ValidErr as e:
+        except ValidationError as e:
             return Response(dict(errors=["Invalid credentials"]), 
                 status=status.HTTP_401_UNAUTHORIZED)
 

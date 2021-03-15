@@ -15,16 +15,15 @@ class UserManager(BaseUserManager):
     """ A manager class for instantiating and updting users
     """
 
-    def create_user(self, email, password=None, username="", **extra_fields):
+    def create_user(self, email, password, username="", **extra_fields):
         """creates and saves new user"""
-        if not email:
-            raise ValueError('User email is required')
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        if not (email and password):
+            raise ValueError('User email and password is required')
         try:
-            validators.validate_password(password=password, user=user)
+            validators.validate_password(password=password)
         except exceptions.ValidationError as e_valid:
             raise ValidationError(e_valid)
-      
+        user = self.model(email=self.normalize_email(email), password=password, username=username, **extra_fields)
         user.username = username
         user.set_password(password)
         user.save(using=self._db)
