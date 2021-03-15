@@ -58,7 +58,7 @@ class CreateUserView(generics.CreateAPIView):
         
             if isinstance(e, ValidErr):
                 error_codes = e.get_codes()
-
+                # print(e.__dict__)
                 if "password" in error_codes or "username" in error_codes or \
                     ("email" in error_codes and "required" in error_codes["email"]):
            
@@ -75,7 +75,8 @@ class CreateUserView(generics.CreateAPIView):
                         " If you forgot your password please use the reset link on our login page.\n" + \
                         "Sincerly, \n Bowtie++ team"
                         subject = 'Account creation with existing email'
-
+                        mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
+                            fail_silently=False)
                     else:
                         token = AccountActivationTokenGenerator().make_token(user)
                         logger.info('Account with email : %s created on: %s', user.email,
@@ -85,8 +86,6 @@ class CreateUserView(generics.CreateAPIView):
                         subject = 'Activate account for no-reply-Bowtieowtie++'
                         mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
                             fail_silently=False)        
-                        mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                            fail_silently=False)
                     return Response(status=status.HTTP_201_CREATED)
 
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -126,7 +125,7 @@ class CreateTokenView(ObtainAuthToken):
                 token.save()
 
             logger.info("User with email %s logs at %s", user.email, timezone.now())
-          
+    
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         except ValidErr as e:
             return Response(dict(errors=["Invalid credentials"]), 
@@ -162,6 +161,14 @@ class UpdatePassword(APIView):
                             password=old_password):
             user.set_password(new_password)
             user.save()
+            logger.warning("User %s changed password ", user)
+            message = "You're password has been changed. If you're familiar with this activity" + \
+            "you can discard this email. Otherwise we suggest you to immedeatly change your" + \
+            "password." + \
+            "Sincerly, \n Bowtie++ team"
+            subject = 'Changed password for Bowtie++'
+            mail.send_mail(subject, message, 'no-reply@Bowtie', [user.email],
+                fail_silently=False)                
             return Response(status=status.HTTP_200_OK)
 
         return Response(dict(errors=["Wrong password"]), status=status.HTTP_400_BAD_REQUEST)

@@ -204,7 +204,6 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(reverse("user:reset"), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
  
-    
 
     def test_password_reset_with_token(self):
         """ Test the password change with a valid token """
@@ -484,11 +483,20 @@ class PublicUserApiTests(TestCase):
         res = self.client.put(url, {'old_password':'123456789A#a', 'new_password': "123456789A#a!"})
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
-        user = get_user_model().objects.filter(email=payload['email']).first()
+        # check if the mail is send correctly
+        message = "You're password has been changed. If you're familiar with this activity" + \
+            "you can discard this email. Otherwise we suggest you to immedeatly change your" + \
+            "password." + \
+            "Sincerly, \n Bowtie++ team"
+        subject = 'Changed password for Bowtie++'
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].body, message)
+        self.assertEqual(mail.outbox[0].from_email, 'no-reply@Bowtie')
+        self.assertEqual(mail.outbox[0].to, [user.email])
         
-
         # old password
-        
+        user = get_user_model().objects.filter(email=payload['email']).first()
         self.assertFalse(user.check_password("123456789A#a"))
         self.assertTrue(user.check_password('123456789A#a!'))
 
