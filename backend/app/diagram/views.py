@@ -5,7 +5,7 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.response import Response
 from django.core.files import File
 from core.models import Diagram, User, DiagramStat
@@ -13,7 +13,16 @@ from django.conf import settings
 from diagram import serializers
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from django.db.models import Q
+from django.db.models import Q, Avg, Count, Min, Sum, F
+
+
+class IsResearcher(BasePermission):
+    """
+    Allows access only to researchers.
+    """
+
+    def has_permission(self, request, view):
+        return bool(request.user and request.user.is_authenticated and request.user.is_Researcher)
 
 
 class DiagramList(APIView):
@@ -121,3 +130,21 @@ class PrivateDiagrams(APIView):
         serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(Q(is_public=False)
                                                                                 & Q(owner=request.user)), many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class StatsView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    #permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+
+        queryset = DiagramStat.objects.all().annotate(barriers_per_consequences_threats=F('barriers')/(F('threats')+F('consequences')))
+
+        resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
+                                  Avg('totalTimeSpent'),
+                                  Avg('barriers_per_consequences_threats'),
+                                  )
+
+        return Response(resp)
+
+

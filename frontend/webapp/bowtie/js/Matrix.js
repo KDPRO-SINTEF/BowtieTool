@@ -7,16 +7,19 @@ class Matrix{
     }
 
     getEllipseColor(ellipseCell){
+        if(ellipseCell.style.split(";")[1].split("=")[1] === '1'){
+            return '#cafefd';
+        }
         return ellipseCell.style.split(";")[1].split("=")[1];
     }
 
     getLaneValue(laneCell){
         for(const ellipse in laneCell.children){
-            if (this.getEllipseColor(laneCell.children[ellipse]) != '#cafefd'){
+            if (this.getEllipseColor(laneCell.children[ellipse]) !== '#cafefd'){
                 return this.convertColorToValue(this.getEllipseColor(laneCell.children[ellipse]));
             }
         }
-        return null;
+        return -1;
     }
 
     convertColorToValue(color){
@@ -38,7 +41,18 @@ class Matrix{
         }
     }
     getMeanValue(){
-        return (this.getACT()+this.getOPP()+this.getMEA()+this.getMTV())/4;
+        if (!this.allDefined()){
+            return ('Missing parameters');
+        }else{
+            return (this.getACT()+this.getOPP()+this.getMEA()+this.getMTV())/4;
+        }
+    }
+    getProbability(){
+        if (!this.allDefined()){
+            return ('Missing parameters');
+        }else{
+            return this.getMeanValue()/10;
+        }
     }
     getColorIndicator(){
         const mean = this.getMeanValue();
@@ -56,11 +70,11 @@ class Matrix{
                 return '#fe773d';
 
             default:
-                return "#ff0000";
+                return '#ff0000';
         }
     }
-    isAllDefined(){
-        return ((this.threatActors != null) && (this.opportunity != null) && (this.means != null) && (this.motivation != null));
+    allDefined(){
+        return ((this.threatActors !== -1) && (this.opportunity !== -1) && (this.means !== -1) && (this.motivation !== -1));
     }
 
     getACT(){

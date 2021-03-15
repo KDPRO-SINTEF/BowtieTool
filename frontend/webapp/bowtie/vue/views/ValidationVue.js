@@ -16,7 +16,7 @@ let validation_vue = new Vue({
         isValidationSuccessful: false,
         errors: {
             ExpiredTokenErr: {
-                message: 'Sorry, this token is invalid.',
+                message: 'An error occurred. Please check your email box for a valid link.',
                 show: false
             },
             InvalidUrlErr: {
@@ -29,7 +29,11 @@ let validation_vue = new Vue({
         this.processUrlParams(window.location.href);
     },
     mounted() {
-        this.processValidationInfo();
+        if (this.context !== undefined && this.user.id !== undefined && this.user.token !== undefined) {
+            this.processValidationInfo();
+        } else {
+            this.errors.InvalidUrlErr.show = true;
+        }
     },
     methods: {
         // Get the information about the user via the url params

@@ -219,11 +219,20 @@
 	right: 10px;
 }
 
-.geMenubar a.geStatus a#userLoginName {
+.geMenubar a.geStatus a#userLoginName{
 	color: #0080ff;
 	padding-top: 2px;
 	float: left;
 	margin-right: 15px;
+}
+
+.geMenubar #statisticsButton {
+	color: white;
+	background-color: black;
+	border: none;
+	border-radius: 5px;
+	padding: 1% 5%;
+	margin : 0 15px;
 }
 
 .geMenubar a.geStatus button#loginButton {
@@ -282,6 +291,16 @@
 	cursor:pointer;
 	opacity:0.6;
 	filter:alpha(opacity=60);
+}
+#riskButton{
+	color:white;
+	border:none;
+	font: inherit;
+	cursor: pointer;
+	background-color: #02a5b1;
+	border-radius:5px;
+	text-align: center;
+	padding: 0.53em;
 }
 
 .geToolbarContainer .geButton . {
