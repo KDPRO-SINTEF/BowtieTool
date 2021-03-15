@@ -31,14 +31,19 @@
         </div>
         <div class="table_container">
             <keep-alive>
-                <threats-component v-if="currentTab === 'Threats'"></threats-component>
-                <consequences-component v-else="currentTab === 'Consequences'"></consequences-component>
+                <threats-component @threats="processThreats" v-if="currentTab === 'Threats'"></threats-component>
+                <consequences-component @consequences="processConsequences" :event-probability="eventProbability" v-else="currentTab === 'Consequences'"></consequences-component>
             </keep-alive>
+        </div>
+        <div>
+            <result-component :highest-risk-value="highestRiskValue" :accumulated-risk-value="accumulatedRiskValue" :event-probability="eventProbability" :missing-consequence="missingConsequence"></result-component>
         </div>
     </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/vue-material"></script>
     <script>Vue.use(VueMaterial.default)</script>
+
+    <!-- Component templates -->
 
     <script type="text/x-template" id="threats">
             <div>
@@ -46,12 +51,12 @@
                     <md-table-row>
                         <md-table-head class="description">Threat</md-table-head>
                         <md-table-head class="indicator">Indicator</md-table-head>
-                        <md-table-head class="probability" md-numeric>Probability</md-table-head>
+                        <md-table-head class="probability" >Probability</md-table-head>
                     </md-table-row >
                     <md-table-row v-for="threat in threats" v-bind:key="threat.getName()">
                         <md-table-cell class="description"> {{threat.getName()}}</md-table-cell>
-                        <md-table-cell class="indicator" ><div class="indicatorDot" style="width: 25px; height: 25px; border-radius: 20px;" :style="{background: threat.getMatrix().getColorIndicator()}"></div></md-table-cell>
-                        <md-table-cell class="probability" md-numeric>{{threat.getMatrix().getMeanValue()/10}}</md-table-cell>
+                        <md-table-cell class="indicator" ><div class="indicatorDot" v-if="threat.getMatrix().allDefined()" style="width: 25px; height: 25px; border-radius: 20px;" :style="{background: threat.getMatrix().getColorIndicator()}"></div></md-table-cell>
+                        <md-table-cell class="probability" >{{threat.getMatrix().getProbability()}}</md-table-cell>
                     </md-table-row>
                 </md-table>
             </div>
@@ -64,14 +69,51 @@
                     <md-table-head class="description">Consequence</md-table-head>
                     <md-table-head class="impact_value" md-numeric>Impact Value</md-table-head>
                     <md-table-head class="probability" md-numeric>Probability</md-table-head>
+                    <md-table-head class="risk_value" >Risk Value</md-table-head>
                 </md-table-row >
                 <md-table-row v-for="consequence in consequences" v-bind:key="consequence.name">
                     <md-table-cell class="description"> {{consequence.name}}</md-table-cell>
-                    <md-table-cell class="impact_value" md-numeric><md-field><md-input ref="consequence" class="numeric_input" v-model="number" v-on:change="updateImpactValue(consequence, $event)"></md-input></md-field></md-table-cell>
-                    <md-table-cell class="probability" md-numeric><md-field><md-input ref="" class="numeric_input" v-model="number" v-on:change="updateProbability(consequence, $event)"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="impact_value" md-numeric><md-field><md-input class="numeric_input" v-on:change="updateImpactValue(consequence, $event)" type="number" min ="0" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="probability" md-numeric><md-field><md-input class="numeric_input" v-on:change="updateProbability(consequence, $event)" type="number" min ="0" max="1" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="risk_value" >
+                        <span v-if="isNaN(eventProbability)">P(U) not defined</span>
+                        <span v-else-if="!consequence.allDefined()">Missing parameter(s)</span>
+                        <span v-else>{{parseFloat((consequence.impactValue * consequence.probability * eventProbability).toFixed(2))}}</span>
+                    </md-table-cell>
                 </md-table-row>
             </md-table>
-            <button v-on:click="test()">Test</button>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="result">
+        <div>
+            <p id="event_probability">
+                <b> Probability that the unwanted event occurs : </b>
+                <span v-if="eventProbability === 'missing_param'">Missing parameter(s) on at least one threat</span>
+                <span v-else-if="eventProbability === 'no_threats'"> No threats linked to a likelihood matrix on the diagram</span>
+                <span v-else>{{eventProbability}}</span>
+            </p>
+            <p id="highest_risk_value">
+                <b> Highest risk value for one consequence occuring : </b>
+                <span v-if="isNaN(eventProbability)">P(U) not defined</span>
+                <span v-else-if="highestRiskValue === 'no_consequences'"> No consequences defined on the diagram</span>
+                <span v-else-if="highestRiskValue === 'none_defined'"> No consequences parameters defined</span>
+                <span v-else>
+                    {{highestRiskValue}}
+                    <span v-if="missingConsequence" class="warning_missing_consequence"> <br>(Warning : One or multiples consequences parameters are missing)</span>
+                </span>
+
+            </p>
+            <p id="accumulated risk value">
+               <b> The accumulated risk value for all consequences occurring : </b>
+                <span v-if="isNaN(eventProbability)">P(U) not defined</span>
+                <span v-else-if="accumulatedRiskValue === 'no_consequences'"> No consequences defined on the diagram</span>
+                <span v-else-if="accumulatedRiskValue === 'none_defined'"> No consequences parameters defined</span>
+                <span v-else>
+                    {{accumulatedRiskValue}}
+                    <span v-if="missingConsequence" class="warning_missing_consequence"> <br>(Warning : One or multiples consequences parameters are missing)</span>
+                </span>
+            </p>
         </div>
     </script>
     <script src="../vue/components/risk/RiskComputationComponent.js"></script>
