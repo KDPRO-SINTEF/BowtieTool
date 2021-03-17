@@ -10,6 +10,8 @@ from django.utils import timezone
 from xml.dom import minidom
 import django.forms
 from django.forms import ValidationError
+import PIL
+
 
 class UserManager(BaseUserManager):
     """ A manager class for instantiating and updting users
@@ -24,7 +26,7 @@ class UserManager(BaseUserManager):
             validators.validate_password(password=password, user=user)
         except exceptions.ValidationError as e_valid:
             raise ValidationError(e_valid)
-      
+
         user.username = username
         user.set_password(password)
         user.save(using=self._db)
@@ -63,7 +65,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     def __str__(self):
-        return  self.username + " " + self.email 
+        return self.username + " " + self.email
+
 
 class Profile(models.Model):
     """Profile of a user related to authentication features"""
@@ -73,8 +76,10 @@ class Profile(models.Model):
     email_confirmed = models.BooleanField(default=False, unique=False)
     last_login = models.DateTimeField(default=timezone.now, unique=False)
     two_factor_enabled = models.BooleanField(default=False, unique=False)
+
     def __str__(self):
         return self.user.email + " " + str(self.email_confirmed) + " " + str(self.last_login)
+
 
 class DiagramStat(models.Model):
     """ Statistical datas linked to a diagram, used by researchers"""
@@ -82,7 +87,7 @@ class DiagramStat(models.Model):
     consequences = models.IntegerField(default=0)
     barriers = models.IntegerField(default=0)
     causes = models.IntegerField(default=0)
-    totalTimeSpent = models.FloatField(default=0) # total time in minutes passed on this diagram
+    totalTimeSpent = models.FloatField(default=0)  # total time in minutes passed on this diagram
 
     def __str__(self):
         res = "threats: " + str(self.threats) + "\nconsequences: " + \
@@ -106,12 +111,12 @@ class Diagram(models.Model):
     writer = models.ManyToManyField(User, related_name="writers")
     tags = TaggableManager()
     description = models.TextField(default="")
-    lastTimeSpent = models.FloatField(default=0) # time in minutes between the last two updates
+    lastTimeSpent = models.FloatField(default=0)  # time in minutes between the last two updates
 
     diagramStat = models.ForeignKey(DiagramStat,
                                     on_delete=models.CASCADE)
+    #preview = models.ImageField(upload_to='diagrams')
     riskTable = models.TextField(default="")
-
 
     def get_tags(self):
         return self.tags.names()
@@ -146,7 +151,7 @@ class Diagram(models.Model):
                     self.description += node.getAttribute('value') + ", "
             new_total_time_spent = self.lastTimeSpent
             # Check that the diagramStat existed before saving (hence adding it's previous value)
-            if self.id: # self.id==None only if it's a new instances of Diagram (hence diagramStat is None too)
+            if self.id:  # self.id==None only if it's a new instances of Diagram (hence diagramStat is None too)
                 new_total_time_spent += float(self.diagramStat.totalTimeSpent)
             self.diagramStat = DiagramStat.objects.create(consequences=consequences, threats=threats,
                                                           barriers=barriers, causes=causes,

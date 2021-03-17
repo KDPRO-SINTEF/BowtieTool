@@ -2929,14 +2929,19 @@ EditorUi.prototype.isCompatibleString = function (data) {
 };
 
 EditorUi.prototype.openFromDb = function (open_endpoint) {
+
     var token = localStorage.getItem('token');
     if (!token) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
         return;
     }
+    let showDiagramSearch = this.actions.get('showDiagramSearch').funct;
+    showDiagramSearch()
 
+
+/*
     var dlg = new OpenFromDBDialog(this, mxUtils.bind(this, function (graphid) {
-        mxUtils.get(window.SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function (req) {
+        mxUtils.get(open_endpoint + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function (req) {
             switch (req.getStatus()) {
                 case 400:
                     mxUtils.alert(mxResources.get('serverBadRequest'));
@@ -2977,7 +2982,7 @@ EditorUi.prototype.openFromDb = function (open_endpoint) {
         }));
     }), null);
     this.showDialog(dlg.container, 300, 200, true, true);
-    dlg.init(open_endpoint);
+    dlg.init(open_endpoint);*/
 }
 
 EditorUi.prototype.modifyRolesForGraph = function () {
@@ -3069,6 +3074,7 @@ EditorUi.prototype.save = function (name) {
                         return;
                     }
                     if (!this.editor.getGraphId()) {
+                        const formData = new FormData();
                         var postdata = JSON.stringify({
                             'name': name,
                             'diagram': xml,
@@ -3076,7 +3082,102 @@ EditorUi.prototype.save = function (name) {
                             'tags': '',
                             'lastTimeSpent': 10
                         });
-                        //console.log(postdata)
+
+                        var zoomInput = 50
+                        var s = Math.max(0, parseFloat(zoomInput.value) || 100) / 100;
+
+                        var bg = null;
+                        console.log(postdata)
+                        var graph = this.editor.graph;
+
+                        svg = mxUtils.getXml(graph.getSvg(bg, s, 0));
+                        console.log(svg)
+
+                        formData.append('name',name)
+                        formData.append('diagram',xml)
+                        formData.append('is_public','false')
+                        formData.append('tags','')
+                        formData.append('lastTimeSpent','10')
+
+                        format = 'png'
+
+                        const dataURLtoFile = (dataurl, filename) => {
+                            const arr = dataurl.split(',')
+                            const mime = arr[0].match(/:(.*?);/)[1]
+                            const bstr = atob(arr[1])
+                            let n = bstr.length
+                            const u8arr = new Uint8Array(n)
+                            while (n) {
+                                u8arr[n - 1] = bstr.charCodeAt(n - 1)
+                                n -= 1 // to make eslint happy
+                            }
+                            return new File([u8arr], filename, { type: mime })
+                        }
+
+                        svgToPng(svg, (imgData) => {
+
+                            console.log(imgData)
+                          /*  let image_file = new Blob([imgData], {type: 'image/png'})
+                            console.log(image_file)*/
+                            // let image_file = dataURLtoFile(imgData, 'preview_' + name.toString() + '.png')
+                          /*  async function image_fetch(img) {
+                                const image = await fetch(img).then(res => res.blob());
+                                formData.append('preview',image,'preview_'+name.toString()+'.png')
+                            }
+                            image_fetch(imgData).then(r => console.log(r))*/
+
+                        });
+
+                        function svgToPng(svg, callback) {
+                            const url = getSvgUrl(svg);
+                            svgUrlToFormat(url, (imgData) => {
+                                callback(imgData);
+                                URL.revokeObjectURL(url);
+                            });
+                        }
+
+                        function getSvgUrl(svg) {
+                            var svg64 = btoa(unescape(encodeURIComponent(svg)));
+                            var b64start = 'data:image/svg+xml;base64,';
+                            return b64start + svg64;
+                        }
+
+                        function svgUrlToFormat(svgUrl, callback) {
+                            //console.log(svgUrl)
+                            const svgImage = new Image();
+                            svgImage.crossOrigin = "*";
+                            // imgPreview.style.position = 'absolute';
+                            // imgPreview.style.top = '-9999px';
+                            document.body.appendChild(svgImage);
+                            svgImage.onload = function () {
+                                const canvas = document.createElement('canvas');
+                                canvas.width = svgImage.clientWidth;
+                                canvas.height = svgImage.clientHeight;
+                                const canvasCtx = canvas.getContext('2d');
+                                try {
+                                    canvasCtx.drawImage(svgImage, 0, 0);
+                                    let trueFormat = format;
+                                    if (format === 'jpg') {
+                                        trueFormat = "jpeg"
+                                    }
+                                    const type = "image/" + trueFormat
+                                    const imgData = canvas.toDataURL(type);
+                                    callback(imgData);
+                                } catch (e) {
+                                    console.log("Unexpected error occurred during conversion")
+                                    console.log(e.message)
+                                }
+                                svgImage.onerror = function () {
+                                    console.log("could not load image")
+                                }
+                                // document.body.removeChild(imgPreview);
+                            };
+                            svgImage.src = svgUrl;
+
+                        }
+                        //                                 'Content-type': 'application/json',
+                        svgToPng(svg,console.log)
+                        console.log(formData.toString())
                         axios.post(window.SAVE_URL, postdata, {
                             headers: {
                                 'Content-type': 'application/json',
