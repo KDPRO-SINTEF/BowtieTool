@@ -32,7 +32,8 @@ logger = logging.getLogger(__name__)
 IMAGE_PATH = "/app/media/QR/token_qr.png"
 CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validation.html?for=email_confirm&id=%s&token=%s"
 REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/common/authentication.html#login"
-PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validate.html?for=reset_pwd&id=%s&token=%s"
+PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validation.html?for=reset_pwd&id=%s&token=%s"
+PASSWORD_RESET_REQUEST_URL = "http://localhost:8080/app/bowtie/common/authentication.html#password-reset"
 
 
 # User creation and authentication logic
@@ -48,7 +49,7 @@ class CreateUserView(generics.CreateAPIView):
             # generate an activation token for the user
             token = AccountActivationTokenGenerator().make_token(user)
             logger.info('Account with email : %s created on: %s', user.email, timezone.now())
-            message = "To activate your account please click on the following link %s" % (
+            message = "To activate your Bowtie++ account, please click on the following link %s" % (
                 CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
             subject = 'Activate account for no-reply-Bowtieowtie++'
             mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
@@ -58,7 +59,7 @@ class CreateUserView(generics.CreateAPIView):
         
             if isinstance(e, ValidErr):
                 error_codes = e.get_codes()
-
+                # print(e.__dict__)
                 if "password" in error_codes or "username" in error_codes or \
                     ("email" in error_codes and "required" in error_codes["email"]):
            
@@ -70,12 +71,13 @@ class CreateUserView(generics.CreateAPIView):
                     if user.profile.email_confirmed:
                         # creation of an account that has not been confirmed
                         logger.warning("Attempt to create account with existing email %s", "")
-                        message = "Someone tried to create an account into Bowtie++ using " + \
+                        message = "Someone attempted to create an account into Bowtie++ using " + \
                         "this email who is already registered." + \
-                        " If you forgot your password please use the reset link on our login page.\n" + \
-                        "Sincerly, \n Bowtie++ team"
+                        " If you forgot your password, please use the reset link on our login page.\n\n" + \
+                        "Sincerly, \n\n Bowtie++ team"
                         subject = 'Account creation with existing email'
-
+                        mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
+                            fail_silently=False)
                     else:
                         token = AccountActivationTokenGenerator().make_token(user)
                         logger.info('Account with email : %s created on: %s', user.email,
@@ -85,8 +87,6 @@ class CreateUserView(generics.CreateAPIView):
                         subject = 'Activate account for no-reply-Bowtieowtie++'
                         mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
                             fail_silently=False)        
-                        mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                            fail_silently=False)
                     return Response(status=status.HTTP_201_CREATED)
 
                 return Response(status=status.HTTP_400_BAD_REQUEST)
@@ -126,7 +126,7 @@ class CreateTokenView(ObtainAuthToken):
                 token.save()
 
             logger.info("User with email %s logs at %s", user.email, timezone.now())
-          
+    
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         except ValidErr as e:
             return Response(dict(errors=["Invalid credentials"]), 
@@ -162,6 +162,14 @@ class UpdatePassword(APIView):
                             password=old_password):
             user.set_password(new_password)
             user.save()
+            logger.warning("User %s changed password ", user)
+            message = "Your Bowtie++ account password has been changed. If you're familiar with this activity, " + \
+            "you can discard this email. Otherwise, we suggest you to immediatly change your " + \
+            "password at http://localhost:8080/app/bowtie/common/authentication.html#password-reset.\n\n" + \
+            "Sincerly, \n\n Bowtie++ team"
+            subject = 'Changed password for Bowtie++'
+            mail.send_mail(subject, message, 'no-reply@Bowtie', [user.email],
+                fail_silently=False)                
             return Response(status=status.HTTP_200_OK)
 
         return Response(dict(errors=["Wrong password"]), status=status.HTTP_400_BAD_REQUEST)

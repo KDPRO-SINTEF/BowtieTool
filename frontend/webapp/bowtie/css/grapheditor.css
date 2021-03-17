@@ -292,6 +292,16 @@
 	opacity:0.6;
 	filter:alpha(opacity=60);
 }
+#riskButton{
+	color:white;
+	border:none;
+	font: inherit;
+	cursor: pointer;
+	background-color: #02a5b1;
+	border-radius:5px;
+	text-align: center;
+	padding: 0.53em;
+}
 
 .geToolbarContainer .geButton . {
 	float:left;
