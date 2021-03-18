@@ -41,18 +41,19 @@ window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || '/app/bowtie/common/my_account.html
 window.STATISTICS_PAGE = window.STATISTICS_PAGE || '/app/bowtie/common/statistics.html';
 
 // Customer driven project specifics
-window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token/';
-window.USER_INFO = window.USER_INFO || 'http://localhost:8000/api/user/me/';
-window.REGISTER = window.REGISTER || 'http://localhost:8000/api/user/create/';
-window.PWD_RESET = window.PWD_RESET || 'http://localhost:8000/api/user/reset/';
-window.DELETE_ACCOUNT = window.DELETE_ACCOUNT || 'http://localhost:8000/api/user/delete/';
-window.CONFIRM_EMAIL = window.CONFIRM_EMAIL || 'http://localhost:8000/api/user/confirm/';
-window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || 'http://localhost:8000/api/user/totp/create/';
-window.VALIDATE_2FA = window.VALIDATE_2FA || 'http://localhost:8000/api/user/totp/verify/';
-window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || 'http://localhost:8000/api/user/test/totp/';
-window.LOGIN_2FA = window.LOGIN_2FA || 'http://localhost:8000/api/user/totp/login/';
-window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || 'http://localhost:8000/api/user/totp/verify/';
-window.DISABLE_2FA = window.DISABLE_2FA || 'http://localhost:8000/api/user/totp/disable/';
+window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token';
+window.USER_INFO = window.USER_INFO || 'http://localhost:8000/api/user/me';
+window.REGISTER = window.REGISTER || 'http://localhost:8000/api/user/create';
+window.PWD_RESET = window.PWD_RESET || 'http://localhost:8000/api/user/password/reset';
+window.DELETE_ACCOUNT = window.DELETE_ACCOUNT || 'http://localhost:8000/api/user/delete';
+window.CONFIRM_EMAIL = window.CONFIRM_EMAIL || 'http://localhost:8000/api/user/confirm';
+window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || 'http://localhost:8000/api/user/totp/create';
+window.VALIDATE_2FA = window.VALIDATE_2FA || 'http://localhost:8000/api/user/totp/verify';
+window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || 'http://localhost:8000/api/user/test/totp';
+window.LOGIN_2FA = window.LOGIN_2FA || 'http://localhost:8000/api/user/totp/login';
+window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || 'http://localhost:8000/api/user/totp/verify';
+window.DISABLE_2FA = window.DISABLE_2FA || 'http://localhost:8000/api/user/totp/disable';
+window.UPDATE_PASSWORD = window.UPDATE_PASSWORD || 'http://localhost:8000/api/user/password/update';
 
 //URL for statistics
 window.STATISTICS = window.STATISTICS || 'http://localhost:8000/api/diagram/stats';

@@ -61,7 +61,7 @@ let Account2faComponent = {
             this.cleanErrorMessages(this.errors);
             if (this.validTotpCode()) {
                 let params = JSON.stringify({"token_totp": this.qrCode});
-                let validate2faUrl = window.VALIDATE_2FA + this.validationToken;
+                let validate2faUrl = window.VALIDATE_2FA + '/' + this.validationToken;
                 axios.post(validate2faUrl, params, {
                     headers: {
                         Authorization: 'Token ' + this.authToken,
