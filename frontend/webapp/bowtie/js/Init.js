@@ -20,6 +20,7 @@ window.STYLE_PATH = window.STYLE_PATH || 'styles';
 window.CSS_PATH = window.CSS_PATH || 'styles';
 window.OPEN_FORM = window.OPEN_FORM || 'common/open.html';
 window.RISK_FORM = window.RISK_FORM || 'common/risk_computation.html';
+window.SEARCH_DIAGRAM = window.SEARCH_DIAGRAM || 'common/diagram_search.html';
 
 
 // Sets the base path, the UI language via URL param and configures the
@@ -61,6 +62,9 @@ window.STATISTICS = window.STATISTICS || 'http://localhost:8000/api/diagram/stat
 // URLs for diagram save & get from backend
 window.SAVE_URL = window.SAVE_URL || 'http://localhost:8000/api/diagram/private';
 window.UPDATE_URL = window.UPDATE_URL || 'http://localhost:8000/api/diagram/'; // {id}
+window.PUBLIC_DIAGS_URL = window.PUBLIC_DIAGS_URL || 'http://localhost:8000/api/diagram/public/list';
+
+
 
 
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';
