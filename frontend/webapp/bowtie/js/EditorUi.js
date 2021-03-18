@@ -3049,7 +3049,7 @@ EditorUi.prototype.saveFile = function (forceDialog) {
 /**
  * Saves the current graph under the given filename.
  */
-EditorUi.prototype.save = function (name) {
+EditorUi.prototype.save = async function (name) {
     if (name != null) {
         if (this.editor.graph.isEditing()) {
             this.editor.graph.stopEditing();
@@ -3175,12 +3175,34 @@ EditorUi.prototype.save = function (name) {
                             svgImage.src = svgUrl;
 
                         }
-                        //                                 'Content-type': 'application/json',
-                        svgToPng(svg,console.log)
-                        console.log(formData.toString())
-                        axios.post(window.SAVE_URL, postdata, {
+
+                        svgToPng(svg, (imgData) => {
+
+                            let blob = new File([imgData], "preview1", {type: 'image/png'})
+                            formData.append('preview', blob)
+                            /*  let image_file = new Blob([imgData], {type: 'image/png'})
+                              console.log(image_file)*/
+                            // let image_file = dataURLtoFile(imgData, 'preview_' + name.toString() + '.png')
+                            /*  async function image_fetch(img) {
+                                  const image = await fetch(img).then(res => res.blob());
+                                  formData.append('preview',image,'preview_'+name.toString()+'.png')
+                              }
+                              image_fetch(imgData).then(r => console.log(r))*/
+
+                        });
+
+                        async function sleep(ms) {
+                            return new Promise(resolve => setTimeout(resolve, ms));
+                        }
+
+                        await sleep(1000)
+                        /* 'Access-Control-Allow-Origin': '*',
+                             "Access-Control-Allow-Credentials": "*",
+                             'Access-Control-Allow-Methods': "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+                             'Access-Control-Allow-Headers': "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
+                         */
+                            axios.post(window.SAVE_URL, formData, {
                             headers: {
-                                'Content-type': 'application/json',
                                 'Authorization': 'Token ' + token
                             }
                         })
@@ -3227,7 +3249,7 @@ EditorUi.prototype.save = function (name) {
                             'tags': '',
                             'lastTimeSpent': 20
                         });
-                        axios.put(window.UPDATE_URL+this.editor.getGraphId(),putData, {
+                        axios.put(window.UPDATE_URL + this.editor.getGraphId(), putData, {
                             headers: {
                                 'Content-type': 'application/json',
                                 'Authorization': 'Token ' + token

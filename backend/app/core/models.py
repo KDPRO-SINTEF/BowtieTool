@@ -115,7 +115,7 @@ class Diagram(models.Model):
 
     diagramStat = models.ForeignKey(DiagramStat,
                                     on_delete=models.CASCADE)
-    #preview = models.ImageField(upload_to='diagrams')
+    preview = models.ImageField(upload_to='diagrams', blank=True, null=True)
     riskTable = models.TextField(default="")
 
     def get_tags(self):

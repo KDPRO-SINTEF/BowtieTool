@@ -1522,23 +1522,6 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
     else if (format === 'png' || format === 'jpg') {
         const svg = mxUtils.getXml(graph.getSvg(bg, s, b));
 
-        svgToPng(svg, (imgData) => {
-            const pngImage = document.createElement('img');
-            document.body.appendChild(pngImage);
-            pngImage.src = imgData;
-            var a = document.createElement("a"),
-                url = imgData;
-            a.href = url;
-            a.download = name;
-            document.body.appendChild(a);
-            a.click();
-            setTimeout(function () {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            }, 0);
-
-        });
-
         function svgToPng(svg, callback) {
             const url = getSvgUrl(svg);
             svgUrlToFormat(url, (imgData) => {
@@ -1585,7 +1568,22 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
             svgImage.src = svgUrl;
         }
 
-        svgToPng(svg, console.log)
+        svgToPng(svg, (imgData) => {
+            const pngImage = document.createElement('img');
+            document.body.appendChild(pngImage);
+            pngImage.src = imgData;
+            var a = document.createElement("a"),
+                url = imgData;
+            a.href = url;
+            a.download = name;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function () {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 0);
+
+        });
 
         /*
 

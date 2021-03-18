@@ -17,6 +17,20 @@ from diagram import serializers
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import base64
+import io
+from PIL import Image
+
+
+def decodeDesignImage(data):
+    try:
+        data = base64.b64decode(data.encode('UTF-8'))
+        buf = io.BytesIO(data)
+        img = Image.open(buf)
+        return img
+    except:
+        return None
 
 
 class IsResearcher(BasePermission):
@@ -49,8 +63,11 @@ class DiagramList(APIView):
         """Create new Diagram"""
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'])
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            request_img = request.data['preview']
+            print(request.data)
+            if request_img:
+                serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'], preview=request_img)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -94,14 +111,15 @@ class DiagramDetail(APIView):
         if serializer.is_valid():
             if diagramModel.is_public:
                 # TODO Verify this work for public diagrams
-                serializer.save(owner=request.user, is_Public=False, lastTimeSpent=request.data['lastTimeSpent'])
-                #diagramModel.delete()
+                serializer.save(owner=request.user, is_Public=False, lastTimeSpent=request.data['lastTimeSpent'],preview=request.data['preview'])
+                # diagramModel.delete()
             else:
                 diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
                 diagramModel.name = str(request.data['name'])
                 diagramModel.diagram = request.data['diagram']
                 diagramModel.is_public = request.data['is_public']
                 diagramModel.tags = request.data['tags']
+                diagramModel.preview = request.data['preview']
                 diagramModel.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -147,8 +165,8 @@ class StatsView(APIView):
     permission_classes = (IsResearcher,)
 
     def get(self, request):
-
-        queryset = DiagramStat.objects.all().annotate(barriers_per_consequences_threats=F('barriers')/(F('threats')+F('consequences')))
+        queryset = DiagramStat.objects.all().annotate(
+            barriers_per_consequences_threats=F('barriers') / (F('threats') + F('consequences')))
 
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
@@ -156,5 +174,3 @@ class StatsView(APIView):
                                   )
 
         return Response(resp)
-
-
