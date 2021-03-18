@@ -25,13 +25,13 @@
             <div id="user-account-logo">
                 <img src="../images/bowtie-user.svg">
             </div>
-            <account-settings v-if="true" v-on:activate-2fa="switchToTab('2fa')" v-on:disable-2fa="on2faDisabling" :username="userInfo.name" :email="userInfo.email" :auth-token="userInfo.authToken" :is2fa-activated="userInfo.twoFactorAuth" v-bind:clean-error-messages="cleanAllErrors" class="user-account-settings"></account-settings>
+            <account-settings v-if="true" v-on:activate-2fa="switchToTab('2fa')" v-on:disable-2fa="on2faDisabling" v-on:update-password="onPasswordUpdate" :username="userInfo.name" :email="userInfo.email" :auth-token="userInfo.authToken" :is2fa-activated="userInfo.twoFactorAuth" v-bind:clean-error-messages="cleanAllErrors" class="user-account-settings"></account-settings>
             <account-2fa v-if="currentAccountTab === '2fa'" v-on:quit-2fa-window="switchToTab('settings')" v-on:2fa-enabled="on2faActivation" v-bind:clean-error-messages="cleanAllErrors" :auth-token="userInfo.authToken"></account-2fa>
         </div>
         <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
             <div id="liveToast" v-bind:class="['toast', { show: toast.show, hide: !toast.show }]" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header">
-                    <strong class="me-auto">Bowtie++ app</strong>
+                    <strong class="me-auto text-success">Bowtie++ app -- successful operation !</strong>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" v-on:click="toast.show = false"></button>
                 </div>
                 <div class="toast-body">
@@ -68,7 +68,7 @@
         <div class="account-tab-content">
             <keep-alive>
                 <account-profile v-if="currentTab === 'Profile'" :username="username" :email="email"></account-profile>
-                <account-security v-else-if="currentTab === 'Security'" v-on:activate-2fa="$emit('activate-2fa')" v-on:disable-2fa="$emit('disable-2fa')" v-bind:is2fa-activated="is2faActivated" v-bind:auth-token="authToken" v-bind:clean-error-messages="cleanErrorMessages"></account-security>
+                <account-security v-else-if="currentTab === 'Security'" v-on:activate-2fa="$emit('activate-2fa')" v-on:disable-2fa="$emit('disable-2fa')" v-bind:is2fa-activated="is2faActivated" v-bind:auth-token="authToken" v-bind:clean-error-messages="cleanErrorMessages" v-on:update-password="$emit('update-password')"></account-security>
                 <account-danger-zone v-else="currentTab === 'Danger-Zone'"
                                      :auth-token="authToken"></account-danger-zone>
             </keep-alive>
@@ -126,17 +126,21 @@
                 <div class="mb-2">
                     <label class="form-label" for="user-password">Actual password</label>
                     <input v-model="user.password" class="form-control" type="password" id="user-password">
+                    <p v-if="errors.WrongActualPasswordErr.show" class="error-message mt-1">{{ errors.WrongActualPasswordErr.message }}</p>
                 </div>
                 <div class="mb-2">
                     <label class="form-label" for="new-password">New password</label>
                     <input v-model="user.newPassword" class="form-control" type="password" id="new-password">
+                    <p v-if="errors.WeakPasswordErr.show" class="error-message mt-1">{{ errors.WeakPasswordErr.message }}</p>
                 </div>
                 <div class="mb-3">
                     <label class="form-label" for="confirm-password">Confirm new password</label>
                     <input v-model="user.confirmPassword" class="form-control" type="password" id="confirm-password">
+                    <p v-if="errors.ConfirmPasswordErr.show" class="error-message mt-1">{{ errors.ConfirmPasswordErr.message }}</p>
                 </div>
                 <div class="mb-4">
-                    <button type="button" class="btn btn-dark">Update password</button>
+                    <button type="button" class="btn btn-dark" v-on:click="submitPasswordUpdateForm">Update password</button>
+                    <p v-if="errors.MissingFieldsErr.show" class="error-message mt-3">{{ errors.MissingFieldsErr.message }}</p>
                 </div>
             </div>
         </form>
@@ -159,13 +163,14 @@
                 <div class="mb-3">
                     <label for="2fa-disabling-totp-token" class="form-label">Want to disable the 2FA ? Enter your 6-digit code:</label>
                     <input v-model="user.totpToken" id="2fa-disabling-totp-token" class="form-control" placeholder="Ex. 123456">
-                    <p v-for="error in activeErrors" class="error-message mt-1">{{ error.message }}</p>
+                    <p v-for="error in active2faErrors" class="error-message mt-1">{{ error.message }}</p>
                 </div>
                 <button type="button" class="btn btn-danger" v-on:click="submit2faDisabling">Disable 2FA</button>
             </div>
         </div>
     </div>
 </script>
+
 <script type="text/x-template" id="account-danger-zone-template">
 <div class="account-danger-zone">
     <h2 class="mb-3">Danger zone</h2>

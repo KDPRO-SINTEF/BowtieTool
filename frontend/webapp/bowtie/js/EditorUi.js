@@ -2653,7 +2653,7 @@ EditorUi.prototype.getStatisticsWindow = function () {
 EditorUi.prototype.setLoginText = function (value) {
     let uinfo = localStorage.getItem('username');
     //let isResearcher = localStorage.getItem('isResearcher');
-    let isResearcher = true;
+    let isResearcher = false;
     this.loginContainer.innerHTML = '';
 
     if (uinfo !== null) {
