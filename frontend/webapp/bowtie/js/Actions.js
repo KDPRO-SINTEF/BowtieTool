@@ -32,7 +32,7 @@ Actions.prototype.init = function () {
         window.open(ui.getUrl());
     });
     this.addAction('openDb...', function () {
-        ui.openFromDb(window.USER_GRAPHS);
+        ui.openFromDb(window.SEARCH_DIAGRAM);
     }).isEnabled = isLoggedIn;
     this.addAction('openLocal...', function () {
         window.openNew = true;
@@ -622,6 +622,10 @@ Actions.prototype.init = function () {
         add Action to show Risk computation dialog
      */
     this.addAction('showRisk', function(){ui.showDialog(new RiskDialog().container, 1000, 750, true, true);});
+
+    this.addAction('showDiagramSearch',function (){
+        ui.showDialog(new OpenFromDBDialog().container,850,500,true,true)
+    });
 
     // Option actions
     var action = null;

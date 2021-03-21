@@ -60,7 +60,7 @@ let LoginComponent =  {
             if (this.checkLoginForm()) {
                 if (this.user.twoFactorAuth) {
                     let params = JSON.stringify({ "token_totp": this.user.totpToken});
-                    let url = window.LOGIN_2FA + this.user.id + '/' + this.user.loginToken;
+                    let url = window.LOGIN_2FA + '/' + this.user.id + '/' + this.user.loginToken;
                     axios.post(url, params, {
                         headers: {
                             'Content-type': 'application/json'
@@ -94,10 +94,12 @@ let LoginComponent =  {
             let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             return mailRegex.test(this.user.email);
         },
+        // Checks if the totp code matches the right pattern
         validTotpCode: function() {
             let totpCodeRegx = /^[0-9]{6}$/;
             return totpCodeRegx.test(this.user.totpToken);
         },
+        // Sets the login mode (2FA login mode or normal login mode) according to the first login form submission
         setLoginMode: function(data) {
             if (data.uidb64 !== undefined && data.token !== undefined) {
                 this.user.id = data.uidb64;
@@ -135,6 +137,7 @@ let LoginComponent =  {
                 console.log('Unexpected error while logging in');
             }
         },
+        //  Handles http errors coming from the login form submission in 2FA login mode
         filter2faLoginErrors: function(error) {
             switch(error.status) {
                 case 400:

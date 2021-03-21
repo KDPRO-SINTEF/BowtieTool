@@ -1,5 +1,8 @@
 #  Module docstring
+import operator
 import os
+from functools import reduce
+
 from django.http import Http404, HttpResponse
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import TokenAuthentication
@@ -42,7 +45,6 @@ class DiagramList(APIView):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    # TODO: make filename safe (handles accents)
     def post(self, request):
         """Create new Diagram"""
         serializer = serializers.DiagramSerializer(data=request.data)
@@ -63,7 +65,12 @@ class DiagramDetail(APIView):
         else:
             queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(is_public=True))
         try:
-            return queryset.get(pk=pk)
+            print(queryset)
+            for i in queryset:
+                print(i.id)
+            queryset = queryset.get(pk=pk)
+            print(queryset)
+            return queryset
         except Diagram.DoesNotExist:
             raise Http404
 
@@ -85,14 +92,17 @@ class DiagramDetail(APIView):
         diagramModel = self.get_object(pk)
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            if not diagramModel.is_public:
-                diagramModel.delete()
-            diagramModel.lastTimeSpent= float(request.data['lastTimeSpent'])
-            diagramModel.name = str(request.data['name'])
-            diagramModel.diagram = request.data['diagram']
-            diagramModel.is_public = request.data['is_public']
-            diagramModel.tags = request.data['tags']
-            diagramModel.save()
+            if diagramModel.is_public:
+                # TODO Verify this work for public diagrams
+                serializer.save(owner=request.user, is_Public=False, lastTimeSpent=request.data['lastTimeSpent'])
+                #diagramModel.delete()
+            else:
+                diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
+                diagramModel.name = str(request.data['name'])
+                diagramModel.diagram = request.data['diagram']
+                diagramModel.is_public = request.data['is_public']
+                diagramModel.tags = request.data['tags']
+                diagramModel.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,11 +122,11 @@ class PublicDiagrams(APIView):
         search = request.GET.get("search")
         if search:
             serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(
-                Q(public=True) | reduce(operator.and_, (Q(description__icontains=x) for x in search.split()))),
+                Q(is_public=True) | reduce(operator.and_, (Q(description__icontains=x) for x in search.split()))),
                 many=True
             )
         else:
-            serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(public=True), many=True)
+            serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(is_public=True), many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -134,7 +144,7 @@ class PrivateDiagrams(APIView):
 
 class StatsView(APIView):
     authentication_classes = (TokenAuthentication,)
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsResearcher,)
 
     def get(self, request):
 
@@ -142,7 +152,7 @@ class StatsView(APIView):
 
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
-                                  Avg('barriers_per_consequences_threats'),
+                                  Avg('barriers_per_consequences_threats')
                                   )
 
         return Response(resp)

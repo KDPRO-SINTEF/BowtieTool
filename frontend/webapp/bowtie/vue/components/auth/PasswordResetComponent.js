@@ -100,7 +100,7 @@ let PasswordResetComponent = {
             }
             if (this.checkNewPwdForm()) {
                 let params = JSON.stringify({'password': this.user.newPassword });
-                let url = window.PWD_RESET + this.user.id + '/' + this.user.resetPwdToken;
+                let url = window.PWD_RESET + '/'+ this.user.id + '/' + this.user.resetPwdToken;
                 axios.post(url, params, {
                     headers: {
                         'Content-type': 'application/json'

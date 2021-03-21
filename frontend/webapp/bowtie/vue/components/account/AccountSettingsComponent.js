@@ -1,3 +1,9 @@
+/**
+ * AccountProfileComponent
+ * Displays the general information about the user
+ * Related template: common/my_account.html
+ */
+
 let AccountProfileComponent = {
     template: '#account-profile-template',
     props: {
@@ -5,6 +11,12 @@ let AccountProfileComponent = {
         email: String
     }
 }
+
+/**
+ * AccountSecurityComponent
+ * Handles the password update and 2FA activation/deactivation processes (calls to Account2faComponent)
+ * Related template: common/my_account.html
+ */
 
 let AccountSecurityComponent = {
     template: '#account-security-template',
@@ -22,6 +34,22 @@ let AccountSecurityComponent = {
                 totpToken: '',
             },
             errors: {
+                MissingFieldsErr: {
+                    message: 'All fields are required. Please fill in them.',
+                    show: false
+                },
+                WeakPasswordErr: {
+                    message: 'This password is not strong enough.',
+                    show: false
+                },
+                ConfirmPasswordErr: {
+                    message: 'The two typed passwords are different.',
+                    show: false
+                },
+                WrongActualPasswordErr: {
+                    message: 'Invalid password provided.',
+                    show: false
+                },
                 ExpiredTotpTokenErr: {
                     message: "This code has expired, try with a new one.",
                     show: false
@@ -38,11 +66,48 @@ let AccountSecurityComponent = {
         }
     },
     computed: {
-        activeErrors: function() {
+        active2faErrors: function() {
             return Object.values(this.errors).filter(error => error.show === true);
         }
     },
     methods: {
+        // Checks if the password update form is valid
+        checkPasswordUpdateForm: function() {
+            let isValid = true;
+            this.cleanErrorMessages(this.errors);
+            if (this.user.password === '' || this.user.newPassword === '' || this.user.confirmPassword === '') {
+                this.errors.MissingFieldsErr.show = true;
+                isValid = false;
+            }
+            if ((this.user.newPassword !== this.user.confirmPassword) && this.user.confirmPassword !== '') {
+                this.errors.ConfirmPasswordErr.show = true
+                this.user.confirmPassword = '';
+                isValid = false;
+            }
+            return isValid;
+        },
+        // Submits the password update form
+        submitPasswordUpdateForm: function() {
+            if (this.checkPasswordUpdateForm()) {
+                let params = JSON.stringify({ 'new_password': this.user.newPassword, 'old_password': this.user.password});
+                axios.put(window.UPDATE_PASSWORD, params, {
+                    headers: {
+                        Authorization: 'Token ' + this.authToken,
+                        'Content-type': 'application/json'
+                    }
+                })
+                    .then(res => {
+                        this.user.password = '';
+                        this.user.newPassword = '';
+                        this.user.confirmPassword = '';
+                        this.$emit('update-password');
+                    })
+                    .catch(error => {
+                        if (error.response) this.filterPasswordUpdateErrors(error.response);
+                    })
+            }
+        },
+        // Submits the 2FA disabling form
         submit2faDisabling: function() {
             this.cleanErrorMessages(this.errors);
             if (!this.validTotpCode()) {
@@ -69,10 +134,28 @@ let AccountSecurityComponent = {
 
 
         },
+        // Checks if the totp code matches the right pattern
         validTotpCode: function() {
             let totpCodeRegx = /^[0-9]{6}$/;
             return totpCodeRegx.test(this.user.totpToken);
         },
+        // Handles http errors coming from the password update form submission
+        filterPasswordUpdateErrors: function(error) {
+            switch(error.status) {
+                case 400:
+                    if (error.data.errors !== undefined && error.data.errors[0] === "Wrong password") {
+                        console.log(error.data.errors[0]);
+                        this.errors.WrongActualPasswordErr.show = true;
+                        this.user.password = '';
+                    } else if (error.data.non_field_errors !== undefined) {
+                        this.errors.WeakPasswordErr.show = true;
+                        this.user.newPassword = '';
+                        this.user.confirmPassword = '';
+                    }
+                    break;
+            }
+        },
+        // Handles http errors coming from the 2FA disabling form submission
         filter2faDisablingErrors: function(error) {
             switch(error.status) {
                 case 400:
@@ -91,6 +174,12 @@ let AccountSecurityComponent = {
     },
 }
 
+/**
+ * AccountDangerZoneComponent
+ * Handles the account deletion process
+ * Related template: common/my_account.html
+ */
+
 let AccountDangerZoneComponent = {
     template: '#account-danger-zone-template',
     props: {
@@ -108,6 +197,7 @@ let AccountDangerZoneComponent = {
         }
     },
     methods: {
+        // Checks if the account deletion form is valid
         checkDeleteAccountForm: function() {
           if (this.password === '') {
               this.errors.emptyPasswordErr.show = true;
@@ -115,13 +205,14 @@ let AccountDangerZoneComponent = {
           }
           return true;
         },
-
+        // Submits the account deletion form
         submitAccountDeletionForm: function() {
             if (this.checkDeleteAccountForm()) {
                 let userConfirmation = confirm('Continue by deleting your account ?');
                 if (userConfirmation) this.confirmAccountDeletion();
             }
         },
+        // Requests confirmation from the user for account deletion
         confirmAccountDeletion: function() {
             let params = JSON.stringify({ password: this.password })
             axios.post(window.DELETE_ACCOUNT, params, {
@@ -139,6 +230,13 @@ let AccountDangerZoneComponent = {
         }
     }
 }
+
+/**
+ * AccountSettingsComponent
+ * Unifies all the previous component as general settings, and handles the render of these components
+ * Related template: common/my_account.html
+ */
+
 
 let AccountSettingsComponent = {
     template: '#account-settings-template',

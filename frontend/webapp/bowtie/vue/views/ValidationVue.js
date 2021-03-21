@@ -57,7 +57,7 @@ let validation_vue = new Vue({
         // Makes the necessary validations according to the user information
         processValidationInfo: function() {
             let url = '';
-            let user_info = this.user.id + '/' + this.user.token;
+            let user_info = '/' + this.user.id + '/' + this.user.token;
             if (this.context === 'email_confirm') {
                 url = window.CONFIRM_EMAIL + user_info;
                 axios.get(url)
