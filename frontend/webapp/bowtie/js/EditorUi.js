@@ -2640,14 +2640,6 @@ EditorUi.prototype.getContextualLoginText = function () {
 };
 
 /**
- * Creates the statistics button and bind it to the statistics window
- */
-EditorUi.prototype.getStatisticsWindow = function () {
-
-}
-
-
-/**
  * Creates a new toolbar for the given container.
  */
 EditorUi.prototype.setLoginText = function (value) {
