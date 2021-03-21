@@ -8,9 +8,11 @@ import six
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
+
 class TagsField(serializers.Field):
     """ custom field to serialize/deserialize TaggableManager instances.
     """
+
     def to_representation(self, value):
         """ in drf this method is called to convert a custom datatype into a primitive,
         serializable datatype.
@@ -30,7 +32,8 @@ class TagsField(serializers.Field):
         """
         return data
 
-class DiagramSerializer( serializers.ModelSerializer):
+
+class DiagramSerializer(serializers.ModelSerializer):
     """Serializer for diagram objects"""
     tags = TagsField(source='get_tags')
 

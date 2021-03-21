@@ -375,9 +375,29 @@ var UserControlDialog = function (editorUi) {
 };
 
 /**
+ * New Bowtie++ OpenFromDbDialog which launch new VueJs Diagram_searchVue
  * Constructs a new filename dialog.
  */
-var OpenFromDBDialog = function (editorUi, fn, cancelFn) {
+var OpenFromDBDialog = function () {
+
+
+    var iframe = document.createElement('iframe');
+    iframe.style.backgroundColor = 'transparent';
+    iframe.allowTransparency = 'true';
+    iframe.style.borderStyle = 'none';
+    iframe.style.borderWidth = '0px';
+    iframe.style.overflow = 'hidden';
+    iframe.frameBorder = '0';
+    // Adds padding as a workaround for box model in older IE versions
+    var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
+
+    iframe.setAttribute('width', 850 + 'px');
+    iframe.setAttribute('height', 500 + 'px');
+    iframe.setAttribute('src', SEARCH_DIAGRAM);
+    this.container = iframe;
+
+    /*
+    var OpenFromDBDialog = function (editorUi, fn, cancelFn) {
     var row, td;
 
     var table = document.createElement('table');
@@ -491,6 +511,7 @@ var OpenFromDBDialog = function (editorUi, fn, cancelFn) {
     };
     table.appendChild(tbody);
     this.container = table;
+    */
 };
 
 /**

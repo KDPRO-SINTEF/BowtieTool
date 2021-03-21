@@ -50,7 +50,7 @@
             <div class="mb-3">
                 <label for="login-password" class="form-label">Password</label>
                 <input v-model="user.password" type="password" id="login-password" class="form-control" :disabled="user.twoFactorAuth">
-                <button v-on:click="$emit('switch-to-tab', 'password-reset')" id="pwd-reset-link" type="button" class="btn-tab">Forgot password?</button>
+                <button v-on:click="$emit('switch-to-tab', 'password-reset')" id="pwd-reset-link" type="button" class="btn-tab mt-1">Forgot password?</button>
                 <p v-show="errors.InvalidCredentialsErr.show" class="error-message mt-2">{{ errors.InvalidCredentialsErr.message }}</p>
             </div>
             <div v-if="user.twoFactorAuth" class="mb-3">
@@ -98,7 +98,7 @@
          </div>
          <button v-on:click="submitRegisterForm" type="button" class="btn btn-success">Register</button>
      </form>
-     <p v-show="errors.MissingFieldsErr.show" class="error-message mt-2">{{ errors.MissingFieldsErr.message }}</p>
+     <p v-show="errors.MissingFieldsErr.show" class="error-message mt-3">{{ errors.MissingFieldsErr.message }}</p>
  </div>
 </script>
 
