@@ -16571,12 +16571,15 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   position: relative; }
 
 hr {
-  width: 10%;
+  width: 40%;
   height: 1px;
   border-radius: 3px;
-  margin-left: 0; }
+  margin-left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
   hr.line-primary {
-    background-color: #5e72e4; }
+    background-color: #5e72e4C4; }
   hr.line-info {
     background-color: #11cdef; }
   hr.line-success {
@@ -16586,7 +16589,7 @@ hr {
   hr.line-danger {
     background-color: #f5365c; }
   hr.line-deafult {
-    background-color: #172b4d; }
+    background-color: #172b4d56; }
 
 .icon-actions > a {
   display: inline-block;
