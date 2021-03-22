@@ -58,7 +58,7 @@
                     </h2>
                   </div>
                   <div class="row justify-content-center mt-4">
-                    <a href="#safety_security" class="btn btn-success" role="button">En savoir plus sur les diagrammes Bowtie </a>
+                    <a href="#diag_bowtie" class="btn btn-success" role="button">En savoir plus sur les diagrammes Bowtie </a>
                   </div>
                 </div>
               </div>
@@ -534,42 +534,132 @@
             </div>
           </section>
 
+          <!-- EN SAVOIR PLUS -->
           <section id="en-savoir-plus" class="section">
             <div id="safety_security" class="container">
               <div class="row">
                 <div class="col-md-10 ml-auto mr-auto text-center">
                   <h3 class="display-3 mb-3">En savoir plus</h3>
+
+                  <!-- DIAGRAMME BOWTIE -->
+                  <h4 id="diag_bowtie" class="text-left mt-3">Diagramme Bowtie</h4>
+                  <img class="p-5" width="100%" src="image/bowtie_element/bowtie_schema.png">
+                  <p class="lead text-justify">
+                    Les diagrammes Bowtie sont composés de plusieurs éléments reliés entre eux par des flèches.
+                    La partie gauche précède l'événement et la partie droite y succède.
+                  </p>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_hazard.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Danger</b>, vecteur de risque inhérent à l'activité.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_unwanted-event.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Événement redouté</b>, situation analysée.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_asset.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Ressource</b>, infrastructure liée à l'événement.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_threat.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Menace</b>, risque lié à la security.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_cause.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Cause</b>, risque lié à la safety.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_barrier_prev.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Barrière de prévention</b>, prévient contre les causes et les menaces.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_escal_factor.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Facteur d'aggravement</b>, facteur pouvant neutraliser une barrière.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_consequence.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Conséquence</b>, répercussion de l'événement redouté.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/bowtie_barr_mitig.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Barrière d'atténuation</b>, atténue les conséquences.
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- DUALITE SAFETY/SECURITY -->
                   <h4 class="text-left mt-3">Dualité *safety* / *security*</h4>
                   <p class="lead text-justify">
-                    Les risques liées à un événement sont de deux types distincts : *safety* et *security*. Les terminologies françaises pouvant
-                    porter à confusion, les terminologies anglaises sont le plus souvent utilisées. La *security* désigne l’ensemble des
-                    moyens dédiés à la prévention, à la mitigation et à la protection contre les actes de malveillance appelés menaces. La
-                    *safety* fait référence aux mêmes moyens appliqués aux risques à caractère accidentel, on parle alors de causes.
+                    La *safety* désigne les risques liés à une cause accidentelle et la *security*, les risques liés à
+                    une menace malveillante.
                   </p>
-                  <h4 class="text-left mt-3">Contexte du projet</h4>
-                  <p class="lead text-justify">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet,
-                    adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue,
-                    euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat.
-                    Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat
-                    libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim.
-                    Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-                    cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales
-                    hendrerit.
-                  </p>
-                  <h4 class="text-left mt-3">Le calcul de risques (à voir si on laisse)</h4>
-                  <p class="lead text-justify">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus. Suspendisse lectus tortor, dignissim sit amet,
-                    adipiscing nec, ultricies sed, dolor. Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue,
-                    euismod non, mi. Proin porttitor, orci nec nonummy molestie, enim est eleifend mi, non fermentum diam nisl sit amet erat.
-                    Duis semper. Duis arcu massa, scelerisque vitae, consequat in, pretium a, enim. Pellentesque congue. Ut in risus volutpat
-                    libero pharetra tempor. Cras vestibulum bibendum augue. Praesent egestas leo in pede. Praesent blandit odio eu enim.
-                    Pellentesque sed dui ut augue blandit sodales. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
-                    cubilia Curae; Aliquam nibh. Mauris ac mauris sed pede pellentesque fermentum. Maecenas adipiscing ante non diam sodales
-                    hendrerit.
-                  </p>
+                  <div class="row justify-content-center m-3">
+                    <div class="col-md-5 mr-3">
+                      <img class="rounded shadow" width="100%" src="image/safety_example.jpg">
+                      <h3 class="display-4 mt-3">Safety</h3>
+                    </div>
+
+                    <div class="col-md-5 ml-3">
+                      <img class="rounded shadow" width="100%" src="image/security_example.jpg">
+                      <h3 class="display-4 mt-3">Security</h3>
+                    </div>
+                  </div>
                 </div>
               </div>
+
             </div>
           </section>
 
