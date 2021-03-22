@@ -56,58 +56,58 @@
 	<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="geEditor">
-	<script type="text/javascript">
-		// Extends EditorUi to update I/O action states based on availability of backend
-		(function()
-		{
-			var editorUiInit = EditorUi.prototype.init;
-			
-			EditorUi.prototype.init = function()
+		<script type="text/javascript">
+			// Extends EditorUi to update I/O action states based on availability of backend
+			(function()
 			{
-				editorUiInit.apply(this);
-				this.actions.get('export').setEnabled(false);
+				var editorUiInit = EditorUi.prototype.init;
 
-				// Updates action states which require a backend
-				if (!Editor.useLocalStorage)
+				EditorUi.prototype.init = function()
 				{
-					mxUtils.post(OPEN_URL, '', mxUtils.bind(this, function(req)
+					editorUiInit.apply(this);
+					this.actions.get('export').setEnabled(false);
+
+					// Updates action states which require a backend
+					if (!Editor.useLocalStorage)
 					{
-						var enabled = req.getStatus() != 404;
-						//this.actions.get('open').setEnabled(enabled || Graph.fileSupport);
-						this.actions.get('import').setEnabled(enabled || Graph.fileSupport);
-						this.actions.get('export').setEnabled(true);
+						mxUtils.post(OPEN_URL, '', mxUtils.bind(this, function(req)
+						{
+							var enabled = req.getStatus() != 404;
+							//this.actions.get('open').setEnabled(enabled || Graph.fileSupport);
+							this.actions.get('import').setEnabled(enabled || Graph.fileSupport);
+							this.actions.get('export').setEnabled(true);
 
-						// Bellow are supposed to be available only when logged in
-						this.actions.get('save').setEnabled(true); // Save the diagram online but ask for name only first time
-						this.actions.get('saveAs').setEnabled(enabled); // Like save but always ask for name of diagram
-					}));
-				}
-			};
-			
-			// Adds required resources (disables loading of fallback properties, this can only
-			// be used if we know that all keys are defined in the language specific file)
-			mxResources.loadDefaultBundle = false;
-			var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
-				mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
+							// Bellow are supposed to be available only when logged in
+							this.actions.get('save').setEnabled(true); // Save the diagram online but ask for name only first time
+							this.actions.get('saveAs').setEnabled(enabled); // Like save but always ask for name of diagram
+						}));
+					}
+				};
 
-			// Fixes possible asynchronous requests
-			mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr)
-			{
-				// Adds bundle text to resources
-				mxResources.parse(xhr[0].getText());
-				
-				// Configures the default graph theme
-				var themes = new Object();
-				themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement(); 
-				
-				// Main
-				var editorUi = new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
-				window.currentUI = editorUi;
-			}, function()
-			{
-				document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
-			});
-		})();
-	</script>
+				// Adds required resources (disables loading of fallback properties, this can only
+				// be used if we know that all keys are defined in the language specific file)
+				mxResources.loadDefaultBundle = false;
+				var bundle = mxResources.getDefaultBundle(RESOURCE_BASE, mxLanguage) ||
+					mxResources.getSpecialBundle(RESOURCE_BASE, mxLanguage);
+
+				// Fixes possible asynchronous requests
+				mxUtils.getAll([bundle, STYLE_PATH + '/default.xml'], function(xhr)
+				{
+					// Adds bundle text to resources
+					mxResources.parse(xhr[0].getText());
+
+					// Configures the default graph theme
+					var themes = new Object();
+					themes[Graph.prototype.defaultThemeName] = xhr[1].getDocumentElement();
+
+					// Main
+					var editorUi = new EditorUi(new Editor(urlParams['chrome'] == '0', themes));
+					window.currentUI = editorUi;
+				}, function()
+				{
+					document.body.innerHTML = '<center style="margin-top:10%;">Error loading resource files. Please check browser console.</center>';
+				});
+			})();
+		</script>
 </body>
 </html>

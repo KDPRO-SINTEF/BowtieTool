@@ -1,0 +1,45 @@
+html, body {
+  height: 100%;
+  }
+body {
+  padding: 70px 0 0 0;
+  }
+
+.navmenu {
+  padding-top: 50px;
+  }
+
+.navbar {
+  display: block;
+  text-align: center;
+  }
+.navbar-brand {
+  display: inline-block;
+  float: none;
+  }
+.navbar-toggler {
+  position: absolute;
+  float: left;
+  }
+
+.container {
+  max-width: 100%;
+  }
+
+@media (min-width: 1px) {
+  .navbar-toggler {
+    display: block !important;
+    }
+  }
+
+@media (min-width: 992px) {
+  body {
+    padding: 0 0 0 300px;
+    }
+  .navmenu {
+    padding-top: 0;
+    }
+  .navbar {
+    display: none !important; /* IE8 fix */
+    }
+  }
