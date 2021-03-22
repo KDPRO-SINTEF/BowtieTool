@@ -165,6 +165,11 @@ Graph = function(container, model, renderHint, stylesheet, themes)
 			  //set color of cell
 			  var s = 'ellipse;' +'fillColor='+ fill+';'
 			  cell.setStyle(s)
+
+			  if(cell.getParent().getParent().edges.length > 0){
+			  	this.updateThreatColor(cell.getParent().getParent().edges[0].source, cell.getParent().getParent());
+			  }
+
 			  this.refresh()
 			  //console.log(cell.getStyle())
 		    // Do something useful with cell and consume the event
@@ -2614,6 +2619,31 @@ Graph.prototype.zapGremlins = function(text)
 	returns the threats and its associated matrix cells IDs
  */
 
+Graph.prototype.updateThreatColor = function(threatCell, matrixCell){
+	let matrix = new Matrix(matrixCell);
+	if(matrix.allDefined()){
+		switch(matrix.getColorIndicator()){
+			case '#00ff06':
+				threatCell.setStyle('shape=mxgraph.bowtie.verylowthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+				break;
+			case '#a7ec67':
+				threatCell.setStyle('shape=mxgraph.bowtie.lowthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+				break;
+			case '#fffe00':
+				threatCell.setStyle('shape=mxgraph.bowtie.mediumthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+				break;
+			case '#fe773d':
+				threatCell.setStyle('shape=mxgraph.bowtie.highthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+				break;
+			case '#ff0000':
+				threatCell.setStyle('shape=mxgraph.bowtie.veryhighthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+				break;
+			default:
+				break;
+		}
+	}
+}
+
 Graph.prototype.getAllThreatsID = function()
 {
 	let allCells = this.model.cells;
@@ -3488,7 +3518,7 @@ HoverIcons.prototype.setCurrentState = function(state)
 		{
 			this.graph.cellRenderer.redraw(state, false, this.isRendering());
 		}
-		
+
 		state = mxGraphViewValidateCellState.apply(this, arguments);
 		
 		// Adds to the list of edges that may intersect with later edges
