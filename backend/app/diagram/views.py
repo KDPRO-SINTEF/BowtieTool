@@ -154,6 +154,7 @@ class StatsView(APIView):
                                   Avg('totalTimeSpent'),
                                   Avg('barriers_per_consequences_threats')
                                   )
+        resp['count'] = DiagramStat.objects.count()
 
         return Response(resp)
 
