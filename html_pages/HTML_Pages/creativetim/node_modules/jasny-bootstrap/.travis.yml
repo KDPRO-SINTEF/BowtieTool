@@ -1,0 +1,44 @@
+language: node_js
+node_js:
+  - '4'
+install:
+  - gem install jekyll html-proofer
+  - npm install -g grunt-cli
+  - npm install
+env:
+  matrix:
+    - TWBS_TEST=core
+    - TWBS_TEST=validate-html
+matrix:
+  fast_finish: true
+after_success:
+  - grunt dist
+  - cd dist;
+  - zip -r jasny-bootstrap-${TRAVIS_TAG}.zip *
+  - tar -zcvf jasny-bootstrap-${TRAVIS_TAG}.tar.gz *
+  - ls
+  - cd ..
+  - git reset --hard
+  - npm --no-git-tag-version version ${TRAVIS_TAG}
+deploy:
+  - provider: releases
+    api_key:
+      secure: "utwXW5WGahq3fXq5q3x5ajdbbj6lUEpHgLW9GVZy5Mf+4MzU4CeZpB3SLfV6KDegzVMZFwd2C6MG/NZZ2Fnqoz9W22DBxMFTPHbmi69IKMd7lHG3/m0bU4Zj/AuS9+Lnky6ilf+j4BWCX4+2XbMxH4/O9oT87R8NGDQvArW2CBk="
+    file: 
+      - dist/jasny-bootstrap-${TRAVIS_TAG}.zip
+      - dist/jasny-bootstrap-${TRAVIS_TAG}.tar.gz
+    skip_cleanup: true
+    on:
+      branch: master
+      repo: jasny/bootstrap
+      tags: true
+  - provider: npm
+    email: arnold@jasny.net
+    api_key:
+      secure: "JG2WD24x0TVSVcG5psFUAgdnWiGDdHeZS9PF+f9WuPzWHiwvMj5JePkPKQEbWuPFZWzpV7y6UGOkjxd87or5WmqVDWcQEn+94OzH1LBIUvlHJJtmyD4BxymEXhy6ftmJyeufTwhbDfNnuh5cDn9J0H5aRl1SZTzwKedGlCrjgiE="
+    skip_cleanup: true
+    on: 
+      branch: master
+      repo: jasny/bootstrap
+      tags: true
+

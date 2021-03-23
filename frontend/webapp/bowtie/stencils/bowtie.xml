@@ -117,6 +117,101 @@
 			<stroke></stroke>
 		</foreground>
 	</shape>
+	<shape name="verylowthreat" h="80" w="120" aspect="fixed" strokewidth="inherit">
+	<connections>
+		<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+		<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+	</connections>
+	<background>
+		<stroke></stroke>
+		<fillcolor color="#00ff06"></fillcolor>
+		<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+		<fillstroke></fillstroke>
+	</background>
+	<foreground>
+		<stroke></stroke>
+		<fillcolor color="#FFFFFF"></fillcolor>
+		<path><roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+		<fillstroke></fillstroke>
+		<stroke></stroke>
+	</foreground>
+	</shape>
+	<shape name="lowthreat" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#a7ec67"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path><roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="mediumthreat" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#fffe00"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path><roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="highthreat" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#fe773d"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path><roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="veryhighthreat" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#ff0000"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path><roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
 	<shape name="cause" h="80" w="120" aspect="fixed" strokewidth="inherit">
 		<connections>
 			<constraint x="1" y="0.5" perimeter="0" name="E"></constraint>
@@ -185,56 +280,6 @@
 		<image src="stencils/elements/hazard_128x128.png" x="0" y="0" w="120" h="80" flipH="0"/>
     </foreground>
   </shape>
-	<shape aspect="fixed" h="20" name="lowthreat" strokewidth="0" w="120">
-    	<connections>
-    	</connections>
-    	<foreground>
-			<rect h="20" w="120" x="0" y="0"/>
-			<strokecolor color="#00000"></strokecolor>
-			<fillstroke/>
-			<image src="stencils/elements/lowthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
-		</foreground>
-	</shape>
-	<shape aspect="fixed" h="20" name="lowmediumthreat" strokewidth="0" w="120">
-    	<connections>
-    	</connections>
-    	<foreground>
-			<rect h="20" w="120" x="0" y="0"/>
-			<strokecolor color="#00000"></strokecolor>
-			<fillstroke/>
-			<image src="stencils/elements/lowmediumthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
-		</foreground>
-	</shape>
-	<shape aspect="fixed" h="20" name="mediumthreat" strokewidth="0" w="120">
-    	<connections>
-    	</connections>
-    	<foreground>
-			<rect h="20" w="120" x="0" y="0"/>
-			<strokecolor color="#00000"></strokecolor>
-			<fillstroke/>
-			<image src="stencils/elements/mediumthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
-		</foreground>
-	</shape>
-	<shape aspect="fixed" h="20" name="mediumhighthreat" strokewidth="0" w="120">
-    	<connections>
-    	</connections>
-    	<foreground>
-			<rect h="20" w="120" x="0" y="0"/>
-			<strokecolor color="#00000"></strokecolor>
-			<fillstroke/>
-			<image src="stencils/elements/mediumhighthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
-		</foreground>
-	</shape>
-	<shape aspect="fixed" h="20" name="highthreat" strokewidth="0" w="120">
-    	<connections>
-    	</connections>
-    	<foreground>
-			<rect h="20" w="120" x="0" y="0"/>
-			<strokecolor color="#00000"></strokecolor>
-			<fillstroke/>
-			<image src="stencils/elements/highthreat.svg" x="0" y="0" w="120" h="20" flipH="0"/>
-		</foreground>
-	</shape>
 	<shape aspect="fixed" h="20" name="blankrisk" strokewidth="0" w="120">
     	<connections>
     	</connections>

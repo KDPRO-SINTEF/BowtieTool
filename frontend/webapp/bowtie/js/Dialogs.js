@@ -42,9 +42,9 @@ var LoginDialog = function () {
     this.container = iframe;
 };
 
-/*
-    Bowtie++ feature
-    Risk Dialog to show risk computation
+/**
+ * Bowtie++ feature
+ * Risk Dialog to show risk computation
  */
 var RiskDialog = function () {
     var iframe = document.createElement('iframe');
@@ -57,8 +57,8 @@ var RiskDialog = function () {
     // Adds padding as a workaround for box model in older IE versions
     var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
 
-    iframe.setAttribute('width', 850 + 'px');
-    iframe.setAttribute('height', 500 + 'px');
+    iframe.setAttribute('width', 1000 + 'px');
+    iframe.setAttribute('height', 750 + 'px');
     iframe.setAttribute('src', RISK_FORM);
     this.container = iframe;
 }

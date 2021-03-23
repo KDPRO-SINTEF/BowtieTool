@@ -77,6 +77,32 @@ let ResultComponent = {
     props:
         ['highest-risk-value', 'accumulated-risk-value', 'event-probability', 'missing-consequence'],
     template: '#result',
+    data: function (){
+        return{
+            showEventProbabilityFormula: false,
+            showHighestRiskValueFormula: false,
+            showAccumulatedRiskValueFormula: false
+        }
+    },
+    methods: {
+        getFormulaButtonText(button){
+            switch (button){
+                case "event":
+                    if(this.showEventProbabilityFormula){return "Hide Formula";}
+                    return "Show Formula";
+                    break;
+                case "highest":
+                    if(this.showHighestRiskValueFormula){return "Hide Formula"}
+                    return "Show Formula";
+                    break;
+                case "accumulated":
+                    if(this.showAccumulatedRiskValueFormula){return "Hide Formula"}
+                    return "Show Formula";
+                    break;
+            };
+
+        }
+    }
 
 }
 
@@ -92,10 +118,10 @@ let risk_vue = new Vue({
             currentTab: 'Threats',
             tabs: ['Threats', 'Consequences'],
             threats: [],
-            highestRiskValue: '',
-            accumulatedRiskValue: '',
+            highestRiskValue: 'none_defined',
+            accumulatedRiskValue: 'none_defined',
             missingConsequence: false,
-            eventProbability: '',
+            eventProbability: 'no_threats',
             consequences : []
         }
     },
@@ -140,6 +166,7 @@ let risk_vue = new Vue({
             let maxProb = 0;
             let accumul = 0;
             let oneDefined = false;
+            this.missingConsequence = false;
 
             for(let i = 0; i < this.consequences.length; i++){
 

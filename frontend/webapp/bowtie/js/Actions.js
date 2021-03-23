@@ -621,7 +621,7 @@ Actions.prototype.init = function () {
         Bowtie++ feature
         add Action to show Risk computation dialog
      */
-    this.addAction('showRisk', function(){ui.showDialog(new RiskDialog().container, 850, 500, true, true);});
+    this.addAction('showRisk', function(){ui.showDialog(new RiskDialog().container, 1000, 750, true, true);});
 
     this.addAction('showDiagramSearch',function (){
         ui.showDialog(new OpenFromDBDialog().container,850,500,true,true)
