@@ -47,6 +47,7 @@
 
 html {
   font-family: sans-serif;
+  scroll-behavior: smooth;
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
@@ -4569,7 +4570,7 @@ a.close.disabled {
 
 @media (min-width: 576px) {
   .modal-dialog {
-    max-width: 500px;
+    max-width: 800px;
     margin: 1.75rem auto; }
   .modal-dialog-scrollable {
     max-height: calc(100% - 3.5rem); }
@@ -21510,3 +21511,8 @@ pre > code.highlight {
     bottom: 0; }
 
 /*# sourceMappingURL=argon-design-system.css.map */
+
+video {
+  border: solid 3px rgb(0,0,0,0.4);
+}
+
