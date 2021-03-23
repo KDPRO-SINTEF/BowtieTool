@@ -11,6 +11,9 @@ urlpatterns = [
     path('<int:pk>', views.DiagramDetail.as_view(), name='my-diagrams'),
     path('private/list', views.PrivateDiagrams.as_view(), name='all-my-private_diagrams'),
     path('stats', views.StatsView.as_view(), name='stats-of-diagrams')
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 # 'search' to look for a diagram depending on it's tags and/or description
 # 'researcher' to give statistical analysis over all the diagrams

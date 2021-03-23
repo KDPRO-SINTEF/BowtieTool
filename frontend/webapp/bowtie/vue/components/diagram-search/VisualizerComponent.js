@@ -40,7 +40,8 @@ let VisualizerComponent = {
         diagram_to_show: function () {
             return this.all_diagrams.filter(diag =>{
                 let areTagsOk = this.show_all_tags
-                for(const tag of diag.tags){
+                diagram_tags = JSON.parse(diag.tags)
+                for(const tag of diagram_tags){
                     for(const tag_s of this.tags_selected){
                         if(tag === tag_s){
                             areTagsOk = true

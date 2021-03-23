@@ -34,33 +34,30 @@ let TagManagerComponent = {
         all_tags: function () {
             // Even though it's definitely how we use it, we cannot create bellow 'tags' as a Map
             // Because it is not well implemented in JS and more importantly not supported by Vue
-            tags = [
-                {
-                    name: "FirstTag",
-                    occurences: 1,
-                },
-                {
-                    name: "ScdTag",
-                    occurences: 2
-                },
-            ]
+            tags = []
+            var not_found = true;
             for (const diag of this.all_diagrams) {
-                for (const tag of diag.tags) {
+                var diagram_tags = JSON.parse(diag.tags)
+                for (const tag of diagram_tags) {
                     if (tag !== "") {
+                        not_found = true
                         for (const stored_tag of tags) {
                             if (stored_tag.name === tag) {
+                                not_found = false
                                 // tag was already present, value must simply be incremented
                                 stored_tag.occurences += 1
-                            } else {
-                                tags.push({
-                                    name: tag,
-                                    occurences: 1
-                                })
                             }
+                        }
+                        if (not_found) {
+                            tags.push({
+                                name: tag,
+                                occurences: 1
+                            })
                         }
                     }
                 }
             }
+
             return tags
         },
     },

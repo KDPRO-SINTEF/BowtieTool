@@ -46,8 +46,7 @@ var LoginDialog = function () {
     Bowtie++ feature
     Risk Dialog to show risk computation
  */
-var RiskDialog = function()
-{
+var RiskDialog = function () {
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
     iframe.allowTransparency = 'true';
@@ -631,13 +630,32 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     nameInput.style.marginLeft = '4px';
     nameInput.style.width = '180px';
 
+    var tags_row = document.createElement('tr')
+    var tags_td = document.createElement('td')
+    tags_td.style.whiteSpace = 'nowrap';
+    tags_td.style.fontSize = '10pt';
+    tags_td.style.width = '120px';
+    mxUtils.write(tags_td, "Diagram tags" + ':');
+
+    tags_row.appendChild(tags_td);
+
+
+    var tags_td_input = document.createElement('td')
+    var tags_input = document.createElement('input')
+    tags_input.setAttribute('value', '');
+    tags_input.style.marginLeft = '4px';
+    tags_input.style.width = '180px';
+
+    tags_td_input.appendChild(tags_input)
+    tags_row.appendChild(tags_td_input)
+
     var genericBtn = mxUtils.button(buttonText, function () {
         if (validateFn == null || validateFn(nameInput.value)) {
             if (closeOnBtn) {
                 editorUi.hideDialog();
             }
-
-            fn(nameInput.value);
+            const tags_splitted = tags_input.value.split(',')
+            fn(nameInput.value, tags_splitted);
         }
     });
     genericBtn.className = 'geBtn gePrimaryBtn';
@@ -707,6 +725,7 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     if (label != null || content == null) {
         tbody.appendChild(row);
     }
+    tbody.appendChild(tags_row)
 
     if (content != null) {
         row = document.createElement('tr');
@@ -1518,8 +1537,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
         svg = mxUtils.getXml(graph.getSvg(bg, s, b));
         download(svg);
         //ExportDialog.saveLocalFile(editorUi, mxUtils.getXml(graph.getSvg(bg, s, b)), name, format);
-    }
-    else if (format === 'png' || format === 'jpg') {
+    } else if (format === 'png' || format === 'jpg') {
         const svg = mxUtils.getXml(graph.getSvg(bg, s, b));
 
         function svgToPng(svg, callback) {
@@ -1626,8 +1644,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
         }
 
          */
-    }
-    else if (format === 'pdf' || 'gif') {
+    } else if (format === 'pdf' || 'gif') {
         alert("Those parameters are not yet supported")
     }
 };
