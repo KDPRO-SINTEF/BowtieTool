@@ -3068,8 +3068,8 @@ EditorUi.prototype.save = async function (name, tags) {
 
                     const formData = new FormData();
 
-                    var zoomInput = 50
-                    var s = Math.max(0, parseFloat(zoomInput.value) || 100) / 100;
+                    var zoomInput = 100;
+                    var s = Math.max(0, zoomInput || 100) / 100;
 
                     var bg = null;
                     var graph = this.editor.graph;
@@ -3138,12 +3138,14 @@ EditorUi.prototype.save = async function (name, tags) {
                         return new Promise(resolve => setTimeout(resolve, ms));
                     }
 
+                    const svg_encoded = getSvgUrl(svg)
+                    formData.append('preview', svg_encoded)
+                    /*
                     svgToPng(svg, (imgData) => {
-                        let blob = new File([imgData], name, {type: 'image/png'})
-                        formData.append('preview', blob)
-
-
-                    });
+                        // let blob = new File([imgData], name, {type: 'image/png'})
+                        console.log(imgData)
+                        formData.append('preview', imgData)
+                    });*/
                     await sleep(1000)
 
                     if (!this.editor.getGraphId()) { //Meaning it's the first time we save this diagram

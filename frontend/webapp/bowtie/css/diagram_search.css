@@ -1,13 +1,10 @@
-.visualizer-and-tags{
+.visualizer-and-tags {
     display: flex;
     flex-wrap: wrap;
 }
 
 .all_visuals {
-
     display: flex;
-    height: 500px;
-    margin-top: 50px;
     flex-wrap: wrap;
 }
 
@@ -16,5 +13,14 @@
 }
 
 .card {
-    margin: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+
+}
+
+.card-img-top {
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
 }

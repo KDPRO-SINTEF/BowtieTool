@@ -377,7 +377,7 @@ var UserControlDialog = function (editorUi) {
  * New Bowtie++ OpenFromDbDialog which launch new VueJs Diagram_searchVue
  * Constructs a new filename dialog.
  */
-var OpenFromDBDialog = function () {
+var OpenFromDBDialog = function (width,height) {
 
 
     var iframe = document.createElement('iframe');
@@ -390,8 +390,8 @@ var OpenFromDBDialog = function () {
     // Adds padding as a workaround for box model in older IE versions
     var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
 
-    iframe.setAttribute('width', 850 + 'px');
-    iframe.setAttribute('height', 500 + 'px');
+    iframe.setAttribute('width', width + 'px');
+    iframe.setAttribute('height', height + 'px');
     iframe.setAttribute('src', SEARCH_DIAGRAM);
     this.container = iframe;
 
@@ -636,10 +636,21 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     tags_td.style.fontSize = '10pt';
     tags_td.style.width = '120px';
     mxUtils.write(tags_td, "Diagram tags" + ':');
-
+    var info_span = document.createElement("span")
+    info_span.setAttribute("class","icon")
+    tags_td.appendChild(info_span)
+    /*var info_canvas = document.createElement("canvas")
+    info_canvas.setAttribute("id","canvas")
+    info_canvas.setAttribute("width","50")
+    info_canvas.setAttribute("height","50")
+    info_canvas.setAttribute("font-family","fontawesome")
+    var ctx = info_canvas.getContext('2d')
+    ctx.font = '20px FontAwesome' //0xe086
+    ctx.fillText(String.fromCharCode('\uF047'), 10, 50);
+    tags_td.appendChild(info_canvas)*/
     tags_row.appendChild(tags_td);
-
-
+    // TODO Add a info img and when you hover over it, it gives info on why and how to use tags
+    // TODO Add a public checkbox to make diagrams public or not
     var tags_td_input = document.createElement('td')
     var tags_input = document.createElement('input')
     tags_input.setAttribute('value', '');
@@ -654,7 +665,7 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
             if (closeOnBtn) {
                 editorUi.hideDialog();
             }
-            const tags_splitted = tags_input.value.split(',')
+            const tags_splitted = tags_input.value.replace(' ','').split(',')
             fn(nameInput.value, tags_splitted);
         }
     });
