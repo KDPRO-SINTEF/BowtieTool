@@ -3022,8 +3022,8 @@ EditorUi.prototype.saveFile = function (forceDialog) {
     if (!forceDialog && this.editor.filename != null) {
         this.save(this.editor.getOrCreateFilename(), "");
     } else {
-        var dlg = new FilenameDialog(this, this.editor.getOrCreateFilename(), mxResources.get('save'), mxUtils.bind(this, function (name, tags) {
-            this.save(name, tags);
+        var dlg = new FilenameDialog(this, this.editor.getOrCreateFilename(), mxResources.get('save'), mxUtils.bind(this, function (name, tags,is_public) {
+            this.save(name, tags,is_public);
         }), null, mxUtils.bind(this, function (name) {
             if (name != null && name.length > 0) {
                 return true;
@@ -3033,7 +3033,7 @@ EditorUi.prototype.saveFile = function (forceDialog) {
 
             return false;
         }));
-        this.showDialog(dlg.container, 300, 100, true, true);
+        this.showDialog(dlg.container, 300, 120, true, true);
         dlg.init();
     }
 };
@@ -3041,7 +3041,7 @@ EditorUi.prototype.saveFile = function (forceDialog) {
 /**
  * Saves the current graph under the given filename.
  */
-EditorUi.prototype.save = async function (name, tags) {
+EditorUi.prototype.save = async function (name, tags,is_public) {
     if (name != null) {
         if (this.editor.graph.isEditing()) {
             this.editor.graph.stopEditing();
@@ -3079,13 +3079,11 @@ EditorUi.prototype.save = async function (name, tags) {
 
                     formData.append('name', name)
                     formData.append('diagram', xml)
-                    formData.append('is_public', 'False')
+                    formData.append('is_public', JSON.parse(is_public))
                     formData.append('lastTimeSpent', '10')
                     formData.append('tags', JSON.stringify(tags))
 
-
-                    format = 'png'
-
+                    var format = "png" // this variables isn't used for now
                     function svgToPng(svg, callback) {
                         const url = getSvgUrl(svg);
                         svgUrlToFormat(url, (imgData) => {
@@ -3093,7 +3091,6 @@ EditorUi.prototype.save = async function (name, tags) {
                             URL.revokeObjectURL(url);
                         });
                     }
-
                     function getSvgUrl(svg) {
                         var svg64 = btoa(unescape(encodeURIComponent(svg)));
                         var b64start = 'data:image/svg+xml;base64,';

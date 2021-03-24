@@ -138,7 +138,7 @@ class PublicDiagrams(APIView):
 
 class PrivateDiagrams(APIView):
     authentication_classes = (TokenAuthentication,)
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         """Returns all private diagrams of a user"""

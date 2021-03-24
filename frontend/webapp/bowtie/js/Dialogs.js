@@ -630,6 +630,8 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     nameInput.style.marginLeft = '4px';
     nameInput.style.width = '180px';
 
+    var is_public = false;
+
     var tags_row = document.createElement('tr')
     var tags_td = document.createElement('td')
     tags_td.style.whiteSpace = 'nowrap';
@@ -650,7 +652,6 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     tags_td.appendChild(info_canvas)*/
     tags_row.appendChild(tags_td);
     // TODO Add a info img and when you hover over it, it gives info on why and how to use tags
-    // TODO Add a public checkbox to make diagrams public or not
     var tags_td_input = document.createElement('td')
     var tags_input = document.createElement('input')
     tags_input.setAttribute('value', '');
@@ -660,13 +661,30 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     tags_td_input.appendChild(tags_input)
     tags_row.appendChild(tags_td_input)
 
+    const public_row = document.createElement('tr')
+    const public_td = document.createElement('td')
+    var check_box = document.createElement('input')
+    check_box.setAttribute("type","checkbox")
+    check_box.setAttribute("id","public_checkbox")
+
+    var checkBox_label = document.createElement('label')
+    checkBox_label.setAttribute("for","checkbox")
+    mxUtils.write(checkBox_label,"Public")
+    public_td.appendChild(check_box)
+    public_td.appendChild(checkBox_label)
+    public_row.appendChild(public_td)
+
+    check_box.addEventListener('click',()=>{
+        is_public = !is_public;
+    })
+
     var genericBtn = mxUtils.button(buttonText, function () {
         if (validateFn == null || validateFn(nameInput.value)) {
             if (closeOnBtn) {
                 editorUi.hideDialog();
             }
             const tags_splitted = tags_input.value.replace(' ','').split(',')
-            fn(nameInput.value, tags_splitted);
+            fn(nameInput.value, tags_splitted, is_public);
         }
     });
     genericBtn.className = 'geBtn gePrimaryBtn';
@@ -737,7 +755,7 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
         tbody.appendChild(row);
     }
     tbody.appendChild(tags_row)
-
+    tbody.appendChild(public_row)
     if (content != null) {
         row = document.createElement('tr');
         td = document.createElement('td');

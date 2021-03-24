@@ -63,7 +63,7 @@ window.STATISTICS = window.STATISTICS || 'http://localhost:8000/api/diagram/stat
 window.SAVE_URL = window.SAVE_URL || 'http://localhost:8000/api/diagram/private';
 window.UPDATE_URL = window.UPDATE_URL || 'http://localhost:8000/api/diagram/'; // {id}
 window.PUBLIC_DIAGS_URL = window.PUBLIC_DIAGS_URL || 'http://localhost:8000/api/diagram/public/list';
-
+window.PRIVATE_DIAGS_URL = window.PRIVATE_DIAGS_URL || 'http://localhost:8000/api/diagram/private/list';
 
 
 
