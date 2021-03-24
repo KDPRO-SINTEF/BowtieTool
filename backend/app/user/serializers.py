@@ -6,7 +6,6 @@ from django.forms import ValidationError
 import django.contrib.auth.password_validation as validators
 from django.utils import timezone
 from user.validators import  LowercaseValidator, UppercaseValidator, SymbolValidator
-import django.contrib.auth.password_validation as validators
 
 class UserSerializer(serializers.Serializer):
     """Serializer for user model"""
