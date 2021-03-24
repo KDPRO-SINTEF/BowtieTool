@@ -71,26 +71,45 @@
             <div class="container">
               <div class="row">
                 <div class="col-md-10 ml-auto mr-auto text-center">
-                  <h3 class="display-3 swap-color-text">Pr&eacute;sentation du projet</h3>
-                  <div class="container ct-example-row">
-                    <h4>
-                      Contexte
-                      <small class="text-muted">Les diagrammes Bowtie sont applicables pour n'importe quel événement. Ainsi on peut les
-                        retrouver dans des situations très diversifiées : le cas le plus évident est la sécurité informatique mais
-                        on peut aussi imaginer un diagramme bowtie dans l'industrie, lors de l'organisation d'un événement... </small>
-                    </h4>
-                    <div class="row justify-content-md-center">
-                      <div class="col col-lg-2">
-                        <span>1 of 3</span>
-                      </div>
-                      <div class="col-md-auto">
-                        <span>Variable width content</span>
-                      </div>
-                      <div class="col col-lg-2">
-                        <span>3 of 3</span>
-                      </div>
+                  <h3 class="display-3 swap-color-text">Contexte du projet</h3>
+                    <p class="lead text-justify swap-color-text">
+                        Quand on parle de sécurité, on pense en premier lieu à la sécurité informatique. C'est cependant loin d'être le seul aspect en prendre en compte :
+                        la présence d'un ice-berg pour un bâteau de croisière, la gestion de la foule lors d'un festival ou encore la fuite d'un barrage, sont autant d'éléments
+                        à prendre en considération pour s'assurer qu'un événement se déroule correctement.
+                    </p>
+
+                    <div>
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Catastrophes naturelles, propriétés d\'un terrain'"
+                                     title="Conditions naturelles"><i class="fa fa-globe" ></i>
+                        </base-button>
+
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Présence d\'iceberg, manque de cannots de sauvetage'"
+                                     title="Transport"><i class="fa fa-ship" ></i>
+                        </base-button>
+
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Vol de données, prise de controle du système'"
+                                     title="Informatique"><i class="fa fa-desktop" ></i>
+                        </base-button>
+
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Gestion de la foule, problème de matériel'"
+                                     title="Evénement culturel"><i class="fa fa-music" ></i>
+                        </base-button>
+
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Fuite d\'un barrage, usure d\'une centrale nucléaire'"
+                                     title="Electricité"><i class="fa fa-lightbulb-o" ></i>
+                        </base-button>
                     </div>
-                  </div>
+
+
+                    <p class="lead text-justify swap-color-text">
+                        Devant une telle variété et complexité d'aspects, l'enjeu de Bowtie++ est donc de trouver
+                        un moyen de réunir tous ces aspects afin de gérer la sécurité d'un événement redouté dans son ensemble
+                    </p>
 
                   <!--<p class="lead text-justify swap-color-text">
                     Le projet a d'abord été pris en main par une équipe d’étudiants norvégiens de l’université de NTNU.
@@ -119,7 +138,7 @@
                 <div class="col-md-10 ">
                   <h3 class="display-3 text-center">Objectif du projet</h3>
                   <p class="lead">
-                    L'objectif est de pouvoir développer une application qui puisse être déployée facilement et rapidement
+                    L'objectif est de pouvoir développer une application répondant à la problématique qui puisse être déployée facilement et rapidement
                     sur de nombreux supports. Pour cela, nous sommes passés par 3 procédés.
                   </p>
                   <div class="row align-items-center">
@@ -747,7 +766,7 @@
                   <div class="card card-profile" data-image="profile-image">
                     <div class="card-header">
                       <div class="card-image">
-                        <a href="javascript:;"><img class="img rounded" src="image/Barbara.png"></a>
+                        <a href="javascript:;"><img class="img rounded" src="image/avatarBarbara.png"></a>
                       </div>
                     </div>
                     <div class="card-body pt-0">
@@ -784,7 +803,7 @@
                   <div class="card card-profile" data-image="profile-image">
                     <div class="card-header">
                       <div class="card-image">
-                        <a href="javascript:;"><img class="img rounded" src="image/PHM.png"></a>
+                        <a href="javascript:;"><img class="img rounded" src="image/avatarPHM.png"></a>
                       </div>
                     </div>
                     <div class="card-body pt-0">
