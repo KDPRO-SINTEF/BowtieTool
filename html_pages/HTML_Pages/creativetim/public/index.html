@@ -18,7 +18,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
   </head>
   <body>
-    <div class="wrapper">
+    <div class="wrapper smooth">
       <html>
         <body>
           <header class="header-2 skew-separator">
@@ -30,7 +30,8 @@
                 <div class="collapse navbar-collapse" id="example-header-2"></div>      
                 <ul class="navbar-nav mx-auto">
                   <li class="nav-item"><a class="nav-link" href="#home">Accueil</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#presentation">Le projet</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#presentation">Présentation</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#objectif">Objectif</a></li>
                   <li class="nav-item"><a class="nav-link" href="#fonctionnalites">Fonctionnalités</a></li>
                   <li class="nav-item"><a class="nav-link" href="#equipe">Equipe</a></li>
                   <li class="nav-item"><a class="nav-link" href="#en-savoir-plus">En savoir plus</a></li>
@@ -70,26 +71,45 @@
             <div class="container">
               <div class="row">
                 <div class="col-md-10 ml-auto mr-auto text-center">
-                  <h3 class="display-3 swap-color-text">Pr&eacute;sentation du projet</h3>
-                  <div class="container ct-example-row">
-                    <h4>
-                      Contexte
-                      <small class="text-muted">Les diagrammes Bowtie sont applicables pour n'importe quel événement. Ainsi on peut les
-                        retrouver dans des situations très diversifiées : le cas le plus évident est la sécurité informatique mais
-                        on peut aussi imaginer un diagramme bowtie dans l'industrie, lors de l'organisation d'un événement... </small>
-                    </h4>
-                    <div class="row justify-content-md-center">
-                      <div class="col col-lg-2">
-                        <span>1 of 3</span>
-                      </div>
-                      <div class="col-md-auto">
-                        <span>Variable width content</span>
-                      </div>
-                      <div class="col col-lg-2">
-                        <span>3 of 3</span>
-                      </div>
+                  <h3 class="display-3 swap-color-text">Contexte du projet</h3>
+                    <p class="lead text-justify swap-color-text">
+                        Quand on parle de sécurité, on pense en premier lieu à la sécurité informatique. C'est cependant loin d'être le seul aspect en prendre en compte :
+                        la présence d'un ice-berg pour un bâteau de croisière, la gestion de la foule lors d'un festival ou encore la fuite d'un barrage, sont autant d'éléments
+                        à prendre en considération pour s'assurer qu'un événement se déroule correctement.
+                    </p>
+
+                    <div>
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Catastrophes naturelles, propriétés d\'un terrain'"
+                                     title="Conditions naturelles"><i class="fa fa-globe" ></i>
+                        </base-button>
+
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Présence d\'iceberg, manque de cannots de sauvetage'"
+                                     title="Transport"><i class="fa fa-ship" ></i>
+                        </base-button>
+
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Vol de données, prise de controle du système'"
+                                     title="Informatique"><i class="fa fa-desktop" ></i>
+                        </base-button>
+
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Gestion de la foule, problème de matériel'"
+                                     title="Evénement culturel"><i class="fa fa-music" ></i>
+                        </base-button>
+
+                        <base-button size="sm" type="default" style="color:#8898aa"
+                                     v-b-popover.hover.left="'Fuite d\'un barrage, usure d\'une centrale nucléaire'"
+                                     title="Electricité"><i class="fa fa-lightbulb-o" ></i>
+                        </base-button>
                     </div>
-                  </div>
+
+
+                    <p class="lead text-justify swap-color-text">
+                        Devant une telle variété et complexité d'aspects, l'enjeu de Bowtie++ est donc de trouver
+                        un moyen de réunir tous ces aspects afin de gérer la sécurité d'un événement redouté dans son ensemble
+                    </p>
 
                   <!--<p class="lead text-justify swap-color-text">
                     Le projet a d'abord été pris en main par une équipe d’étudiants norvégiens de l’université de NTNU.
@@ -118,7 +138,7 @@
                 <div class="col-md-10 ">
                   <h3 class="display-3 text-center">Objectif du projet</h3>
                   <p class="lead">
-                    L'objectif est de pouvoir développer une application qui puisse être déployée facilement et rapidement
+                    L'objectif est de pouvoir développer une application répondant à la problématique qui puisse être déployée facilement et rapidement
                     sur de nombreux supports. Pour cela, nous sommes passés par 3 procédés.
                   </p>
                   <div class="row align-items-center">
@@ -147,63 +167,325 @@
           </section>
 
 
-          <p class="text-center"><hr class="line-deafult"></p>
+          <p class="text-center"><hr class="line-deafult"/></p>
 
           <!-- FONCTIONNALITES -->
+          <!-- CYAN/ROUGE NOIR/ORANGE VERT/INDIGO -->
+
           <section id="fonctionnalites" class="section features-2">
             <div class="container">
               <div class="row align-items-center">
                 <div class="col-md-12 pl-md-0">
+                    <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        Launch demo modal
+                    </button> -->
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                   <h3 class="display-3 text-center">Fonctionnalités</h3>
                   <div class="row">
+
+                    <!-- CREATION DE DIAGRAMMES -->
                     <div class="col-lg-4 col-md-4">
                       <div class="info text-left bg-info shadow">
-                        <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary"><i class="fa fa-sign-out text-info"></i></div>
-                        <h5 class="info-title text-white">Plus d'exports</h5>
-                        <p class="description">Vous pouvez maintenant exporter sous 4 formats différents : XML, JPG, PNG et SVG.</p>
-                      </div>
-                    </div>          
-                    <div class="col-lg-4 col-md-4">
-                      <div class="info text-left bg-danger shadow">
-                        <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary"><i class="fa fa-floppy-o text-danger"></i></div>
-                        <h5 class="info-title text-white">La sauvegarde</h5>
-                        <p class="description">Vous n'avez terminé votre diagramme ? Sauvegardez et continuez plus tard.</p>
-                      </div>
-                    </div>          
-                    <div class="col-lg-4 col-md-4">
-                      <div class="info text-left bg-default shadow">
-                        <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary"><i class="fa fa-share-alt text-default"></i></div>
-                        <h5 class="info-title text-white">Le partage</h5>
-                        <p class="description">Vous êtes fiers de vous et souhaitez partager votre travail pour aider, ou même pour l'améliorer ? C'est possible.</p>
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-paint-brush text-info"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Création de diagrammes</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/bowite++_example.png">
+                                  <a href="#demo" type="button" class="btn btn-danger mt-5 mb-0">
+                                      Voir la démo
+                                  </a>
+                              </div>
+                          </div>
                       </div>
                     </div>
-                  </div>        
-                  <div class="row">
-                    <div class="col-lg-4 col-md-4">
-                      <div class="info text-left bg-primary shadow">
-                        <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary"><i class="fa fa-calculator text-primary"></i></div>
-                        <h5 class="info-title text-white">le calcul de risques</h5>
-                        <p class="description">Bowtie++ vous fournit une valeur de risques relative de votre diagramme pour le comparer avec d'autres.</p>
-                      </div>
-                    </div>          
+
+                      <!-- PARTAGE DE DIAGRAMMES -->
                     <div class="col-lg-4 col-md-4">
                       <div class="info text-left bg-warning shadow">
-                        <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary"><i class="fa fa-user-circle-o text-warning"></i></div>
-                        <h5 class="info-title text-white">L'authentification</h5>
-                        <p class="description">Créez un compte et connectez vous pour accèder à votre espace perso.</p>
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-share-alt text-warning"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Partage de diagrammes</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_partage.jpg">
+                                  <button type="button" class="btn btn-default mt-5 mb-0" data-toggle="modal" data-target="#modal_partage">
+                                      Voir en détails
+                                  </button>
+
+                                  <div class="modal fade" id="modal_partage" tabindex="-1" role="dialog" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h5 class="modal-title" id="">Partage de diagrammes</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <p class="lead text-justify">
+                                                      Bowtie++ permet à ses utilisateurs de partager leurs diagrammes avec
+                                                      leurs collaborateurs selon deux modes d'accès : l'accès en lecture
+                                                      seule et l'accès en écriture.
+                                                  </p>
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
-                    </div>          
+                    </div>
+
+                    <!-- BIBLIOTHEQUE DE DIAGRAMMES -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-primary shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-download text-primary"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Bibliothèque de diagrammes</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/bowite++_example.png">
+                                  <button type="button" class="btn btn-success mt-5 mb-0" data-toggle="modal" data-target="#modal_bibli">
+                                      Voir en détails
+                                  </button>
+
+                                  <div class="modal fade" id="modal_bibli" tabindex="-1" role="dialog" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h5 class="modal-title">Bibliothèque de diagrammes</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <p class="lead text-justify">
+                                                      Bowtie++ permet à ses utilisateurs de rendre leurs diagrammes publics.
+                                                      Ces derniers peuvent alors servir de modèle à tous les autres utilisateurs
+                                                      de l'application.
+                                                  </p>
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+
+                    <!-- CALCUL DE RISQUES -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-danger shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-calculator text-danger"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Calcul de risques</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_calcul.jpg">
+                                  <button type="button" class="btn btn-info mt-5 mb-0" data-toggle="modal" data-target="#modal_calcul">
+                                      Voir en détails
+                                  </button>
+
+                                  <div class="modal fade" id="modal_calcul" tabindex="-1" role="dialog" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h5 class="modal-title">Calcul de risques</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <p class="lead text-justify">
+                                                      Bowtie++ permet à ses utilisateurs de calculer la valeur de risques d'un
+                                                      diagrammes. Pour cela, il leur suffit de rentrer des données telles que
+                                                      les probabilités des causes/menaces, leur dangerosité, leur fréquence.
+                                                      Cette valeur n'est pas absolue mais permet aux utilisateurs de comparer
+                                                      des diagrammes Bowtie.
+                                                  </p>
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- ANALYSE STATISTIQUE -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-default shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-bar-chart text-default"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Analyse statistique</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_stats.jpg">
+                                  <button type="button" class="btn btn-warning mt-5 mb-0" data-toggle="modal" data-target="#modal_stats">
+                                      Voir en détails
+                                  </button>
+
+                                  <div class="modal fade" id="modal_stats" tabindex="-1" role="dialog" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h5 class="modal-title">Analyse Statistique</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <p class="lead text-justify">
+                                                      A des fins de recherche, le statut de chercheur peut être accordé à un
+                                                      utilisateur via un admin. Ce statut confère l'accès à l'analyse statistiqe
+                                                      de la base de données de Bowtie++. On y retrouve des informations comme le
+                                                      nombre de diagrammes, le nombre moyen de causes, le nombre de barrières par conséquences.
+                                                  </p>
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- APPLICATION SECURISEE -->
                     <div class="col-lg-4 col-md-4">
                       <div class="info text-left bg-success shadow">
-                        <div class="icon icon-shape bg-gradient-white shadow rounded-circle text-primary"><i class="fa fa-shield text-success"></i></div>
-                        <h5 class="info-title text-white">Une application sécurisée</h5>
-                        <p class="description">Bowtie++ est pourvue d'une communcation chiffrée et d'un double facteur d'authentification.</p>
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-shield text-success"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Application sécurisée</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_secure.jpg">
+                                  <button type="button" class="btn btn-primary mt-5 mb-0" data-toggle="modal" data-target="#modal_secure">
+                                      Voir en détails
+                                  </button>
+
+                                  <div class="modal fade" id="modal_secure" tabindex="-1" role="dialog" aria-hidden="true">
+                                      <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                              <div class="modal-header">
+                                                  <h5 class="modal-title">Application sécurisée</h5>
+                                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                              </div>
+                                              <div class="modal-body">
+                                                  <p class="lead text-justify">
+                                                      Bowtie++ est une application sécurisée sur deux plans. Premièrement, les
+                                                      communications sont chiffrées via un certificat TLS. Deuxièmement, les comptes
+                                                      utilisateurs sont soumis à un double facteur d'authentification.
+                                                  </p>
+                                              </div>
+                                              <div class="modal-footer">
+                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+          </section>
+
+          <p class="text-center"><hr class="line-deafult"/></p>
+
+          <!-- DEMO -->
+          <section id="demo" class="section">
+              <div class="container">
+                  <div class="row justify-content-center">
+                      <div class="col-md-10">
+                          <h3 class="display-3 text-center">Démonstration</h3>
+                          <video class="rounded shadow my-5" controls width="100%" autoplay="true" muted="true">
+                              <source src="video/diagram-creation-demo.mov">
+                          </video>
+                      </div>
+                  </div>
+              </div>
           </section>
 
           <!-- THE EXECUTIVE TEAM-->
@@ -484,7 +766,7 @@
                   <div class="card card-profile" data-image="profile-image">
                     <div class="card-header">
                       <div class="card-image">
-                        <a href="javascript:;"><img class="img rounded" src="image/Barbara.png"></a>
+                        <a href="javascript:;"><img class="img rounded" src="image/avatarBarbara.png"></a>
                       </div>
                     </div>
                     <div class="card-body pt-0">
@@ -521,7 +803,7 @@
                   <div class="card card-profile" data-image="profile-image">
                     <div class="card-header">
                       <div class="card-image">
-                        <a href="javascript:;"><img class="img rounded" src="image/PHM.png"></a>
+                        <a href="javascript:;"><img class="img rounded" src="image/avatarPHM.png"></a>
                       </div>
                     </div>
                     <div class="card-body pt-0">
@@ -731,9 +1013,11 @@
                 <a class="text-white" href="https://mdbootstrap.com/">INSA Rennes</a>
               </div> -->
             </footer>
+          </section>
         </body>
       </html>
     </div>
+
     <!-- Core JS Files-->
     <script src="js/core/jquery.min.js" type="text/javascript"></script>
     <script src="js/core/popper.min.js" type="text/javascript"></script>
