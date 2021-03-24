@@ -44,20 +44,17 @@ class DiagramList(APIView):
                                                     (Q(description__icontains=x) for x in search.split()))), many=True)
         else:
             serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(owner=self.request.user), many=True)
-            print(serializer.data)
+            # print(serializer.data)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         """Create new Diagram"""
-        request_img = request.data['preview']
-        file_img = request.FILES['preview']
-        print(file_img)
+        # request_img = request.data['preview']
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            print(request.data)
-            if request_img:
-                serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'], preview=file_img   )
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            # print(request.data)
+            serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'])
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
