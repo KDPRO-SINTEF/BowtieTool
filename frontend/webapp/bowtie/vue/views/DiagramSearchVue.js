@@ -20,7 +20,7 @@ let diagramSearch_vue = new Vue({
                 return;
             }
             // Getting all private diags
-            axios.get(window.SAVE_URL, {
+            axios.get(window.PRIVATE_DIAGS_URL, {
                 headers: {
                     'Authorization': 'Token ' + token
                 }

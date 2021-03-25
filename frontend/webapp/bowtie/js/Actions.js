@@ -602,7 +602,7 @@ Actions.prototype.init = function () {
                 graph.zoomTo(val / 100);
             }
         }), mxResources.get('zoom') + ' (%)');
-        this.editorUi.showDialog(dlg.container, 300, 80, true, true);
+        this.editorUi.showDialog(dlg.container, 300, 100, true, true);
         dlg.init();
     }), null, null, Editor.ctrlKey + '+0'));
     this.addAction('pageScale...', mxUtils.bind(this, function () {
