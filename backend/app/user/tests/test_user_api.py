@@ -484,10 +484,10 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         # check if the mail is send correctly
-        message = "You're password has been changed. If you're familiar with this activity" + \
-            "you can discard this email. Otherwise we suggest you to immedeatly change your" + \
-            "password." + \
-            "Sincerly, \n Bowtie++ team"
+        message = "Your Bowtie++ account password has been changed. If you're familiar with this activity, " + \
+            "you can discard this email. Otherwise, we suggest you to immediatly change your " + \
+            "password at http://localhost:8080/app/bowtie/common/authentication.html#password-reset.\n\n" + \
+            "Sincerly, \n\n Bowtie++ team"
         subject = 'Changed password for Bowtie++'
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, subject)
