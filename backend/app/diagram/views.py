@@ -1,5 +1,8 @@
 #  Module docstring
+import operator
 import os
+from functools import reduce
+
 from django.http import Http404, HttpResponse
 from rest_framework import viewsets, mixins, status
 from rest_framework.authentication import TokenAuthentication
@@ -14,6 +17,8 @@ from diagram import serializers
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F
+import PIL
+
 
 
 class IsResearcher(BasePermission):
@@ -39,14 +44,15 @@ class DiagramList(APIView):
                                                     (Q(description__icontains=x) for x in search.split()))), many=True)
         else:
             serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(owner=self.request.user), many=True)
-
+            # print(serializer.data)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    # TODO: make filename safe (handles accents)
     def post(self, request):
         """Create new Diagram"""
+        # request_img = request.data['preview']
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
+            # print(request.data)
             serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'])
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -63,7 +69,12 @@ class DiagramDetail(APIView):
         else:
             queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(is_public=True))
         try:
-            return queryset.get(pk=pk)
+            print(queryset)
+            for i in queryset:
+                print(i.id)
+            queryset = queryset.get(pk=pk)
+            print(queryset)
+            return queryset
         except Diagram.DoesNotExist:
             raise Http404
 
@@ -85,14 +96,18 @@ class DiagramDetail(APIView):
         diagramModel = self.get_object(pk)
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            if not diagramModel.is_public:
-                diagramModel.delete()
-            diagramModel.lastTimeSpent= float(request.data['lastTimeSpent'])
-            diagramModel.name = str(request.data['name'])
-            diagramModel.diagram = request.data['diagram']
-            diagramModel.is_public = request.data['is_public']
-            diagramModel.tags = request.data['tags']
-            diagramModel.save()
+            if diagramModel.is_public:
+                # TODO Verify this work for public diagrams
+                serializer.save(owner=request.user, is_Public=False, lastTimeSpent=request.data['lastTimeSpent'],preview=request.data['preview'])
+                # diagramModel.delete()
+            else:
+                diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
+                diagramModel.name = str(request.data['name'])
+                diagramModel.diagram = request.data['diagram']
+                diagramModel.is_public = request.data['is_public']
+                diagramModel.tags = request.data['tags']
+                diagramModel.preview = request.data['preview']
+                diagramModel.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -112,18 +127,18 @@ class PublicDiagrams(APIView):
         search = request.GET.get("search")
         if search:
             serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(
-                Q(public=True) | reduce(operator.and_, (Q(description__icontains=x) for x in search.split()))),
+                Q(is_public=True) | reduce(operator.and_, (Q(description__icontains=x) for x in search.split()))),
                 many=True
             )
         else:
-            serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(public=True), many=True)
+            serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(is_public=True), many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class PrivateDiagrams(APIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         """Returns all private diagrams of a user"""
@@ -134,17 +149,16 @@ class PrivateDiagrams(APIView):
 
 class StatsView(APIView):
     authentication_classes = (TokenAuthentication,)
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsResearcher,)
 
     def get(self, request):
-
-        queryset = DiagramStat.objects.all().annotate(barriers_per_consequences_threats=F('barriers')/(F('threats')+F('consequences')))
+        queryset = DiagramStat.objects.all().annotate(
+            barriers_per_consequences_threats=F('barriers') / (F('threats') + F('consequences')))
 
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
-                                  Avg('barriers_per_consequences_threats'),
+                                  Avg('barriers_per_consequences_threats')
                                   )
+        resp['count'] = DiagramStat.objects.count()
 
         return Response(resp)
-
-

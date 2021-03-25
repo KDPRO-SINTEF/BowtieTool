@@ -32,7 +32,8 @@ logger = logging.getLogger(__name__)
 IMAGE_PATH = "/app/media/QR/token_qr.png"
 CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validation.html?for=email_confirm&id=%s&token=%s"
 REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/common/authentication.html#login"
-PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validate.html?for=reset_pwd&id=%s&token=%s"
+PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validation.html?for=reset_pwd&id=%s&token=%s"
+PASSWORD_RESET_REQUEST_URL = "http://localhost:8080/app/bowtie/common/authentication.html#password-reset"
 
 
 # User creation and authentication logic
@@ -54,7 +55,7 @@ class CreateUserView(generics.CreateAPIView):
             # generate an activation token for the user
             token = AccountActivationTokenGenerator().make_token(user)
             logger.info('Account with email : %s created on: %s', user.email, timezone.now())
-            message = "To activate your account please click on the following link %s" % (
+            message = "To activate your Bowtie++ account, please click on the following link %s" % (
                 CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
             subject = 'Activate account for no-reply-Bowtieowtie++'
             mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
@@ -154,10 +155,10 @@ class UpdatePassword(APIView):
             user.set_password(new_password)
             user.save()
             logger.warning("User %s changed password ", user)
-            message = "You're password has been changed. If you're familiar with this activity" + \
-            "you can discard this email. Otherwise we suggest you to immedeatly change your" + \
-            "password." + \
-            "Sincerly, \n Bowtie++ team"
+            message = "Your Bowtie++ account password has been changed. If you're familiar with this activity, " + \
+            "you can discard this email. Otherwise, we suggest you to immediatly change your " + \
+            "password at http://localhost:8080/app/bowtie/common/authentication.html#password-reset.\n\n" + \
+            "Sincerly, \n\n Bowtie++ team"
             subject = 'Changed password for Bowtie++'
             mail.send_mail(subject, message, 'no-reply@Bowtie', [user.email],
                 fail_silently=False)                

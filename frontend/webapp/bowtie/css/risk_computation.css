@@ -7,14 +7,22 @@
 #consequences_button{
     float: right;
 }
+#highest_risk-value_image{
+    width: 85%;
+    height: 85%;
+    margin-left: 7.5%;
+    margin-right: 7.5%;
+}
 .buttons_container{
     height: 50px;
     display: block;
 }
-.description {
-    width: 70%;
+.table_container{
+    padding-top : 20px;
 }
-
+.description {
+     width: 70%;
+ }
 .md-field {
     padding-top: 0;
     padding-right: 0;
@@ -33,4 +41,23 @@
 .risk_value{
     text-align: right;
 }
+.result_container{
+    padding-top : 30px;
+}
+
+.result_description{
+    width: 70%;
+}
+.result_value{
+    width : 35%;
+}
+img:not(.md-image){
+    margin-left: 17%;
+    margin-right: 17%;
+    height: 69px;
+}
+
+
+
+
 

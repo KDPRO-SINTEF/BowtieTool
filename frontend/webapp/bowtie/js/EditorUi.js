@@ -2640,20 +2640,12 @@ EditorUi.prototype.getContextualLoginText = function () {
 };
 
 /**
- * Creates the statistics button and bind it to the statistics window
- */
-EditorUi.prototype.getStatisticsWindow = function () {
-
-}
-
-
-/**
  * Creates a new toolbar for the given container.
  */
 EditorUi.prototype.setLoginText = function (value) {
     let uinfo = localStorage.getItem('username');
     //let isResearcher = localStorage.getItem('isResearcher');
-    let isResearcher = true;
+    let isResearcher = false;
     this.loginContainer.innerHTML = '';
 
     if (uinfo !== null) {
@@ -2929,55 +2921,60 @@ EditorUi.prototype.isCompatibleString = function (data) {
 };
 
 EditorUi.prototype.openFromDb = function (open_endpoint) {
+
     var token = localStorage.getItem('token');
     if (!token) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
         return;
     }
+    let showDiagramSearch = this.actions.get('showDiagramSearch').funct;
+    showDiagramSearch()
 
-    var dlg = new OpenFromDBDialog(this, mxUtils.bind(this, function (graphid) {
-        mxUtils.get(window.SAVE_URL + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function (req) {
-            switch (req.getStatus()) {
-                case 400:
-                    mxUtils.alert(mxResources.get('serverBadRequest'));
-                    break;
-                case 401:
-                    mxUtils.alert(mxResources.get('serverUnauthorized'));
-                    break;
-                case 403:
-                    mxUtils.alert(mxResources.get('serverForbidden'));
-                    break;
-                default:
-                    break;
 
-            }
+    /*
+        var dlg = new OpenFromDBDialog(this, mxUtils.bind(this, function (graphid) {
+            mxUtils.get(open_endpoint + '?id=' + graphid + '&token=' + encodeURIComponent(token), mxUtils.bind(this, function (req) {
+                switch (req.getStatus()) {
+                    case 400:
+                        mxUtils.alert(mxResources.get('serverBadRequest'));
+                        break;
+                    case 401:
+                        mxUtils.alert(mxResources.get('serverUnauthorized'));
+                        break;
+                    case 403:
+                        mxUtils.alert(mxResources.get('serverForbidden'));
+                        break;
+                    default:
+                        break;
 
-            var obj = JSON.parse(req.getText());
+                }
 
-            var doc = mxUtils.parseXml(obj.graph_data);
-            this.editor.setGraphXml(doc.documentElement);
-            this.editor.setModified(false);
-            this.editor.undoManager.clear();
+                var obj = JSON.parse(req.getText());
 
-            switch (obj.role) {
-                case 1:
-                    console.log('Graph disabled with role', obj.role);
-                    this.editor.graph.setEnabled(false);
-                    break;
-                case 2:
-                    graphid = null;
-                default:
-                    this.editor.graph.setEnabled(true);
-                    break;
-            }
-            this.editor.setFilename(obj.title);
-            this.updateDocumentTitle();
-            this.editor.setGraphId(graphid == null ? null : parseInt(graphid));
+                var doc = mxUtils.parseXml(obj.graph_data);
+                this.editor.setGraphXml(doc.documentElement);
+                this.editor.setModified(false);
+                this.editor.undoManager.clear();
 
-        }));
-    }), null);
-    this.showDialog(dlg.container, 300, 200, true, true);
-    dlg.init(open_endpoint);
+                switch (obj.role) {
+                    case 1:
+                        console.log('Graph disabled with role', obj.role);
+                        this.editor.graph.setEnabled(false);
+                        break;
+                    case 2:
+                        graphid = null;
+                    default:
+                        this.editor.graph.setEnabled(true);
+                        break;
+                }
+                this.editor.setFilename(obj.title);
+                this.updateDocumentTitle();
+                this.editor.setGraphId(graphid == null ? null : parseInt(graphid));
+
+            }));
+        }), null);
+        this.showDialog(dlg.container, 300, 200, true, true);
+        dlg.init(open_endpoint);*/
 }
 
 EditorUi.prototype.modifyRolesForGraph = function () {
@@ -3023,10 +3020,10 @@ EditorUi.prototype.modifyRolesForGraph = function () {
  */
 EditorUi.prototype.saveFile = function (forceDialog) {
     if (!forceDialog && this.editor.filename != null) {
-        this.save(this.editor.getOrCreateFilename());
+        this.save(this.editor.getOrCreateFilename(), "");
     } else {
-        var dlg = new FilenameDialog(this, this.editor.getOrCreateFilename(), mxResources.get('save'), mxUtils.bind(this, function (name) {
-            this.save(name);
+        var dlg = new FilenameDialog(this, this.editor.getOrCreateFilename(), mxResources.get('save'), mxUtils.bind(this, function (name, tags) {
+            this.save(name, tags);
         }), null, mxUtils.bind(this, function (name) {
             if (name != null && name.length > 0) {
                 return true;
@@ -3044,7 +3041,7 @@ EditorUi.prototype.saveFile = function (forceDialog) {
 /**
  * Saves the current graph under the given filename.
  */
-EditorUi.prototype.save = function (name) {
+EditorUi.prototype.save = async function (name, tags) {
     if (name != null) {
         if (this.editor.graph.isEditing()) {
             this.editor.graph.stopEditing();
@@ -3068,18 +3065,97 @@ EditorUi.prototype.save = function (name) {
                         mxUtils.alert(mxResources.get('notLoggedIn'));
                         return;
                     }
-                    if (!this.editor.getGraphId()) {
-                        var postdata = JSON.stringify({
-                            'name': name,
-                            'diagram': xml,
-                            'is_public': false,
-                            'tags': '',
-                            'lastTimeSpent': 10
+
+                    const formData = new FormData();
+
+                    var zoomInput = 100;
+                    var s = Math.max(0, zoomInput || 100) / 100;
+
+                    var bg = null;
+                    var graph = this.editor.graph;
+
+                    svg = mxUtils.getXml(graph.getSvg(bg, s, 0));
+
+
+                    formData.append('name', name)
+                    formData.append('diagram', xml)
+                    formData.append('is_public', 'False')
+                    formData.append('lastTimeSpent', '10')
+                    formData.append('tags', JSON.stringify(tags))
+
+
+                    format = 'png'
+
+                    function svgToPng(svg, callback) {
+                        const url = getSvgUrl(svg);
+                        svgUrlToFormat(url, (imgData) => {
+                            callback(imgData);
+                            URL.revokeObjectURL(url);
                         });
-                        //console.log(postdata)
-                        axios.post(window.SAVE_URL, postdata, {
+                    }
+
+                    function getSvgUrl(svg) {
+                        var svg64 = btoa(unescape(encodeURIComponent(svg)));
+                        var b64start = 'data:image/svg+xml;base64,';
+                        return b64start + svg64;
+                    }
+
+                    function svgUrlToFormat(svgUrl, callback) {
+                        //console.log(svgUrl)
+                        const svgImage = new Image();
+                        svgImage.crossOrigin = "*";
+                        // imgPreview.style.position = 'absolute';
+                        // imgPreview.style.top = '-9999px';
+                        document.body.appendChild(svgImage);
+                        svgImage.onload = function () {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = svgImage.clientWidth;
+                            canvas.height = svgImage.clientHeight;
+                            const canvasCtx = canvas.getContext('2d');
+                            try {
+                                canvasCtx.drawImage(svgImage, 0, 0);
+                                let trueFormat = format;
+                                if (format === 'jpg') {
+                                    trueFormat = "jpeg"
+                                }
+                                const type = "image/" + trueFormat
+                                const imgData = canvas.toDataURL(type);
+                                callback(imgData);
+                            } catch (e) {
+                                console.log("Unexpected error occurred during conversion")
+                                console.log(e.message)
+                            }
+                            svgImage.onerror = function () {
+                                console.log("could not load image")
+                            }
+                            // document.body.removeChild(imgPreview);
+                        };
+                        svgImage.src = svgUrl;
+
+                    }
+
+                    async function sleep(ms) {
+                        return new Promise(resolve => setTimeout(resolve, ms));
+                    }
+
+                    const svg_encoded = getSvgUrl(svg)
+                    formData.append('preview', svg_encoded)
+                    /*
+                    svgToPng(svg, (imgData) => {
+                        // let blob = new File([imgData], name, {type: 'image/png'})
+                        console.log(imgData)
+                        formData.append('preview', imgData)
+                    });*/
+                    await sleep(1000)
+
+                    if (!this.editor.getGraphId()) { //Meaning it's the first time we save this diagram
+                        /* 'Access-Control-Allow-Origin': '*',
+                             "Access-Control-Allow-Credentials": "*",
+                             'Access-Control-Allow-Methods': "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+                             'Access-Control-Allow-Headers': "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
+                         */
+                        axios.post(window.SAVE_URL, formData, {
                             headers: {
-                                'Content-type': 'application/json',
                                 'Authorization': 'Token ' + token
                             }
                         })
@@ -3118,17 +3194,9 @@ EditorUi.prototype.save = function (name) {
                     } else {
                         // In that case the id is already defined meaning the diagram was already stored once in the backend
                         console.log('Existing with id', this.editor.getGraphId());
-                        var putData = JSON.stringify({
-                            'id': this.editor.getGraphId(),
-                            'name': name,
-                            'diagram': xml,
-                            'is_public': false,
-                            'tags': '',
-                            'lastTimeSpent': 20
-                        });
-                        axios.put(window.UPDATE_URL+this.editor.getGraphId(),putData, {
+                        formData.append('id', this.editor.getGraphId())
+                        axios.put(window.UPDATE_URL + this.editor.getGraphId(), formData, {
                             headers: {
-                                'Content-type': 'application/json',
                                 'Authorization': 'Token ' + token
                             }
                         })

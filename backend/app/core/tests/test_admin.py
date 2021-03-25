@@ -14,21 +14,15 @@ class AdminSiteTests(TestCase):
         self.client.force_login(self.admin_user)
         self.user = get_user_model().objects.create_user(
             email='test@bowtie.com',
-            password='testpassS123#',
-            first_name='test name'
+            password='testpassS123#'
         )
 
-    def tearDown(self):
-        """Clean the database after each method (probles due to force login probably"""
-        print("Here")
-        os.system(" echo yes | python3 manage.py flush ")
 
     def test_users_listed(self):
         """test users are listed on user page"""
         url = reverse('admin:core_user_changelist')
         res = self.client.get(url)
 
-        self.assertContains(res, self.user.last_name)
         self.assertContains(res, self.user.email)
 
     def test_user_change_page(self):
