@@ -2,7 +2,7 @@ import base64
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize
+from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize, UserInfoSerializer
 from user.customPermission import HasConfirmedEmail
 from django.core import mail
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken, TOTPValidityToken, ExpiringTokenAuthentication
@@ -127,13 +127,16 @@ class CreateTokenView(ObtainAuthToken):
 
 class ManageUserViews(generics.RetrieveAPIView):
     """Manage the authenticated user"""
-    serializer_class = UserSerializer
+    serializer_class = UserInfoSerializer
     authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
         """Retrieve and return an authenticated user"""
         return self.request.user
+
+    def __str__(self):
+        return "User info endpoint"
 
 class UpdatePassword(APIView):
     """Manage the authenticated user"""

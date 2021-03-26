@@ -8,7 +8,7 @@ from django.utils import timezone
 from user.validators import  LowercaseValidator, UppercaseValidator, SymbolValidator
 
 class UserSerializer(serializers.Serializer):
-    """Serializer for user model"""
+    """Authentication and creation serializer for user model"""
 
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
@@ -23,6 +23,27 @@ class UserSerializer(serializers.Serializer):
             serializers.ValidationError("Validation error", code='authentication')
         return user
 
+class ProfileSerializer(serializers.Serializer):
+    """Serializer for user role"""
+
+    email_confirmed = serializers.BooleanField()
+    two_factor_enabled = serializers.BooleanField()
+    
+    def validate(self, attrs):
+        return attrs
+
+
+class UserInfoSerializer(serializers.Serializer):
+    """Serializer for user information"""
+
+   
+    email = serializers.EmailField()
+    is_Researcher = serializers.BooleanField()
+    username = serializers.CharField()
+    profile = ProfileSerializer(required=False)
+
+    def validate(self, attrs):
+        return attrs
 
 class UserUpdateSerialize(serializers.Serializer):
     """ Serializer for update password """
