@@ -14,7 +14,7 @@ class UserSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     username = serializers.CharField()
 
-    
+
     def create(self, validated_data):
         """Create new user and return it"""
 
@@ -28,7 +28,7 @@ class ProfileSerializer(serializers.Serializer):
 
     email_confirmed = serializers.BooleanField()
     two_factor_enabled = serializers.BooleanField()
-    
+
     def validate(self, attrs):
         return attrs
 
@@ -36,7 +36,7 @@ class ProfileSerializer(serializers.Serializer):
 class UserInfoSerializer(serializers.Serializer):
     """Serializer for user information"""
 
-   
+
     email = serializers.EmailField()
     is_Researcher = serializers.BooleanField()
     username = serializers.CharField()
@@ -88,7 +88,7 @@ class AuthTokenSerialize(serializers.Serializer):
                             username=email,
                             password=password
         )
-         
+
         if user :
             attrs['user'] = user
             Profile.objects.filter(user=user).update(last_login=timezone.now())

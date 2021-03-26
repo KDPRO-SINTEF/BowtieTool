@@ -9,4 +9,7 @@ env
 app/env
 app/logs/*
 app/media/QR/*
+
 .coverage
+
+.env*
