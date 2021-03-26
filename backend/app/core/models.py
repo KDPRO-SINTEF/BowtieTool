@@ -24,7 +24,7 @@ class UserManager(BaseUserManager):
             validators.validate_password(password=password)
         except exceptions.ValidationError as e_valid:
             raise ValidationError(e_valid)
-        
+
         user = self.model(email=self.normalize_email(email), password=password, username=username, **extra_fields)
         user.username = username
         user.set_password(password)
@@ -36,14 +36,14 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password, username=""):
         """creates and saves new super user """
-        
+
         if not (email and password):
             raise ValueError('User email and password is required')
         try:
             validators.validate_password(password=password)
         except exceptions.ValidationError as e_valid:
             raise ValidationError(e_valid)
-        
+
         user = self.create_user(email, password, username)
         user.is_staff = True
         user.is_superuser = True
@@ -51,6 +51,7 @@ class UserManager(BaseUserManager):
         user.profile.email_confirmed = True
         user.profile.save()
         return user
+
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -81,6 +82,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.email + " " + str(self.email_confirmed) + " " + str(self.last_login)
+
 
 
 class DiagramStat(models.Model):
