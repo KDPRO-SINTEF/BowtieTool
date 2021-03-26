@@ -35,7 +35,8 @@
 
 <div id="diagram-search-vue">
     <div class="search-bar-container">
-        <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"></search-bar>
+        <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"
+                    :all_diagrams="all_diagrams" :tags_selected="tags_selected"></search-bar>
     </div>
     <div class="visualizer-and-tags">
         <tag-manager :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
@@ -72,6 +73,7 @@
 <script type="text/x-template" id="tag_manager-template">
     <div class="tag_manager">
         <div class="list-group">
+            <div class="card-header" style="text-align: center">Tags</div>
             <div v-for="tag_object in all_tags">
                 <label class="list-group-item">
                     <input class="form-check-input me-1" type="checkbox" value=""
@@ -86,16 +88,20 @@
 
 <script type="text/x-template" id="visualizer-template">
     <div class="all_visuals">
-        <div v-for="diagram in diagram_to_show" v-bind:key="diagram.id">
-            <div class="card">
-                <div class="ratio ratio-1x1">
-                    <img :src=diagram.preview class="card-img-top" alt="Preview of diagram">
-                </div>
-                <div class="card-body">
-                    <h5 class="card-title">{{diagram.name}}</h5>
-                    <p class="card-text">id: {{diagram.id}}</p>
-                    <a href="#" class="btn btn-secondary" v-on:click="openDiagram(diagram.name)">
-                        Open this diagram</a>
+        <div id="grid-container" class="row row-cols-auto">
+            <div v-for="diagram in diagram_to_show" v-bind:key="diagram.id">
+                <div class="col">
+                    <div class="card">
+                        <div class="ratio ratio-1x1">
+                            <img :src=diagram.preview class="card-img-top" alt="Preview of diagram">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{diagram.name}}</h5>
+                            <p class="card-text">id: {{diagram.id}}</p>
+                            <a href="#" class="btn btn-secondary" v-on:click="openDiagram(diagram.name)">
+                                Open this diagram</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
