@@ -9,24 +9,23 @@ import django.contrib.auth.password_validation as validators
 from django.utils import timezone
 from xml.dom import minidom
 import django.forms
-from django.forms import ValidationError
 import PIL
-
+from rest_framework.exceptions import ValidationError
 
 class UserManager(BaseUserManager):
     """ A manager class for instantiating and updting users
     """
 
-    def create_user(self, email, password=None, username="", **extra_fields):
+    def create_user(self, email, password, username="", **extra_fields):
         """creates and saves new user"""
-        if not email:
-            raise ValueError('User email is required')
-        user = self.model(email=self.normalize_email(email), **extra_fields)
+        if not (email and password):
+            raise ValueError('User email and password is required')
         try:
-            validators.validate_password(password=password, user=user)
+            validators.validate_password(password=password)
         except exceptions.ValidationError as e_valid:
             raise ValidationError(e_valid)
 
+        user = self.model(email=self.normalize_email(email), password=password, username=username, **extra_fields)
         user.username = username
         user.set_password(password)
         user.save(using=self._db)
@@ -36,19 +35,23 @@ class UserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, username=""):
-        """creates and saves new super user
-        """
+        """creates and saves new super user """
+
+        if not (email and password):
+            raise ValueError('User email and password is required')
+        try:
+            validators.validate_password(password=password)
+        except exceptions.ValidationError as e_valid:
+            raise ValidationError(e_valid)
+
         user = self.create_user(email, password, username)
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self._db)
-        # profile
-        profile = Profile(user=user)
-        user.profile.save()
         user.profile.email_confirmed = True
-        profile.save(using=self._db)
-        user.profile = profile
+        user.profile.save()
         return user
+
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -79,6 +82,7 @@ class Profile(models.Model):
 
     def __str__(self):
         return self.user.email + " " + str(self.email_confirmed) + " " + str(self.last_login)
+
 
 
 class DiagramStat(models.Model):
@@ -115,7 +119,8 @@ class Diagram(models.Model):
 
     diagramStat = models.ForeignKey(DiagramStat,
                                     on_delete=models.CASCADE)
-    #preview = models.ImageField(upload_to='diagrams')
+    preview = models.TextField(default="")
+    # preview = models.ImageField(upload_to='diagrams', blank=True, null=True)
     riskTable = models.TextField(default="")
 
     def get_tags(self):

@@ -1,5 +1,7 @@
 from django.urls import path, include
 from diagram import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 app_name = 'diagram'
 
@@ -10,5 +12,8 @@ urlpatterns = [
     path('private/list', views.PrivateDiagrams.as_view(), name='all-my-private_diagrams'),
     path('stats', views.StatsView.as_view(), name='stats-of-diagrams')
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
 # 'search' to look for a diagram depending on it's tags and/or description
 # 'researcher' to give statistical analysis over all the diagrams

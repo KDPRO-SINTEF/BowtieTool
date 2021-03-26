@@ -8,7 +8,7 @@ app:
 if [ "$#" = 0 ]; then
     mkdir -p backend/app/media/QR
     mkdir -p backend/app/logs
-    docker-compose up 
+    docker-compose up
 elif [ "$#" = 1 ]; then
     if [ "$1" = "-h" -o "$1" = "--help" ]; then
         echo "$help_message"

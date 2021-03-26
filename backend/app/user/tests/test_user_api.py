@@ -1,14 +1,11 @@
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-# to generate api url
 from core.models import Profile
 from rest_framework.test import APIClient
-# test client used to make requests to api and check response
 from rest_framework import status
 from django.core import mail 
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken
-# to get human readable form of status codes
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework.settings import api_settings as settings
@@ -333,17 +330,6 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(url, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    # def totp_token_create_test(self):
-    #     """Creating an TOTP token"""
-    #     payload = {
-    #         'email': 'test@bowtie.com',
-    #         'password': '123456789A#a'
-    #     }
-    #     user = create_user(**payload)
-
-    #     Profile.objects.filter(user=user).update(email_confirmed=True)
-    #     res = self.client.post(TOKEN_URL, payload)
-
 
     def test_delete_user_ok(self):
         """Test for deleting user"""
@@ -484,10 +470,10 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
         # check if the mail is send correctly
-        message = "You're password has been changed. If you're familiar with this activity" + \
-            "you can discard this email. Otherwise we suggest you to immedeatly change your" + \
-            "password." + \
-            "Sincerly, \n Bowtie++ team"
+        message = "Your Bowtie++ account password has been changed. If you're familiar with this activity, " + \
+            "you can discard this email. Otherwise, we suggest you to immediatly change your " + \
+            "password at http://localhost:8080/app/bowtie/common/authentication.html#password-reset.\n\n" + \
+            "Sincerly, \n\n Bowtie++ team"
         subject = 'Changed password for Bowtie++'
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, subject)
@@ -594,4 +580,5 @@ class PublicUserApiTests(TestCase):
         url2 = reverse("user:totp-activate", kwargs={'token':token_totp_validate})
         res2 = self.client.post(url2, {"token_totp": "1234"})
         self.assertEqual(res2.status_code, status.HTTP_400_BAD_REQUEST)
-# todo test update password, enable, disable two fa, new login logic 
+
+# todo enable, disable two fa, new login logic 

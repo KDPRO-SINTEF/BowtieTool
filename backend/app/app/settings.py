@@ -70,7 +70,7 @@ AUTHENTICATION_TOKEN_EXPIRE_SECONDS = env('AUTHENTICATION_TOKEN_EXPIRE_SECONDS')
 EMAIL_BACKEND = env('EMAIL_BACKEND')
 # Email configuration
 EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_HOST_USER =  env('EMAIL_HOST_USER')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_USE_TLS = env("EMAIL_USE_TLS")
@@ -96,6 +96,7 @@ INSTALLED_APPS = [
     'pydot',
     'pydotplus',
     'drf_yasg',
+    'app',
 ]
 
 MIDDLEWARE = [
@@ -156,7 +157,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
         'OPTIONS': {
             'min_length': 9,
-        }
+        },
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -172,6 +173,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'user.validators.SymbolValidator',
+    },
+    {
+        'NAME': 'user.validators.DigitValidator',
     },
 ]
 
@@ -241,12 +245,17 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'core.User'
+STATICFILES_DIRS = [
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    os.path.join(BASE_DIR, 'static'),
+
+]
+AUTH_USER_MODEL = 'core.User'
 MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 application = get_wsgi_application()
 django.setup()

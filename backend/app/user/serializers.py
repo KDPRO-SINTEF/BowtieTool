@@ -5,27 +5,45 @@ from core.models import Profile
 from django.forms import ValidationError
 import django.contrib.auth.password_validation as validators
 from django.utils import timezone
+from user.validators import  LowercaseValidator, UppercaseValidator, SymbolValidator
 
+class UserSerializer(serializers.Serializer):
+    """Authentication and creation serializer for user model"""
 
-class UserSerializer(serializers.ModelSerializer):
-    """Serializer for user model"""
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    username = serializers.CharField()
 
-    class Meta:
-        """Meta information"""
-        model = get_user_model()
-        fields = ('email', 'password', 'username')
-        extra_kwargs = {'password': {'write_only': True, 'min_length': 9}}
-
+    
     def create(self, validated_data):
         """Create new user and return it"""
-        try:
-            user = get_user_model().objects.create_user(**validated_data)
-            if user is None:
-                serializers.ValidationError("Validation error", code='authentication')
-            return user
-        except Exception as e:
-            print(type(e))
 
+        user = get_user_model().objects.create_user(**validated_data)
+        if user is None:
+            serializers.ValidationError("Validation error", code='authentication')
+        return user
+
+class ProfileSerializer(serializers.Serializer):
+    """Serializer for user role"""
+
+    email_confirmed = serializers.BooleanField()
+    two_factor_enabled = serializers.BooleanField()
+    
+    def validate(self, attrs):
+        return attrs
+
+
+class UserInfoSerializer(serializers.Serializer):
+    """Serializer for user information"""
+
+   
+    email = serializers.EmailField()
+    is_Researcher = serializers.BooleanField()
+    username = serializers.CharField()
+    profile = ProfileSerializer(required=False)
+
+    def validate(self, attrs):
+        return attrs
 
 class UserUpdateSerialize(serializers.Serializer):
     """ Serializer for update password """
@@ -34,17 +52,16 @@ class UserUpdateSerialize(serializers.Serializer):
     new_password = serializers.CharField()
     old_password = serializers.CharField()
 
-  
     def validate(self, attrs):
+        """ Validate method"""
 
         new_password = attrs.get("new_password")
         old_password = attrs.get("old_password")
-
         validators.validate_password(new_password)
-        
+
         if new_password == old_password:
             raise serializers.ValidationError("The two passwords must be different")
-        
+
         return attrs
 
     def __str__(self):

@@ -1,14 +1,22 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
 from django.utils.translation import gettext as _
 from xml.dom import minidom
 from core import models
 
 
+class ProfileInline(admin.StackedInline):
+    model = models.Profile
+    can_delete = False
+    verbose_name_plural = 'Profile'
+    fk_name = 'user'
+
+
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
-    list_display = ['email', ]
+    inlines = (ProfileInline,)
+    list_display = ['email', 'two_factor_enabled', 'email_confirmed', 'last_login']
+    list_select_related = ('profile', )
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal Info'), {'fields': ('username',)}),
@@ -23,6 +31,23 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password1', 'password2')
         }),
     )
+
+    def get_inline_instances(self, request, obj=None):
+        if not obj:
+            return list()
+        return super().get_inline_instances(request, obj)
+    
+    def email_confirmed(self, instance):
+        return instance.profile.email_confirmed
+    email_confirmed.short_description = 'Email Confirmed'
+
+    def two_factor_enabled(self, instance):
+        return instance.profile.two_factor_enabled
+    two_factor_enabled.short_description = "Two factor enabled"
+
+    def last_login(self, instance):
+        return instance.profile.last_login
+    last_login.short_description = "Last login"
 
 
 class DiagramAdmin(admin.ModelAdmin):
@@ -57,6 +82,7 @@ class DiagramAdmin(admin.ModelAdmin):
                                                       barriers=barriers, causes=causes,
                                                       totalTimeSpent=new_total_time_spent)
         super(DiagramAdmin, self).save_model(request, obj, form, change)
+
 
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Diagram, DiagramAdmin)

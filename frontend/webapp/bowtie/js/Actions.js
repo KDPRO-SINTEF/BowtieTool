@@ -602,7 +602,7 @@ Actions.prototype.init = function () {
                 graph.zoomTo(val / 100);
             }
         }), mxResources.get('zoom') + ' (%)');
-        this.editorUi.showDialog(dlg.container, 300, 80, true, true);
+        this.editorUi.showDialog(dlg.container, 300, 100, true, true);
         dlg.init();
     }), null, null, Editor.ctrlKey + '+0'));
     this.addAction('pageScale...', mxUtils.bind(this, function () {
@@ -624,7 +624,9 @@ Actions.prototype.init = function () {
     this.addAction('showRisk', function(){ui.showDialog(new RiskDialog().container, 1000, 750, true, true);});
 
     this.addAction('showDiagramSearch',function (){
-        ui.showDialog(new OpenFromDBDialog().container,850,500,true,true)
+        const width = 1250;
+        const height = 800;
+        ui.showDialog(new OpenFromDBDialog(width,height).container,width,height,true,true)
     });
 
     // Option actions
