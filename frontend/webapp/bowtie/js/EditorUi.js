@@ -2645,30 +2645,32 @@ EditorUi.prototype.getContextualLoginText = function () {
 EditorUi.prototype.setLoginText = function (value) {
     let uinfo = localStorage.getItem('username');
     //let isResearcher = localStorage.getItem('isResearcher');
-    let isResearcher = false;
+    let isResearcher = true;
     this.loginContainer.innerHTML = '';
-
     if (uinfo !== null) {
         /* Researcher button */
         if (isResearcher) {
-            let statisticsButton = document.createElement('a');
-            statisticsButton.setAttribute('id', 'statisticsButton');
+            let statisticsButton = document.createElement('button');
+            statisticsButton.setAttribute('id', 'statistics-button');
             statisticsButton.innerHTML = 'Statistics';
-            statisticsButton.setAttribute('href', window.STATISTICS_PAGE);
+            statisticsButton.addEventListener('click', function () {
+                window.open(window.STATISTICS_PAGE);
+            })
             statisticsButton.setAttribute('target', '_blank');
             this.loginContainer.appendChild(statisticsButton);
         }
 
         /* My account button */
-        let userName = document.createElement('a');
-        userName.setAttribute('id', 'userLoginName');
-        userName.innerHTML = 'My account';
-        userName.setAttribute('href', window.ACCOUNT_PAGE);
-        userName.setAttribute('target', '_blank');
-        this.loginContainer.appendChild(userName);
+        let accountButton = document.createElement('button');
+        accountButton.setAttribute('id', 'account-button');
+        accountButton.innerHTML = 'My account';
+        accountButton.addEventListener('click', function () {
+            window.open(window.ACCOUNT_PAGE);
+        })
+        accountButton.setAttribute('target', '_blank');
+        this.loginContainer.appendChild(accountButton);
     }
     this.loginContainer.appendChild(value);
-
 };
 
 /**
