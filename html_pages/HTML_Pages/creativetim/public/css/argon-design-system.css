@@ -16591,6 +16591,8 @@ hr {
     background-color: #f5365c; }
   hr.line-deafult {
     background-color: #172b4d56; }
+  hr.line-white {
+    background-color: white; }
 
 .icon-actions > a {
   display: inline-block;
@@ -21514,5 +21516,13 @@ pre > code.highlight {
 
 video {
   border: solid 3px rgb(0,0,0,0.4);
+}
+
+.modal-body b {
+  color:#fb6340;
+  font-weight: bold;
+}
+.lead b {
+  font-weight: bold;
 }
 

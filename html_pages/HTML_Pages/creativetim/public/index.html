@@ -40,7 +40,7 @@
               </div>
             </nav>  
             <div id="home" class="page-header">
-              <div class="page-header-image" style="background-image: url('image/fond-schema.jpg')"></div>
+              <div class="page-header-image" style="background-image: url('image/fond.png')"></div>
               <div class="container pt-300">
                 <div class="row">
                   <div class="col-md-9 mx-auto text-center">
@@ -55,7 +55,7 @@
                     </div>
                     <h2 class="lead text-white text-justify pt-5 px-5">
                       Bowtie++ est une application dont le but est de créer facilement et rapidement des diagrammes
-                      Bowtie. Ces diagrammes sont utilisés pour évaluer au mieux le risque que peut entraîner
+                      d'analyse de risques. Ces diagrammes sont utilisés pour évaluer au mieux le risque que peut entraîner
                       un événement redouté : on représente ses causes et conséquences afin de pouvoir élaborer une stratégie
                       pour s'en prémunir ou en limiter les potentiels dégâts.
                     </h2>
@@ -73,12 +73,17 @@
                 <div class="col-md-10 ml-auto mr-auto text-center">
                   <h3 class="display-3 swap-color-text">Contexte du projet</h3>
                     <p class="lead text-justify swap-color-text">
-                        Quand on parle de sécurité, on pense en premier lieu à la sécurité informatique. C'est cependant loin d'être le seul aspect à prendre en compte :
-                        la présence d'un ice-berg pour un bâteau de croisière, la gestion de la foule lors d'un festival ou encore la fuite d'un barrage, sont autant d'éléments
-                        à prendre en considération pour s'assurer qu'un événement se déroule correctement.
+                        L’analyse de risques est une phase importante dans le cycle de vie d’un projet. Elle permet
+                        d’identifier les potentiels actes de malveillances, constituant des menaces, et de mettre en
+                        perspective les risques liés à des causes accidentelles. L’absence d’outils open-source de
+                        modélisation de tels risques et couvrant ces aspects de <b>safety</b> et <b>security</b> a été la
+                        motivation première pour la réalisation du projet Bowtie++.
                     </p>
+                    <div class="row justify-content-center mt-4">
+                        <a href="#safety_security" class="btn btn-success" role="button">En savoir plus sur la dualité safety/security </a>
+                    </div>
 
-                    <div>
+                    <!-- <div>
                         <base-button size="sm" type="default" style="color:#8898aa"
                                      v-b-popover.hover.left="'Catastrophes naturelles, propriétés d\'un terrain'"
                                      title="Conditions naturelles"><i class="fa fa-globe" ></i>
@@ -103,23 +108,46 @@
                                      v-b-popover.hover.left="'Fuite d\'un barrage, usure d\'une centrale nucléaire'"
                                      title="Electricité"><i class="fa fa-lightbulb-o" ></i>
                         </base-button>
-                    </div>
+                    </div> -->
 
 
-                    <p class="lead text-justify swap-color-text">
+                    <!--<p class="lead text-justify swap-color-text">
                         Devant une telle variété et complexité, l'enjeu de Bowtie++ est donc de trouver
                         un moyen de réunir tous ces aspects afin de gérer la sécurité d'un événement redouté dans son ensemble.
+                    </p> -->
+
+
+
+                    <div class="row">
+                        <div class="col-md-12 ml-auto mr-auto text-center my-5">
+                            <div class="p-4">
+                                <img class="rounded shadow transform-perspective-left" width="80%" src="image/bowite++_example.png">
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-center"><hr class="line-white"/></p>
+
+                    <h3 id="safety_security" class="display-3 swap-color-text">Dualité safety/security</h3>
+                    <p class="lead text-justify text-white">
+                        La <b>safety</b> désigne les risques liés à une cause accidentelle et la <b>security</b>, les risques liés à
+                        une menace malveillante.
                     </p>
+                    <div class="row justify-content-center m-3">
+                        <div class="col-md-5 mr-3">
+                            <img class="rounded shadow" width="100%" src="image/safety_example.jpg">
+                            <h3 class="display-4 mt-3 text-white">Safety</h3>
+                        </div>
+
+                        <div class="col-md-5 ml-3">
+                            <img class="rounded shadow" width="100%" src="image/security_example.jpg">
+                            <h3 class="display-4 mt-3 text-white">Security</h3>
+                        </div>
+                        </div>
 
                 </div>
               </div>
-              <div class="row">
-                <div class="col-md-12 ml-auto mr-auto text-center my-5">
-                  <div class="p-4">
-                    <img class="rounded shadow transform-perspective-left" width="80%" src="image/bowite++_example.png">
-                  </div>
-                </div>
-              </div>
+
             </div>
           </section>
 
@@ -130,8 +158,8 @@
                 <div class="col-md-10 ">
                   <h3 class="display-3 text-center">Objectif du projet</h3>
                   <p class="lead text-justify">
-                    L'objectif est de développer une application déployable facilement sur de nombreux supports,
-                      tout en étant une solution moderne et sécurisée. Pour cela, nous nous sommes basés sur
+                    L'objectif est de développer une application de modélisation de diagrammes d'analyse de risques, déployable facilement sur de nombreux supports.
+                      Bowtie++ apporte une solution moderne et sécurisée. Pour cela, nous nous sommes basés sur
                       3 technologies.
                   </p>
                   <div class="row align-items-center">
@@ -260,7 +288,7 @@
                           </div>
                           <div class="row">
                               <div class="col-md-12 ml-auto mr-auto text-center mt-5">
-                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/bowite++_example.png">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_bibli.png">
                                   <button type="button" class="btn btn-success mt-5 mb-0" data-toggle="modal" data-target="#modal_bibli">
                                       Voir en détails
                                   </button>
@@ -395,16 +423,6 @@
                               </div>
                             </div>
                           </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Adore partager ses pâtes au thon</h6>
-                              </div>
-                            </div>
-                          </li>
                         </ul>
                       </div>
                     </div>
@@ -432,16 +450,6 @@
                               </div>
                             </div>
                           </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Peut potentiellement tous nous hacker</h6>
-                              </div>
-                            </div>
-                          </li>
                         </ul>
                       </div>
                     </div>
@@ -466,16 +474,6 @@
                               </div>                    
                               <div>
                                 <h6 class="mb-1">Equipe Back-end</h6>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Prie le Saint-Django 3 fois par jour</h6>
                               </div>
                             </div>
                           </li>
@@ -509,16 +507,6 @@
                               </div>
                             </div>
                           </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Doctorant en calcul de risques</h6>
-                              </div>
-                            </div>
-                          </li>
                         </ul>
                       </div>
                     </div>
@@ -546,16 +534,6 @@
                               </div>
                             </div>
                           </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Le seul clouds d'un projet sécu</h6>
-                              </div>
-                            </div>
-                          </li>
                         </ul>
                       </div>
                     </div>
@@ -580,16 +558,6 @@
                               </div>
                               <div>
                                 <h6 class="mb-1">Equipe Front-end</h6>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Légèrement maniaque</h6>
                               </div>
                             </div>
                           </li>
@@ -623,16 +591,6 @@
                               </div>
                             </div>
                           </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Photo non-contractuelle</h6>
-                              </div>
-                            </div>
-                          </li>
                         </ul>
                       </div>
                     </div>
@@ -647,23 +605,13 @@
                     </div>
                     <div class="card-body pt-0">
                       <h4 class="display-4 mb-0">Barbara Fila</h4>
-                      <p class="lead">Maitre de conférence</p>
+                      <p class="lead">Maitre de conférence à l'INSA</p>
                       <div class="table-responsive">
                         <ul class="list-unstyled">
                           <li class="py-1">
                             <div class="d-flex align-items-center">
                               <div>
                                 <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
-                              </div>
-                              <div>
-                                <h6 class="mb-1">Encadrante</h6>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
                               </div>
                               <div>
                                 <h6 class="mb-1">Chercheuse à l'IRISA</h6>
@@ -693,16 +641,6 @@
                                 <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
                               </div>
                               <div>
-                                <h6 class="mb-1">Encadrant</h6>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="py-1">
-                            <div class="d-flex align-items-center">
-                              <div>
-                                <div class="badge badge-circle badge-success mr-3"><i class="ni ni-user-run"></i></div>
-                              </div>
-                              <div>
                                 <h6 class="mb-1">Chercheur à SINTEF Digital</h6>
                               </div>
                             </div>
@@ -720,7 +658,7 @@
 
           <!-- EN SAVOIR PLUS -->
           <section id="en-savoir-plus" class="section">
-            <div id="safety_security" class="container">
+            <div class="container">
               <div class="row">
                 <div class="col-md-10 ml-auto mr-auto text-center">
                   <h3 class="display-3 mb-3">En savoir plus</h3>
@@ -729,8 +667,11 @@
                   <h4 id="diag_bowtie" class="text-left mt-3">Diagramme Bowtie</h4>
                   <img class="p-5" width="100%" src="image/bowtie_element/bowtie_schema.png">
                   <p class="lead text-justify">
-                    Les diagrammes Bowtie sont composés de plusieurs éléments reliés entre eux par des flèches.
-                    La partie gauche précède l'événement et la partie droite y succède.
+                      Un diagramme BowTie tire son nom de son apparence en forme de nœud papillon (BowTie en anglais),
+                      le nœud central représente un évènement indésirable, à sa gauche se trouvent les causes menant à
+                      l’évènement indésirable, tandis qu'à sa droite se trouvent les conséquences. L’une des forces du
+                      diagramme BowTie vient du fait qu’il montre simplement la différence entre la prévention des
+                      risques et la minimisation des conséquences, tout en permettant la modélisation de scénarios complexes.
                   </p>
                   <div class="row justify-content-center align-items-center">
                     <div class="col-md-3 my-4">
@@ -938,12 +879,13 @@
                               <span aria-hidden="true">&times;</span>
                           </button>
                       </div>
-                      <div class="modal-body">
+                      <div class="modal-body ">
                           <p class="lead text-justify">
                               Bowtie++ permet à ses utilisateurs de rendre leurs diagrammes publics.
                               Ces derniers peuvent alors servir de modèle à tous les autres utilisateurs
                               de l'application.
                           </p>
+                          <img class="rounded shadow" width="100%" src="image/fonctionnalites/fonc_bibli.png">
                       </div>
                       <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -962,12 +904,14 @@
                       </div>
                       <div class="modal-body">
                           <p class="lead text-justify">
-                              Bowtie++ permet à ses utilisateurs de calculer la valeur de risques d'un
-                              diagrammes. Pour cela, il leur suffit de rentrer des données telles que
-                              les probabilités des causes/menaces, leur dangerosité, leur fréquence.
-                              Cette valeur n'est pas absolue mais permet aux utilisateurs de comparer
-                              des diagrammes Bowtie.
+                              Bowtie++ permet à ses utilisateurs de calculer la valeur de risques d'un diagramme.
+                              Pour cela, il leur suffit de rentrer les caractéristiques (probabilité d'occurence,
+                              dangerosité, etc.) des <b>causes</b> et <b>conséquences</b> de l’<b>événement indésirable</b>. Cette valeur
+                              n'est pas absolue mais permet aux utilisateurs de comparer des diagrammes Bowtie.
                           </p>
+                          <div class="row justify-content-center mt-4">
+                              <a href="#diag_bowtie" class="btn btn-warning" role="button">En savoir plus sur les diagrammes Bowtie </a>
+                          </div>
                       </div>
                       <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -979,7 +923,7 @@
               <div class="modal-dialog" role="document">
                   <div class="modal-content">
                       <div class="modal-header">
-                          <h5 class="modal-title">Analyse Statistique</h5>
+                          <h5 class="modal-title">Analyse statistique</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                               <span aria-hidden="true">&times;</span>
                           </button>
@@ -987,10 +931,13 @@
                       <div class="modal-body">
                           <p class="lead text-justify">
                               A des fins de recherche, le statut de chercheur peut être accordé à un
-                              utilisateur via un admin. Ce statut confère l'accès à l'analyse statistiqe
+                              utilisateur via un admin. Ce statut confère l'accès à l'analyse statistique
                               de la base de données de Bowtie++. On y retrouve des informations comme le
-                              nombre de diagrammes, le nombre moyen de causes, le nombre de barrières par conséquences.
+                              nombre de diagrammes, le nombre moyen de <b>causes</b>, le nombre de <b>barrières</b> par <b>conséquences</b>.
                           </p>
+                          <div class="row justify-content-center mt-4">
+                              <a href="#diag_bowtie" class="btn btn-warning" role="button">En savoir plus sur les diagrammes Bowtie </a>
+                          </div>
                       </div>
                       <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
