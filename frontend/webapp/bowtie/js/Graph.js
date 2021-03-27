@@ -166,12 +166,14 @@ Graph = function(container, model, renderHint, stylesheet, themes)
 			  var s = 'ellipse;' +'fillColor='+ fill+';'
 			  cell.setStyle(s)
 
-			  if(cell.getParent().getParent().edges.length > 0){
-			  	this.updateThreatColor(cell.getParent().getParent().edges[0].source, cell.getParent().getParent());
+			  // If the matrix is connected to a threat, update the color of the threat
+			  if(cell.getParent().getParent().edges!=null){
+				  if(cell.getParent().getParent().edges[0].source.customID='Threat'){
+					  this.updateThreatColor(cell.getParent().getParent().edges[0].source, cell.getParent().getParent());
+				  }
 			  }
 
 			  this.refresh()
-			  //console.log(cell.getStyle())
 		    // Do something useful with cell and consume the event
 		  }
 	    evt.consume();

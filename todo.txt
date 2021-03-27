@@ -1,0 +1,4 @@
+inverser couleur boutons,
+fixer boutons,
+rendre le tout sauvegardable au moins sur la session,
+couleur threat que sur modif.

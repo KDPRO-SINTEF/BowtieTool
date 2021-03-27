@@ -4,8 +4,25 @@
 #threats_button{
     float: left;
 }
+
 #consequences_button{
     float: right;
+}
+#threats_button:disabled{
+     color: rgba(0,0,0,0.87);
+     color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.87))
+ }
+#threats_button{
+    color:rgba(0,0,0,0.26);
+    color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.26))
+}
+#consequences_button:disabled{
+    color: rgba(0,0,0,0.87);
+    color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.87))
+}
+#consequences_button{
+    color:rgba(0,0,0,0.26);
+    color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.26))
 }
 #highest_risk-value_image{
     width: 85%;
@@ -17,6 +34,7 @@
     height: 50px;
     display: block;
 }
+
 .table_container{
     padding-top : 20px;
 }
