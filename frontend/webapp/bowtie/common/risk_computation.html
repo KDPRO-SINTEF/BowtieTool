@@ -25,17 +25,17 @@
 </head>
 <body id="body">
     <div id="risk_container">
-        <div class="buttons_container">
+        <div id="buttons_container">
             <md-button id="threats_button" class="side_selection_button" v-on:click="currentTab = 'Threats'" :disabled="currentTab === 'Threats'">Threats</md-button>
             <md-button id="consequences_button" class="side_selection_button" v-on:click="currentTab = 'Consequences'" :disabled="currentTab === 'Consequences'">Consequences</md-button>
         </div>
-        <div class="table_container">
+        <div id="table_container">
             <keep-alive>
                 <threats-component @threats="processThreats" v-if="currentTab === 'Threats'"></threats-component>
                 <consequences-component @consequences="processConsequences" :event-probability="eventProbability" v-else="currentTab === 'Consequences'"></consequences-component>
             </keep-alive>
         </div>
-        <div class="result_container">
+        <div id="result_container">
             <result-component :highest-risk-value="highestRiskValue" :accumulated-risk-value="accumulatedRiskValue" :event-probability="eventProbability" :missing-consequence="missingConsequence"></result-component>
         </div>
     </div>

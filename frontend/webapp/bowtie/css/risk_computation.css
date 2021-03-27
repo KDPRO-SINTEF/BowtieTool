@@ -1,10 +1,23 @@
 #body{
     background-color: white;
 }
+#buttons_container{
+    height: 50px;
+    display: block;
+    width: 100%;
+    position: fixed;
+    z-index: 200;
+    background-color: #FFFFFF;
+}
+#table_container{
+    padding-top: 50px;
+}
+#result_container{
+    padding-top : 30px;
+}
 #threats_button{
     float: left;
 }
-
 #consequences_button{
     float: right;
 }
@@ -30,14 +43,6 @@
     margin-left: 7.5%;
     margin-right: 7.5%;
 }
-.buttons_container{
-    height: 50px;
-    display: block;
-}
-
-.table_container{
-    padding-top : 20px;
-}
 .description {
      width: 70%;
  }
@@ -58,9 +63,6 @@
 }
 .risk_value{
     text-align: right;
-}
-.result_container{
-    padding-top : 30px;
 }
 
 .result_description{
