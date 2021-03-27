@@ -1,11 +1,20 @@
 class Consequence{
-    constructor(name, impactValue, probability){
-        this._impactValue = (impactValue != null) ? impactValue : -1;
-        this._probability = (probability != null) ? probability : -1;
-        this._name = name;
+    constructor(cell){
+        this._cell = cell;
+        this._impactValue =  "";
+        this._probability =  "";
+        this._name = cell.value;
     }
     allDefined(){
-        return (this._impactValue !== -1) && (this._probability !== -1);
+        return (this._impactValue !== "") && (this._probability !== "");
+    }
+
+    get cell() {
+        return this._cell;
+    }
+
+    set cell(newCell) {
+        this._cell = newCell;
     }
 
     get name() {

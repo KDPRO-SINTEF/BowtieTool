@@ -32,7 +32,7 @@
         <div id="table_container">
             <keep-alive>
                 <threats-component @threats="processThreats" v-if="currentTab === 'Threats'"></threats-component>
-                <consequences-component @consequences="processConsequences" :event-probability="eventProbability" v-else="currentTab === 'Consequences'"></consequences-component>
+                <consequences-component @consequences="processConsequences" :event-probability="eventProbability" :highest-risk-value="highestRiskValue" v-else="currentTab === 'Consequences'"></consequences-component>
             </keep-alive>
         </div>
         <div id="result_container">
@@ -78,10 +78,10 @@
                     <md-table-head class="probability" md-numeric>Probability p(C<sub>j</sub>)</md-table-head>
                     <md-table-head class="risk_value" >Risk Value R(U)<sub>j</sub></md-table-head>
                 </md-table-row >
-                <md-table-row v-for="consequence in consequences" v-bind:key="consequence.name">
+                <md-table-row v-for="consequence in consequences" v-bind:key="consequence.name" v-bind:class='{"highest_rv_row" : isHighest(consequence)}'>
                     <md-table-cell class="description"> {{consequence.name}}</md-table-cell>
-                    <md-table-cell class="impact_value" md-numeric><md-field><md-input class="numeric_input" v-on:change="updateImpactValue(consequence, $event)" type="number" min ="0" step="0.01"></md-input></md-field></md-table-cell>
-                    <md-table-cell class="probability" md-numeric><md-field><md-input class="numeric_input" v-on:change="updateProbability(consequence, $event)" type="number" min ="0" max="1" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="impact_value" md-numeric><md-field><md-input class="numeric_input" v-model="consequence.impactValue" v-on:change="updateImpactValue(consequence, $event)" type="number" min ="0" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="probability" md-numeric><md-field><md-input class="numeric_input" v-model="consequence.probability" v-on:change="updateProbability(consequence, $event)" type="number" min ="0" max="1" step="0.01"></md-input></md-field></md-table-cell>
                     <md-table-cell class="risk_value" >
                         <span v-if="isNaN(eventProbability)">P(U) not defined</span>
                         <span v-else-if="!consequence.allDefined()">Missing parameter(s)</span>

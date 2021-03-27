@@ -1,5 +1,6 @@
 class Matrix{
     constructor(matrixCell){
+        this.matrixCell = matrixCell;
         this.threatActors = this.getLaneValue(matrixCell.children[0]);
         this.opportunity = this.getLaneValue(matrixCell.children[1]);
         this.means = this.getLaneValue(matrixCell.children[2]);

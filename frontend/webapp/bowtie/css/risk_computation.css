@@ -46,6 +46,9 @@
 .description {
      width: 70%;
  }
+.highest_rv_row{
+    background-color: #ffd5d5;
+}
 .md-field {
     padding-top: 0;
     padding-right: 0;
