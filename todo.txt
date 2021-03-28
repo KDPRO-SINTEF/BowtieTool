@@ -1,3 +1,0 @@
-rendre le tout sauvegardable au moins sur la session,
-Effet coloré sur highest rv
-couleur threat que sur modif.
