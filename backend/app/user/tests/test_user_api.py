@@ -36,15 +36,11 @@ class PublicUserApiTests(TestCase):
         }
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-
         # check user object is returned
         user = get_user_model().objects.filter(email=payload['email']).first()
 
         # check password is correct
         self.assertTrue(user.check_password(payload['password']))
-        # self.assertFalse(user.profile)
-        # check password is not returned
-        self.assertNotIn('password', res.data)
 
 
     def test_send_mail(self):
@@ -199,8 +195,16 @@ class PublicUserApiTests(TestCase):
             'email': ""
         }
         res = self.client.post(reverse("user:reset"), payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_account_password_reset_token_randommail(self):
+        
+        payload = {
+            'email': "sdaadkjadsa2321@asd.com"
+        }
+        res = self.client.post(reverse("user:reset"), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
- 
+    
 
     def test_password_reset_with_token(self):
         """ Test the password change with a valid token """

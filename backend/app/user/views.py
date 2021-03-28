@@ -2,7 +2,7 @@ import base64
 from rest_framework import generics, authentication, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize, UserInfoSerializer
+from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize, UserInfoSerializer, PasswordResetSerializer
 from user.customPermission import HasConfirmedEmail
 from django.core import mail
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken, TOTPValidityToken, ExpiringTokenAuthentication
@@ -36,6 +36,11 @@ PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validation.html?for=reset
 PASSWORD_RESET_REQUEST_URL = "http://localhost:8080/app/bowtie/common/authentication.html#password-reset"
 
 
+def send_mail(subject, message, email, fromm='no-reply@Bowtie'):
+    """Send email functiom"""
+
+    mail.send_mail(subject, message, fromm, [email], fail_silently=False)
+
 # User creation and authentication logic
 class CreateUserView(generics.CreateAPIView):
     """Create a new user in the system"""
@@ -50,45 +55,42 @@ class CreateUserView(generics.CreateAPIView):
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
-
             user = get_user_model().objects.filter(email=request.data['email']).first()
-            # generate an activation token for the user
             token = AccountActivationTokenGenerator().make_token(user)
-            logger.info('Account with email : %s created on: %s', user.email, timezone.now())
             message = "To activate your Bowtie++ account, please click on the following link %s" % (
                 CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
             subject = 'Activate account for no-reply-Bowtieowtie++'
-            mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                fail_silently=False)
-            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            logger.info('Account with email : %s created on: %s', user.email, timezone.now())
+            send_mail(subject, message, user.email)
 
-        except (ValidationError, AssertionError, IntegrityError) as e:
+        except (ValidationError, AssertionError, IntegrityError) as error_validation:
 
-            if isinstance(e, IntegrityError):   # duplication
-                user = get_user_model().objects.filter(email=request.data['email']).first()
-                if user.profile.email_confirmed:
-                    # creation of an account that has not been confirmed
-                    logger.warning("Attempt to create account with existing email %s", "")
-                    message = "Someone tried to create an account into Bowtie++ using " + \
-                    "this email who is already registered." + \
-                    " If you forgot your password please use the reset link on our login page.\n" + \
-                    "Sincerly, \n Bowtie++ team"
-                    subject = 'Account creation with existing email'
-                    mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                        fail_silently=False)
-                else:
-                    token = AccountActivationTokenGenerator().make_token(user)
-                    logger.info('Account with email : %s created on: %s', user.email,
-                        timezone.now())
-                    message = "To activate your account please click on the following link %s" % (
-                        CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
-                    subject = 'Activate account for no-reply-Bowtieowtie++'
-                    mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                        fail_silently=False)
+            if not isinstance(error_validation, IntegrityError):
+                return Response(dict(errors=error_validation.detail),
+                    status=status.HTTP_400_BAD_REQUEST)
 
-                return Response(status=status.HTTP_201_CREATED)
+            user = get_user_model().objects.filter(email=request.data['email']).first()
+            if user.profile.email_confirmed:
+                logger.warning("Attempt to create account with existing email %s", "")
+                message = "Someone tried to create an account into Bowtie++ using " + \
+                "this email who is already registered." + \
+                " If you forgot your password please use the reset link on our login page.\n"+\
+                "Sincerly, \n Bowtie++ team"
 
-            return Response(dict(errors=e.detail), status=status.HTTP_400_BAD_REQUEST)
+                subject = 'Account creation with existing email'
+                send_mail(subject, message, user.email)
+
+            else:
+                token = AccountActivationTokenGenerator().make_token(user)
+
+                message = "To activate your account please click on the following link %s" % (
+                    CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
+
+                mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
+                    fail_silently=False)
+
+        return Response(status=status.HTTP_201_CREATED)
+
 
 
 class CreateTokenView(ObtainAuthToken):
@@ -147,27 +149,21 @@ class UpdatePassword(APIView):
 
     def put(self, request):
         user = request.user
-        serializer = UserUpdateSerialize(data=request.data)
+        serializer = UserUpdateSerialize(data=request.data, user=user)
         serializer.is_valid(raise_exception=True)
-        new_password = serializer.validated_data['new_password']
-        old_password = serializer.validated_data['old_password']
+        new_password = serializer.validated_data['new_password'] 
+        user.set_password(new_password)
+        user.save()
+        logger.warning("User %s changed password ", user)
+        message = "Your Bowtie++ account password has been changed. If you're familiar with this activity, " + \
+        "you can discard this email. Otherwise, we suggest you to immediatly change your " + \
+        "password at http://localhost:8080/app/bowtie/common/authentication.html#password-reset.\n\n" + \
+        "Sincerly, \n\n Bowtie++ team"
+        subject = 'Changed password for Bowtie++'
+        mail.send_mail(subject, message, 'no-reply@Bowtie', [user.email],
+            fail_silently=False)
+        return Response(status=status.HTTP_200_OK)
 
-        if authenticate(request=request,
-                            username=user.email,
-                            password=old_password):
-            user.set_password(new_password)
-            user.save()
-            logger.warning("User %s changed password ", user)
-            message = "Your Bowtie++ account password has been changed. If you're familiar with this activity, " + \
-            "you can discard this email. Otherwise, we suggest you to immediatly change your " + \
-            "password at http://localhost:8080/app/bowtie/common/authentication.html#password-reset.\n\n" + \
-            "Sincerly, \n\n Bowtie++ team"
-            subject = 'Changed password for Bowtie++'
-            mail.send_mail(subject, message, 'no-reply@Bowtie', [user.email],
-                fail_silently=False)
-            return Response(status=status.HTTP_200_OK)
-
-        return Response(dict(errors=["Wrong password"]), status=status.HTTP_400_BAD_REQUEST)
 
     def __str__(self):
         return "Retrieve authenticated user from an API request"
@@ -203,22 +199,13 @@ class ActivateAccount(APIView):
 class PasswordReset(APIView):
     """ Route for password reset request of a user"""
 
+    serializer_class = PasswordResetSerializer
+    
     def post(self, request):
         """Post method for password reset. It takes a JSON with the user's email"""
 
-        email = request.data['email']
-
-        user = get_user_model().objects.filter(email=email).first()
-        if not user is None:
-            # generate an activation token for the user
-            token = PasswordResetToken().make_token(user)
-            # Reset message and mail sending
-            message = "To reset your account password for Bowtie++ please click on the following link %s" % (
-                PASSWORD_RESET_URL % (urlsafe_base64_encode(force_bytes(user.pk)), token))
-
-            subject = 'Reset password for Bowtie++'
-            mail.send_mail(subject, message, 'no-reply-Bowtie++', [email], fail_silently=True)
-
+        serializer = PasswordResetSerializer(data=request.data, url=PASSWORD_RESET_URL)
+        serializer.is_valid(raise_exception=True)
         return  Response(status=status.HTTP_200_OK)
 
     def __str__(self):
@@ -239,9 +226,10 @@ class ValidatePasswordReset(APIView):
             logger.warning("Failed resset password for User with id %s. Exception: %s", uid, e_ex)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        if user and PasswordResetToken().check_token(user, token):
-            user.is_active = False # User needs to be inactive for the reset password duration
+        if PasswordResetToken().check_token(user, token):
+
             try:
+                user.is_active = False # User needs to be inactive for the reset password duration
                 password = request.data['password']
                 validators.validate_password(password)
                 user.set_password(password)
@@ -249,16 +237,12 @@ class ValidatePasswordReset(APIView):
                 user.save()
                 user.profile.save()
                 return Response(status=status.HTTP_200_OK)
+
             except ValidationError:
                 data = "bad credentials"
                 return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
-        elif not user is None:
-            user.is_active = False # User needs to be inactive for the reset password duration
-            return Response(status=status.HTTP_400_BAD_REQUEST, data="Invalid token")
-
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 # Two factor authentication logic
 def get_user_totp_device(user, confirmed=False):
@@ -320,32 +304,26 @@ class TOTPAuthenticateView(APIView):
     def post(self, request, uidb64, token):
         """Verify user one-time password"""
 
-        # check if request is made in the permitted time
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
-            user = None
             logger.warning('Unsuccessfull login with id %s. Exception: %s', uid, e_ex)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        if not TOTPValidityToken().check_token(user, token):
-            return Response(dict(
-           errors=['Expired token']),
-                status=status.HTTP_400_BAD_REQUEST
-            )
 
+        if TOTPValidityToken().check_token(user, token) and ("token_totp" in request.data):
 
-        device = get_user_totp_device(user, True)
-        if not device:
-            return Response(dict(
-           errors=['This user has not setup two factor authentication']),
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            device = get_user_totp_device(user, True)
+            token_totp = request.data["token_totp"]
 
-        token_totp = request.data["token_totp"]
-        if device.verify_token(token_totp):
+            if not device or not device.verify_token(token_totp):
+                return Response(dict(errors=['This user has not setup two' \
+                    + 'factor authentication or has not enter a valid code']),
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
             token, created = Token.objects.get_or_create(user=user)
             if not created:
                 # update the created time of the token to keep it valid
@@ -355,7 +333,8 @@ class TOTPAuthenticateView(APIView):
             logger.info("User with email %s logs at %s", user.email, timezone.now())
             return Response({'token': token.key}, status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(dict(errors=['Expired token']), status=status.HTTP_400_BAD_REQUEST)
 
 
 class VerifyTOTPView(APIView):
@@ -453,17 +432,3 @@ class DisableTOTP(APIView):
         user.profile.save()
         user.save()
         return Response(status=status.HTTP_200_OK)
-
-class Two_fa_test(APIView):
-
-    authentication_classes = (ExpiringTokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get(self, request):
-
-        user = request.user
-        enabled = user.profile.two_factor_enabled
-        device = get_user_totp_device(user, True)
-        confirmed = device.confirmed if device else False
-
-        return Response(dict(two_fa=enabled, confirmed=confirmed), status=status.HTTP_200_OK)

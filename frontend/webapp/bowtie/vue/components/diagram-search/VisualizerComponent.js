@@ -48,7 +48,8 @@ let VisualizerComponent = {
                         }
                     }
                 }
-                let nameOk = (diag.name.indexOf(this.nameInput) > -1) || (this.nameInput==="")
+                // let nameOk = (diag.name.indexOf(this.nameInput) > -1) || (this.nameInput==="")
+                let nameOk = (diag.name.toLowerCase().includes(this.nameInput.toLowerCase())) || (this.nameInput==="")
                 return diag.is_public === this.isPublic && nameOk && areTagsOk;
             })
         },

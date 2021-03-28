@@ -1,3 +1,4 @@
+
 let diagramSearch_vue = new Vue({
     el: '#diagram-search-vue',
     components: {
@@ -11,6 +12,7 @@ let diagramSearch_vue = new Vue({
         all_diagrams: [],
         tags_selected:[],
         show_all_tags: true,
+
     },
     methods: {
         init: function () {
