@@ -8,7 +8,18 @@ let AccountProfileComponent = {
     template: '#account-profile-template',
     props: {
         username: String,
-        email: String
+        email: String,
+        isResearcher: Boolean
+    },
+    data: function() {
+        return {
+            role: 'Basic user'
+        }
+    },
+    beforeMount() {
+        if (this.isResearcher) {
+            this.role = 'Researcher';
+        }
     }
 }
 
@@ -35,7 +46,7 @@ let AccountSecurityComponent = {
             },
             errors: {
                 MissingFieldsErr: {
-                    message: 'All fields are required. Please fill in them.',
+                    message: 'All fields are required.',
                     show: false
                 },
                 WeakPasswordErr: {
@@ -43,7 +54,7 @@ let AccountSecurityComponent = {
                     show: false
                 },
                 ConfirmPasswordErr: {
-                    message: 'The two typed passwords are different.',
+                    message: 'Typed passwords are different.',
                     show: false
                 },
                 WrongActualPasswordErr: {
@@ -183,14 +194,19 @@ let AccountSecurityComponent = {
 let AccountDangerZoneComponent = {
     template: '#account-danger-zone-template',
     props: {
-        authToken: String
+        authToken: String,
+        cleanErrorMessages: Function
     },
     data: function() {
         return {
             password: '',
             errors: {
-                emptyPasswordErr: {
-                    message: 'Please, type your password.',
+                EmptyPasswordErr: {
+                    message: 'Password is required.',
+                    show: false
+                },
+                WrongPasswordErr: {
+                    message: 'Invalid password provided.',
                     show: false
                 }
             }
@@ -199,8 +215,9 @@ let AccountDangerZoneComponent = {
     methods: {
         // Checks if the account deletion form is valid
         checkDeleteAccountForm: function() {
+            this.cleanErrorMessages(this.errors);
           if (this.password === '') {
-              this.errors.emptyPasswordErr.show = true;
+              this.errors.EmptyPasswordErr.show = true;
               return false;
           }
           return true;
@@ -227,6 +244,14 @@ let AccountDangerZoneComponent = {
                     alert('Your account has been successfully deleted.');
                     window.location.assign(window.LOGIN_PAGE);
                 })
+                .catch(error => {
+                    if (error.response) this.filterAccountDeletionErrors(error.response);
+                })
+        },
+        filterAccountDeletionErrors: function(error) {
+            if (error.status === 400) {
+                this.errors.WrongPasswordErr.show = true;
+            }
         }
     }
 }
@@ -245,7 +270,8 @@ let AccountSettingsComponent = {
         email: String,
         authToken: String,
         is2faActivated: Boolean,
-        cleanErrorMessages: Function
+        cleanErrorMessages: Function,
+        isResearcher: Boolean
     },
     components: {
         'account-profile': AccountProfileComponent,
