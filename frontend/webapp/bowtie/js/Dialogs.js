@@ -377,7 +377,7 @@ var UserControlDialog = function (editorUi) {
  * New Bowtie++ OpenFromDbDialog which launch new VueJs Diagram_searchVue
  * Constructs a new filename dialog.
  */
-var OpenFromDBDialog = function (width,height) {
+var OpenFromDBDialog = function (width, height) {
 
 
     var iframe = document.createElement('iframe');
@@ -630,7 +630,10 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     nameInput.style.marginLeft = '4px';
     nameInput.style.width = '180px';
 
-    var is_public = false;
+    if(localStorage.getItem('is_public')===null){
+        localStorage.setItem('is_public','false')
+    }
+
 
     var tags_row = document.createElement('tr')
     var tags_td = document.createElement('td')
@@ -639,7 +642,7 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     tags_td.style.width = '120px';
     mxUtils.write(tags_td, "Diagram tags" + ':');
     var info_span = document.createElement("span")
-    info_span.setAttribute("class","icon")
+    info_span.setAttribute("class", "icon")
     tags_td.appendChild(info_span)
     /*var info_canvas = document.createElement("canvas")
     info_canvas.setAttribute("id","canvas")
@@ -664,18 +667,26 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     const public_row = document.createElement('tr')
     const public_td = document.createElement('td')
     var check_box = document.createElement('input')
-    check_box.setAttribute("type","checkbox")
-    check_box.setAttribute("id","public_checkbox")
+    check_box.setAttribute("type", "checkbox")
+    check_box.setAttribute("id", "public_checkbox")
 
     var checkBox_label = document.createElement('label')
-    checkBox_label.setAttribute("for","checkbox")
-    mxUtils.write(checkBox_label,"Public")
+    checkBox_label.setAttribute("for", "checkbox")
+    mxUtils.write(checkBox_label, "Public")
     public_td.appendChild(check_box)
     public_td.appendChild(checkBox_label)
     public_row.appendChild(public_td)
 
-    check_box.addEventListener('click',()=>{
-        is_public = !is_public;
+    check_box.addEventListener('click', () => {
+        switch (localStorage.getItem('is_public').toLowerCase().trim()) {
+            case 'false':
+                localStorage.setItem('is_public','true');
+                break;
+            default:
+                localStorage.setItem('is_public','false');
+                break;
+        }
+        // that way if the checkbox isn't clicked once we can send a null value
     })
 
     var genericBtn = mxUtils.button(buttonText, function () {
@@ -683,8 +694,9 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
             if (closeOnBtn) {
                 editorUi.hideDialog();
             }
-            const tags_splitted = tags_input.value.replace(' ','').split(',')
-            fn(nameInput.value, tags_splitted, is_public);
+            const tags_splitted = tags_input.value.replace(' ', '').split(',')
+            // const is_public = localStorage.getItem('is_public')
+            fn(nameInput.value, tags_splitted);
         }
     });
     genericBtn.className = 'geBtn gePrimaryBtn';
