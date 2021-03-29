@@ -670,6 +670,10 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     check_box.setAttribute("type", "checkbox")
     check_box.setAttribute("id", "public_checkbox")
 
+    if(localStorage.getItem('is_public') === 'true'){
+        check_box.checked = true;
+    }
+
     var checkBox_label = document.createElement('label')
     checkBox_label.setAttribute("for", "checkbox")
     mxUtils.write(checkBox_label, "Public")
