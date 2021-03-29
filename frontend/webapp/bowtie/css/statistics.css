@@ -33,7 +33,7 @@ h1 {
 
 #download-csv-button {
     display: block;
-    margin: 8vh auto auto auto;
+    margin: 0 auto auto auto;
 }
 
 .stats-item-logo {

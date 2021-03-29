@@ -34,6 +34,10 @@ let statistics_vue = new Vue({
                 label: 'Barriers/consequences *',
                 number: 0
             },
+            barriersPerThreats: {
+                label: 'Security controls/threats *',
+                number: 0
+            },
             count: {
                 label: 'Number of diagrams',
                 number: 0
@@ -95,7 +99,10 @@ let statistics_vue = new Vue({
                 this.statistics.totalTimeSpent.number = Number(data.totalTimeSpent__avg.toFixed(2));
             }
             if (data.barriers_per_consequences__avg !== null) {
-                this.barriersPerConsequences.number = Number(data.barriers_per_consequences__avg.toFixed(2));
+                this.statistics.barriersPerConsequences.number = Number(data.barriers_per_consequences__avg.toFixed(2));
+            }
+            if (data.barriers_per_threats__avg !== null) {
+                this.statistics.barriersPerThreats.number = Number(data.barriers_per_threats__avg.toFixed(2));
             }
         },
         buildCSVData: function() {

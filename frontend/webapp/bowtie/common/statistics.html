@@ -20,64 +20,80 @@
 <body>
 <div id="statistics-vue">
     <div v-if="user.isAuthenticated && user.isResearcher" class="container statistics-overlay">
-            <div class="container">
-                <h1>Diagrams statistics</h1>
-                <div class="row gx-5 mb-5">
-                    <div class="col">
-                        <statistics-item :label="statistics.totalTimeSpent.label" :number="statistics.totalTimeSpent.number" v-on:value-copied="showToastMessage($event)" v-bind:image-src="'../images/statistics/statistics-clock.png'"></statistics-item>
-                    </div>
-                    <div class="col">
-                        <statistics-item :label="statistics.threats.label" :number="statistics.threats.number" v-on:value-copied="showToastMessage($event)" v-bind:image-src="'../images/statistics/statistics-threats.png'"></statistics-item>
+        <div class="container">
+            <h1>Diagrams statistics</h1>
+            <div class="row gx-5 mb-5">
+                <div class="col">
+                    <statistics-item :label="statistics.totalTimeSpent.label" :number="statistics.totalTimeSpent.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-clock.png'"></statistics-item>
+                </div>
+                <div class="col">
+                    <statistics-item :label="statistics.threats.label" :number="statistics.threats.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-threats.png'"></statistics-item>
+                </div>
+            </div>
+            <div class="row gx-5 mb-5">
+                <div class="col">
+                    <statistics-item :label="statistics.causes.label" :number="statistics.causes.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-causes.png'"></statistics-item>
+                </div>
+                <div class="col">
+                    <statistics-item :label="statistics.consequences.label" :number="statistics.consequences.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-consequences.png'"></statistics-item>
+                </div>
+            </div>
+            <div class="row gx-5 mb-5">
+                <div class="col">
+                    <statistics-item :label="statistics.barriers.label" :number="statistics.barriers.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
+                </div>
+                <div class="col">
+                    <statistics-item :label="statistics.barriersPerConsequences.label"
+                                     :number="statistics.barriersPerConsequences.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
+                </div>
+            </div>
+            <div class="row gx-5 mb-5">
+                <div class="col">
+                    <statistics-item :label="statistics.barriersPerThreats.label"
+                                     :number="statistics.barriersPerThreats.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
+                </div>
+                <div class="col">
+                    <statistics-item :label="statistics.count.label" :number="statistics.count.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-count.png'"></statistics-item>
+                </div>
+            </div>
+            <div class="row gx-5 mb-5">
+                <div class="col">
+                    <div class="alert alert-secondary" role="alert">
+                        Fields marked with * are computed as data per diagrams.
                     </div>
                 </div>
-                <div class="row gx-5 mb-5">
-                    <div class="col">
-                        <statistics-item :label="statistics.causes.label" :number="statistics.causes.number" v-on:value-copied="showToastMessage($event)" v-bind:image-src="'../images/statistics/statistics-causes.png'"></statistics-item>
-                    </div>
-                    <div class="col">
-                        <statistics-item :label="statistics.consequences.label" :number="statistics.consequences.number" v-on:value-copied="showToastMessage($event)" v-bind:image-src="'../images/statistics/statistics-consequences.png'"></statistics-item>
-                    </div>
-                </div>
-                <div class="row gx-5 mb-5">
-                    <div class="col">
-                        <statistics-item :label="statistics.barriers.label" :number="statistics.barriers.number" v-on:value-copied="showToastMessage($event)" v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
-                    </div>
-                    <div class="col">
-                        <statistics-item :label="statistics.barriersPerConsequences.label" :number="statistics.barriersPerConsequences.number" v-on:value-copied="showToastMessage($event)" v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
-                    </div>
-                </div>
-                <div class="row gx-5 mb-5">
-                    <div class="col">
-                        <statistics-item :label="statistics.count.label" :number="statistics.count.number" v-on:value-copied="showToastMessage($event)" v-bind:image-src="'../images/statistics/statistics-count.png'"></statistics-item>
-                    </div>
-                    <div class="col">
-                        <!--<div class="card shadow p-2 bg-white rounded">
-                            <div class="card-body">
-                                <div class="card-title text-uppercase text-muted">Info</div>
-                                <div class="card-content">
-                                    Data marked with * are counted as average by diagrams.
-                                    Statistics take in account both public and private diagrams.
-                                </div>
-                            </div>
-                        </div>-->
-                        <div class="statistics-info p-3">
-                            <div class="card-title text-uppercase text-muted">Info</div>
-                            <div class="card-content">
-                                Data marked with * are counted as average by diagrams.<br>
-                                Statistics only take into account public diagrams.
-                            </div>
-                        </div>
+                <div class="col">
+                    <div class="alert alert-danger" role="alert">
+                        Only public diagrams are used for statistical purposes !
                     </div>
                 </div>
             </div>
-            <button v-on:click="downloadAsCSV" class="btn btn-primary" id="download-csv-button">Download data as CSV</button>
-        </>
+        </div>
+        <button v-on:click="downloadAsCSV" class="btn btn-primary" id="download-csv-button">Download data as CSV
+        </button>
         <transition name="fade">
             <div v-if="toast.show" class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
                 <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
                     <div class="toast-header">
                         <strong class="me-auto text-success">Bowtie++ app -- successful operation !</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" v-on:click="toast.show = false"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"
+                                v-on:click="toast.show = false"></button>
                     </div>
                     <div class="toast-body">
                         {{ toast.message }}
