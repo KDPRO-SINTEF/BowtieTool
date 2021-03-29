@@ -19,3 +19,5 @@ urlpatterns = [
     path('password/update', views.UpdatePassword.as_view(), name='update-password-view'),
     path('totp/disable', totpviews.DisableTOTP.as_view(), name="reset-2fa"),
 ]
+
+   

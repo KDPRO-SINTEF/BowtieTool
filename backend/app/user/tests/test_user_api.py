@@ -9,7 +9,7 @@ from rest_framework.test import APIClient
 from rest_framework.exceptions import ValidationError
 from rest_framework import status
 from rest_framework.settings import api_settings as settings
-from django.core import mail 
+from django.core import mail
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -49,15 +49,15 @@ class PublicUserApiTests(TestCase):
 
 
     def test_user_missing_username(self):
-        
+
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
         }
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("username", res.data["errors"])        
-        
+        self.assertIn("username", res.data["errors"])
+
 
     def test_create_user_invalid_email(self):
         """Check if correct exception is raised for invalid email(response)"""
@@ -66,12 +66,12 @@ class PublicUserApiTests(TestCase):
             'password': '123456789a!',
             'username': 'Test name'
         }
-    
+
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("email", res.data["errors"])        
+        self.assertIn("email", res.data["errors"])
         self.assertEqual("Invalid field", res.data["errors"]["email"])
-    
+
 
     def test_create_user_invalid_password(self):
         """Check if correct exception is raised for invalid password (response)"""
@@ -80,46 +80,46 @@ class PublicUserApiTests(TestCase):
             'password': '123456789aa!',
             'username': 'Test name'
         }
-        
+
         payload2 = {
             'email': 'mkirov@insaa-rennes.fr',
             'password': '123456789AA!',
             'username': 'Test name'
         }
-    
+
         payload3 = {
             'email': 'mkirov@insaa-rennes.fr',
             'password': 'aaaaaaaaAaa!',
             'username': 'Test name'
         }
-        
+
         payload4 = {
             'email': 'mkirov@insaa-rennes.fr',
             'password': '123456789AAA',
             'username': 'Test name'
         }
-    
+
 
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("password", res.data["errors"])        
+        self.assertIn("password", res.data["errors"])
         self.assertEqual("Invalid field", res.data["errors"]["password"])
-    
+
         res = self.client.post(CREATE_USER_URL, payload2)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("password", res.data["errors"])        
+        self.assertIn("password", res.data["errors"])
         self.assertEqual("Invalid field", res.data["errors"]["password"])
-        
+
         res = self.client.post(CREATE_USER_URL, payload3)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("password", res.data["errors"])        
+        self.assertIn("password", res.data["errors"])
         self.assertEqual("Invalid field", res.data["errors"]["password"])
-        
+
         res = self.client.post(CREATE_USER_URL, payload4)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("password", res.data["errors"])        
+        self.assertIn("password", res.data["errors"])
         self.assertEqual("Invalid field", res.data["errors"]["password"])
-    
+
 
     # todo test for integrity error -> https://stackoverflow.com/questions/21458387/transactionmanagementerror-you-cant-execute-queries-until-the-end-of-the-atom
     def test_send_mail(self):
@@ -146,9 +146,10 @@ class PublicUserApiTests(TestCase):
     #     try:
     #         with transaction.atomic():
     #             res = self.client.post(CREATE_USER_URL, payload)
+    #         self.fail('Duplicate question allowed.')
     #     except IntegrityError:
+    #         # self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
     #         pass
-    #     self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_token_for_user_fail(self):
         """Test for unsuccessful creation of authentification token for user"""
@@ -281,15 +282,15 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_account_password_reset_token_randommail(self):
-        
+
         payload = {
             'email': "sdaadkjadsa2321@asd.com"
         }
         res = self.client.post(reverse("user:reset"), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-    
+
     def test_response_time_existing_unexisting_emails(self):
-        """Test the response time for password resset request for existing 
+        """Test the response time for password resset request for existing
             and unexisting user """
         payload = {
             'email': 'test@bowtie.com',
@@ -303,10 +304,10 @@ class PublicUserApiTests(TestCase):
 
         start1 = datetime.datetime.now()
         self.client.post(reverse("user:reset"), payload)
-        end1 = datetime.datetime.now() 
+        end1 = datetime.datetime.now()
         start2 = datetime.datetime.now()
         self.client.post(reverse("user:reset"), payload2)
-        end2 = datetime.datetime.now() 
+        end2 = datetime.datetime.now()
         difference = ((end1-start1) - (end2-start2)).total_seconds()
         self.assertTrue( difference <= 0.1 )
 
@@ -452,7 +453,7 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(TOKEN_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn('token', res.data)
-        # add the auth token to the header of the APIClient object 
+        # add the auth token to the header of the APIClient object
         token = res.data['token']
         url = reverse('user:delete')
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
@@ -461,11 +462,11 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         user = get_user_model().objects.filter(email=payload['email']).first()
         self.assertEqual(None, user)
-    
+
 
     def test_delete_user_nok(self):
         """Test if deleting user fails if a wrong password or an empty field
-            is submitted 
+            is submitted
         """
         payload = {
             'email': 'test@bowtie.com',
@@ -477,7 +478,7 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(TOKEN_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn('token', res.data)
-        # add the auth token to the header of the APIClient object 
+        # add the auth token to the header of the APIClient object
         token = res.data['token']
         url = reverse('user:delete')
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
@@ -492,7 +493,7 @@ class PublicUserApiTests(TestCase):
 
 
     def test_update_password_user_nok1(self):
-        """Update psasword for not unauthenticated user 
+        """Update psasword for not unauthenticated user
             or incorrect method"""
 
         payload = {
@@ -508,7 +509,7 @@ class PublicUserApiTests(TestCase):
         token = res.data['token']
 
         url = reverse('user:update-password-view')
-       
+
         # request without token authentication
         res = self.client.put(url, {'old_password':'what'})
         self.assertEqual(status.HTTP_401_UNAUTHORIZED, res.status_code)
@@ -536,9 +537,9 @@ class PublicUserApiTests(TestCase):
         self.assertIn('token', res.data)
         token = res.data['token']
         url = reverse('user:update-password-view')
-        # request with incorrect JSON format 
+        # request with incorrect JSON format
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-        
+
         # invalid field names
         res = self.client.put(url, {'old_passwordd':'what', 'new_password': "what" })
         self.assertEqual(status.HTTP_400_BAD_REQUEST, res.status_code)
@@ -553,7 +554,7 @@ class PublicUserApiTests(TestCase):
         res = self.client.put(url, {'old_passwordd':'123456789A#aa', 'new_password': "what" })
         self.assertEqual(status.HTTP_400_BAD_REQUEST, res.status_code)
 
-        #invalid new password 
+        #invalid new password
         res = self.client.put(url, {'old_passwordd':'123456789A#a', 'new_password': "123456789A#" })
         self.assertEqual(status.HTTP_400_BAD_REQUEST, res.status_code)
 
@@ -588,7 +589,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(mail.outbox[0].body, message)
         self.assertEqual(mail.outbox[0].from_email, 'no-reply@Bowtie')
         self.assertEqual(mail.outbox[0].to, [user.email])
-        
+
         # old password
         user = get_user_model().objects.filter(email=payload['email']).first()
         self.assertFalse(user.check_password("123456789A#a"))
@@ -610,7 +611,7 @@ class PublicUserApiTests(TestCase):
         # token = res.data['token']
 
         url = reverse("user:totp-create")
-        res = self.client.get(url)        
+        res = self.client.get(url)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
@@ -630,7 +631,7 @@ class PublicUserApiTests(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
         url = reverse("user:totp-create")
-        res = self.client.get(url)        
+        res = self.client.get(url)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
 
         # temporary token present
@@ -643,7 +644,7 @@ class PublicUserApiTests(TestCase):
     def test_enable_two_fa_validate_token_validity(self):
         """Test validity of token for validation of user totp device"""
         settings.TOTP_CONFIRM_RESET_TIMEOUT=2
-        
+
         payload = {
             'email': 'test@bowtie.com',
             'password': '123456789A#a'
@@ -657,7 +658,7 @@ class PublicUserApiTests(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
         url = reverse("user:totp-create")
-        res = self.client.get(url)           
+        res = self.client.get(url)
         time.sleep(3)
         token_totp_validate = res.data["token"]
 
@@ -668,7 +669,7 @@ class PublicUserApiTests(TestCase):
 
     def test_enable_two_fa_validate_invalid_totp_token(self):
         """Test validity of token for validation of user totp device"""
-        
+
         payload = {
             'email': 'test@bowtie.com',
             'password': '123456789A#a'
@@ -682,11 +683,11 @@ class PublicUserApiTests(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
         url = reverse("user:totp-create")
-        res = self.client.get(url)           
+        res = self.client.get(url)
         token_totp_validate = res.data["token"]
 
         url2 = reverse("user:totp-activate", kwargs={'token':token_totp_validate})
         res2 = self.client.post(url2, {"token_totp": "1234"})
         self.assertEqual(res2.status_code, status.HTTP_400_BAD_REQUEST)
 
-# todo enable, disable two fa, new login logic 
+# todo enable, disable two fa, new login logic

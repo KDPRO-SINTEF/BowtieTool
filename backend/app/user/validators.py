@@ -22,14 +22,12 @@ class LowercaseValidator:
 class UppercaseValidator:
     """Validation for uppercase in password"""
 
-
     def validate(self, password, user=None):
         """Validate password"""
         if not re.findall('[A-Z]', password):
             raise ValidationError(dict(
                     password="The password must contain at least 1 uppercase letter, A-Z."),
-                    code='password_no_upper')
-
+                    code='password_no_upper') 
 
     def get_help_text(self):
         """ Help message """
@@ -66,7 +64,6 @@ class DigitValidator:
         if not re.findall('[0-9]', password):
             raise ValidationError(dict(password="The password must contain at least 1 digit, 1-9."),
                     code='password_no_digit')
-
 
     def get_help_text(self):
         """ Help message """
