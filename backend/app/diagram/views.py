@@ -149,7 +149,7 @@ class StatsView(APIView):
     permission_classes = (IsResearcher,)
 
     def get(self, request):
-        queryset = DiagramStat.objects.all().annotate(
+        queryset = DiagramStat.objects.all().filter(F('threats') != 0).filter(F('consequences') != 0).annotate(
             barriers_per_consequences_threats=F('barriers') / (F('threats') + F('consequences')))
 
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
