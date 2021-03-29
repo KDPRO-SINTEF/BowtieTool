@@ -2643,12 +2643,10 @@ EditorUi.prototype.getContextualLoginText = function () {
  * Creates a new toolbar for the given container.
  */
 EditorUi.prototype.setLoginText = function (value) {
-    let user = localStorage.getItem('token');
-    //let isResearcher = localStorage.getItem('isResearcher');
-    let isResearcher = true;
     this.loginContainer.innerHTML = '';
-    if (user !== null) {
-        /* Researcher button */
+    let token = localStorage.getItem('token');
+    let isResearcher = true;
+    if (token !== null) {
         if (isResearcher) {
             let statisticsButton = document.createElement('button');
             statisticsButton.setAttribute('id', 'statistics-button');
@@ -2658,9 +2656,7 @@ EditorUi.prototype.setLoginText = function (value) {
             })
             statisticsButton.setAttribute('target', '_blank');
             this.loginContainer.appendChild(statisticsButton);
-        }
-
-        /* My account button */
+        }/* My account button */
         let accountButton = document.createElement('button');
         accountButton.setAttribute('id', 'account-button');
         accountButton.innerHTML = 'My account';
@@ -2669,6 +2665,7 @@ EditorUi.prototype.setLoginText = function (value) {
         })
         accountButton.setAttribute('target', '_blank');
         this.loginContainer.appendChild(accountButton);
+
     }
     this.loginContainer.appendChild(value);
 };
