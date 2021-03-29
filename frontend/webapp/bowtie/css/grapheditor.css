@@ -219,32 +219,29 @@
 	right: 10px;
 }
 
-.geMenubar a.geStatus a#userLoginName{
-	color: #0080ff;
-	padding-top: 2px;
-	float: left;
-	margin-right: 15px;
-}
-
-.geMenubar #statisticsButton {
-	color: white;
-	background-color: black;
-	border: none;
-	border-radius: 5px;
-	padding: 1% 5%;
-	margin : 0 15px;
-}
-
-.geMenubar a.geStatus button#loginButton {
+.geMenubar a.geStatus button {
 	color:white;
 	border:none;
 	font: inherit;
 	cursor: pointer;
-	background-color: #4CAF50;
 	border-radius:5px;
-	width:70px;
 	height: 20px;
 	text-align: center;
+	margin-right: 15px;
+	margin-top: -1px;
+}
+
+.geMenubar a.geStatus button#account-button{
+	background-color: #0d6efd;
+}
+
+.geMenubar a.geStatus button#statistics-button {
+	background-color: black;
+}
+
+.geMenubar a.geStatus button#loginButton {
+	width: 70px;
+	background: #4CAF50;
 }
 
 .geMenubar a.geStatus:hover {

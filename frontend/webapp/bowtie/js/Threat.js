@@ -17,7 +17,7 @@ class Threat {
         return this.threat.value;
     }
 
-    getCellId(){
+    getCell(){
         return this.threat;
     }
     getMatrix(){

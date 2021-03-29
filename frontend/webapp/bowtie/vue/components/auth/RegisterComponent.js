@@ -19,7 +19,7 @@ let RegisterComponent = {
             },
             errors: {
                 ConfirmPasswordErr: {
-                    message: 'The two typed passwords are different.',
+                    message: 'Typed passwords are different.',
                     show: false
                 },
                 WeakPasswordErr: {
@@ -27,7 +27,7 @@ let RegisterComponent = {
                     show: false
                 },
                 MissingFieldsErr: {
-                    message: 'All fields are required. Please fill in them.',
+                    message: 'All fields are required.',
                     show: false
                 },
                 InvalidEmailErr: {
@@ -44,7 +44,7 @@ let RegisterComponent = {
             this.cleanErrorMessages(this.errors);
             if (this.user.username === '' || this.user.email === '' || this.user.password === '') {
                 this.errors.MissingFieldsErr.show = true;
-                isValid = false;
+                return false;
             }
             if (!this.validEmail()) {
                 this.errors.InvalidEmailErr.show = true;
@@ -96,7 +96,7 @@ let RegisterComponent = {
                     }
                     break;
                 default:
-                    console.log('Error while contacting the server');
+                    console.log('Unexpected error wile signing up.');
             }
         }
     }

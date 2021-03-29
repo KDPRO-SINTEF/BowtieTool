@@ -1,11 +1,41 @@
 #body{
     background-color: white;
 }
+#buttons_container{
+    height: 50px;
+    display: block;
+    width: 100%;
+    position: fixed;
+    z-index: 200;
+    background-color: #FFFFFF;
+}
+#table_container{
+    padding-top: 50px;
+}
+#result_container{
+    padding-top : 30px;
+}
 #threats_button{
     float: left;
 }
 #consequences_button{
     float: right;
+}
+#threats_button:disabled{
+     color: rgba(0,0,0,0.87);
+     color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.87))
+ }
+#threats_button{
+    color:rgba(0,0,0,0.26);
+    color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.26))
+}
+#consequences_button:disabled{
+    color: rgba(0,0,0,0.87);
+    color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.87))
+}
+#consequences_button{
+    color:rgba(0,0,0,0.26);
+    color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.26))
 }
 #highest_risk-value_image{
     width: 85%;
@@ -13,16 +43,12 @@
     margin-left: 7.5%;
     margin-right: 7.5%;
 }
-.buttons_container{
-    height: 50px;
-    display: block;
-}
-.table_container{
-    padding-top : 20px;
-}
 .description {
      width: 70%;
  }
+.highest_rv_row{
+    background-color: #ffd5d5;
+}
 .md-field {
     padding-top: 0;
     padding-right: 0;
@@ -40,9 +66,6 @@
 }
 .risk_value{
     text-align: right;
-}
-.result_container{
-    padding-top : 30px;
 }
 
 .result_description{

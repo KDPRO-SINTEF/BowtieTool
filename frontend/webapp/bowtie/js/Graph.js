@@ -76,6 +76,7 @@ Graph = function(container, model, renderHint, stylesheet, themes)
 	this.themes = themes || this.defaultThemes;
 	this.currentEdgeStyle = mxUtils.clone(this.defaultEdgeStyle);
 	this.currentVertexStyle = mxUtils.clone(this.defaultVertexStyle);
+	this.consequences = [];
 
 	// Sets the base domain URL and domain path URL for relative links.
 	var b = this.baseUrl;
@@ -166,12 +167,14 @@ Graph = function(container, model, renderHint, stylesheet, themes)
 			  var s = 'ellipse;' +'fillColor='+ fill+';'
 			  cell.setStyle(s)
 
-			  if(cell.getParent().getParent().edges.length > 0){
-			  	this.updateThreatColor(cell.getParent().getParent().edges[0].source, cell.getParent().getParent());
+			  // If the matrix is connected to a threat, update the color of the threat
+			  if(cell.getParent().getParent().edges!=null){
+				  if(cell.getParent().getParent().edges[0].source.customID='Threat'){
+					  this.updateThreatColor(cell.getParent().getParent().edges[0].source, cell.getParent().getParent());
+				  }
 			  }
 
 			  this.refresh()
-			  //console.log(cell.getStyle())
 		    // Do something useful with cell and consume the event
 		  }
 	    evt.consume();
@@ -2643,7 +2646,10 @@ Graph.prototype.updateThreatColor = function(threatCell, matrixCell){
 		}
 	}
 }
-
+/*
+	Bowtie++ feature
+	returns the threats cells
+ */
 Graph.prototype.getAllThreatsID = function()
 {
 	let allCells = this.model.cells;
@@ -2664,9 +2670,9 @@ Graph.prototype.getAllThreatsID = function()
 }
 /*
 	Bowtie++ feature
-	returns the consequences cells IDs
+	returns the consequences cells
  */
-Graph.prototype.getAllConsequences = function()
+Graph.prototype.getAllConsequencesCells = function()
 {
 	let allCells = this.model.cells;
 	let consequences = new Array();
@@ -2678,6 +2684,40 @@ Graph.prototype.getAllConsequences = function()
 	return consequences;
 }
 
+/*
+	Bowtie++ feature
+	update this.consequences with the graph
+	returns this.consequences
+ */
+Graph.prototype.getAllConsequences = function()
+{
+	consCells = this.getAllConsequencesCells();
+	//Add new consequences from the diagram to this.consequences, rename it if it already was in this.consequences
+	consCells.forEach(cell => {
+		let consequence = this.consequences.find(elem => elem.cell.id === cell.id);
+		if (consequence !== undefined) {
+			consequence.name = cell.value;
+		} else {
+			this.consequences.push(new Consequence(cell));
+		}
+	});
+
+	// Remove the deleted consequences in this.consequences
+	let newConsequencesArray = [];
+	this.consequences.forEach(consequence => {
+		let cell = consCells.find(elem => elem.id === consequence.cell.id);
+		if (cell !== undefined){
+			newConsequencesArray.push(consequence);
+		}
+	});
+	this.consequences.sort(function(a,b){return b.name.toString() < a.name.toString()});
+	this.setConsequences(newConsequencesArray);
+	return this.consequences;
+}
+
+Graph.prototype.setConsequences = function(consequences){
+	this.consequences = consequences;
+}
 /**
  * Hover icons are used for hover, vertex handler and drag from sidebar.
  */

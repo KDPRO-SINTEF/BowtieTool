@@ -13,3 +13,4 @@ app/media/QR/*
 .coverage
 
 .env*
+app/core/migrations/*

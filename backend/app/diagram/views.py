@@ -16,9 +16,8 @@ from django.conf import settings
 from diagram import serializers
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from django.db.models import Q, Avg, Count, Min, Sum, F
+from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
 import PIL
-
 
 
 class IsResearcher(BasePermission):
@@ -69,11 +68,7 @@ class DiagramDetail(APIView):
         else:
             queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(is_public=True))
         try:
-            print(queryset)
-            for i in queryset:
-                print(i.id)
             queryset = queryset.get(pk=pk)
-            print(queryset)
             return queryset
         except Diagram.DoesNotExist:
             raise Http404
@@ -90,16 +85,18 @@ class DiagramDetail(APIView):
         # response['Content-Disposition'] = 'attachment; filename="%s"' % path.split('/')[-1]
         return response
 
-    # TODO: handle case where diagram public , and owner update ( currently duplicates file)
+    # TODO: handle case where diagram public
     def put(self, request, pk):
         """Update diagram"""
         diagramModel = self.get_object(pk)
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            if diagramModel.is_public:
-                # TODO Verify this work for public diagrams
-                serializer.save(owner=request.user, is_Public=False, lastTimeSpent=request.data['lastTimeSpent'],preview=request.data['preview'])
-                # diagramModel.delete()
+            print(diagramModel.owner.username)
+            print(request.user.username)
+            if diagramModel.is_public and (diagramModel.owner.username != request.user.username):
+                # If current user isn't the owner of the diagram,
+                # then he can only create a new private diagram from the public one
+                serializer.save(owner=request.user, is_public=False, lastTimeSpent=request.data['lastTimeSpent'])
             else:
                 diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
                 diagramModel.name = str(request.data['name'])
@@ -152,12 +149,25 @@ class StatsView(APIView):
     permission_classes = (IsResearcher,)
 
     def get(self, request):
-        queryset = DiagramStat.objects.all().annotate(
-            barriers_per_consequences_threats=F('barriers') / (F('threats') + F('consequences')))
 
+        queryset = DiagramStat.objects.all().annotate(
+            cons=F('consequences'),
+            sec_con=F('security_control'),
+            barriers_per_consequences=Case(
+                When(cons=0, then=0),
+                default=(F('barriers') / F('consequences')),
+                output_field=FloatField(),
+            ),
+            barriers_per_threats=Case(
+                When(sec_con=0, then=0),
+                default=(F('security_control') / F('consequences')),
+                output_field=FloatField(),
+            ),
+        )
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
-                                  Avg('barriers_per_consequences_threats')
+                                  Avg('barriers_per_consequences'),
+                                  Avg('barriers_per_threats')
                                   )
         resp['count'] = DiagramStat.objects.count()
 

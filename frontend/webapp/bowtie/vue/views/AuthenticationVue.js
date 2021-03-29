@@ -3,7 +3,7 @@ let auth_vue = new Vue({
     components: {
         'login': LoginComponent,
         'register': RegisterComponent,
-        'password-reset': PasswordResetComponent,
+        'password-reset': PasswordResetComponent
     },
     data: {
         currentTab: 'login',

@@ -5,9 +5,10 @@ app:
     frontend: launch the frontend
     backend: launch the backend"
 
+mkdir -p backend/app/media/QR
+mkdir -p backend/app/logs
+
 if [ "$#" = 0 ]; then
-    mkdir -p backend/app/media/QR
-    mkdir -p backend/app/logs
     docker-compose up
 elif [ "$#" = 1 ]; then
     if [ "$1" = "-h" -o "$1" = "--help" ]; then
@@ -15,10 +16,7 @@ elif [ "$#" = 1 ]; then
     elif [ "$1" = "frontend" ]; then
         cd ./frontend; docker-compose up
     elif [ "$1" = "backend" ]; then
-        cd ./backend
-	mkdir -p app/media/QR
-	mkdir -p app/logs
-	docker-compose up
+        cd ./backend; docker-compose up
     else
         echo "Illegal argument '$1'"
         echo "$help_message"

@@ -2643,32 +2643,31 @@ EditorUi.prototype.getContextualLoginText = function () {
  * Creates a new toolbar for the given container.
  */
 EditorUi.prototype.setLoginText = function (value) {
-    let uinfo = localStorage.getItem('username');
-    //let isResearcher = localStorage.getItem('isResearcher');
-    let isResearcher = false;
     this.loginContainer.innerHTML = '';
-
-    if (uinfo !== null) {
-        /* Researcher button */
+    let token = localStorage.getItem('token');
+    let isResearcher = true;
+    if (token !== null) {
         if (isResearcher) {
-            let statisticsButton = document.createElement('a');
-            statisticsButton.setAttribute('id', 'statisticsButton');
+            let statisticsButton = document.createElement('button');
+            statisticsButton.setAttribute('id', 'statistics-button');
             statisticsButton.innerHTML = 'Statistics';
-            statisticsButton.setAttribute('href', window.STATISTICS_PAGE);
+            statisticsButton.addEventListener('click', function () {
+                window.open(window.STATISTICS_PAGE);
+            })
             statisticsButton.setAttribute('target', '_blank');
             this.loginContainer.appendChild(statisticsButton);
-        }
+        }/* My account button */
+        let accountButton = document.createElement('button');
+        accountButton.setAttribute('id', 'account-button');
+        accountButton.innerHTML = 'My account';
+        accountButton.addEventListener('click', function () {
+            window.open(window.ACCOUNT_PAGE);
+        })
+        accountButton.setAttribute('target', '_blank');
+        this.loginContainer.appendChild(accountButton);
 
-        /* My account button */
-        let userName = document.createElement('a');
-        userName.setAttribute('id', 'userLoginName');
-        userName.innerHTML = 'My account';
-        userName.setAttribute('href', window.ACCOUNT_PAGE);
-        userName.setAttribute('target', '_blank');
-        this.loginContainer.appendChild(userName);
     }
     this.loginContainer.appendChild(value);
-
 };
 
 /**
@@ -3022,8 +3021,8 @@ EditorUi.prototype.saveFile = function (forceDialog) {
     if (!forceDialog && this.editor.filename != null) {
         this.save(this.editor.getOrCreateFilename(), "");
     } else {
-        var dlg = new FilenameDialog(this, this.editor.getOrCreateFilename(), mxResources.get('save'), mxUtils.bind(this, function (name, tags,is_public) {
-            this.save(name, tags,is_public);
+        var dlg = new FilenameDialog(this, this.editor.getOrCreateFilename(), mxResources.get('save'), mxUtils.bind(this, function (name, tags) {
+            this.save(name, tags);
         }), null, mxUtils.bind(this, function (name) {
             if (name != null && name.length > 0) {
                 return true;
@@ -3041,7 +3040,7 @@ EditorUi.prototype.saveFile = function (forceDialog) {
 /**
  * Saves the current graph under the given filename.
  */
-EditorUi.prototype.save = async function (name, tags,is_public) {
+EditorUi.prototype.save = function (name, tags) {
     if (name != null) {
         if (this.editor.graph.isEditing()) {
             this.editor.graph.stopEditing();
@@ -3079,7 +3078,12 @@ EditorUi.prototype.save = async function (name, tags,is_public) {
 
                     formData.append('name', name)
                     formData.append('diagram', xml)
-                    formData.append('is_public', JSON.parse(is_public))
+                    const is_public = localStorage.getItem('is_public')
+                    if(is_public === 'true'){ // This is needed because our backend uses Python and JSON.parse isn't workin
+                        formData.append('is_public', 'True')
+                    }else {
+                        formData.append('is_public', 'False')
+                    }
                     formData.append('lastTimeSpent', '10')
                     formData.append('tags', JSON.stringify(tags))
 
@@ -3143,14 +3147,10 @@ EditorUi.prototype.save = async function (name, tags,is_public) {
                         console.log(imgData)
                         formData.append('preview', imgData)
                     });*/
-                    await sleep(1000)
+                    // await sleep(1000)
 
                     if (!this.editor.getGraphId()) { //Meaning it's the first time we save this diagram
-                        /* 'Access-Control-Allow-Origin': '*',
-                             "Access-Control-Allow-Credentials": "*",
-                             'Access-Control-Allow-Methods': "GET, PUT, POST, DELETE, HEAD, OPTIONS",
-                             'Access-Control-Allow-Headers': "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers",
-                         */
+
                         axios.post(window.SAVE_URL, formData, {
                             headers: {
                                 'Authorization': 'Token ' + token
@@ -3163,31 +3163,10 @@ EditorUi.prototype.save = async function (name, tags,is_public) {
                                 console.log('Posted new diagram with id', id, 'and', this.editor.getGraphId());
                             })
                             .catch(error => {
-                                if (error.response) {
+
                                     console.log(error)
-                                }
+
                             })
-                        /*mxUtils.post(window.SAVE_URL, postdata, mxUtils.bind(this, function (req) {
-                            switch (req.getStatus()) {
-                                case 400:
-                                    mxUtils.alert(mxResources.get('serverBadRequest'));
-                                    break;
-                                case 401:
-                                    mxUtils.alert(mxResources.get('serverUnauthorized'));
-                                    break;
-                                case 403:
-                                    mxUtils.alert(mxResources.get('serverForbidden'));
-                                    break;
-                                default:
-                                    break;
-
-                            }
-
-                            var id = JSON.parse(req.getText()).id;
-                            this.editor.setGraphId(id);
-                            console.log('Inserted with id', id, 'and', this.editor.getGraphId());
-
-                        }));*/
                     } else {
                         // In that case the id is already defined meaning the diagram was already stored once in the backend
                         console.log('Existing with id', this.editor.getGraphId());
@@ -3199,32 +3178,13 @@ EditorUi.prototype.save = async function (name, tags,is_public) {
                         })
                             .then(res => {
                                 console.log(res)
-                                var id = res.data['id']
-                                console.log('Updated diagram with id', id, ' == ', this.editor.getGraphId());
+                                console.log('Updated diagram with id ',this.editor.getGraphId());
                             })
                             .catch(error => {
                                 if (error.response) {
                                     console.log(error)
                                 }
                             })
-                        /*mxUtils.post(window.UPDATE_URL+'/'+this.editor.getGraphId(), postdata, mxUtils.bind(this, function (req) {
-                            switch (req.getStatus()) {
-                                case 400:
-                                    mxUtils.alert(mxResources.get('serverBadRequest'));
-                                    break;
-                                case 401:
-                                    mxUtils.alert(mxResources.get('serverUnauthorized'));
-                                    break;
-                                case 403:
-                                    mxUtils.alert(mxResources.get('serverForbidden'));
-                                    break;
-                                default:
-                                    break;
-
-                            }
-
-                            console.log('Updated with response', req.getText());
-                        }));*/
                     }
                 } else {
                     mxUtils.alert(mxResources.get('drawingTooLarge'));
@@ -3238,7 +3198,8 @@ EditorUi.prototype.save = async function (name, tags,is_public) {
             this.editor.setFilename(name);
             this.updateDocumentTitle();
         } catch (e) {
-            this.editor.setStatus(mxUtils.htmlEntities(mxResources.get('errorSavingFile')));
+            console.log(e)
+            // this.editor.setStatus(mxUtils.htmlEntities(mxResources.get('errorSavingFile')));
         }
     }
 };

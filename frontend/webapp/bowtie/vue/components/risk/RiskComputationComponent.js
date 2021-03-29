@@ -26,7 +26,7 @@ let ThreatsComponent = {
 }
 
 let ConsequencesComponent = {
-    props: ['event-probability'],
+    props: ['event-probability', 'highest-risk-value'],
     template: '#consequences',
     data: function() {
         return {
@@ -35,28 +35,30 @@ let ConsequencesComponent = {
     },
     beforeMount: function () {
         //Initialize consequences array
-        const consID = window.parent.currentUI.editor.graph.getAllConsequences();
-        consID.forEach(elem => this.consequences.push(new Consequence(elem.value)));
-        this.consequences.sort(function(a,b){return b.name.toString() < a.name.toString()});
+        //const consCells = window.parent.currentUI.editor.graph.getAllConsequencesCells();
+        //consCells.forEach(elem => this.consequences.push(new Consequence(elem)));
+        this.consequences = window.parent.currentUI.editor.graph.getAllConsequences();
     },
     methods: {
-        updateImpactValue: function(consequence, event) {
+        updateImpactValue: function (consequence, event) {
             //Check input validity
-            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value === ""){
+            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value === "") {
                 console.log("Invalid impact value");
-                consequence.impactValue = -1;
+                consequence.impactValue = "";
                 this.emitConsequences();
                 return;
             }
 
             consequence.impactValue = parseFloat(event.target.value);
+            this.updateGraphConsequences();
             this.emitConsequences();
         },
-        updateProbability: function(consequence, event) {
+        updateProbability: function (consequence, event) {
             //Check input validity
-            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 1 || event.target.value === ""){
+            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 1 || event.target.value === "") {
                 console.log("Invalid probability value");
-                consequence.probability = -1;
+                consequence.probability = "";
+                this.updateGraphConsequences();
                 this.emitConsequences();
                 return;
             }
@@ -64,8 +66,21 @@ let ConsequencesComponent = {
             consequence.probability = parseFloat(event.target.value);
             this.emitConsequences();
         },
-        emitConsequences: function() {
+        emitConsequences: function () {
             this.$emit("consequences", this.consequences);
+        },
+        updateGraphConsequences: function () {
+            window.parent.currentUI.editor.graph.setConsequences(this.consequences);
+        },
+        isHighest: function (consequence) {
+            if (!isNaN(this.eventProbability) && !isNaN(this.highestRiskValue)) {
+                if ((consequence.impactValue * consequence.probability * this.eventProbability) >= this.highestRiskValue) {
+                    return true;
+
+                }
+            }
+            return false;
+
         }
     },
     mounted() {
@@ -90,17 +105,13 @@ let ResultComponent = {
                 case "event":
                     if(this.showEventProbabilityFormula){return "Hide Formula";}
                     return "Show Formula";
-                    break;
                 case "highest":
                     if(this.showHighestRiskValueFormula){return "Hide Formula"}
                     return "Show Formula";
-                    break;
                 case "accumulated":
                     if(this.showAccumulatedRiskValueFormula){return "Hide Formula"}
                     return "Show Formula";
-                    break;
-            };
-
+            }
         }
     }
 
@@ -155,7 +166,7 @@ let risk_vue = new Vue({
             this.consequences = input;
 
             //Check if there are consequences to process
-            if(this.consequences.length == 0){
+            if(this.consequences.length === 0){
                 console.log("No consequences on diagram");
                 this.highestRiskValue = "no_consequences";
                 this.accumulatedRiskValue = "no_consequences";

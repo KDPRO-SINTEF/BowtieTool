@@ -1,16 +1,82 @@
-#statistics-title{
-    text-align: center;
+.statistics-overlay {
+    margin-top: 8vh;
+    margin-bottom: 8vh;
+    max-width: 1100px;
 }
 
-.image {
+h1 {
     text-align: center;
+    margin-bottom: 8vh;
+
 }
 
-.statistics-components {
-    background-color: #82E0AA;
-    border-radius: 10px;
-    margin : 30px;
-    box-shadow: 10px 5px 10px #585858C4;
-    text-align: center;
-    font-size : 20px;
+.card {
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-title {
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+.card-content {
+    display: flex;
+}
+
+.card-content-text {
+    margin-right: 20px;
+    margin-top: 2px;
+}
+
+#download-csv-button {
+    display: block;
+    margin: 0 auto auto auto;
+}
+
+.stats-item-logo {
+    margin-top: 22px;
+    margin-bottom: 22px;
+    margin-right: 1em;
+    width: 6em;
+    float: right;
+}
+
+.input-group-text {
+    border: rgb(33, 37, 41);
+    background: rgb(33, 37, 41);
+}
+
+.input-group-text:hover {
+    background: rgba(33, 37, 41, 0.8);
+}
+
+.btn {
+    color: white;
+}
+
+.btn:hover {
+    color: white;
+}
+
+#copy-logo {
+    width: 20px;
+}
+
+#statistics-item .btn {
+    padding: 0 5px 4px 5px;
+    border: none;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+.alert {
+    font-size: 0.9em;
 }

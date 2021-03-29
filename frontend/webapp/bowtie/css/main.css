@@ -1,0 +1,9 @@
+.error-message {
+    color: #dc3545;
+    font-size: 0.9em;
+}
+
+.btn-success {
+    background-color: rgb(40, 167, 69);
+    border-color: rgb(40, 167, 69);
+}

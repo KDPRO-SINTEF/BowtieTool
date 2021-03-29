@@ -8,11 +8,12 @@ let user_account_vue = new Vue ({
         account_tabs: ['settings', '2fa'],
         currentAccountTab: 'settings',
         isUserAuthenticated: false,
-        userInfo: {
+        user: {
             name: null,
             email: null,
             authToken: null,
-            twoFactorAuth: false
+            twoFactorAuth: false,
+            isResearcher: null
         },
         toast: {
             message: '',
@@ -38,10 +39,10 @@ let user_account_vue = new Vue ({
         on2faActivation: function() {
             this.toast.show = true;
             this.toast.message = 'Two-factor authentication is now enabled.'
-            this.userInfo.twoFactorAuth = true;
+            this.user.twoFactorAuth = true;
         },
         on2faDisabling: function() {
-            this.userInfo.twoFactorAuth = false;
+            this.user.twoFactorAuth = false;
             this.toast.show = true;
             this.toast.message = 'Two-factor authentication has been disabled.'
         },
@@ -55,38 +56,21 @@ let user_account_vue = new Vue ({
             this.toast.message = 'Password has been updated.';
         },
         getUserInfo: function() {
-            this.userInfo.name = localStorage.getItem('username');
-            this.userInfo.authToken = localStorage.getItem('token');
-            if (this.userInfo.name !== null && this.userInfo.authToken !== null) {
+            this.user.authToken = localStorage.getItem('token');
+            if (this.user.authToken !== null) {
                 axios.get(window.USER_INFO, {
                     headers: {
-                        Authorization: 'Token ' + this.userInfo.authToken
+                        Authorization: 'Token ' + this.user.authToken
                     }
                 })
                     .then(res => {
-                        this.userInfo.email = res.data.email;
+                        this.user.name = res.data.username;
+                        this.user.isResearcher = res.data.is_Researcher;
+                        this.user.twoFactorAuth = res.data.profile.two_factor_enabled;
+                        this.user.email = res.data.email;
                         this.isUserAuthenticated = true;
-                    })
-
-                axios.get(window.CREATE_2FA_CODE, {
-                    headers: {
-                        Authorization: 'Token ' + this.userInfo.authToken
-                    }
-                })
-                    .then(res => {
-                        this.userInfo.twoFactorAuth = false;
-                    })
-                    .catch(error => {
-                        if (error.response) this.filter2FAStatusAskErrors(error.response);
                     })
             }
         },
-        filter2FAStatusAskErrors: function(error) {
-            switch(error.status) {
-                case 400:
-                    this.userInfo.twoFactorAuth = true;
-                    break;
-            }
-        }
     }
 })

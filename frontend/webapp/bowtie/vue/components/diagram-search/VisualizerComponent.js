@@ -22,6 +22,11 @@ let VisualizerComponent = {
             var doc = mxUtils.parseXml(chosen_diag.diagram);
             window.parent.currentUI.editor.setGraphXml(doc.documentElement);
             window.parent.currentUI.editor.setGraphId(chosen_diag.id)
+            if(chosen_diag.is_public){
+                localStorage.setItem('is_public','true')
+            }else{
+                localStorage.setItem('is_public','false')
+            }
             window.parent.currentUI.editor.setModified(false);
             window.parent.currentUI.editor.undoManager.clear();
 

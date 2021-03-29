@@ -1,3 +1,5 @@
+@import "main.css";
+
 #user-account-vue {
     width: 100vw;
     height: 100vh;
@@ -103,18 +105,11 @@
     width: 60%;
 }
 
-.btn-success {
-    background-color: #4CAF50;
-}
-
 .message-emphasis {
     border: 1px solid black;
     border-radius: 4px;
     padding: 10px 5px 0px 10px;
     font-size: 0.8em;
-}
-.error-message {
-    color: #dc0000!important;
 }
 
 .spinner-border {
