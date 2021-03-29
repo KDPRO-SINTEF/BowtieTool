@@ -146,11 +146,10 @@ class PrivateDiagrams(APIView):
 
 class StatsView(APIView):
     authentication_classes = (TokenAuthentication,)
-    #permission_classes = (IsResearcher,)
+    permission_classes = (IsResearcher,)
 
     def get(self, request):
-        # queryset = DiagramStat.objects.all().annotate(
-        #     barriers_per_consequences_threats=F('barriers') / (F('threats') + F('consequences') + 1))
+
         queryset = DiagramStat.objects.all().annotate(
             cons=F('consequences'),
             sec_con=F('security_control'),
