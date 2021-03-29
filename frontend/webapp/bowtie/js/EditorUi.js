@@ -2643,11 +2643,11 @@ EditorUi.prototype.getContextualLoginText = function () {
  * Creates a new toolbar for the given container.
  */
 EditorUi.prototype.setLoginText = function (value) {
-    let uinfo = localStorage.getItem('username');
+    let user = localStorage.getItem('token');
     //let isResearcher = localStorage.getItem('isResearcher');
     let isResearcher = true;
     this.loginContainer.innerHTML = '';
-    if (uinfo !== null) {
+    if (user !== null) {
         /* Researcher button */
         if (isResearcher) {
             let statisticsButton = document.createElement('button');

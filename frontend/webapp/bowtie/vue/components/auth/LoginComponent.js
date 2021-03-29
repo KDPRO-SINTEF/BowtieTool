@@ -28,7 +28,7 @@ let LoginComponent =  {
                     message: 'Valid email is required.',
                     show: false
                 },
-                InvalidTotpCodeErr: {
+                InvalidTotpTokenErr: {
                     message: '6-digit code is required.',
                     show: false
                 },
@@ -50,7 +50,7 @@ let LoginComponent =  {
                 isValid = false;
             }
             if (this.user.totpToken !== null && !this.validTotpCode()) {
-                this.errors.InvalidTotpCodeErr.show = true;
+                this.errors.InvalidTotpTokenErr.show = true;
                 isValid = false;
             }
             return isValid;
@@ -67,7 +67,7 @@ let LoginComponent =  {
                         }
                     })
                         .then(res => {
-                            this.processToken(res.data.token);
+                            this.saveAuthToken(res.data.token);
                         })
                         .catch(error => {
                             if (error.response) this.filter2faLoginErrors(error.response);
@@ -89,6 +89,11 @@ let LoginComponent =  {
             }
 
         },
+        // Saves authentication token and redirects to the root page if login succeeded
+        saveAuthToken(token) {
+            localStorage.setItem('token', token);
+            window.location.assign(window.BASE_PATH);
+        },
         // Checks if the mail matches the right pattern
         validEmail: function() {
             let mailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -107,27 +112,8 @@ let LoginComponent =  {
                 this.user.twoFactorAuth = true;
                 this.user.totpToken = '';
             } else {
-                this.processToken(data.token);
+                this.saveAuthToken(data.token);
             }
-        },
-
-        // Handles the received token if the login form has been successfully submitted
-        processToken: function (token) {
-            localStorage.setItem('token', token);
-            axios.get(window.USER_INFO, {
-                headers: {
-                    'Authorization': 'Token ' + token
-                }
-            })
-                .then(res => {
-                    this.processName(res.data.username);
-                })
-
-        },
-        // Handles the user information received thanks to the token
-        processName: function(name) {
-            localStorage.setItem('username', name);
-            window.location.assign(window.BASE_PATH);
         },
         // Handles http errors coming from the login form submission
         filterLoginErrors: function(error) {
@@ -151,7 +137,7 @@ let LoginComponent =  {
                     }
                     break;
                 default:
-                    console.log('Error while contacting the server.');
+                    console.log('Unexpected error while logging in');
             }
         }
     }

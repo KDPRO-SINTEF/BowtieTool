@@ -21,15 +21,15 @@ let PasswordResetComponent = {
             isResetEmailSent: false,
             errors: {
                 ConfirmPwdErr: {
-                    message: 'The two typed passwords are different.',
+                    message: 'Typed passwords are different.',
                     show: false
                 },
                 WeakPasswordErr: {
                     message: 'This password is not strong enough.',
                     show: false
                 },
-                MissingFieldsErr: {
-                    message: 'All elements are required. Please fill them.',
+                MissingPasswordErr: {
+                    message: 'New password is required.',
                     show: false
                 },
                 InvalidEmailErr: {
@@ -64,7 +64,7 @@ let PasswordResetComponent = {
         checkNewPwdForm: function() {
            this.cleanErrorMessages(this.errors);
             if (this.user.newPassword === '' && this.user.passwordConfirm === '') {
-                this.errors.MissingFieldsErr.show = true;
+                this.errors.MissingPasswordErr.show = true;
                 return false;
             } else if (this.user.newPassword !== this.user.passwordConfirm) {
                 this.errors.ConfirmPwdErr.show = true;
@@ -83,7 +83,7 @@ let PasswordResetComponent = {
                     }
                 })
                     .then(res => {
-                        alert('A password reset mail has been sent. You will be redirected to the login page.');
+                        alert('A password reset mail has been sent.');
                         location.hash = 'login';
                     })
                     .catch(error => {
