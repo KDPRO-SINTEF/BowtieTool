@@ -10,3 +10,4 @@ app/env
 app/logs/*
 app/media/QR/*
 .env*
+app/core/migrations/*
