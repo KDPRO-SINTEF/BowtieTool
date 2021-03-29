@@ -16,7 +16,7 @@ from django.conf import settings
 from diagram import serializers
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from django.db.models import Q, Avg, Count, Min, Sum, F
+from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
 import PIL
 
 
@@ -146,15 +146,29 @@ class PrivateDiagrams(APIView):
 
 class StatsView(APIView):
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsResearcher,)
+    #permission_classes = (IsResearcher,)
 
     def get(self, request):
+        # queryset = DiagramStat.objects.all().annotate(
+        #     barriers_per_consequences_threats=F('barriers') / (F('threats') + F('consequences') + 1))
         queryset = DiagramStat.objects.all().annotate(
-            barriers_per_consequences_threats=F('barriers') / (F('threats') + F('consequences') + 1))
-
+            cons=F('consequences'),
+            sec_con=F('security_control'),
+            barriers_per_consequences=Case(
+                When(cons=0, then=0),
+                default=(F('barriers') / F('consequences')),
+                output_field=FloatField(),
+            ),
+            barriers_per_threats=Case(
+                When(sec_con=0, then=0),
+                default=(F('security_control') / F('consequences')),
+                output_field=FloatField(),
+            ),
+        )
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
-                                  Avg('barriers_per_consequences_threats')
+                                  Avg('barriers_per_consequences'),
+                                  Avg('barriers_per_threats')
                                   )
         resp['count'] = DiagramStat.objects.count()
 
