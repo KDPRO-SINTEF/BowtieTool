@@ -1,4 +1,6 @@
 import time
+# from pytest import approx
+import datetime
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -29,7 +31,7 @@ class PublicUserApiTests(TestCase):
     def setUp(self):
         """Test setup"""
         self.client = APIClient()
-    
+
     def test_create_valid_user_success(self):
         """Test creating with valid payload"""
         payload = {
@@ -46,19 +48,79 @@ class PublicUserApiTests(TestCase):
         self.assertTrue(user.check_password(payload['password']))
 
 
-    def test_create_user_invalid_password(self):
-        """Check if correct exception is raised"""
+    def test_user_missing_username(self):
+        
         payload = {
-            'email': 'mkirov@insaa-rennes.fr',
-            'password': '123456789aa!',
+            'email': 'mkirov@insa-rennes.fr',
+            'password': '123456789Aa#',
+        }
+        res = self.client.post(CREATE_USER_URL, payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("username", res.data["errors"])        
+        
+
+    def test_create_user_invalid_email(self):
+        """Check if correct exception is raised for invalid email(response)"""
+        payload = {
+            'email': 'mkirovinsaa-rennes.fr',
+            'password': '123456789a!',
             'username': 'Test name'
         }
     
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("email", res.data["errors"])        
+        self.assertEqual("Invalid field", res.data["errors"]["email"])
+    
+
+    def test_create_user_invalid_password(self):
+        """Check if correct exception is raised for invalid password (response)"""
+        payload = {
+            'email': 'mkirov@insaa-rennes.fr',
+            'password': '123456789aa!',
+            'username': 'Test name'
+        }
+        
+        payload2 = {
+            'email': 'mkirov@insaa-rennes.fr',
+            'password': '123456789AA!',
+            'username': 'Test name'
+        }
+    
+        payload3 = {
+            'email': 'mkirov@insaa-rennes.fr',
+            'password': 'aaaaaaaaAaa!',
+            'username': 'Test name'
+        }
+        
+        payload4 = {
+            'email': 'mkirov@insaa-rennes.fr',
+            'password': '123456789AAA',
+            'username': 'Test name'
+        }
+    
+
+        res = self.client.post(CREATE_USER_URL, payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("password", res.data["errors"])        
         self.assertEqual("Invalid field", res.data["errors"]["password"])
     
+        res = self.client.post(CREATE_USER_URL, payload2)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("password", res.data["errors"])        
+        self.assertEqual("Invalid field", res.data["errors"]["password"])
+        
+        res = self.client.post(CREATE_USER_URL, payload3)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("password", res.data["errors"])        
+        self.assertEqual("Invalid field", res.data["errors"]["password"])
+        
+        res = self.client.post(CREATE_USER_URL, payload4)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("password", res.data["errors"])        
+        self.assertEqual("Invalid field", res.data["errors"]["password"])
+    
+
     # todo test for integrity error -> https://stackoverflow.com/questions/21458387/transactionmanagementerror-you-cant-execute-queries-until-the-end-of-the-atom
     def test_send_mail(self):
         """ Test mail send"""
@@ -226,6 +288,27 @@ class PublicUserApiTests(TestCase):
         res = self.client.post(reverse("user:reset"), payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
     
+    def test_response_time_existing_unexisting_emails(self):
+        """Test the response time for password resset request for existing 
+            and unexisting user """
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a'
+        }
+        create_user(**payload)
+        payload.pop('password')
+        payload2 = {
+            'email': 'mkirov@insa-rennes.fr'
+        }
+
+        start1 = datetime.datetime.now()
+        self.client.post(reverse("user:reset"), payload)
+        end1 = datetime.datetime.now() 
+        start2 = datetime.datetime.now()
+        self.client.post(reverse("user:reset"), payload2)
+        end2 = datetime.datetime.now() 
+        difference = ((end1-start1) - (end2-start2)).total_seconds()
+        self.assertTrue( difference <= 0.1 )
 
     def test_password_reset_with_token(self):
         """ Test the password change with a valid token """

@@ -50,7 +50,7 @@ class CreateUserView(generics.CreateAPIView):
             self.perform_create(serializer)
             logger.info('Account with email : %s created on: %s',
                 request.data["email"], timezone.now())
-    
+
         except (ValidationError, AssertionError, IntegrityError) as error_validation:
 
             if not isinstance(error_validation, IntegrityError):
@@ -172,9 +172,7 @@ class ActivateAccount(APIView):
             user = None
         # check the validity of the token
         if not user is None and AccountActivationTokenGenerator().check_token(user, token):
-            # Activation of the user
             User.objects.filter(email=user.email).update(is_active=True)
-            # and we're changing the boolean field so that the token link becomes invalid
             Profile.objects.filter(user=user).update(email_confirmed=True)
             return Response(status=status.HTTP_200_OK)
 
