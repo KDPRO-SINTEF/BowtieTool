@@ -60,6 +60,7 @@ let statistics_vue = new Vue({
             })
                 .then(res => {
                     this.user.isResearcher = true;
+                    this.fillStatisticsData(res.data);
                 })
                 .catch(error => {
                     if (error.response) {
