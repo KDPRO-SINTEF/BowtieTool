@@ -1,16 +1,19 @@
+import time
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from core.models import Profile
 from rest_framework.test import APIClient
+from rest_framework.exceptions import ValidationError
 from rest_framework import status
+from rest_framework.settings import api_settings as settings
 from django.core import mail 
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from rest_framework.settings import api_settings as settings
-import time
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django_otp import devices_for_user
+from django.db import transaction
+from django.db.utils import IntegrityError
 
 CREATE_USER_URL = reverse('user:create')
 TOKEN_URL = reverse('user:token')
@@ -43,6 +46,20 @@ class PublicUserApiTests(TestCase):
         self.assertTrue(user.check_password(payload['password']))
 
 
+    def test_create_user_invalid_password(self):
+        """Check if correct exception is raised"""
+        payload = {
+            'email': 'mkirov@insaa-rennes.fr',
+            'password': '123456789aa!',
+            'username': 'Test name'
+        }
+    
+        res = self.client.post(CREATE_USER_URL, payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("password", res.data["errors"])        
+        self.assertEqual("Invalid field", res.data["errors"]["password"])
+    
+    # todo test for integrity error -> https://stackoverflow.com/questions/21458387/transactionmanagementerror-you-cant-execute-queries-until-the-end-of-the-atom
     def test_send_mail(self):
         """ Test mail send"""
 
@@ -56,16 +73,20 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(mail.outbox[0].from_email, 'from@example.com')
         self.assertEqual(mail.outbox[0].to, ['mkirov@insa-rennes.fr'])
 
-    def test_user_duplicate(self):
-        """Test creating user that already exists"""
-        payload = {
-            'email': 'test@bowtie.com',
-            'password': '123456789A#a'
-        }
-        create_user(**payload)
-
-        res = self.client.post(CREATE_USER_URL, payload)
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+    # def test_user_duplicate(self):
+    #     """Test creating user that already exists"""
+    #     payload = {
+    #         'email': 'test@bowtie.com',
+    #         'password': '123456789A#a',
+    #         'username': 'username'
+    #     }
+    #     create_user(**payload)
+    #     try:
+    #         with transaction.atomic():
+    #             res = self.client.post(CREATE_USER_URL, payload)
+    #     except IntegrityError:
+    #         pass
+    #     self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_token_for_user_fail(self):
         """Test for unsuccessful creation of authentification token for user"""

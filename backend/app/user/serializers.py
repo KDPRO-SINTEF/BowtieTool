@@ -16,7 +16,7 @@ class UserSerializer(serializers.Serializer):
     """Authentication and creation serializer for user model"""
 
     email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True,  allow_blank=False, trim_whitespace=True)
     username = serializers.CharField()
 
 
@@ -54,8 +54,8 @@ class UserUpdateSerialize(serializers.Serializer):
     """ Serializer for update password """
 
 
-    new_password = serializers.CharField()
-    old_password = serializers.CharField()
+    new_password = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    old_password = serializers.CharField(allow_blank=False, trim_whitespace=True)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -72,7 +72,6 @@ class UserUpdateSerialize(serializers.Serializer):
                         password=old_password):
 
             raise serializers.ValidationError("Wrong password")
-        
         
         if new_password == old_password:
             raise serializers.ValidationError("The two passwords must be different")

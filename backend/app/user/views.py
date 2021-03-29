@@ -1,35 +1,30 @@
-import base64
-from rest_framework import generics, authentication, permissions
+"""User manage views"""
+import datetime
+import time
+import logging
+from rest_framework import generics, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
-from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize, UserInfoSerializer, PasswordResetSerializer
-from user.customPermission import HasConfirmedEmail
-from django.core import mail
-from user.authentication import AccountActivationTokenGenerator, PasswordResetToken, TOTPValidityToken, ExpiringTokenAuthentication
+from rest_framework.authtoken.models import Token
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
-from django.contrib.auth import get_user_model, login
+from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize, UserInfoSerializer, PasswordResetSerializer
+from user.customPermission import HasConfirmedEmail
+from user.authentication import AccountActivationTokenGenerator, TOTPValidityToken, PasswordResetToken, ExpiringTokenAuthentication
+from django.core import mail
+from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.urls import reverse
-from rest_framework.exceptions import ValidationError
 import django.contrib.auth.password_validation as validators
 from core.models import Profile, User
-from rest_framework.authtoken.models import Token
-from django_otp import devices_for_user, user_has_device
-from django_otp.plugins.otp_totp.models import TOTPDevice
-from django.shortcuts import redirect
-import datetime
-import qrcode
 from django.utils import timezone
-from django.contrib.auth import authenticate
-import logging
 from django.db.utils import IntegrityError
+from django.contrib.auth import authenticate
 
 logger = logging.getLogger(__name__)
 
-IMAGE_PATH = "/app/media/QR/token_qr.png"
 CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validation.html?for=email_confirm&id=%s&token=%s"
 REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/common/authentication.html#login"
 PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validation.html?for=reset_pwd&id=%s&token=%s"
@@ -50,23 +45,19 @@ class CreateUserView(generics.CreateAPIView):
         """Create a user endpoint"""
 
         try:
-
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
-            user = get_user_model().objects.filter(email=request.data['email']).first()
-            token = AccountActivationTokenGenerator().make_token(user)
-            message = "To activate your Bowtie++ account, please click on the following link %s" % (
-                CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
-            subject = 'Activate account for no-reply-Bowtieowtie++'
-            logger.info('Account with email : %s created on: %s', user.email, timezone.now())
-            send_mail(subject, message, user.email)
-
+            logger.info('Account with email : %s created on: %s',
+                request.data["email"], timezone.now())
+    
         except (ValidationError, AssertionError, IntegrityError) as error_validation:
 
             if not isinstance(error_validation, IntegrityError):
-                return Response(dict(errors=error_validation.detail),
+                error_dict = dict()
+                key = list(error_validation.detail.keys())[0]
+                error_dict[key] = "Invalid field"
+                return Response(dict(errors=error_dict),
                     status=status.HTTP_400_BAD_REQUEST)
 
             user = get_user_model().objects.filter(email=request.data['email']).first()
@@ -76,21 +67,18 @@ class CreateUserView(generics.CreateAPIView):
                 "this email who is already registered." + \
                 " If you forgot your password please use the reset link on our login page.\n"+\
                 "Sincerly, \n Bowtie++ team"
-
                 subject = 'Account creation with existing email'
                 send_mail(subject, message, user.email)
+                return Response(status=status.HTTP_201_CREATED)
 
-            else:
-                token = AccountActivationTokenGenerator().make_token(user)
-
-                message = "To activate your account please click on the following link %s" % (
-                    CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
-
-                mail.send_mail(subject, message, 'no-reply@Bowtie', [request.data['email']],
-                    fail_silently=False)
+        user = get_user_model().objects.filter(email=request.data['email']).first()
+        token = AccountActivationTokenGenerator().make_token(user)
+        message = "To activate your Bowtie++ account, please click on the following link %s" % (
+            CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
+        subject = 'Activate account for no-reply-Bowtieowtie++'
+        send_mail(subject, message, user.email)
 
         return Response(status=status.HTTP_201_CREATED)
-
 
 
 class CreateTokenView(ObtainAuthToken):
@@ -122,7 +110,7 @@ class CreateTokenView(ObtainAuthToken):
             logger.info("User with email %s logs at %s", user.email, timezone.now())
 
             return Response({'token': token.key}, status=status.HTTP_200_OK)
-        except ValidationError as e:
+        except ValidationError:
             return Response(dict(errors=["Invalid credentials"]),
                 status=status.HTTP_401_UNAUTHORIZED)
 
@@ -151,7 +139,7 @@ class UpdatePassword(APIView):
         user = request.user
         serializer = UserUpdateSerialize(data=request.data, user=user)
         serializer.is_valid(raise_exception=True)
-        new_password = serializer.validated_data['new_password'] 
+        new_password = serializer.validated_data['new_password']
         user.set_password(new_password)
         user.save()
         logger.warning("User %s changed password ", user)
@@ -200,12 +188,17 @@ class PasswordReset(APIView):
     """ Route for password reset request of a user"""
 
     serializer_class = PasswordResetSerializer
-    
-    def post(self, request):
-        """Post method for password reset. It takes a JSON with the user's email"""
 
+    def post(self, request):
+        """Post method for password reset.
+           It takes a JSON with the user's email.
+           There is a total time for the method execution to counter
+           email info leak. -> method execution time >= 3
+        """
+        start = datetime.datetime.now()
         serializer = PasswordResetSerializer(data=request.data, url=PASSWORD_RESET_URL)
         serializer.is_valid(raise_exception=True)
+        time.sleep(3 - (datetime.datetime.now() - start).total_seconds())
         return  Response(status=status.HTTP_200_OK)
 
     def __str__(self):
@@ -244,139 +237,6 @@ class ValidatePasswordReset(APIView):
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
-# Two factor authentication logic
-def get_user_totp_device(user, confirmed=False):
-    """
-        Find an existing user totp device and returning it
-    """
-
-    devices = devices_for_user(user, confirmed=confirmed)
-    for device in devices:
-        if isinstance(device, TOTPDevice):
-            return device
-
-class TOTPCreateAPIView(APIView):
-    """
-    Creation of a time based one time password for a user
-    """
-
-    authentication_classes = (ExpiringTokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def __str__(self):
-        return "TOTP create endpoint"
-
-    def get(self, request):
-        """TOPT generaton"""
-
-        user = request.user
-        if user_has_device(user, confirmed=True):
-            return Response(dict(errors=["2FA is already activated on this account"]),
-                status=status.HTTP_400_BAD_REQUEST)
-
-        device = get_user_totp_device(user, False)
-        if not device:
-            device = user.totpdevice_set.create(confirmed=False)
-            user.save()
-
-        img = qrcode.make(device.config_url)
-        img.save(IMAGE_PATH) # save for further byte reading
-
-        token =  TOTPValidityToken().make_token(user)
-        with open(IMAGE_PATH, "rb") as image_file:
-            image_data = base64.b64encode(image_file.read()).decode('utf-8')
-
-        return Response({"qrImg": image_data, "token": token}, status=status.HTTP_201_CREATED)
-
-
-
-
-class TOTPAuthenticateView(APIView):
-    """
-    Use this endpoint to verify a token produced by a TOTP device
-    in order to authenticate user
-    """
-
-    def __str__(self):
-        return "Verification endpoint"
-
-
-    def post(self, request, uidb64, token):
-        """Verify user one-time password"""
-
-        try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
-            user = get_user_model().objects.get(pk=uid)
-
-        except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
-            logger.warning('Unsuccessfull login with id %s. Exception: %s', uid, e_ex)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-
-        if TOTPValidityToken().check_token(user, token) and ("token_totp" in request.data):
-
-            device = get_user_totp_device(user, True)
-            token_totp = request.data["token_totp"]
-
-            if not device or not device.verify_token(token_totp):
-                return Response(dict(errors=['This user has not setup two' \
-                    + 'factor authentication or has not enter a valid code']),
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
-            token, created = Token.objects.get_or_create(user=user)
-            if not created:
-                # update the created time of the token to keep it valid
-                token.created = timezone.now()
-                token.save()
-
-            logger.info("User with email %s logs at %s", user.email, timezone.now())
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
-
-
-        return Response(dict(errors=['Expired token']), status=status.HTTP_400_BAD_REQUEST)
-
-
-class VerifyTOTPView(APIView):
-    """Endpoint for validation of TOTP service"""
-
-    authentication_classes = (ExpiringTokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request, token):
-        """Activate the device of authenticated user given a totp token in the post request
-           which validation period is defined by token
-        """
-
-        user = request.user
-        if not TOTPValidityToken().check_token(user, token):
-            return Response(dict(
-           errors=['Validation token expired']),
-                status=status.HTTP_401_UNAUTHORIZED
-            )
-
-        device = get_user_totp_device(user, False)
-        if not device:
-            return Response(dict(
-           errors=['This user has not setup two factor authentication']),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        if not "token_totp" in request.data:
-            return Response(dict(errors=["Need authentication app code"]),
-                status=status.HTTP_400_BAD_REQUEST)
-
-        token_totp = request.data["token_totp"]
-        if device.verify_token(token_totp):
-            device.confirmed = True
-            user.profile.two_factor_enabled = True
-            device.save()
-            user.profile.save()
-            user.save()
-            return Response(status=status.HTTP_200_OK)
-
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
 
 class DeleteUserView(APIView):
     """Endpoint for deleting user. The user has to be authenticated to perform this action"""
@@ -402,33 +262,3 @@ class DeleteUserView(APIView):
 
     def __str__(self):
         return "Delete user endpoint"
-
-
-class DisableTOTP(APIView):
-    """Endpoing for disabling 2fa service"""
-
-    authentication_classes = (ExpiringTokenAuthentication,)
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request):
-        """Disable device"""
-        user = request.user
-        device = get_user_totp_device(user, True)
-
-        if not device or not device.confirmed:
-            logger.warning("Suspicious 2FA desactivation - no 2FA or 2FA not activated for user %s",
-                user)
-            return Response(dict(errors=["Ivalid operation"]), status=status.HTTP_400_BAD_REQUEST)
-
-        if not "token_totp" in request.data:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        token_totp = request.data["token_totp"]
-        if not device.verify_token(token_totp):
-            return Response(dict(errors=["Invalid code"]), status=status.HTTP_400_BAD_REQUEST)
-
-        TOTPDevice.objects.filter(user=user).delete()
-        user.profile.two_factor_enabled = False
-        user.profile.save()
-        user.save()
-        return Response(status=status.HTTP_200_OK)
