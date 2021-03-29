@@ -76,3 +76,7 @@ h1 {
 .fade-enter, .fade-leave-to {
     opacity: 0;
 }
+
+.alert {
+    font-size: 0.9em;
+}
