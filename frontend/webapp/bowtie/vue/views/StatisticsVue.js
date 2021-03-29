@@ -78,25 +78,25 @@ let statistics_vue = new Vue({
             }, 3000);
         },
         fillStatisticsData: function(data) {
+            this.statistics.count.number = Number(data.count);
             if (data.threats__avg !== null) {
-                this.statistics.threats = data.threats__avg;
+                this.statistics.threats.number = Number(data.threats__avg.toFixed(2));
             }
             if (data.consequences__avg !== null) {
-                this.statistics.consequences = data.consequences__avg;
+                this.statistics.consequences.number = Number(data.consequences__avg.toFixed(2));
             }
             if (data.barriers__avg !== null) {
-                this.statistics.barriers = data.barriers__avg;
+                this.statistics.barriers.number = Number(data.barriers__avg.toFixed(2));
             }
             if (data.causes__avg !== null) {
-                this.statistics.causes = data.causes__avg;
+                this.statistics.causes.number = Number(data.causes__avg.toFixed(2));
             }
             if (data.totalTimeSpent__avg !== null) {
-                this.statistics.totalTimeSpent = data.totalTimeSpent__avg;
+                this.statistics.totalTimeSpent.number = Number(data.totalTimeSpent__avg.toFixed(2));
             }
             if (data.barriers_per_consequences__avg !== null) {
-                this.barriersPerConsequences = data.barriers_per_consequences__avg;
+                this.barriersPerConsequences.number = Number(data.barriers_per_consequences__avg.toFixed(2));
             }
-            this.statistics.count = data.count;
         },
         buildCSVData: function() {
             let csvData = "";
