@@ -379,7 +379,6 @@ var UserControlDialog = function (editorUi) {
  */
 var OpenFromDBDialog = function (width, height) {
 
-
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
     iframe.allowTransparency = 'true';
