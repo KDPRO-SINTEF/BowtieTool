@@ -167,7 +167,8 @@ class StatsView(APIView):
         resp = queryset.aggregate(Avg('threats'), Avg('consequences'), Avg('barriers'), Avg('causes'),
                                   Avg('totalTimeSpent'),
                                   Avg('barriers_per_consequences'),
-                                  Avg('barriers_per_threats')
+                                  Avg('barriers_per_threats'),
+                                  Avg('assets'),
                                   )
         resp['count'] = DiagramStat.objects.count()
 

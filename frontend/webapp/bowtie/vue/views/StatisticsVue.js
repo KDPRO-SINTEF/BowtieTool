@@ -7,7 +7,7 @@ let statistics_vue = new Vue({
     data: {
         user: {
             isResearcher: false,
-            isAuthenticated: true
+            isAuthenticated: false
         },
         statistics: {
             totalTimeSpent : {
@@ -63,6 +63,7 @@ let statistics_vue = new Vue({
                 }
             })
                 .then(res => {
+                    this.user.isAuthenticated = true
                     this.user.isResearcher = true;
                     this.fillStatisticsData(res.data);
                 })
