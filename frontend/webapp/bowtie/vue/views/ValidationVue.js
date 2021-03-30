@@ -78,8 +78,8 @@ let validation_vue = new Vue({
                     localStorage.setItem('userId', this.user.id);
                     this.isPasswordChangeSuccessful = true;
                     console.log("Pasword");
-                    //alert('Your password reset request is now authorized. You will be redirected to the corresponding page.')
-                    //location.assign(window.RESET_PWD_PAGE);
+                    alert('Your password reset request is now authorized. You will be redirected to the corresponding page.')
+                    location.assign(window.RESET_PWD_PAGE);
                 }
             }
         },

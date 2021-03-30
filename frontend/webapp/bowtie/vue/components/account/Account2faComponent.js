@@ -21,7 +21,7 @@ let Account2faComponent = {
                     show: false
                 },
                 ExpiredTotpTokenErr: {
-                    message: "This code has expired, try with a new one.",
+                    message: "Invalid code.",
                     show: false
                 },
                 InvalidTotpCodeErr: {
