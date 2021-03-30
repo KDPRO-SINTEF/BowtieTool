@@ -11,18 +11,24 @@
 
     <!-- styles -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href="css/validation.css" rel="stylesheet">
 
 </head>
 <body>
 <div id="validation-vue">
-    <div id="validation-message" class="m-3">
-        <p v-if="isValidationSuccessful">Success</p>
-        <p v-else-if="errors.ExpiredTokenErr.show">{{ errors.ExpiredTokenErr.message }}</p>
-        <div v-else-if="errors.InvalidUrlErr.show">
-            <p>{{ errors.InvalidUrlErr.message }}</p>
-            <p>We are sorry, this page doesn't exist.</p>
+    <div class="valid-container">
+        <h2 id="valid-title">Success !</h2>
+        <div id="validation-message" class="m-3">
+            <p v-if="isRegistrationSuccessful">Registration</p>
+            <p v-if="isPasswordChangeSuccessful">Password Change</p>
+            <p v-else-if="errors.ExpiredTokenErr.show">{{ errors.ExpiredTokenErr.message }}</p>
+            <div v-else-if="errors.InvalidUrlErr.show">
+                <p>{{ errors.InvalidUrlErr.message }}</p>
+                <p>We are sorry, this page doesn't exist.</p>
+            </div>
         </div>
     </div>
+
 </div>
 </body>
 <script type="text/javascript" src="vue/views/ValidationVue.js"></script>

@@ -13,7 +13,8 @@ let validation_vue = new Vue({
             id: null,
             token: null
         },
-        isValidationSuccessful: false,
+        isPasswordChangeSuccessful : false,
+        isRegistrationSuccessful: false,
         errors: {
             ExpiredTokenErr: {
                 message: 'An error occurred. Please check your email box for a valid link.',
@@ -63,8 +64,9 @@ let validation_vue = new Vue({
                 axios.get(url)
                     .then(res => {
                         if (res.status === 200) {
-                            this.isValidationSuccessful = true;
-                            alert('Your email is now confirmed.')
+                            this.isRegistrationSuccessful = true;
+                            console.log("Registration");
+                            //alert('Your email is now confirmed.')
                         }
                     })
                     .catch(error => {
@@ -74,9 +76,10 @@ let validation_vue = new Vue({
                 if (this.user.token !== null && this.user.id !== null) {
                     localStorage.setItem('resetPwdToken', this.user.token);
                     localStorage.setItem('userId', this.user.id);
-                    this.isValidationSuccessful = true;
-                    alert('Your password reset request is now authorized. You will be redirected to the corresponding page.')
-                    location.assign(window.RESET_PWD_PAGE);
+                    this.isPasswordChangeSuccessful = true;
+                    console.log("Pasword");
+                    //alert('Your password reset request is now authorized. You will be redirected to the corresponding page.')
+                    //location.assign(window.RESET_PWD_PAGE);
                 }
             }
         },
