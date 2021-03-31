@@ -44,8 +44,8 @@ let PasswordResetComponent = {
     },
     // Verifies if the reset password email has already been sent
     beforeMount() {
-        this.user.id = localStorage.getItem('userId');
-        this.user.resetPwdToken = localStorage.getItem('resetPwdToken');
+        this.user.id = sessionStorage.getItem('userId');
+        this.user.resetPwdToken = sessionStorage.getItem('passwordResetToken');
         if (this.user.id !== null && this.user.resetPwdToken !== null) {
             this.isResetEmailSent = true;
         }
@@ -95,8 +95,8 @@ let PasswordResetComponent = {
         // Submits the new passwords of the user
         submitNewPassword: function() {
             if (this.user.id === null && this.user.resetPwdToken === null) {
-                this.user.id = localStorage.getItem('userId');
-                this.user.resetPwdToken = localStorage.getItem('resetPwdToken');
+                this.user.id = sessionStorage.getItem('userId');
+                this.user.resetPwdToken = sessionStorage.getItem('resetPwdToken');
             }
             if (this.checkNewPwdForm()) {
                 let params = JSON.stringify({'password': this.user.newPassword });
@@ -108,8 +108,8 @@ let PasswordResetComponent = {
                 })
                     .then(res => {
                         alert('Your password is now reset, you will be redirected to login page.');
-                        localStorage.removeItem('userId');
-                        localStorage.removeItem('resetPwdToken');
+                        sessionStorage.removeItem('userId');
+                        sessionStorage.removeItem('passwordResetToken');
                         window.location.assign(window.LOGIN_PAGE);
                     })
                     .catch(error => {
@@ -137,10 +137,10 @@ let PasswordResetComponent = {
                     if (error.data === 'bad credentials') {
                         this.errors.WeakPasswordErr.show = true;
                         this.user.passwordConfirm = '';
-                    } else if (error.data === 'Invalid token') {
+                    } else {
                         alert('The token is invalid or has expired. Please, enter your email again.');
-                        localStorage.removeItem('userId');
-                        localStorage.removeItem('resetPwdToken');
+                        sessionStorage.removeItem('userId');
+                        sessionStorage.removeItem('passwordResetToken');
                         window.location.reload();
                     }
                     break;

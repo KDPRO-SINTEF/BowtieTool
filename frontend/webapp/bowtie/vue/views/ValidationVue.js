@@ -74,8 +74,8 @@ let validation_vue = new Vue({
                     })
             } else if (this.context === 'reset_pwd') {
                 if (this.user.token !== null && this.user.id !== null) {
-                    localStorage.setItem('resetPwdToken', this.user.token);
-                    localStorage.setItem('userId', this.user.id);
+                    sessionStorage.setItem('passwordResetToken', this.user.token);
+                    sessionStorage.setItem('userId', this.user.id);
                     this.isPasswordChangeSuccessful = true;
                     console.log("Pasword");
                     alert('Your password reset request is now authorized. You will be redirected to the corresponding page.')
