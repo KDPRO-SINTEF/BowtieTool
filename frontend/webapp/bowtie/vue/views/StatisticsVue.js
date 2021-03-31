@@ -26,6 +26,10 @@ let statistics_vue = new Vue({
                 label: 'Consequences *',
                 number: 0
             },
+            assets: {
+                label: 'Assets *',
+                number: 0
+            },
             barriers: {
                 label: 'Barriers *',
                 number: 0
@@ -104,6 +108,9 @@ let statistics_vue = new Vue({
             }
             if (data.barriers_per_threats__avg !== null) {
                 this.statistics.barriersPerThreats.number = Number(data.barriers_per_threats__avg.toFixed(2));
+            }
+            if (data.assets__avg !== null) {
+                this.statistics.assets.number = Number(data.assets__avg.toFixed(2));
             }
         },
         buildCSVData: function() {
