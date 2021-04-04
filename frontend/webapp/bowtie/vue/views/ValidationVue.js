@@ -13,8 +13,8 @@ let validation_vue = new Vue({
             id: null,
             token: null
         },
-        isPasswordChangeSuccessful : false,
         isRegistrationSuccessful: false,
+        isPasswordIncorrect: false,
         errors: {
             ExpiredTokenErr: {
                 message: 'An error occurred. Please check your email box for a valid link.',
@@ -76,10 +76,10 @@ let validation_vue = new Vue({
                 if (this.user.token !== null && this.user.id !== null) {
                     sessionStorage.setItem('passwordResetToken', this.user.token);
                     sessionStorage.setItem('userId', this.user.id);
-                    this.isPasswordChangeSuccessful = true;
-                    console.log("Pasword");
-                    alert('Your password reset request is now authorized. You will be redirected to the corresponding page.')
-                    location.assign(window.RESET_PWD_PAGE);
+                    console.log("Password");
+                    window.location.assign(window.RESET_PWD_PAGE);
+                } else {
+                    isPasswordIncorrect = true;
                 }
             }
         },
@@ -93,6 +93,9 @@ let validation_vue = new Vue({
                     this.errors.InvalidUrlErr.show = true;
                     break;
             }
+        },
+        redirectLogin: function(){
+            window.location.assign(window.LOGIN_PAGE);
         }
     }
 })
