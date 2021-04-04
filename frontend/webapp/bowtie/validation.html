@@ -17,16 +17,21 @@
 <body>
 <div id="validation-vue">
     <div class="valid-container">
-        <h2 id="valid-title">Success !</h2>
+        <img id="validation-logo" src="images/logo.png">
+        <div class="validation-titles">
+            <h2 v-if="isRegistrationSuccessful" id="valid-email-title">E-mail successfully confirmed !</h2>
+            <h2 v-else-if="errors.ExpiredTokenErr.show || errors.InvalidUrlErr.show || isPasswordIncorrect" id="error-title">Error</h2>
+        </div>
         <div id="validation-message" class="m-3">
-            <p v-if="isRegistrationSuccessful">Registration</p>
-            <p v-if="isPasswordChangeSuccessful">Password Change</p>
+            <p v-if="isRegistrationSuccessful">Your registration is complete. You can now login normally on the login page.</p>
+            <p v-else-if="isPasswordIncorrect">A problem has occured while resetting your password, make sure you have clicked on the right link or try again.</p>
             <p v-else-if="errors.ExpiredTokenErr.show">{{ errors.ExpiredTokenErr.message }}</p>
             <div v-else-if="errors.InvalidUrlErr.show">
                 <p>{{ errors.InvalidUrlErr.message }}</p>
                 <p>We are sorry, this page doesn't exist.</p>
             </div>
         </div>
+        <button v-on:click="redirectLogin" type="button" class="validation-btn">Login page</button>
     </div>
 
 </div>
