@@ -57,12 +57,16 @@ let AccountSecurityComponent = {
                     message: 'Typed passwords are different.',
                     show: false
                 },
-                WrongActualPasswordErr: {
+                WrongPasswordErr: {
                     message: 'Invalid password provided.',
                     show: false
                 },
+                SamePasswordsErr: {
+                    message: 'Current and new passwords must be different.',
+                    show: false,
+                },
                 ExpiredTotpTokenErr: {
-                    message: "This code has expired, try with a new one.",
+                    message: "Invalid code.",
                     show: false
                 },
                 InvalidTotpTokenErr: {
@@ -154,13 +158,18 @@ let AccountSecurityComponent = {
         filterPasswordUpdateErrors: function(error) {
             switch(error.status) {
                 case 400:
-                    if (error.data.errors !== undefined && error.data.errors[0] === "Wrong password") {
-                        console.log(error.data.errors[0]);
-                        this.errors.WrongActualPasswordErr.show = true;
-                        this.user.password = '';
-                    } else if (error.data.non_field_errors !== undefined) {
+                    let errorArray = error.data.non_field_errors;
+                    if (errorArray !== undefined) {
+                        if (errorArray[0] === "Wrong password") {
+                            this.user.password = '';
+                            this.errors.WrongPasswordErr.show = true;
+                        } else if (errorArray[0] === "The two passwords must be different") {
+                            this.errors.SamePasswordsErr.show = true;
+                            this.user.newPassword = '';
+                            this.user.confirmPassword = '';
+                        }
+                    } else if (error.data.password !== undefined) {
                         this.errors.WeakPasswordErr.show = true;
-                        this.user.newPassword = '';
                         this.user.confirmPassword = '';
                     }
                     break;
