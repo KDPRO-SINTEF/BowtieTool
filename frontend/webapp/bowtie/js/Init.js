@@ -1,5 +1,6 @@
 // urlParams is null when used for embedding
 window.urlParams = window.urlParams || {};
+window.API_DOMAIN = window.API_DOMAIN || 'http://localhost:8000';
 
 // Base path of the web app
 window.BASE_PATH = '/app/bowtie'
@@ -42,28 +43,28 @@ window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || '/app/bowtie/common/my_account';
 window.STATISTICS_PAGE = window.STATISTICS_PAGE || '/app/bowtie/common/statistics';
 
 // Customer driven project specifics
-window.LOGIN = window.LOGIN || 'http://localhost:8000/api/user/token';
-window.USER_INFO = window.USER_INFO || 'http://localhost:8000/api/user/me';
-window.REGISTER = window.REGISTER || 'http://localhost:8000/api/user/create';
-window.PWD_RESET = window.PWD_RESET || 'http://localhost:8000/api/user/password/reset';
-window.DELETE_ACCOUNT = window.DELETE_ACCOUNT || 'http://localhost:8000/api/user/delete';
-window.CONFIRM_EMAIL = window.CONFIRM_EMAIL || 'http://localhost:8000/api/user/confirm';
-window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || 'http://localhost:8000/api/user/totp/create';
-window.VALIDATE_2FA = window.VALIDATE_2FA || 'http://localhost:8000/api/user/totp/verify';
-window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || 'http://localhost:8000/api/user/test/totp';
-window.LOGIN_2FA = window.LOGIN_2FA || 'http://localhost:8000/api/user/totp/login';
-window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || 'http://localhost:8000/api/user/totp/verify';
-window.DISABLE_2FA = window.DISABLE_2FA || 'http://localhost:8000/api/user/totp/disable';
-window.UPDATE_PASSWORD = window.UPDATE_PASSWORD || 'http://localhost:8000/api/user/password/update';
+window.LOGIN = window.LOGIN || window.API_DOMAIN + '/api/user/token';
+window.USER_INFO = window.USER_INFO || window.API_DOMAIN + '/api/user/me';
+window.REGISTER = window.REGISTER || window.API_DOMAIN + '/api/user/create';
+window.PWD_RESET = window.PWD_RESET || window.API_DOMAIN + '/api/user/password/reset';
+window.DELETE_ACCOUNT = window.DELETE_ACCOUNT || window.API_DOMAIN + '/api/user/delete';
+window.CONFIRM_EMAIL = window.CONFIRM_EMAIL || window.API_DOMAIN + '/api/user/confirm';
+window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || window.API_DOMAIN + '/api/user/totp/create';
+window.VALIDATE_2FA = window.VALIDATE_2FA || window.API_DOMAIN + '/api/user/totp/verify';
+window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || window.API_DOMAIN + '/api/user/test/totp';
+window.LOGIN_2FA = window.LOGIN_2FA || window.API_DOMAIN + '/api/user/totp/login';
+window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || window.API_DOMAIN + '/api/user/totp/verify';
+window.DISABLE_2FA = window.DISABLE_2FA || window.API_DOMAIN + '/api/user/totp/disable';
+window.UPDATE_PASSWORD = window.UPDATE_PASSWORD || window.API_DOMAIN + '/api/user/password/update';
 
 //URL for statistics
-window.STATISTICS = window.STATISTICS || 'http://localhost:8000/api/diagram/stats';
+window.STATISTICS = window.STATISTICS || window.API_DOMAIN + '/api/diagram/stats';
 
 // URLs for diagram save & get from backend
-window.SAVE_URL = window.SAVE_URL || 'http://localhost:8000/api/diagram/private';
-window.UPDATE_URL = window.UPDATE_URL || 'http://localhost:8000/api/diagram/'; // {id}
-window.PUBLIC_DIAGS_URL = window.PUBLIC_DIAGS_URL || 'http://localhost:8000/api/diagram/public/list';
-window.PRIVATE_DIAGS_URL = window.PRIVATE_DIAGS_URL || 'http://localhost:8000/api/diagram/private/list';
+window.SAVE_URL = window.SAVE_URL || window.API_DOMAIN + '/api/diagram/private';
+window.UPDATE_URL = window.UPDATE_URL || window.API_DOMAIN + '/api/diagram/'; // {id}
+window.PUBLIC_DIAGS_URL = window.PUBLIC_DIAGS_URL || window.API_DOMAIN + '/api/diagram/public/list';
+window.PRIVATE_DIAGS_URL = window.PRIVATE_DIAGS_URL || window.API_DOMAIN + '/api/diagram/private/list';
 
 
 
