@@ -145,22 +145,25 @@ class Diagram(models.Model):
             assets = 0
             allMxCell = root.getElementsByTagName('mxCell')
             for node in allMxCell:
-                if node.getAttribute('customID') == "Threat":
+                customId = node.getAttribute('customID')
+                if customId:
+                    self.description += node.getAttribute('value') + ", "
+                if customId == "Threat":
                     threats += 1
-                if node.getAttribute('customID') == "Consequence":
+                if customId == "Consequence":
                     consequences += 1
-                if node.getAttribute('customID') == "Cause":
+                if customId == "Cause":
                     causes += 1
-                if node.getAttribute('customID') == "Security Control":
+                if customId == "Security Control":
                     security_control += 1
-                if node.getAttribute('customID') == "Asset":
+                if customId == "Asset":
                     assets += 1
-                if node.getAttribute('customID') == "Barrier":
+                if customId == "Barrier":
                     barriers += 1
-                if node.getAttribute('customID') == "Hazard":
-                    self.description += node.getAttribute('value') + ", "
-                if node.getAttribute('customID') == "Event":
-                    self.description += node.getAttribute('value') + ", "
+                if customId == "Hazard":
+                    pass
+                if customId == "Event":
+                    pass
             new_total_time_spent = self.lastTimeSpent
             # Check that the diagramStat existed before saving (hence adding it's previous value)
             if self.id:  # self.id==None only if it's a new instances of Diagram (hence diagramStat is None too)
