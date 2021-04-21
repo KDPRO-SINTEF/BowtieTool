@@ -37,7 +37,7 @@
 <div id="diagram-search-vue">
     <div class="search-bar-container">
         <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"
-                    :all_diagrams="all_diagrams" :tags_selected="tags_selected"></search-bar>
+                    :all_diagrams="all_diagrams" :tags_selected="tags_selected" :name-input="nameInput"></search-bar>
     </div>
     <div class="visualizer-and-tags">
         <tag-manager :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
@@ -52,7 +52,7 @@
 <script type="text/x-template" id="search-bar-template">
     <div id="search_bar" style="display: inline-flex;">
         <div id="search_entries" class="form-outline" style="width: 22rem">
-            <label for="validationCustom01" class="form-label">Diagram name or tags</label>
+            <label for="validationCustom01" class="form-label">Diagram name or description</label>
             <input type="text" id="validationCustom01" class="form-control" style="background-color: transparent"
                    v-on:input="onInput($event)" v-on:keydown="onKey($event)">
             <span id="ghost"></span>

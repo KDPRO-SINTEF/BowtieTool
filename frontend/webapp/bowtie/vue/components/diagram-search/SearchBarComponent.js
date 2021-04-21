@@ -106,20 +106,32 @@ let SearchBarComponent = {
             if (wordToComplete) {
                 this.suggestion = this.prefixTree.complete(wordToComplete)[0]
                 if (this.suggestion) {
+                    // if (this.suggestion.includes(this.nameInput)) {
                     const fakeDiv = document.getElementById("fake-div")
                     fakeDiv.innerText = this.query
                     this.span.style.left = this.r.left + fakeDiv.clientWidth + 'px';
                     const ghostText = this.suggestion.slice(wordToComplete.length)
                     this.prefixTree.clear()
                     this.span.textContent = ghostText
+
+                    // }
+                } else {
+                    this.span.textContent = ""
                 }
 
             }
         },
-        onKey:function (e){
+        onKey: function (e) {
             if (e.key === 'ArrowRight' || e.key === 'Enter') {
-                this.span.textContent = '';
-                this.input.value = this.suggestion;
+                if (this.suggestion) {
+                    this.span.textContent = '';
+                    this.input.value = this.suggestion;
+                    this.$emit('change-name', this.suggestion)
+                }
+            }
+            if (e.key === "Backspace") {
+                const length = this.span.textContent.length
+                this.span.textContent = this.span.textContent.slice(length, length + 1)
             }
         },
     },
