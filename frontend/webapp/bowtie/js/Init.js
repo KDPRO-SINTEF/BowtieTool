@@ -66,6 +66,8 @@ window.UPDATE_URL = window.UPDATE_URL || window.API_DOMAIN + '/api/diagram/'; //
 window.PUBLIC_DIAGS_URL = window.PUBLIC_DIAGS_URL || window.API_DOMAIN + '/api/diagram/public/list';
 window.PRIVATE_DIAGS_URL = window.PRIVATE_DIAGS_URL || window.API_DOMAIN + '/api/diagram/private/list';
 
+//URL to share diagrams
+window.SHARE_DIAGRAM = window.SHARE_DIAGRAM || window.API_DOMAIN + '/api/diagram/share/'; // + {graphid}
 
 
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';

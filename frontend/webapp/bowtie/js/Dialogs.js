@@ -541,12 +541,12 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
 
     var role = document.createElement('select');
     var owner = document.createElement('option');
-    owner.value = '0';
-    mxUtils.write(owner, 'Owner');
+    owner.value = 'writer';
+    mxUtils.write(owner, 'Writer');
 
     var readonly = document.createElement('option');
-    readonly.value = '1';
-    mxUtils.write(readonly, 'Read only');
+    readonly.value = 'reader';
+    mxUtils.write(readonly, 'Reader');
 
     role.appendChild(owner);
     role.appendChild(readonly);
@@ -583,12 +583,9 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
 
     var genericBtn = mxUtils.button(mxResources.get('save'), mxUtils.bind(this, function () {
         var user = nameInput.value;
-        var r = parseInt(role.value);
-        if (user && r) {
-            editorUi.hideDialog();
-            console.log('user', user, 'role', r);
-            fn(user, r);
-        }
+        editorUi.hideDialog();
+        console.log('user', user, 'role', role.value);
+        fn(user, role.value);
     }));
     genericBtn.className = 'geBtn gePrimaryBtn';
     td.appendChild(genericBtn);
