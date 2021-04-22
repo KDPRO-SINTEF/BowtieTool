@@ -71,6 +71,17 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username + " " + self.email
 
 
+class NonceToToken(models.Model):
+    """Model for binding hashesh to user id when sending links containing 
+        the information
+    """
+
+    uid = models.IntegerField(default=False, unique=True)
+    nonce = models.CharField(default=False, unique=True, max_length=128)
+
+    def __str__(self):
+        return "NonceToToken model"
+
 class Profile(models.Model):
     """Profile of a user related to authentication features"""
 
