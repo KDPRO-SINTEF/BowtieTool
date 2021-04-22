@@ -98,7 +98,7 @@ class DiagramDetail(APIView):
         """Update diagram"""
         diagramModel = self.get_object(pk)
         # Checks that the current user as the rights to update specified diagram
-        if diagramModel.owner != self.request.user or (self.request.user not in diagramModel.writers):
+        if diagramModel.owner != self.request.user or (self.request.user not in diagramModel.writer):
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
@@ -205,9 +205,9 @@ class ShareView(APIView):
             raise Http404
         role = request.data['role']
         if role == "reader":
-            shared_diagram.readers.add(user)
+            shared_diagram.reader.add(user)
         else:
-            shared_diagram.writers.add(user)
+            shared_diagram.writer.add(user)
         # TODO send new email to notify user that a diagram was shared with him
 
         return Response(status=status.HTTP_200_OK)
@@ -215,7 +215,6 @@ class ShareView(APIView):
 
     def get(self, request, pk):
         # TODO send all diagrams shared with the current user
-        diags_as_reader = Diagram.objects.all().filter(readers__contains=self.request.user)
-        diags_as_writer = Diagram.objects.all().filter(writers__contains=self.request.user)
-        # if (self.request.user in diag.writers) or (self.request.user in diag.readers):
+        diags_as_reader = Diagram.objects.all().filter(reader__contains=self.request.user)
+        diags_as_writer = Diagram.objects.all().filter(writer__contains=self.request.user)
 
