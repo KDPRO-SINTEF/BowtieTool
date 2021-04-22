@@ -96,29 +96,32 @@ class DiagramDetail(APIView):
 
     def put(self, request, pk):
         """Update diagram"""
-        diagramModel = self.get_object(pk)
+        diagramModel = Diagram.objects.get(pk=pk)
         # Checks that the current user as the rights to update specified diagram
-        if diagramModel.owner != self.request.user or (self.request.user not in diagramModel.writer):
-            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
             # print(diagramModel.owner.username)
             # print(request.user.username)
             diagram_xml = request.data['diagram']
             no_script_xml = noScriptTagsInXML(diagram_xml)
-            if diagramModel.is_public and (diagramModel.owner.username != request.user.username):
-                # If current user isn't the owner of the diagram,
-                # then he can only create a new private diagram from the public one
-                serializer.save(owner=request.user, is_public=False, lastTimeSpent=request.data['lastTimeSpent'],
-                                diagram=no_script_xml)
-            else:
-                diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
-                diagramModel.name = str(request.data['name'])
-                diagramModel.diagram = no_script_xml
-                diagramModel.is_public = request.data['is_public']
-                diagramModel.tags = request.data['tags']
-                diagramModel.preview = request.data['preview']
-                diagramModel.save()
+            if diagramModel.owner.email != self.request.user.email:
+                if diagramModel.is_public:
+                    # If current user isn't the owner of the diagram,
+                    # then he can only create a new private diagram from the public one
+                    serializer.save(owner=request.user, is_public=False, lastTimeSpent=request.data['lastTimeSpent'],
+                                    diagram=no_script_xml)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                if self.request.user not in diagramModel.writer.all():
+                    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            # In bellow case we either are the owner, or we have writer rights over the diagram
+            # Hence we can modify it
+            diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
+            diagramModel.name = str(request.data['name'])
+            diagramModel.diagram = no_script_xml
+            diagramModel.is_public = request.data['is_public']
+            diagramModel.tags = request.data['tags']
+            diagramModel.preview = request.data['preview']
+            diagramModel.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -192,11 +195,6 @@ class ShareView(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
-    def send_mail(subject, message, email, fromm='no-reply@Bowtie'):
-        """Send email functiom"""
-
-        mail.send_mail(subject, message, fromm, [email], fail_silently=False)
-
     def post(self, request, pk):
         queryset = Diagram.objects.all().filter(owner=self.request.user)
         try:
@@ -214,10 +212,11 @@ class ShareView(APIView):
         else:
             shared_diagram.writer.add(user)
         subject = "Someone shared a BowTie diagram with you"
-        message = f'{self.request.user.email} shared his BowTie diagram named: {shared_diagram.name} with you, and ' \
-                  f'gave you the role of {role}.\nFeel free to visit BowTie++ website to work on this ' \
-                  f'diagram!\nSincerly, \n Bowtie++ team '
-        self.send_mail(subject, message, user.email)
+        message = f"{self.request.user.email} shared his BowTie diagram named: \'{shared_diagram.name}\' with you, "\
+                  " and "\
+                  f"gave you the role of {role}.\nFeel free to visit BowTie++ website to work on this " \
+                  f"diagram!\nSincerly,\nBowtie++ team "
+        mail.send_mail(subject, message, "no-reply@Bowtie", [user.email], fail_silently=False)
         return Response(status=status.HTTP_200_OK)
 
     def get(self, request, pk):
