@@ -14,10 +14,17 @@ from django.core.files import File
 from core.models import Diagram, User, DiagramStat
 from django.conf import settings
 from diagram import serializers
+import re
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
 import PIL
+
+
+def noScriptTagsInXML(input_xml):
+    pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'  # mach any char zero or more times
+    no_script_xml = re.sub(pattern, '', input_xml, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
+    return no_script_xml
 
 
 class IsResearcher(BasePermission):
@@ -51,8 +58,10 @@ class DiagramList(APIView):
         # request_img = request.data['preview']
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            # print(request.data)
-            serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'])
+            diagram_xml = request.data['diagram']
+            # Checks against XSS
+            no_script_xml = noScriptTagsInXML(diagram_xml)
+            serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'], diagram=no_script_xml)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -91,16 +100,19 @@ class DiagramDetail(APIView):
         diagramModel = self.get_object(pk)
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            print(diagramModel.owner.username)
-            print(request.user.username)
+            # print(diagramModel.owner.username)
+            # print(request.user.username)
+            diagram_xml = request.data['diagram']
+            no_script_xml = noScriptTagsInXML(diagram_xml)
             if diagramModel.is_public and (diagramModel.owner.username != request.user.username):
                 # If current user isn't the owner of the diagram,
                 # then he can only create a new private diagram from the public one
-                serializer.save(owner=request.user, is_public=False, lastTimeSpent=request.data['lastTimeSpent'])
+                serializer.save(owner=request.user, is_public=False, lastTimeSpent=request.data['lastTimeSpent'],
+                                diagram=no_script_xml)
             else:
                 diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
                 diagramModel.name = str(request.data['name'])
-                diagramModel.diagram = request.data['diagram']
+                diagramModel.diagram = no_script_xml
                 diagramModel.is_public = request.data['is_public']
                 diagramModel.tags = request.data['tags']
                 diagramModel.preview = request.data['preview']
@@ -149,7 +161,6 @@ class StatsView(APIView):
     permission_classes = (IsResearcher,)
 
     def get(self, request):
-
         queryset = DiagramStat.objects.all().annotate(
             cons=F('consequences'),
             sec_con=F('security_control'),

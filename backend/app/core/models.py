@@ -7,7 +7,7 @@ import reversion
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
 from django.utils import timezone
-from xml.dom import minidom
+import defusedxml.minidom
 import django.forms
 import PIL
 from rest_framework.exceptions import ValidationError
@@ -135,7 +135,7 @@ class Diagram(models.Model):
             print("Content of diagram is empty (printed from models.py)")
         else:
             # Each time we save a new diagram we will parse the xml to update the diagramStat
-            diagram_xml = minidom.parseString(self.diagram)
+            diagram_xml = defusedxml.minidom.parseString(self.diagram)
             root = diagram_xml.documentElement.firstChild
             threats = 0
             causes = 0
