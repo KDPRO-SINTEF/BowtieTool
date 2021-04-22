@@ -6,7 +6,7 @@ window.API_DOMAIN = window.API_DOMAIN || 'http://localhost:8000';
 window.BASE_PATH = '/app/bowtie'
 
 // Public global variables
-window.MAX_REQUEST_SIZE = window.MAX_REQUEST_SIZE  || 10485760;
+window.MAX_REQUEST_SIZE = window.MAX_REQUEST_SIZE || 10485760;
 window.MAX_AREA = window.MAX_AREA || 15000 * 15000;
 
 // URLs for save and export
@@ -65,7 +65,7 @@ window.SAVE_URL = window.SAVE_URL || window.API_DOMAIN + '/api/diagram/private';
 window.UPDATE_URL = window.UPDATE_URL || window.API_DOMAIN + '/api/diagram/'; // {id}
 window.PUBLIC_DIAGS_URL = window.PUBLIC_DIAGS_URL || window.API_DOMAIN + '/api/diagram/public/list';
 window.PRIVATE_DIAGS_URL = window.PRIVATE_DIAGS_URL || window.API_DOMAIN + '/api/diagram/private/list';
-
+window.ALL_DIAGS_SHARED_WITH_ME_URL = window.ALL_DIAGS_SHARED_WITH_ME_URL || window.API_DOMAIN + '/api/diagram/share/'; // {id} Although the id isn't useful
 
 
 /* window.REGISTER_FORM = window.REGISTER_FORM || 'register_old.html';

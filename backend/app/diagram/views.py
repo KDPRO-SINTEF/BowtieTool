@@ -18,7 +18,7 @@ import re
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
-import PIL
+from django.core import mail
 
 
 def noScriptTagsInXML(input_xml):
@@ -192,6 +192,11 @@ class ShareView(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
+    def send_mail(subject, message, email, fromm='no-reply@Bowtie'):
+        """Send email functiom"""
+
+        mail.send_mail(subject, message, fromm, [email], fail_silently=False)
+
     def post(self, request, pk):
         queryset = Diagram.objects.all().filter(owner=self.request.user)
         try:
@@ -208,13 +213,16 @@ class ShareView(APIView):
             shared_diagram.reader.add(user)
         else:
             shared_diagram.writer.add(user)
-        # TODO send new email to notify user that a diagram was shared with him
-
+        subject = "Someone shared a BowTie diagram with you"
+        message = f'{self.request.user.email} shared his BowTie diagram named: {shared_diagram.name} with you, and ' \
+                  f'gave you the role of {role}.\nFeel free to visit BowTie++ website to work on this ' \
+                  f'diagram!\nSincerly, \n Bowtie++ team '
+        self.send_mail(subject, message, user.email)
         return Response(status=status.HTTP_200_OK)
 
-
     def get(self, request, pk):
-        # TODO send all diagrams shared with the current user
-        diags_as_reader = Diagram.objects.all().filter(reader__contains=self.request.user)
-        diags_as_writer = Diagram.objects.all().filter(writer__contains=self.request.user)
-
+        diags_as_reader = Diagram.objects.all().filter(reader__email__contains=self.request.user.email)
+        diags_as_writer = Diagram.objects.all().filter(writer__email__contains=self.request.user.email)
+        all_diags = diags_as_writer.union(diags_as_reader)
+        serializer = serializers.DiagramSerializer(all_diags, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)

@@ -88,7 +88,7 @@ let SearchBarComponent = {
     },
     data: function () {
         return {
-            is_public: false,
+            is_public: 0,
         }
     },
     methods: {
