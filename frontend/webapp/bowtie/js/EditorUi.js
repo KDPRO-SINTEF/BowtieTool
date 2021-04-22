@@ -2990,7 +2990,23 @@ EditorUi.prototype.modifyRolesForGraph = function () {
     }
 
     var dlg = new RoleDialog(this, mxUtils.bind(this, function (user, role) {
-        var json = JSON.stringify({'token': token, 'id': graphid, 'username': user, 'role': role});
+        if(user !== null) {
+            axios.post(window.SHARE_DIAGRAM + graphid, {
+                headers: {
+                    Authorization: 'Token ' + token,
+                    'email ' : user,
+                    'role ' : role
+                }
+            })
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+            })
+        }
+
+        /*
         mxUtils.post(window.ROLE_URL, json, mxUtils.bind(this, function (req) {
             switch (req.getStatus()) {
                 case 200:
@@ -3008,7 +3024,7 @@ EditorUi.prototype.modifyRolesForGraph = function () {
                 default:
                     break;
             }
-        }));
+        }));*/
     }), null);
     this.showDialog(dlg.container, 300, 80, true, true);
     //dlg.init();
@@ -3185,6 +3201,10 @@ EditorUi.prototype.save = function (name, tags) {
                                 console.log('Updated diagram with id ',this.editor.getGraphId());
                             })
                             .catch(error => {
+                                if (error.response.status === 405) {
+                                    console.log(error)
+                                    mxUtils.alert("You're not allowed to save this diagram, maybe you're have the reader only role ?")
+                                }
                                 if (error.response) {
                                     console.log(error)
                                 }
