@@ -22,7 +22,7 @@ import PIL
 
 
 def noScriptTagsInXML(input_xml):
-    pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'  # mach any char zero or more times
+    pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'
     no_script_xml = re.sub(pattern, '', input_xml, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
     return no_script_xml
 
@@ -94,10 +94,11 @@ class DiagramDetail(APIView):
         # response['Content-Disposition'] = 'attachment; filename="%s"' % path.split('/')[-1]
         return response
 
-    # TODO: handle case where diagram public
     def put(self, request, pk):
         """Update diagram"""
         diagramModel = self.get_object(pk)
+        if diagramModel.owner != self.request.user or (self.request.user not in diagramModel.writers):
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
             # print(diagramModel.owner.username)
@@ -184,3 +185,32 @@ class StatsView(APIView):
         resp['count'] = DiagramStat.objects.count()
 
         return Response(resp)
+
+
+class ShareView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsResearcher,)
+
+    def post(self, request, pk):
+        queryset = Diagram.objects.all().filter(owner=self.request.user)
+        try:
+            shared_diagram = queryset.get(pk=pk)
+        except Diagram.DoesNotExist:
+            raise Http404
+        email_to_share_with = request.data['email']
+        user = User.objects.get(email=email_to_share_with)
+        role = request.data['role']
+        if role == "reader":
+            shared_diagram.readers.add(user)
+        else:
+            shared_diagram.writers.add(user)
+        # TODO send new email to notify user that a diagram was shared with him
+
+        return Response(status=status.HTTP_200_OK)
+
+
+    def get(self, request, pk):
+        # TODO send all diagrams shared with the current user
+        diag = Diagram.objects.get(pk=pk)
+        if self.request.user in diag.writers:
+            pass
