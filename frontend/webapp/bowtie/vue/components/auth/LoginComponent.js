@@ -92,7 +92,7 @@ let LoginComponent =  {
         // Saves authentication token and redirects to the root page if login succeeded
         saveAuthToken(token) {
             localStorage.setItem('token', token);
-            window.location.assign(window.BASE_PATH);
+            window.location.replace(window.STATIC_SERVER_DOMAIN);
         },
         // Checks if the mail matches the right pattern
         validEmail: function() {
