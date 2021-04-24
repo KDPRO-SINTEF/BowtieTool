@@ -1,9 +1,7 @@
 // urlParams is null when used for embedding
 window.urlParams = window.urlParams || {};
+window.STATIC_SERVER_DOMAIN = window.STATIC_SERVER_DOMAIN || 'http://localhost:8080'
 window.API_DOMAIN = window.API_DOMAIN || 'http://localhost:8000';
-
-// Base path of the web app
-window.BASE_PATH = '/app/bowtie'
 
 // Public global variables
 window.MAX_REQUEST_SIZE = window.MAX_REQUEST_SIZE  || 10485760;
@@ -35,12 +33,12 @@ window.mxBasePath = window.mxBasePath || '../lib/mxgraph/src';
 window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
 
-window.ROOT_PAGE = window.ROOT_PAGE || '/app/bowtie'
-window.LOGIN_PAGE = window.LOGIN_PAGE || '/app/bowtie/common/authentication#login';
-window.REGISTER_PAGE = window.REGISTER_PAGE || '/app/bowtie/common/authentication#register';
-window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || '/app/bowtie/common/authentication#password-reset';
-window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || '/app/bowtie/common/my_account';
-window.STATISTICS_PAGE = window.STATISTICS_PAGE || '/app/bowtie/common/statistics';
+window.ROOT_PAGE = window.ROOT_PAGE || '/'
+window.LOGIN_PAGE = window.LOGIN_PAGE || window.ROOT_PAGE + 'common/authentication.html#login';
+window.REGISTER_PAGE = window.REGISTER_PAGE || window.ROOT_PAGE + 'common/authentication.html#register';
+window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || window.ROOT_PAGE + 'common/authentication.html#password-reset';
+window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || window.ROOT_PAGE + 'common/my_account.html';
+window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'common/statistics.html';
 
 // Customer driven project specifics
 window.LOGIN = window.LOGIN || window.API_DOMAIN + '/api/user/token';

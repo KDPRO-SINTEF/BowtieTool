@@ -25,10 +25,11 @@ from django.contrib.auth import authenticate
 
 logger = logging.getLogger(__name__)
 
-CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validation.html?for=email_confirm&id=%s&token=%s"
-REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/common/authentication.html#login"
-PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validation.html?for=reset_pwd&id=%s&token=%s"
-PASSWORD_RESET_REQUEST_URL = "http://localhost:8080/app/bowtie/common/authentication.html#password-reset"
+STATIC_SERVER_DOMAIN = "http://localhost:8080"
+CONFIRM_REDIRECT = STATIC_SERVER_DOMAIN + "/validation.html?for=email_confirm&id=%s&token=%s"
+REDIRECT_LOGIN = STATIC_SERVER_DOMAIN  + "/common/authentication.html#login"
+PASSWORD_RESET_URL = STATIC_SERVER_DOMAIN + "/validation.html?for=reset_pwd&id=%s&token=%s"
+PASSWORD_RESET_REQUEST_URL = STATIC_SERVER_DOMAIN + "/common/authentication.html#password-reset"
 
 
 def send_mail(subject, message, email, fromm='no-reply@Bowtie'):
