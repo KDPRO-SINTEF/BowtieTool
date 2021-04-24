@@ -2242,7 +2242,10 @@ Graph.prototype.getUnwantedEventName = function () {
     for (const cell of Object.values(allCells)) {
         if (cell.customID === 'Event') {
             let name_with_html = cell.value
-            const res = name_with_html.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "").replaceAll(/<br>/g, "")
+            const res = name_with_html.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
+                .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
+                .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
+                .replaceAll(/<\/pre>/g,"")
             return res
         }
     }

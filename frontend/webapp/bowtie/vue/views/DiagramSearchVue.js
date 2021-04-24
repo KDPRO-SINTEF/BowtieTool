@@ -28,7 +28,7 @@ let diagramSearch_vue = new Vue({
                 .then(res => {
                     console.log(res)
                     for (const diag of res.data) {
-                        diag.isSharedWithMe = "false"
+                        diag.isSharedWithMe = false
                         this.all_diagrams.push(diag)
                     }
 
@@ -45,7 +45,7 @@ let diagramSearch_vue = new Vue({
                 .then(res => {
                     console.log(res)
                     for (const diag of res.data) {
-                        diag.isSharedWithMe = "false"
+                        diag.isSharedWithMe = false
                         this.all_diagrams.push(diag)
                     }
 
@@ -62,7 +62,7 @@ let diagramSearch_vue = new Vue({
                 res => {
                     console.log(res)
                     for (const diag of res.data) {
-                        diag.isSharedWithMe = "true"
+                        diag.isSharedWithMe = true
                         this.all_diagrams.push(diag)
                     }
                 }
