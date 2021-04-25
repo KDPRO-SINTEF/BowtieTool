@@ -69,6 +69,7 @@ Graph = function (container, model, renderHint, stylesheet, themes) {
     this.themes = themes || this.defaultThemes;
     this.currentEdgeStyle = mxUtils.clone(this.defaultEdgeStyle);
     this.currentVertexStyle = mxUtils.clone(this.defaultVertexStyle);
+    this.threats = [];
     this.consequences = [];
 
     // Sets the base domain URL and domain path URL for relative links.
@@ -2233,8 +2234,8 @@ Graph.prototype.zapGremlins = function (text) {
 };
 
 
-/*
-	Bowtie++ feature
+/**
+ *	Bowtie++ feature
 	returns name of the current unwanted Event
  */
 Graph.prototype.getUnwantedEventName = function () {
@@ -2281,31 +2282,91 @@ Graph.prototype.updateThreatColor = function (threatCell, matrixCell) {
         }
     }
 }
-/*
-	Bowtie++ feature
-	returns the threats cells
+/**
+ *	Bowtie++ feature
+ *	returns the threats cells
  */
-Graph.prototype.getAllThreatsID = function () {
+
+Graph.prototype.getAllThreatsCells = function() {
     let allCells = this.model.cells;
     let threats = new Array();
     for (const cell of Object.values(allCells)) {
         if (cell.customID == 'Threat') {
-            let matrix = '';
-            for (const edge of Object.values(cell.edges)) {
-                if (edge.target.customID == 'Likelihood') {
-                    matrix = edge.target;
-                    break;
-                }
-            }
-            threats.push([cell, matrix]);
+            threats.push(cell);
         }
     }
     return threats;
 }
-/*
-	Bowtie++ feature
-	returns the consequences cells
+/**
+ *	Bowtie++ feature
+ *	returns the matrix linked to the threat cell given in parameter
  */
+Graph.prototype.getMatrix = function(cell) {
+    let mat = new Matrix(null);
+    if(cell.edges != null){
+        for (const edge of Object.values(cell.edges)) {
+            if (edge.target.customID == 'Likelihood'){
+                mat = new Matrix(edge.target);
+                break;
+            }
+        }
+    }
+    return mat;
+}
+/**
+ *	Bowtie++ feature
+ *	Update this.threats with the graph
+ */
+Graph.prototype.updateAllThreats = function () {
+    threatsCells = this.getAllThreatsCells();
+    //Add new threats from the diagram to this.threats, rename it if it already was in this.threats and update matrix
+    threatsCells.forEach(cell => {
+        let threat = this.threats.find(elem => elem.cell === cell.id);
+        if (threat !== undefined) {
+            threat.name = cell.value;
+            threat.matrix = this.getMatrix(cell);
+        } else {
+            let matrix = this.getMatrix(cell);
+            this.threats.push(new Threat(cell, matrix));
+        }
+    });
+    console.log("threats");
+    console.log(this.threats);
+    // Remove the deleted threats in this.threats
+    let newThreatsArray = [];
+    this.threats.forEach(threat => {
+        let cell = threatsCells.find(elem => elem.id === threat.cell);
+        if (cell !== undefined) {
+            newThreatsArray.push(threat);
+        }
+    });
+    this.setThreats(newThreatsArray);
+
+    // Alphabetically sort this.threats
+    this.threats.sort(function (a, b) {
+        return b.name.toString() < a.name.toString()
+    });
+}
+/**
+ *	Bowtie++ feature
+ *	returns this.threats
+ */
+Graph.prototype.getAllThreats = function() {
+    this.updateAllThreats();
+    return this.threats;
+}
+/**
+ *	Bowtie++ feature
+ *	Set this.threats to the parameter
+ */
+Graph.prototype.setThreats = function(threats){
+    this.threats = threats;
+}
+/**
+ *	Bowtie++ feature
+ *	returns the consequences cells
+ */
+
 Graph.prototype.getAllConsequencesCells = function () {
     let allCells = this.model.cells;
     let consequences = new Array();
@@ -2317,16 +2378,16 @@ Graph.prototype.getAllConsequencesCells = function () {
     return consequences;
 }
 
-/*
-	Bowtie++ feature
-	update this.consequences with the graph
-	returns this.consequences
+/**
+ *	Bowtie++ feature
+ *	update this.consequences with the graph
  */
-Graph.prototype.getAllConsequences = function () {
+
+Graph.prototype.updateAllConsequences = function() {
     consCells = this.getAllConsequencesCells();
     //Add new consequences from the diagram to this.consequences, rename it if it already was in this.consequences
     consCells.forEach(cell => {
-        let consequence = this.consequences.find(elem => elem.cell.id === cell.id);
+        let consequence = this.consequences.find(elem => elem.cell === cell.id);
         if (consequence !== undefined) {
             consequence.name = cell.value;
         } else {
@@ -2337,18 +2398,32 @@ Graph.prototype.getAllConsequences = function () {
     // Remove the deleted consequences in this.consequences
     let newConsequencesArray = [];
     this.consequences.forEach(consequence => {
-        let cell = consCells.find(elem => elem.id === consequence.cell.id);
+        let cell = consCells.find(elem => elem.id === consequence.cell);
         if (cell !== undefined) {
             newConsequencesArray.push(consequence);
         }
     });
+    this.setConsequences(newConsequencesArray);
+
+    //Alphabetically sort this.consequences
     this.consequences.sort(function (a, b) {
         return b.name.toString() < a.name.toString()
     });
-    this.setConsequences(newConsequencesArray);
-    return this.consequences;
 }
 
+/**
+ *	Bowtie++ feature
+ *	returns updated consequences
+ */
+
+Graph.prototype.getAllConsequences = function () {
+    this.updateAllConsequences();
+    return this.consequences;
+}
+/**
+ *	Bowtie++ feature
+ *	Set this.consequences to the parameter
+ */
 Graph.prototype.setConsequences = function (consequences) {
     this.consequences = consequences;
 }

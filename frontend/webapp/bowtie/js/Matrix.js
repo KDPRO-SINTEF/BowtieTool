@@ -1,10 +1,18 @@
 class Matrix{
     constructor(matrixCell){
-        this.matrixCell = matrixCell;
-        this.threatActors = this.getLaneValue(matrixCell.children[0]);
-        this.opportunity = this.getLaneValue(matrixCell.children[1]);
-        this.means = this.getLaneValue(matrixCell.children[2]);
-        this.motivation = this.getLaneValue(matrixCell.children[3]);
+        if(matrixCell != null) {
+            this.matrixCell = matrixCell.id;
+            this.threatActors = this.getLaneValue(matrixCell.children[0]);
+            this.opportunity = this.getLaneValue(matrixCell.children[1]);
+            this.means = this.getLaneValue(matrixCell.children[2]);
+            this.motivation = this.getLaneValue(matrixCell.children[3]);
+        }else{
+            this.matrixCell = -1;
+            this.threatActors = -1;
+            this.opportunity = -1;
+            this.means = -1;
+            this.motivation = -1;
+        }
     }
 
     getEllipseColor(ellipseCell){

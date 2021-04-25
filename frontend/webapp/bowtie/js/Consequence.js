@@ -1,6 +1,6 @@
 class Consequence{
     constructor(cell){
-        this._cell = cell;
+        this._cell = cell.id;
         this._impactValue =  "";
         this._probability =  "";
         this._name = cell.value;

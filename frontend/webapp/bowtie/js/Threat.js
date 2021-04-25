@@ -1,26 +1,25 @@
 class Threat {
 
     constructor(threatCell,mat){
-        if(mat === ''){
-            constructorNoMat(threatCell);
-        }else{
-            this.threat = threatCell;
-            this.matrix = mat;
-        }
-    }
-    constructorNoMat(threatCell){
-        this.threat = threatCell;
-        this.matrix = null;
+        this._cell = threatCell.id;
+        this._name = threatCell.value;
+        this._matrix = mat;
+
     }
 
-    getName(){
-        return this.threat.value;
+    get name(){
+        return this._name;
     }
-
-    getCell(){
-        return this.threat;
+    set name(newName){
+        this._name = newName;
     }
-    getMatrix(){
-        return this.matrix;
+    get cell(){
+        return this._cell;
+    }
+    get matrix(){
+        return this._matrix;
+    }
+    set matrix(newMatrix){
+        this._matrix = newMatrix;
     }
 }
