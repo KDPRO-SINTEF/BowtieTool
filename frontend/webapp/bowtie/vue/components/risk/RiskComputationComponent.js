@@ -16,9 +16,9 @@ let ThreatsComponent = {
     },
     beforeMount: function() {
             //Initialize threats array
-            const threatsID = window.parent.currentUI.editor.graph.getAllThreatsID();
-            threatsID.forEach(elem => this.threats.push(new Threat(elem[0], new Matrix(elem[1]))));
-            this.threats.sort(function(a,b){return b.getName().toString() < a.getName().toString()});
+            this.threats = window.parent.currentUI.editor.graph.getAllThreats();
+            console.log("init threat : ");
+            console.log(this.threats);
     },
     mounted() {
         this.$emit("threats", this.threats);
@@ -35,8 +35,6 @@ let ConsequencesComponent = {
     },
     beforeMount: function () {
         //Initialize consequences array
-        //const consCells = window.parent.currentUI.editor.graph.getAllConsequencesCells();
-        //consCells.forEach(elem => this.consequences.push(new Consequence(elem)));
         this.consequences = window.parent.currentUI.editor.graph.getAllConsequences();
     },
     methods: {
@@ -113,6 +111,25 @@ let ResultComponent = {
                     return "Show Formula";
             }
         }
+        /* Code used to transform objects into xml string
+        getTestXml(){
+            var encoder = new mxCodec(mxUtils.createXmlDocument());
+            let objVer = new Array();
+            window.parent.currentUI.editor.graph.getAllConsequences().forEach(elem => {
+                objVer.push({...elem});
+            });
+            var result = encoder.encode(objVer);
+            var xml = mxUtils.getXml(result);
+            return xml;
+        },
+        getTestDecode(xml){
+            var doc = mxUtils.parseXml(xml);
+            var codec = new mxCodec(doc);
+            let testObject = new Array();
+            codec.decode(doc.documentElement, testObject);
+            return testObject;
+        }
+        */
     }
 
 }
@@ -150,14 +167,21 @@ let risk_vue = new Vue({
             let inter_res = 1;
             for(let i = 0; i < this.threats.length; i++){
 
-                //Check if parameters of the threat are defined
-                if(!this.threats[i].getMatrix().allDefined()){
-                    this.eventProbability = "missing_param";
-                    console.log("Missing parameter(s) on " + this.threats[i].getName());
+                //Check if a matrix is linked to the threat
+                if(this.threats[i].matrix == null){
+                    this.eventProbability = 'no_matrix';
+                    console.log("No matrix linked to the threat was found on the diagram");
                     return;
                 }
 
-                inter_res *= (1.0 - this.threats[i].getMatrix().getProbability());
+                //Check if parameters of the threat are defined
+                if(!this.threats[i].matrix.allDefined()){
+                    this.eventProbability = "missing_param";
+                    console.log("Missing parameter(s) on " + this.threats[i].name);
+                    return;
+                }
+
+                inter_res *= (1.0 - this.threats[i].matrix.getProbability());
             }
             this.eventProbability = 1 - inter_res;
         },

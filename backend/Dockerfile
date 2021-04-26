@@ -1,7 +1,10 @@
 FROM python:3.7-alpine
 MAINTAINER Moulkaf Badreddine
 
+RUN apk update
 ENV PYTHONUNBUFFERED 1
+RUN apk add python3 py3-pip && \
+	pip install --upgrade pip
 COPY ./requirements.txt /requirements.txt
 RUN apk add --update --no-cache postgresql-client
 RUN apk add --update --no-cache --virtual .tmp-build-deps \
@@ -10,7 +13,7 @@ RUN apk add zlib-dev jpeg-dev gcc musl-dev
 RUN apk add --update --no-cache \
            graphviz \
            ttf-freefont
-RUN pip install -r /requirements.txt
+RUN pip3 install -r /requirements.txt
 RUN apk del .tmp-build-deps
 
 RUN mkdir /app
