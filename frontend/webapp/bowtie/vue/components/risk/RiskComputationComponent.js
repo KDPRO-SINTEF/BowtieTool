@@ -10,18 +10,103 @@ let ThreatsComponent = {
     data: function() {
         return {
             threats : [],
+            display_threat : []
         }
-    },
-    methods: {
     },
     beforeMount: function() {
             //Initialize threats array
             this.threats = window.parent.currentUI.editor.graph.getAllThreats();
-            console.log("init threat : ");
-            console.log(this.threats);
     },
     mounted() {
         this.$emit("threats", this.threats);
+    },
+    methods: {
+        display_detail : function(threat){
+            const index = this.display_threat.indexOf(threat);
+            if (index >= 0){
+                this.display_threat.splice(index,1);
+            } else {
+                this.display_threat.push(threat);
+            }
+        },
+        getDetailsButtonText(threat){
+            if (this.display_threat.includes(threat)){
+                return "Hide Details";
+            }else{
+                return "Show Details";
+            }
+        },
+        updateThreatActors: function (threat, event) {
+            //Check input validity
+            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 10 || event.target.value === "") {
+                console.log("Invalid threat actors value");
+                threat.threatActors = "";
+                threat.updateThreatCellColor();
+                this.updateGraphThreats();
+                this.emitThreats();
+                return;
+            }
+
+            threat.threatActors = parseFloat(event.target.value);
+            threat.updateThreatCellColor();
+            this.updateGraphThreats();
+            this.emitThreats();
+        },
+        updateOpportunity: function (threat, event) {
+            //Check input validity
+            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 10 || event.target.value === "") {
+                console.log("Invalid opportunity value");
+                threat.opportunity = "";
+                threat.updateThreatCellColor();
+                this.updateGraphThreats();
+                this.emitThreats();
+                return;
+            }
+
+            threat.opportunity = parseFloat(event.target.value);
+            threat.updateThreatCellColor();
+            this.updateGraphThreats();
+            this.emitThreats();
+        },
+        updateMeans: function (threat, event) {
+            //Check input validity
+            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 10 || event.target.value === "") {
+                console.log("Invalid means value");
+                threat.means = "";
+                threat.updateThreatCellColor();
+                this.updateGraphThreats();
+                this.emitThreats();
+                return;
+            }
+
+            threat.means = parseFloat(event.target.value);
+            threat.updateThreatCellColor();
+            this.updateGraphThreats();
+            this.emitThreats();
+        },
+        updateMotivation: function (threat, event) {
+            //Check input validity
+            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 10 || event.target.value === "") {
+                console.log("Invalid threat actors value");
+                threat.motivation = "";
+                threat.updateThreatCellColor();
+                this.updateGraphThreats();
+                this.emitThreats();
+                return;
+            }
+
+            threat.motivation = parseFloat(event.target.value);
+            threat.updateThreatCellColor();
+            this.updateGraphThreats();
+            this.emitThreats();
+        },
+        emitThreats: function () {
+            this.$emit("threats", this.threats);
+        },
+        updateGraphThreats: function () {
+            window.parent.currentUI.editor.graph.setThreats(this.threats);
+            window.parent.currentUI.editor.graph.updateAllThreats();
+        },
     }
 }
 
@@ -43,6 +128,7 @@ let ConsequencesComponent = {
             if (isNaN(event.target.value) || event.target.value < 0 || event.target.value === "") {
                 console.log("Invalid impact value");
                 consequence.impactValue = "";
+                this.updateGraphConsequences();
                 this.emitConsequences();
                 return;
             }
@@ -175,13 +261,13 @@ let risk_vue = new Vue({
                 }
 
                 //Check if parameters of the threat are defined
-                if(!this.threats[i].matrix.allDefined()){
+                if(!this.threats[i].allDefined()){
                     this.eventProbability = "missing_param";
                     console.log("Missing parameter(s) on " + this.threats[i].name);
                     return;
                 }
 
-                inter_res *= (1.0 - this.threats[i].matrix.getProbability());
+                inter_res *= (1.0 - this.threats[i].getProbability());
             }
             this.eventProbability = 1 - inter_res;
         },

@@ -155,10 +155,34 @@ Graph = function (container, model, renderHint, stylesheet, themes) {
                 var s = 'ellipse;' + 'fillColor=' + fill + ';'
                 cell.setStyle(s)
 
+                this.updateAllThreats();
                 // If the matrix is connected to a threat, update the color of the threat
-                if (cell.getParent().getParent().edges != null) {
+                if (cell.getParent().getParent().edges != null && cell.getParent().getParent().edges.length > 0) {
                     if (cell.getParent().getParent().edges[0].source.customID = 'Threat') {
-                        this.updateThreatColor(cell.getParent().getParent().edges[0].source, cell.getParent().getParent());
+                        this.threats.forEach(threat => {
+                            if (threat.cell === cell.getParent().getParent().edges[0].source.id){
+                                let value = threat.convertColorToValue(fill);
+                                switch(cell.getParent().value){
+                                    case("ACT"):
+                                        threat.threatActors = value;
+                                        break;
+
+                                    case("OPP"):
+                                        threat.opportunity = value;
+                                        break;
+
+                                    case("MEA"):
+                                        threat.means = value;
+                                        break;
+
+                                    case("MTV"):
+                                        threat.motivation = value;
+                                        break;
+
+                                }
+                                threat.updateThreatCellColor();
+                            }
+                        });
                     }
                 }
 
@@ -2253,35 +2277,6 @@ Graph.prototype.getUnwantedEventName = function () {
     return ""
 }
 
-/*
-	Bowtie++ feature
-	returns the threats and its associated matrix cells IDs
- */
-
-Graph.prototype.updateThreatColor = function (threatCell, matrixCell) {
-    let matrix = new Matrix(matrixCell);
-    if (matrix.allDefined()) {
-        switch (matrix.getColorIndicator()) {
-            case '#00ff06':
-                threatCell.setStyle('shape=mxgraph.bowtie.verylowthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
-                break;
-            case '#a7ec67':
-                threatCell.setStyle('shape=mxgraph.bowtie.lowthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
-                break;
-            case '#fffe00':
-                threatCell.setStyle('shape=mxgraph.bowtie.mediumthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
-                break;
-            case '#fe773d':
-                threatCell.setStyle('shape=mxgraph.bowtie.highthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
-                break;
-            case '#ff0000':
-                threatCell.setStyle('shape=mxgraph.bowtie.veryhighthreat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
-                break;
-            default:
-                break;
-        }
-    }
-}
 /**
  *	Bowtie++ feature
  *	returns the threats cells
@@ -2324,14 +2319,16 @@ Graph.prototype.updateAllThreats = function () {
         let threat = this.threats.find(elem => elem.cell === cell.id);
         if (threat !== undefined) {
             threat.name = cell.value;
-            threat.matrix = this.getMatrix(cell);
+            let mat = this.getMatrix(cell);
+            if(threat.matrix.getMatrixCell() != mat.getMatrixCell()){
+                threat.matrix = this.getMatrix(cell);
+            }
         } else {
             let matrix = this.getMatrix(cell);
             this.threats.push(new Threat(cell, matrix));
         }
     });
-    console.log("threats");
-    console.log(this.threats);
+
     // Remove the deleted threats in this.threats
     let newThreatsArray = [];
     this.threats.forEach(threat => {
@@ -2346,6 +2343,7 @@ Graph.prototype.updateAllThreats = function () {
     this.threats.sort(function (a, b) {
         return b.name.toString() < a.name.toString()
     });
+    this.refresh();
 }
 /**
  *	Bowtie++ feature
@@ -2361,6 +2359,7 @@ Graph.prototype.getAllThreats = function() {
  */
 Graph.prototype.setThreats = function(threats){
     this.threats = threats;
+    this.refresh();
 }
 /**
  *	Bowtie++ feature
