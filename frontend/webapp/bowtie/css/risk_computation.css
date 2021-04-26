@@ -10,6 +10,7 @@
     background-color: #FFFFFF;
 }
 #table_container{
+    margin-bottom: 0;
     padding-top: 50px;
 }
 #result_container{
@@ -46,18 +47,48 @@
 .description {
      width: 70%;
  }
+.indicator{
+    width: 15%;
+    text-align: center;
+}
+.indicatorDot{
+    margin: 0 auto;
+}
+.probability{
+    width: 20%;
+    text-align: right;
+}
+.details_button{
+    text-align: center;
+    margin: 0 0 0 0;
+}
+.detail_row{
+    margin-bottom: 0;
+}
+.threat_detail_span{
+    display: flex;
+    justify-content: space-between;
+}
+
+.threat_detail_field{
+    display: inline-block;
+    padding: 0 0;
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: 32px;
+    width: 75px;
+
+}
+
 .highest_rv_row{
     background-color: #ffd5d5;
 }
-.md-field {
+.consequence_field {
     padding-top: 0;
     padding-right: 0;
     margin: 0 0 0;
     min-height: 32px;
     width: 75px;
-}
-.md-field .md-input{
-    font-size: 13px;
 }
 
 .numeric_input{

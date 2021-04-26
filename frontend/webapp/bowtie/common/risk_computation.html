@@ -55,12 +55,33 @@
                         <md-table-head class="description">Threat T<sub>i</sub></md-table-head>
                         <md-table-head class="indicator">Indicator</md-table-head>
                         <md-table-head class="probability" >Probability p(T<sub>i</sub>)</md-table-head>
+                        <md-table-head class="details_button">Details</md-table-head>
                     </md-table-row >
-                    <md-table-row v-for="threat in threats" v-bind:key="threat.name">
-                        <md-table-cell class="description"> {{threat.name}}</md-table-cell>
-                        <md-table-cell class="indicator" ><div class="indicatorDot" v-if="threat.matrix.allDefined()" style="width: 25px; height: 25px; border-radius: 20px;" :style="{background: threat.matrix.getColorIndicator()}"></div></md-table-cell>
-                        <md-table-cell class="probability" >{{threat.matrix.getProbability()}}</md-table-cell>
-                    </md-table-row>
+                    <template v-for="threat in threats">
+                        <md-table-row>
+                            <md-table-cell class="description"> {{threat.name}}</md-table-cell>
+                            <md-table-cell class="indicator" ><div class="indicatorDot" v-if="threat.allDefined()" style="width: 25px; height: 25px; border-radius: 20px;" :style="{background: threat.getColorIndicator()}"></div></md-table-cell>
+                            <md-table-cell class="probability" >
+                                <span v-if="!threat.allDefined()">Missing parameter(s)</span>
+                                <span v-else>{{parseFloat((threat.getProbability()).toFixed(3))}}</span>
+                            </md-table-cell>
+                            <md-table-cell>
+                                <md-button class="details_button" v-on:click="display_detail(threat)">{{getDetailsButtonText(threat)}}</md-button>
+                            </md-table-cell>
+                        </md-table-row>
+                        <md-table-row class="detail_row" v-if="display_threat.includes(threat)">
+                            <md-table-cell colspan="4">
+                                <span class="threat_detail_span">
+                                    <span class="threat_detail_cell">Threat Actors (ACT) :<md-field class="threat_detail_field"><md-input class="numeric_input" v-model="threat.threatActors" v-on:change="updateThreatActors(threat, $event)" type="number" min ="0" max="10" step="0.01"></md-input></md-field></span>
+                                    <span class="threat_detail_cell">Opportunity (OPP) :<md-field class="threat_detail_field"><md-input class="numeric_input" v-model="threat.opportunity" v-on:change="updateOpportunity(threat, $event)" type="number" min ="0" max="10" step="0.01"></md-input></md-field></span>
+                                    <span class="threat_detail_cell">Means (MEA) :<md-field class="threat_detail_field"><md-input class="numeric_input" v-model="threat.means" v-on:change="updateMeans(threat, $event)" type="number" min ="0" max="10" step="0.01"></md-input></md-field></span>
+                                    <span class="threat_detail_cell">Motivations (MTV) :<md-field class="threat_detail_field"><md-input class="numeric_input" v-model="threat.motivation" v-on:change="updateMotivation(threat, $event)" type="number" min ="0" max="10" step="0.01"></md-input></md-field></span>
+                                </span>
+                            </md-table-cell>
+                        </md-table-row>
+
+
+                    </template>
                 </md-table>
             </div>
     </script>
@@ -75,13 +96,13 @@
                 <md-table-row>
                     <md-table-head class="description">Consequence C<sub>j</sub></md-table-head>
                     <md-table-head class="impact_value" md-numeric>Impact Value L<sub>C<sub>j</sub></sub></md-table-head>
-                    <md-table-head class="probability" md-numeric>Probability p(C<sub>j</sub>)</md-table-head>
+                    <md-table-head class="consequence_probability" md-numeric>Probability p(C<sub>j</sub>)</md-table-head>
                     <md-table-head class="risk_value" >Risk Value R(U)<sub>j</sub></md-table-head>
                 </md-table-row >
                 <md-table-row v-for="consequence in consequences" v-bind:key="consequence.name" v-bind:class='{"highest_rv_row" : isHighest(consequence)}'>
                     <md-table-cell class="description"> {{consequence.name}}</md-table-cell>
-                    <md-table-cell class="impact_value" md-numeric><md-field><md-input class="numeric_input" v-model="consequence.impactValue" v-on:change="updateImpactValue(consequence, $event)" type="number" min ="0" step="0.01"></md-input></md-field></md-table-cell>
-                    <md-table-cell class="probability" md-numeric><md-field><md-input class="numeric_input" v-model="consequence.probability" v-on:change="updateProbability(consequence, $event)" type="number" min ="0" max="1" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="impact_value" md-numeric><md-field class="consequence_field"><md-input class="numeric_input" v-model="consequence.impactValue" v-on:change="updateImpactValue(consequence, $event)" type="number" min ="0" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="consequence_probability" md-numeric><md-field class="consequence_field"><md-input class="numeric_input" v-model="consequence.probability" v-on:change="updateProbability(consequence, $event)" type="number" min ="0" max="1" step="0.01"></md-input></md-field></md-table-cell>
                     <md-table-cell class="risk_value" >
                         <span v-if="isNaN(eventProbability)">P(U) not defined</span>
                         <span v-else-if="!consequence.allDefined()">Missing parameter(s)</span>
