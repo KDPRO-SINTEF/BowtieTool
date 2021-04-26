@@ -243,7 +243,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-    def test_account_password__reset_token(self):
+    def test_account_password_reset_token(self):
         """ Test if account reset password token is valid and the request
             to the generated url changes user password
         """
