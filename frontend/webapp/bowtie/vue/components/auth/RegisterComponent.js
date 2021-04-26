@@ -84,14 +84,15 @@ let RegisterComponent = {
         filterErrorResponse: function(error) {
             switch(error.status) {
                 case 400:
-                    if (error.data.email !== undefined) {
+                    if (error.data.errors.email !== undefined) {
                         this.errors.InvalidEmailErr.show = true;
                     }
-                    if (error.data.password !== undefined) {
+                    console.log(error.data);
+                    if (error.data.errors.password !== undefined) {
                         this.errors.WeakPasswordErr.show = true;
                         this.user.passwordConfirm = '';
                     }
-                    if (error.data.username !== undefined) {
+                    if (error.data.errors.username !== undefined) {
                         this.errors.MissingFieldsErr.show = true;
                     }
                     break;

@@ -1172,6 +1172,8 @@ Sidebar.prototype.addRootPalette = function(dir, expand)
             this.createVertexTemplateEntry('Event','shape=mxgraph.bowtie.event;html=1;whiteSpace=wrap;fontSize=16;aspect=fixed', 120, 80, 'Unwanted Event', 'Unwanted Event', null, null, 'bowtie unwanted event'),
             ];
 
+    window.localStorage.setItem('unwanted-event', "Unwanted Event")
+
     this.addPaletteFunctions('Bowtie Root', mxResources.get('bowtieroot'), expand, fns);
 }
 

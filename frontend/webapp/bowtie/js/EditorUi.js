@@ -3021,7 +3021,11 @@ EditorUi.prototype.saveFile = function (forceDialog) {
     if (!forceDialog && this.editor.filename != null) {
         this.save(this.editor.getOrCreateFilename(), "");
     } else {
-        var dlg = new FilenameDialog(this, this.editor.getOrCreateFilename(), mxResources.get('save'), mxUtils.bind(this, function (name, tags) {
+        var filename = this.editor.getOrCreateFilename()
+        if(this.editor.graph.getUnwantedEventName()!==""){
+            filename = this.editor.graph.getUnwantedEventName()
+        }
+        var dlg = new FilenameDialog(this, filename, mxResources.get('save'), mxUtils.bind(this, function (name, tags) {
             this.save(name, tags);
         }), null, mxUtils.bind(this, function (name) {
             if (name != null && name.length > 0) {

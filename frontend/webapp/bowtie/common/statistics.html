@@ -48,28 +48,38 @@
             </div>
             <div class="row gx-5 mb-5">
                 <div class="col">
-                    <statistics-item :label="statistics.barriers.label" :number="statistics.barriers.number"
+                    <statistics-item :label="statistics.assets.label"
+                                     :number="statistics.assets.number"
                                      v-on:value-copied="showToastMessage($event)"
-                                     v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
+                                     v-bind:image-src="'../images/statistics/statistics-asset.png'"></statistics-item>
                 </div>
                 <div class="col">
-                    <statistics-item :label="statistics.barriersPerConsequences.label"
-                                     :number="statistics.barriersPerConsequences.number"
+                    <statistics-item :label="statistics.barriers.label" :number="statistics.barriers.number"
                                      v-on:value-copied="showToastMessage($event)"
                                      v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
                 </div>
             </div>
             <div class="row gx-5 mb-5">
                 <div class="col">
+                    <statistics-item :label="statistics.barriersPerConsequences.label"
+                                     :number="statistics.barriersPerConsequences.number"
+                                     v-on:value-copied="showToastMessage($event)"
+                                     v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
+                </div>
+                <div class="col">
                     <statistics-item :label="statistics.barriersPerThreats.label"
                                      :number="statistics.barriersPerThreats.number"
                                      v-on:value-copied="showToastMessage($event)"
                                      v-bind:image-src="'../images/statistics/statistics-barrier.png'"></statistics-item>
                 </div>
+            </div>
+            <div class="row gx-5 mb-5">
                 <div class="col">
                     <statistics-item :label="statistics.count.label" :number="statistics.count.number"
                                      v-on:value-copied="showToastMessage($event)"
                                      v-bind:image-src="'../images/statistics/statistics-count.png'"></statistics-item>
+                </div>
+                <div class="col">
                 </div>
             </div>
             <div class="row gx-5 mb-5">

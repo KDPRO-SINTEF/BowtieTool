@@ -101,6 +101,7 @@ class DiagramStat(models.Model):
     consequences = models.IntegerField(default=0)
     barriers = models.IntegerField(default=0)
     causes = models.IntegerField(default=0)
+    assets = models.IntegerField(default=0)
     security_control = models.IntegerField(default=0)
     totalTimeSpent = models.FloatField(default=0)  # total time in minutes passed on this diagram
 
@@ -152,6 +153,7 @@ class Diagram(models.Model):
             consequences = 0
             barriers = 0
             security_control = 0
+            assets = 0
             allMxCell = root.getElementsByTagName('mxCell')
             for node in allMxCell:
                 if node.getAttribute('customID') == "Threat":
@@ -162,6 +164,8 @@ class Diagram(models.Model):
                     causes += 1
                 if node.getAttribute('customID') == "Security Control":
                     security_control += 1
+                if node.getAttribute('customID') == "Asset":
+                    assets += 1
                 if node.getAttribute('customID') == "Barrier":
                     barriers += 1
                 if node.getAttribute('customID') == "Hazard":
@@ -175,7 +179,8 @@ class Diagram(models.Model):
             self.diagramStat = DiagramStat.objects.create(consequences=consequences, threats=threats,
                                                           barriers=barriers, causes=causes,
                                                           security_control=security_control,
-                                                          totalTimeSpent=new_total_time_spent)
+                                                          totalTimeSpent=new_total_time_spent,
+                                                          assets=assets)
         super().save(*args, **kwargs)  # Call the "real" save() method.
 
     def __str__(self):

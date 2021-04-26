@@ -33,7 +33,7 @@ let LoginComponent =  {
                     show: false
                 },
                 ExpiredTotpTokenErr: {
-                    message: 'This code has expired, try with a new one.',
+                    message: 'Invalid code.',
                     show: false
                 }
             }
@@ -127,13 +127,16 @@ let LoginComponent =  {
         filter2faLoginErrors: function(error) {
             switch(error.status) {
                 case 400:
-                    if(error.data.errors !== undefined) {
-                        this.user.twoFactorAuth = false;
-                        this.user.loginToken = null;
-                        alert('Your login token has expired. Please try again.');
-                    } else {
-                        this.errors.ExpiredTotpTokenErr.show = true;
-                        this.qrCode = '';
+                    let errorArray = error.data.errors;
+                    if(errorArray !== undefined) {
+                        if (errorArray[0] === 'Expired token') {
+                            alert("Something went wrong, please try again.");
+                            this.user.twoFactorAuth = false;
+                            location.hash = 'login';
+                        } else {
+                            this.errors.ExpiredTotpTokenErr.show = true;
+                            this.user.totpToken = '';
+                        }
                     }
                     break;
                 default:

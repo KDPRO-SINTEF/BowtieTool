@@ -2617,6 +2617,22 @@ Graph.prototype.zapGremlins = function(text)
 	
 	return checked.join('');
 };
+
+
+/*
+	Bowtie++ feature
+	returns name of the current unwanted Event
+ */
+Graph.prototype.getUnwantedEventName = function (){
+	let allCells = this.model.cells;
+	for(const cell of Object.values(allCells)){
+		if(cell.customID === 'Event'){
+			return cell.value
+		}
+	}
+	return ""
+}
+
 /*
 	Bowtie++ feature
 	returns the threats and its associated matrix cells IDs
@@ -6313,6 +6329,7 @@ if (typeof mxVertexHandler != 'undefined')
 				this.textarea.style.outline = 'none';
 				this.textarea.style.border = '';
 			}
+
 		}
 
 		/**
