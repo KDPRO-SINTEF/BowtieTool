@@ -16,4 +16,4 @@ django-cors-headers<=3.7.0
 Pillow>=8.0
 pytz<=2020.1
 coverage
-
+defusedxml

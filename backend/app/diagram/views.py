@@ -14,10 +14,17 @@ from django.core.files import File
 from core.models import Diagram, User, DiagramStat
 from django.conf import settings
 from diagram import serializers
+import re
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
-import PIL
+from django.core import mail
+
+
+def noScriptTagsInXML(input_xml):
+    pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'
+    no_script_xml = re.sub(pattern, '', input_xml, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
+    return no_script_xml
 
 
 class IsResearcher(BasePermission):
@@ -51,8 +58,10 @@ class DiagramList(APIView):
         # request_img = request.data['preview']
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            # print(request.data)
-            serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'])
+            diagram_xml = request.data['diagram']
+            # Checks against XSS
+            no_script_xml = noScriptTagsInXML(diagram_xml)
+            serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'], diagram=no_script_xml)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -85,26 +94,34 @@ class DiagramDetail(APIView):
         # response['Content-Disposition'] = 'attachment; filename="%s"' % path.split('/')[-1]
         return response
 
-    # TODO: handle case where diagram public
     def put(self, request, pk):
         """Update diagram"""
-        diagramModel = self.get_object(pk)
+        diagramModel = Diagram.objects.get(pk=pk)
+        # Checks that the current user as the rights to update specified diagram
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
-            print(diagramModel.owner.username)
-            print(request.user.username)
-            if diagramModel.is_public and (diagramModel.owner.username != request.user.username):
-                # If current user isn't the owner of the diagram,
-                # then he can only create a new private diagram from the public one
-                serializer.save(owner=request.user, is_public=False, lastTimeSpent=request.data['lastTimeSpent'])
-            else:
-                diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
-                diagramModel.name = str(request.data['name'])
-                diagramModel.diagram = request.data['diagram']
-                diagramModel.is_public = request.data['is_public']
-                diagramModel.tags = request.data['tags']
-                diagramModel.preview = request.data['preview']
-                diagramModel.save()
+            # print(diagramModel.owner.username)
+            # print(request.user.username)
+            diagram_xml = request.data['diagram']
+            no_script_xml = noScriptTagsInXML(diagram_xml)
+            if diagramModel.owner.email != self.request.user.email:
+                if diagramModel.is_public:
+                    # If current user isn't the owner of the diagram,
+                    # then he can only create a new private diagram from the public one
+                    serializer.save(owner=request.user, is_public=False, lastTimeSpent=request.data['lastTimeSpent'],
+                                    diagram=no_script_xml)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                if self.request.user not in diagramModel.writer.all():
+                    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            # In bellow case we either are the owner, or we have writer rights over the diagram
+            # Hence we can modify it
+            diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
+            diagramModel.name = str(request.data['name'])
+            diagramModel.diagram = no_script_xml
+            diagramModel.is_public = request.data['is_public']
+            diagramModel.tags = request.data['tags']
+            diagramModel.preview = request.data['preview']
+            diagramModel.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -149,7 +166,6 @@ class StatsView(APIView):
     permission_classes = (IsResearcher,)
 
     def get(self, request):
-
         queryset = DiagramStat.objects.all().annotate(
             cons=F('consequences'),
             sec_con=F('security_control'),
@@ -173,3 +189,39 @@ class StatsView(APIView):
         resp['count'] = DiagramStat.objects.count()
 
         return Response(resp)
+
+
+class ShareView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, pk):
+        queryset = Diagram.objects.all().filter(owner=self.request.user)
+        try:
+            shared_diagram = queryset.get(pk=pk)
+        except Diagram.DoesNotExist:
+            raise Http404
+        email_to_share_with = request.data['email']
+        try:
+            user = User.objects.get(email=email_to_share_with)
+        except User.DoesNotExist:
+            raise Http404
+        role = request.data['role']
+        if role == "reader":
+            shared_diagram.reader.add(user)
+        else:
+            shared_diagram.writer.add(user)
+        subject = "Someone shared a BowTie diagram with you"
+        message = f"{self.request.user.email} shared his BowTie diagram named: \'{shared_diagram.name}\' with you, "\
+                  " and "\
+                  f"gave you the role of {role}.\nFeel free to visit BowTie++ website to work on this " \
+                  f"diagram!\nSincerly,\nBowtie++ team "
+        mail.send_mail(subject, message, "no-reply@Bowtie", [user.email], fail_silently=False)
+        return Response(status=status.HTTP_200_OK)
+
+    def get(self, request, pk):
+        diags_as_reader = Diagram.objects.all().filter(reader__email__contains=self.request.user.email)
+        diags_as_writer = Diagram.objects.all().filter(writer__email__contains=self.request.user.email)
+        all_diags = diags_as_writer.union(diags_as_reader)
+        serializer = serializers.DiagramSerializer(all_diags, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)

@@ -80,8 +80,9 @@ class DiagramApiTests(TestCase):
         if serializer.is_valid():
             for diag in serializer.data:
                 self.assertIn('test', diag['name'])
+                print(diag)
                 diagramCount += 1
-        self.assertEqual(3, diagramCount)
+            self.assertEqual(3, diagramCount)
 
     def test_post_new_Diagram_then_Delete(self):
         headers = {'Content-Type': 'application/xml'}
@@ -96,8 +97,8 @@ class DiagramApiTests(TestCase):
         self.assertEqual(201, res.status_code)
         diag = Diagram.objects.get(name='test_post')
         # diagStat = DiagramStat.objects.get(pk=diag.diagramStat.pk)
-        print(diag.get_tags())
-        print(diag.diagramStat)
+        # print(diag.get_tags())
+        # print(diag.diagramStat)
         self.assertTrue(diag.is_public)
         self.assertEqual(30, diag.lastTimeSpent)
         self.assertEqual(30, diag.diagramStat.totalTimeSpent)

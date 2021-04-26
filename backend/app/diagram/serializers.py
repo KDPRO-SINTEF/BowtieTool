@@ -48,5 +48,5 @@ class DiagramSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Diagram
-        fields = ('id', 'name', 'is_public', 'diagram', 'tags', 'preview')
-        read_only_fields = ('id',)
+        fields = ('id', 'name', 'is_public', 'diagram', 'tags', 'preview', 'description',)
+        read_only_fields = ('id', 'description',)

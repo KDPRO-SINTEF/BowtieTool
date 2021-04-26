@@ -291,7 +291,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_response_time_existing_unexisting_emails(self):
-        """Test the response time for password resset request for existing
+        """Test the response time for password reset request for existing
             and unexisting user """
         payload = {
             'email': 'test@bowtie.com',

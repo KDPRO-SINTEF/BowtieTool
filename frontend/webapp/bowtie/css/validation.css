@@ -2,12 +2,27 @@
 
 .valid-container {
     display: block;
-    width: 25em;
+    width: 35em;
     margin: 10vh auto 10vh auto;
     padding: 1em;
+    text-align: center;
 }
 
-#auth-content-title {
-    margin-bottom: 2rem;
-    text-align: center;
+.validation-titles {
+    margin-bottom: 2em;
+}
+
+.validation-btn {
+    width: 200px;
+    height: 30px;
+    margin-top: 1em;
+    padding: 0;
+    border: none;
+    color: white;
+    background-color: rgb(40,167,69);
+}
+
+#validation-logo {
+    width: 25%;
+    margin-bottom: 2em;
 }

@@ -1,4 +1,3 @@
-
 let diagramSearch_vue = new Vue({
     el: '#diagram-search-vue',
     components: {
@@ -7,12 +6,11 @@ let diagramSearch_vue = new Vue({
         'tag-manager': TagManagerComponent,
     },
     data: {
-        isPublic: false,
+        isPublic: 0,
         nameInput: "",
         all_diagrams: [],
-        tags_selected:[],
+        tags_selected: [],
         show_all_tags: true,
-
     },
     methods: {
         init: function () {
@@ -30,6 +28,7 @@ let diagramSearch_vue = new Vue({
                 .then(res => {
                     console.log(res)
                     for (const diag of res.data) {
+                        diag.isSharedWithMe = false
                         this.all_diagrams.push(diag)
                     }
 
@@ -46,6 +45,7 @@ let diagramSearch_vue = new Vue({
                 .then(res => {
                     console.log(res)
                     for (const diag of res.data) {
+                        diag.isSharedWithMe = false
                         this.all_diagrams.push(diag)
                     }
 
@@ -53,17 +53,37 @@ let diagramSearch_vue = new Vue({
                 .catch(error => {
                     console.log(error)
                 })
+            // Getting all the diagrams shared with me
+            axios.get(window.ALL_DIAGS_SHARED_WITH_ME_URL+'0',{
+                headers: {
+                    'Authorization': 'Token ' + token
+                }
+            }).then(
+                res => {
+                    console.log(res)
+                    for (const diag of res.data) {
+                        diag.isSharedWithMe = true
+                        this.all_diagrams.push(diag)
+                    }
+                }
+            ).catch(
+                error => {
+                    console.log(error)
+                }
+            )
         },
         onUpdateFromSearchBar: function (datas) {
-            this.nameInput = datas[0]
+            if (datas[0] !== "") {
+                this.nameInput = datas[0]
+            }
             this.isPublic = datas[1]
         },
-        onTagsChange:function (selected_tags){
+        onTagsChange: function (selected_tags) {
             console.log("Change of tags!")
             this.show_all_tags = false
             this.tags_selected = selected_tags
         },
-        onTagsEmpty:function (){
+        onTagsEmpty: function () {
             this.show_all_tags = true
         }
     },
