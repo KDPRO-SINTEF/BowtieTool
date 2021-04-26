@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./webapp:/app
+        - ./webapp:/app
     ports:
       - "8080:80"
     image: my-apache2

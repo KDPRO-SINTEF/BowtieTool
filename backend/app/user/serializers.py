@@ -6,7 +6,7 @@ from django.forms import ValidationError
 import django.contrib.auth.password_validation as validators
 from django.utils import timezone
 from user.validators import  LowercaseValidator, UppercaseValidator, SymbolValidator
-from user.authentication import PasswordResetToken
+from user.authentication import PasswordResetToken,  create_random_user_id
 from django.core import mail
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -95,10 +95,12 @@ class PasswordResetSerializer(serializers.Serializer):
         """Validate the password reset form"""
         
         user = get_user_model().objects.filter(email=attrs.get('email')).first()
-        if not user is None:
+        if user :
             token = PasswordResetToken().make_token(user)
+            nonce = create_random_user_id(user.id)
+
             message = "To reset your account password for Bowtie++ please click on the following"\
-            + "link %s" % ( self.url % (urlsafe_base64_encode(force_bytes(user.pk)), token))
+            + "link %s" % ( self.url % (urlsafe_base64_encode(force_bytes(nonce)), token))
             subject = 'Reset password for Bowtie++'
 
             mail.send_mail(subject, message, 'no-reply@Bowtie', [user.email], fail_silently=False)
