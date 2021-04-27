@@ -56,7 +56,7 @@ let user_account_vue = new Vue ({
             this.toast.message = 'Password has been updated.';
         },
         getUserInfo: function() {
-            this.user.authToken = localStorage.getItem('token');
+            this.user.authToken = localStorage.getItem('sessionToken');
             if (this.user.authToken !== null) {
                 axios.get(window.USER_INFO, {
                     headers: {

@@ -2612,7 +2612,7 @@ EditorUi.prototype.createStatusContainer = function () {
  */
 EditorUi.prototype.getContextualLoginText = function () {
     var user = {
-        'token': localStorage.getItem('token'),
+        'token': localStorage.getItem('sessionToken'),
         'username': localStorage.getItem('username'),
         //'isResearcher' : localStorage.getItem('isResearcher')
         'isResearcher': true
@@ -2629,7 +2629,7 @@ EditorUi.prototype.getContextualLoginText = function () {
         button.style.backgroundColor = '#f44336';
 
         button.addEventListener('click', function () {
-            localStorage.removeItem('token');
+            localStorage.removeItem('sessionToken');
             localStorage.removeItem('username');
             alert("You will be disconnected.");
             window.location.reload();
@@ -2644,7 +2644,7 @@ EditorUi.prototype.getContextualLoginText = function () {
  */
 EditorUi.prototype.setLoginText = function (value) {
     this.loginContainer.innerHTML = '';
-    let token = localStorage.getItem('token');
+    let token = localStorage.getItem('sessionToken');
     let isResearcher = true;
     if (token !== null) {
         if (isResearcher) {
@@ -2921,7 +2921,7 @@ EditorUi.prototype.isCompatibleString = function (data) {
 
 EditorUi.prototype.openFromDb = function (open_endpoint) {
 
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('sessionToken');
     if (!token) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
         return;
@@ -2977,7 +2977,7 @@ EditorUi.prototype.openFromDb = function (open_endpoint) {
 }
 
 EditorUi.prototype.modifyRolesForGraph = function () {
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('sessionToken');
     var graphid = this.editor.getGraphId();
     if (!token) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
@@ -3078,7 +3078,7 @@ EditorUi.prototype.save = function (name, tags) {
                 this.editor.setStatus(mxUtils.htmlEntities(mxResources.get('saved')) + ' ' + new Date());
             } else {
                 if (xml.length < MAX_REQUEST_SIZE) {
-                    var token = localStorage.getItem('token');
+                    var token = localStorage.getItem('sessionToken');
                     if (!token) {
                         mxUtils.alert(mxResources.get('notLoggedIn'));
                         return;

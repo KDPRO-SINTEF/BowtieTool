@@ -417,7 +417,7 @@ var OpenFromDBDialog = function (width, height) {
     select.style = 'width:300px;height:150px';
 
     this.init = function (open_endpoint) {
-        var token = localStorage.getItem('token');
+        var token = localStorage.getItem('sessionToken');
         if (!token) {
             mxUtils.alert(mxResources.get('notLoggedIn'));
             return;

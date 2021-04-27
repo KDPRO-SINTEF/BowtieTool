@@ -21,7 +21,7 @@ Actions.prototype.init = function () {
         return Action.prototype.isEnabled.apply(this, arguments) && graph.isEnabled();
     };
     var isLoggedIn = function () {
-        return localStorage.getItem('token') != null;
+        return localStorage.getItem('sessionToken') != null;
     };
     var allEnabled = function () {
         return isLoggedIn() && isGraphEnabled();
