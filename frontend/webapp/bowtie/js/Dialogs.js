@@ -379,6 +379,9 @@ var UserControlDialog = function (editorUi) {
  */
 var OpenFromDBDialog = function (width, height) {
 
+    const iframe_holder = document.createElement('div')
+    iframe_holder.setAttribute("style","background:url(../images/ajax-loading-large.gif) center center no-repeat;")
+
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
     iframe.allowTransparency = 'true';
@@ -392,7 +395,8 @@ var OpenFromDBDialog = function (width, height) {
     iframe.setAttribute('width', width + 'px');
     iframe.setAttribute('height', height + 'px');
     iframe.setAttribute('src', SEARCH_DIAGRAM);
-    this.container = iframe;
+    iframe_holder.appendChild(iframe)
+    this.container = iframe_holder;
 
     /*
     var OpenFromDBDialog = function (editorUi, fn, cancelFn) {
