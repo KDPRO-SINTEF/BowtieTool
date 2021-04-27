@@ -24,11 +24,13 @@
 </head>
 <body>
 <div id="app">
-  <div class="container__home">
-    <home></home>
-  </div>
-  <div class="container__page" v-show="!homePage()">
-    <router-view></router-view>
+  <div v-if="isStoreLoaded">
+    <div class="container__home">
+      <home></home>
+    </div>
+    <div class="container__page" v-show="!homePage()">
+      <router-view></router-view>
+    </div>
   </div>
 </div>
 
