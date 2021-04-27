@@ -1,10 +1,15 @@
 import { HomePage } from "./pages/HomePage.js";
+import { LoginPage } from "./pages/auth/LoginPage.js";
 
 const routes = [
     {
         path: '/',
         name: 'Home',
-        component: HomePage
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: LoginPage
     },
     {
         path: '*',

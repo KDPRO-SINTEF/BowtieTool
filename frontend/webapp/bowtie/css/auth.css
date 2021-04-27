@@ -1,0 +1,23 @@
+.form__auth {
+    max-width: 375px;
+    width: 100%;
+    margin: 10vh auto 10vh auto;
+}
+
+.title__auth {
+    text-align: center;
+}
+
+.bowtie-logo__auth {
+    display: block;
+    width: 25%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2em;
+}
+
+#forgot-password-link {
+    padding: 0;
+    font-size: 0.8em;
+    text-decoration: none;
+}
