@@ -380,7 +380,7 @@ var UserControlDialog = function (editorUi) {
 var OpenFromDBDialog = function (width, height) {
 
     const iframe_holder = document.createElement('div')
-    iframe_holder.setAttribute("style","background:url(../images/ajax-loading-large.gif) center center no-repeat;")
+    iframe_holder.setAttribute("style", "background:url(../images/ajax-loading-large.gif) center center no-repeat;")
 
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
@@ -630,20 +630,30 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     nameInput.style.marginLeft = '4px';
     nameInput.style.width = '180px';
 
-    if(localStorage.getItem('is_public')===null){
-        localStorage.setItem('is_public','false')
+    if (localStorage.getItem('is_public') === null) {
+        localStorage.setItem('is_public', 'false')
     }
-
-
     var tags_row = document.createElement('tr')
     var tags_td = document.createElement('td')
     tags_td.style.whiteSpace = 'nowrap';
     tags_td.style.fontSize = '10pt';
     tags_td.style.width = '120px';
-    mxUtils.write(tags_td, "Diagram tags" + ':');
-    var info_span = document.createElement("span")
-    info_span.setAttribute("class", "icon")
-    tags_td.appendChild(info_span)
+
+    mxUtils.write(tags_td, "Diagram tags" + ': ');
+    let icon = document.createElement("i")
+    icon.setAttribute("class", "icon-info-sign")
+    icon.setAttribute("title","Tags are like keywords for diagrams, separated by commas.")
+    tags_td.appendChild(icon)
+    // var info_div = document.createElement("div")
+    // info_div.setAttribute("class", "info")
+
+    /* let info_span = document.createElement("div")
+    info_span.setAttribute("class", "extra-info")
+    info_span.innerText = "Tags are used as keywords for diagrams." +
+        "You can enter as much as you want separated by a comma."
+    info_div.appendChild(icon)
+    info_div.appendChild(info_span)
+    tags_td.appendChild(info_div)*/
     /*var info_canvas = document.createElement("canvas")
     info_canvas.setAttribute("id","canvas")
     info_canvas.setAttribute("width","50")
@@ -670,7 +680,7 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     check_box.setAttribute("type", "checkbox")
     check_box.setAttribute("id", "public_checkbox")
 
-    if(localStorage.getItem('is_public') === 'true'){
+    if (localStorage.getItem('is_public') === 'true') {
         check_box.checked = true;
     }
 
@@ -684,10 +694,10 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     check_box.addEventListener('click', () => {
         switch (localStorage.getItem('is_public').toLowerCase().trim()) {
             case 'false':
-                localStorage.setItem('is_public','true');
+                localStorage.setItem('is_public', 'true');
                 break;
             default:
-                localStorage.setItem('is_public','false');
+                localStorage.setItem('is_public', 'false');
                 break;
         }
         // that way if the checkbox isn't clicked once we can send a null value
@@ -832,7 +842,7 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
 /**
  * Construct a new input dialog
  */
-var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, validateFn, content, helpLink, closeOnBtn, cancelFn){
+var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, validateFn, content, helpLink, closeOnBtn, cancelFn) {
     closeOnBtn = (closeOnBtn != null) ? closeOnBtn : true;
     var row, td;
 
@@ -855,12 +865,9 @@ var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, valid
     nameInput.style.marginLeft = '4px';
     nameInput.style.width = '180px';
 
-    var genericBtn = mxUtils.button(buttonText, function()
-    {
-        if (validateFn == null || validateFn(nameInput.value))
-        {
-            if (closeOnBtn)
-            {
+    var genericBtn = mxUtils.button(buttonText, function () {
+        if (validateFn == null || validateFn(nameInput.value)) {
+            if (closeOnBtn) {
                 editorUi.hideDialog();
             }
 
@@ -869,36 +876,28 @@ var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, valid
     });
     genericBtn.className = 'geBtn gePrimaryBtn';
 
-    this.init = function()
-    {
-        if (label == null && content != null)
-        {
+    this.init = function () {
+        if (label == null && content != null) {
             return;
         }
 
         nameInput.focus();
 
-        if (mxClient.IS_FF || document.documentMode >= 5 || mxClient.IS_QUIRKS)
-        {
+        if (mxClient.IS_FF || document.documentMode >= 5 || mxClient.IS_QUIRKS) {
             nameInput.select();
-        }
-        else
-        {
+        } else {
             document.execCommand('selectAll', false, null);
         }
 
         // Installs drag and drop handler for links
-        if (Graph.fileSupport)
-        {
+        if (Graph.fileSupport) {
             // Setup the dnd listeners
             var dlg = table.parentNode;
             var graph = editorUi.editor.graph;
             var dropElt = null;
 
-            mxEvent.addListener(dlg, 'dragleave', function(evt)
-            {
-                if (dropElt != null)
-                {
+            mxEvent.addListener(dlg, 'dragleave', function (evt) {
+                if (dropElt != null) {
                     dropElt.style.backgroundColor = '';
                     dropElt = null;
                 }
@@ -907,11 +906,9 @@ var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, valid
                 evt.preventDefault();
             });
 
-            mxEvent.addListener(dlg, 'dragover', mxUtils.bind(this, function(evt)
-            {
+            mxEvent.addListener(dlg, 'dragover', mxUtils.bind(this, function (evt) {
                 // IE 10 does not implement pointer-events so it can't have a drop highlight
-                if (dropElt == null && (!mxClient.IS_IE || document.documentMode > 10))
-                {
+                if (dropElt == null && (!mxClient.IS_IE || document.documentMode > 10)) {
                     dropElt = nameInput;
                     dropElt.style.backgroundColor = '#ebf2f9';
                 }
@@ -920,16 +917,13 @@ var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, valid
                 evt.preventDefault();
             }));
 
-            mxEvent.addListener(dlg, 'drop', mxUtils.bind(this, function(evt)
-            {
-                if (dropElt != null)
-                {
+            mxEvent.addListener(dlg, 'drop', mxUtils.bind(this, function (evt) {
+                if (dropElt != null) {
                     dropElt.style.backgroundColor = '';
                     dropElt = null;
                 }
 
-                if (mxUtils.indexOf(evt.dataTransfer.types, 'text/uri-list') >= 0)
-                {
+                if (mxUtils.indexOf(evt.dataTransfer.types, 'text/uri-list') >= 0) {
                     nameInput.value = decodeURIComponent(evt.dataTransfer.getData('text/uri-list'));
                     genericBtn.click();
                 }
@@ -944,13 +938,11 @@ var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, valid
     td.appendChild(nameInput);
     row.appendChild(td);
 
-    if (label != null || content == null)
-    {
+    if (label != null || content == null) {
         tbody.appendChild(row);
     }
 
-    if (content != null)
-    {
+    if (content != null) {
         row = document.createElement('tr');
         td = document.createElement('td');
         td.colSpan = 2;
@@ -966,26 +958,21 @@ var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, valid
     td.style.whiteSpace = 'nowrap';
     td.setAttribute('align', 'right');
 
-    var cancelBtn = mxUtils.button(mxResources.get('cancel'), function()
-    {
+    var cancelBtn = mxUtils.button(mxResources.get('cancel'), function () {
         editorUi.hideDialog();
 
-        if (cancelFn != null)
-        {
+        if (cancelFn != null) {
             cancelFn();
         }
     });
     cancelBtn.className = 'geBtn';
 
-    if (editorUi.editor.cancelFirst)
-    {
+    if (editorUi.editor.cancelFirst) {
         td.appendChild(cancelBtn);
     }
 
-    if (helpLink != null)
-    {
-        var helpBtn = mxUtils.button(mxResources.get('help'), function()
-        {
+    if (helpLink != null) {
+        var helpBtn = mxUtils.button(mxResources.get('help'), function () {
             window.open(helpLink);
         });
 
@@ -993,18 +980,15 @@ var InputDialog = function (editorUi, defaultValue, buttonText, fn, label, valid
         td.appendChild(helpBtn);
     }
 
-    mxEvent.addListener(nameInput, 'keypress', function(e)
-    {
-        if (e.keyCode == 13)
-        {
+    mxEvent.addListener(nameInput, 'keypress', function (e) {
+        if (e.keyCode == 13) {
             genericBtn.click();
         }
     });
 
     td.appendChild(genericBtn);
 
-    if (!editorUi.editor.cancelFirst)
-    {
+    if (!editorUi.editor.cancelFirst) {
         td.appendChild(cancelBtn);
     }
 
