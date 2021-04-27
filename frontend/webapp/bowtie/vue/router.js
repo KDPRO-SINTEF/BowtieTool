@@ -1,7 +1,14 @@
+import { HomePage } from "./pages/HomePage.js";
+
 const routes = [
     {
         path: '/',
-        name: 'Home'
+        name: 'Home',
+        component: HomePage
+    },
+    {
+        path: '*',
+        component: HomePage
     }
 ];
 
