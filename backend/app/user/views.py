@@ -217,7 +217,7 @@ class ValidatePasswordReset(APIView):
             logger.warning("Failed resset password for User with id %s. Exception: %s", uid, e_ex)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        if PasswordResetToken().check_token(user, token):
+        if PasswordResetToken().check_token(user, token) and "password" in request.data:
 
             try:
                 user.is_active = False # User needs to be inactive for the reset password duration

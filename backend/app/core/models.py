@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
             raise ValueError('User email and password is required')
         try:
             validators.validate_password(password=password)
+        
         except exceptions.ValidationError as e_valid:
             raise ValidationError(e_valid)
 
@@ -57,7 +58,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """custom user model that supports email instead of username"""
     email = models.EmailField(max_length=255, unique=True)
-    username = models.CharField(max_length=255)
+    username = models.CharField(max_length=66)
     is_Researcher = models.BooleanField(default=False)
 
     # is_active and is_staff are still there since they are used by the django/contrib/auth/admin.py

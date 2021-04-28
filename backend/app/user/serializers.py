@@ -8,6 +8,7 @@ from django.utils import timezone
 from user.validators import  LowercaseValidator, UppercaseValidator, SymbolValidator
 from user.authentication import PasswordResetToken
 from django.core import mail
+from user.validators import UserNameValidator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
@@ -17,7 +18,7 @@ class UserSerializer(serializers.Serializer):
 
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True,  allow_blank=False, trim_whitespace=True)
-    username = serializers.CharField()
+    username = serializers.CharField(validators=[UserNameValidator])
 
 
     def create(self, validated_data):
