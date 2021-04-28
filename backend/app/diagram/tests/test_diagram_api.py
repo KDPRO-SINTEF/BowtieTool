@@ -19,7 +19,10 @@ class DiagramApiTests(TestCase):
 
     def setUp(self):
         self.client = APIClient()
+        self.email_to_share_with = "test-share@bowtie.com"
         self.test_user = get_user_model().objects.create_user(email='test@bowtie.com', password="123Az*bbbbb")
+        self.user_to_share_with = get_user_model().objects.create_user(email=self.email_to_share_with, password="123Az"
+                                                                                                                "*bbbbb")
         self.client.force_authenticate(user=self.test_user)
         diagramStat = DiagramStat.objects.create()
         self.test_xml = ""
@@ -91,7 +94,7 @@ class DiagramApiTests(TestCase):
         if serializer.is_valid():
             for diag in serializer.data:
                 self.assertIn('test', diag['name'])
-                print(diag)
+                # print(diag)
                 diagramCount += 1
             # self.assertEqual(3, diagramCount)
 
@@ -152,7 +155,7 @@ class DiagramApiTests(TestCase):
         self.assertEqual(20, stored_diag.lastTimeSpent)
         self.assertEqual(50, stored_diag.diagramStat.totalTimeSpent)
 
-    def test_all_private_diag(self):
+    def test_get_all_private_diag(self):
         res = self.client.get(self.ALL_MY_PRIVATE_DIAGS)
         self.assertEqual(res.status_code, 200)
         # print(res.content.decode('utf-8'))
@@ -164,3 +167,23 @@ class DiagramApiTests(TestCase):
                 # print(diag)
                 self.assertIn('private', diag['name'])
                 self.assertEqual(False, diag['is_public'])
+
+    def test_share_diagram(self):
+        payload = {
+            "email": self.email_to_share_with,
+            "role": "reader"
+        }
+        res = self.client.post(reverse('diagram:shared-diagram', args=(self.diagram_pub1.id,)), payload)
+        self.assertEqual(res.status_code, 200)
+        self.assertIn(self.user_to_share_with, self.diagram_pub1.reader.all())
+        self.assertNotIn(self.user_to_share_with, self.diagram_pub1.writer.all())
+
+    def test_get_all_diagrams_shared(self):
+        self.client.force_authenticate(user=self.user_to_share_with)
+        self.diagram_pub1.reader.add(self.user_to_share_with)
+        res = self.client.get(reverse('diagram:shared-diagram', args=(self.diagram_pub1.id,)))
+        self.assertEqual(res.status_code, 200)
+        serializer = serializers.DiagramSerializer(data=res.data, many=isinstance(res.data, list))
+        serializer.is_valid()
+        if serializer.is_valid():
+            self.assertIn(self.diagram_pub1.name, serializer.data[0]['name'])
