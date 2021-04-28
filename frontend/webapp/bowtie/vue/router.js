@@ -1,6 +1,8 @@
 import { HomePage } from "./pages/HomePage.js";
 import { LoginPage } from "./pages/auth/LoginPage.js";
 import { RegistrationPage } from "./pages/auth/RegistrationPage.js";
+import { EmailConfirmationPage } from "./pages/auth/EmailConfirmationPage.js";
+import { HttpError404Page } from "./pages/HttpError404Page.js";
 
 const routes = [
     {
@@ -18,8 +20,18 @@ const routes = [
         component: RegistrationPage
     },
     {
+        path: '/register/email_confirm',
+        name: 'EmailConfirm',
+        component: EmailConfirmationPage
+    },
+    {
+        path: '/404',
+        name: 'NotFound',
+        component: HttpError404Page
+    },
+    {
         path: '*',
-        component: HomePage
+        component: HttpError404Page
     }
 ];
 

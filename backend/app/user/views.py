@@ -26,10 +26,10 @@ from django.contrib.auth import authenticate
 logger = logging.getLogger(__name__)
 
 STATIC_SERVER_DOMAIN = "http://localhost:8080"
-CONFIRM_REDIRECT = STATIC_SERVER_DOMAIN + "/validation.html?for=email_confirm&id=%s&token=%s"
-REDIRECT_LOGIN = STATIC_SERVER_DOMAIN  + "/common/authentication.html#login"
-PASSWORD_RESET_URL = STATIC_SERVER_DOMAIN + "/validation.html?for=reset_pwd&id=%s&token=%s"
-PASSWORD_RESET_REQUEST_URL = STATIC_SERVER_DOMAIN + "/common/authentication.html#password-reset"
+CONFIRM_REDIRECT = STATIC_SERVER_DOMAIN + "/register/email_confirm?id=%s&token=%s"
+REDIRECT_LOGIN = STATIC_SERVER_DOMAIN  + "/login"
+PASSWORD_RESET_URL = STATIC_SERVER_DOMAIN + "/login/password_reset?id=%s&token=%s"
+PASSWORD_RESET_REQUEST_URL = STATIC_SERVER_DOMAIN + "/login/password_reset"
 
 
 def send_mail(subject, message, email, fromm='no-reply@Bowtie'):

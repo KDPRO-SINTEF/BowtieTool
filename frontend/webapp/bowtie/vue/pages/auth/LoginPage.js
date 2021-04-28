@@ -1,5 +1,4 @@
 import * as validators from '/js/modules/validators.js'
-import { router } from "../../router.js";
 import { store } from "../../store.js"
 
 export const LoginPage = {
@@ -31,7 +30,7 @@ export const LoginPage = {
                         <div v-else class="spinner-border text-light" role="status"></div>
                     </button>
                 </form>
-                <p>Don't have an account yet? Please <router-link to="/">register</router-link>.</p>
+                <p>Don't have an account yet? Please <router-link to="/register">register</router-link>.</p>
             </div>
         </div>
     `,
@@ -112,7 +111,7 @@ export const LoginPage = {
                 this.totpLogin.id = data.id;
                 this.totpLogin.token = data.token;
             } else {
-
+                this.saveSessionToken(data.token);
             }
         },
         saveSessionToken(token) {
@@ -122,7 +121,7 @@ export const LoginPage = {
                 .then(res => {
                     store.commit('setAuthenticationStatus', true);
                     store.commit('setUserData', res.data);
-                    router.push('/');
+                    this.$router.push('/');
                 });
         },
         filterLoginErrors: function(error) {

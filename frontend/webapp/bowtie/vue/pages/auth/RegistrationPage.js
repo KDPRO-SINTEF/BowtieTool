@@ -1,6 +1,5 @@
 import * as validators from '/js/modules/validators.js'
 import { store } from "../../store.js";
-import { router } from "../../router.js";
 
 export const RegistrationPage = {
     template: `
@@ -128,7 +127,7 @@ export const RegistrationPage = {
                         if (res.status === 201) {
                             setTimeout(() => {
                                 alert('An email has been sent for confirmation.');
-                                router.push('/login');
+                                this.$router.push('/login');
                             }, 10)
                         }
                     })

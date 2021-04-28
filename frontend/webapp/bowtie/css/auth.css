@@ -16,6 +16,10 @@
     margin-bottom: 2em;
 }
 
+.error-page {
+    margin: 5vh;
+}
+
 #forgot-password-link {
     padding: 0;
     font-size: 0.8em;
@@ -24,4 +28,21 @@
 
 #password-policy {
     font-size: 0.8em;
+}
+
+#email-confirm {
+    max-width: 600px;
+    width: 100%;
+    margin: 30vh auto 30vh auto;
+}
+
+#email-confirm #card-header-logo {
+    width: 50px;
+    height: 100%;
+}
+
+#email-confirm .card-header-content {
+    display: flex;
+    justify-content: space-between;
+    width: 130px;
 }
