@@ -2,6 +2,7 @@ import { router } from "./router.js";
 import { store } from "./store.js";
 import { HomePage } from "./pages/HomePage.js";
 //import { LoginPage } from "./pages/auth/LoginPage.js";
+import { TheNavbarComponent } from "./components/TheNavbarComponent.js";
 
 export const app = new Vue({
     router,
@@ -11,10 +12,14 @@ export const app = new Vue({
     },
     components: {
         'home': HomePage,
+        'navbar': TheNavbarComponent
     },
     methods: {
         homePage: function() {
             return (this.$router.currentRoute.path === '/');
+        },
+        showNavbar: function() {
+            return this.homePage();
         }
     },
     created: function() {

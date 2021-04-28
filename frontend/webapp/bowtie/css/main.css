@@ -1,11 +1,19 @@
 @import "auth.css";
 @import "buttons.css";
+@import "navbar.css";
 
 #app {
     width: 100%;
     height: 100%;
     margin: 0;
     padding: 0;
+}
+
+.container__navbar {
+    position: absolute;
+    z-index: 100;
+    right: 1vw;
+    margin-top: 2px;
 }
 
 .container__home {
