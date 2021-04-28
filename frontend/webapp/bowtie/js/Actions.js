@@ -32,7 +32,7 @@ Actions.prototype.init = function () {
         window.open(ui.getUrl());
     });
     this.addAction('openDb...', function () {
-        ui.openFromDb(window.SEARCH_DIAGRAM);
+        ui.openFromDb(window.DIAGRAM_SEARCH_DIALOG);
     }).isEnabled = isLoggedIn;
     this.addAction('openLocal...', function () {
         window.openNew = true;

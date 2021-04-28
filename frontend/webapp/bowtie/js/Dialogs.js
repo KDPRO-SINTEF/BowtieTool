@@ -18,7 +18,7 @@ var OpenDialog = function () {
 
     iframe.setAttribute('width', (((Editor.useLocalStorage) ? 640 : 320) + dx) + 'px');
     iframe.setAttribute('height', (((Editor.useLocalStorage) ? 480 : 220) + dx) + 'px');
-    iframe.setAttribute('src', OPEN_FORM);
+    iframe.setAttribute('src', OPEN_DIALOG);
 
     this.container = iframe;
 };
@@ -59,7 +59,7 @@ var RiskDialog = function () {
 
     iframe.setAttribute('width', 1000 + 'px');
     iframe.setAttribute('height', 750 + 'px');
-    iframe.setAttribute('src', RISK_FORM);
+    iframe.setAttribute('src', RISK_DIALOG);
     this.container = iframe;
 }
 /**
@@ -391,7 +391,7 @@ var OpenFromDBDialog = function (width, height) {
 
     iframe.setAttribute('width', width + 'px');
     iframe.setAttribute('height', height + 'px');
-    iframe.setAttribute('src', SEARCH_DIAGRAM);
+    iframe.setAttribute('src', DIAGRAM_SEARCH_DIALOG);
     this.container = iframe;
 
     /*

@@ -24,17 +24,17 @@ window.mxLanguages = window.mxLanguages || ['de'];
 
 // Pages
 window.ROOT_PAGE = window.ROOT_PAGE || '/'
-window.EDITOR_PAGE = window.EDITOR_PAGE || window.ROOT_PAGE + 'common/editor.html'
+window.EDITOR_PAGE = window.EDITOR_PAGE || window.ROOT_PAGE + 'html/editor.html'
 window.LOGIN_PAGE = window.LOGIN_PAGE || window.ROOT_PAGE + 'login';
-window.REGISTER_PAGE = window.REGISTER_PAGE || window.ROOT_PAGE + 'common/authentication.html#register';
-window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || window.ROOT_PAGE + 'common/authentication.html#password-reset';
-window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || window.ROOT_PAGE + 'common/my_account.html';
-window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'common/statistics.html';
+window.REGISTER_PAGE = window.REGISTER_PAGE || window.ROOT_PAGE + 'html/authentication.html#register';
+window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || window.ROOT_PAGE + 'html/authentication.html#password-reset';
+window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || window.ROOT_PAGE + 'html/my_account.html';
+window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'html/statistics.html';
 
 // Dialogs
-window.OPEN_DIALOG = window.OPEN_DIALOG || window.ROOT_PAGE + 'common/open.html';
-window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'common/risk_computation.html';
-window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'common/diagram_search.html';
+window.OPEN_DIALOG = window.OPEN_DIALOG || window.ROOT_PAGE + 'html/open.html';
+window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk_computation.html';
+window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram_search.html';
 
 // Resources
 // Path is relative to the editor.html page
