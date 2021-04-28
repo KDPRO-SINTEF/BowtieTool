@@ -29,7 +29,7 @@ Actions.prototype.init = function () {
 
     // File actions
     this.addAction('new...', function () {
-        window.open(ui.getUrl());
+        window.open(window.ROOT_PAGE);
     });
     this.addAction('openDb...', function () {
         ui.openFromDb(window.DIAGRAM_SEARCH_DIALOG);
