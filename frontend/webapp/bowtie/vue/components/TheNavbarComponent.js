@@ -1,13 +1,14 @@
 export const TheNavbarComponent = {
     template: `
         <div id="navbar">
-            <div id="navbar-links">
-                <div v-if="!isUserAuthenticated">
+            <span id="navbar-links">
+            <router-link to="/" class="navbar-link navbar-link__home">Home</router-link>
+                <span v-if="!isUserAuthenticated">
                     <router-link to="/login" class="navbar-link navbar-link__login">Login</router-link>
-                </div>
-                <div v-else>
+                </span>
+                <span v-else>
                     <button class="navbar-btn navbar-btn__logout" v-on:click="logout">Logout</button>
-                </div>
+                </span>
             </div>
         </div>
     `,

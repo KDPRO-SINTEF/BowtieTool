@@ -19,6 +19,14 @@
     background-color: #198754;
 }
 
+.navbar-link__home {
+    background-color: rgb(108, 117, 125);
+}
+
+.navbar-link__home:hover {
+    background-color: rgb(73, 80, 87);
+}
+
 .navbar-btn {
     padding: 1px 15px 1px 15px;
     color: white;
