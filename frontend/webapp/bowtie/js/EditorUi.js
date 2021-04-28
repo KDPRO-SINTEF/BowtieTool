@@ -2611,31 +2611,8 @@ EditorUi.prototype.createStatusContainer = function () {
  * Creates the login button and bind it to the login dialog window
  */
 EditorUi.prototype.getContextualLoginText = function () {
-    var user = {
-        'token': localStorage.getItem('token'),
-        'username': localStorage.getItem('username'),
-        //'isResearcher' : localStorage.getItem('isResearcher')
-        'isResearcher': true
-    };
     var button = document.createElement('button');
-    button.setAttribute('id', 'loginButton');
-    if (user.token === null) {
-        mxUtils.write(button, mxResources.get('login'));
-        button.addEventListener('click', function () {
-            window.location.assign(window.LOGIN_PAGE);
-        })
-    } else {
-        mxUtils.write(button, mxResources.get('logout'));
-        button.style.backgroundColor = '#f44336';
-
-        button.addEventListener('click', function () {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            alert("You will be disconnected.");
-            window.location.reload();
-        });
-
-    }
+    button.setAttribute('style', 'visibility: hidden;');
     return button;
 };
 
@@ -2644,29 +2621,6 @@ EditorUi.prototype.getContextualLoginText = function () {
  */
 EditorUi.prototype.setLoginText = function (value) {
     this.loginContainer.innerHTML = '';
-    let token = localStorage.getItem('token');
-    let isResearcher = true;
-    if (token !== null) {
-        if (isResearcher) {
-            let statisticsButton = document.createElement('button');
-            statisticsButton.setAttribute('id', 'statistics-button');
-            statisticsButton.innerHTML = 'Statistics';
-            statisticsButton.addEventListener('click', function () {
-                window.open(window.STATISTICS_PAGE);
-            })
-            statisticsButton.setAttribute('target', '_blank');
-            this.loginContainer.appendChild(statisticsButton);
-        }/* My account button */
-        let accountButton = document.createElement('button');
-        accountButton.setAttribute('id', 'account-button');
-        accountButton.innerHTML = 'My account';
-        accountButton.addEventListener('click', function () {
-            window.open(window.ACCOUNT_PAGE);
-        })
-        accountButton.setAttribute('target', '_blank');
-        this.loginContainer.appendChild(accountButton);
-
-    }
     this.loginContainer.appendChild(value);
 };
 
@@ -2921,7 +2875,7 @@ EditorUi.prototype.isCompatibleString = function (data) {
 
 EditorUi.prototype.openFromDb = function (open_endpoint) {
 
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('sessionToken');
     if (!token) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
         return;
@@ -2977,7 +2931,7 @@ EditorUi.prototype.openFromDb = function (open_endpoint) {
 }
 
 EditorUi.prototype.modifyRolesForGraph = function () {
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('sessionToken');
     var graphid = this.editor.getGraphId();
     if (!token) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
@@ -2990,7 +2944,22 @@ EditorUi.prototype.modifyRolesForGraph = function () {
     }
 
     var dlg = new RoleDialog(this, mxUtils.bind(this, function (user, role) {
-        var json = JSON.stringify({'token': token, 'id': graphid, 'username': user, 'role': role});
+        if (user !== null) {
+            const params = {"email": user, "role": role}
+            axios.post(window.SHARE_DIAGRAM + graphid, params, {
+                headers: {
+                    Authorization: 'Token ' + token
+                }
+            })
+                .then(response => {
+                    console.log(response);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+
+        /*
         mxUtils.post(window.ROLE_URL, json, mxUtils.bind(this, function (req) {
             switch (req.getStatus()) {
                 case 200:
@@ -3008,7 +2977,7 @@ EditorUi.prototype.modifyRolesForGraph = function () {
                 default:
                     break;
             }
-        }));
+        }));*/
     }), null);
     this.showDialog(dlg.container, 300, 80, true, true);
     //dlg.init();
@@ -3022,7 +2991,7 @@ EditorUi.prototype.saveFile = function (forceDialog) {
         this.save(this.editor.getOrCreateFilename(), "");
     } else {
         var filename = this.editor.getOrCreateFilename()
-        if(this.editor.graph.getUnwantedEventName()!==""){
+        if (this.editor.graph.getUnwantedEventName() !== "") {
             filename = this.editor.graph.getUnwantedEventName()
         }
         var dlg = new FilenameDialog(this, filename, mxResources.get('save'), mxUtils.bind(this, function (name, tags) {
@@ -3063,7 +3032,7 @@ EditorUi.prototype.save = function (name, tags) {
                 this.editor.setStatus(mxUtils.htmlEntities(mxResources.get('saved')) + ' ' + new Date());
             } else {
                 if (xml.length < MAX_REQUEST_SIZE) {
-                    var token = localStorage.getItem('token');
+                    var token = localStorage.getItem('sessionToken');
                     if (!token) {
                         mxUtils.alert(mxResources.get('notLoggedIn'));
                         return;
@@ -3083,9 +3052,9 @@ EditorUi.prototype.save = function (name, tags) {
                     formData.append('name', name)
                     formData.append('diagram', xml)
                     const is_public = localStorage.getItem('is_public')
-                    if(is_public === 'true'){ // This is needed because our backend uses Python and JSON.parse isn't workin
+                    if (is_public === 'true') { // This is needed because our backend uses Python and JSON.parse isn't workin
                         formData.append('is_public', 'True')
-                    }else {
+                    } else {
                         formData.append('is_public', 'False')
                     }
                     formData.append('lastTimeSpent', '10')
@@ -3099,6 +3068,7 @@ EditorUi.prototype.save = function (name, tags) {
                             URL.revokeObjectURL(url);
                         });
                     }
+
                     function getSvgUrl(svg) {
                         var svg64 = btoa(unescape(encodeURIComponent(svg)));
                         var b64start = 'data:image/svg+xml;base64,';
@@ -3145,13 +3115,6 @@ EditorUi.prototype.save = function (name, tags) {
 
                     const svg_encoded = getSvgUrl(svg)
                     formData.append('preview', svg_encoded)
-                    /*
-                    svgToPng(svg, (imgData) => {
-                        // let blob = new File([imgData], name, {type: 'image/png'})
-                        console.log(imgData)
-                        formData.append('preview', imgData)
-                    });*/
-                    // await sleep(1000)
 
                     if (!this.editor.getGraphId()) { //Meaning it's the first time we save this diagram
 
@@ -3168,7 +3131,7 @@ EditorUi.prototype.save = function (name, tags) {
                             })
                             .catch(error => {
 
-                                    console.log(error)
+                                console.log(error)
 
                             })
                     } else {
@@ -3182,9 +3145,13 @@ EditorUi.prototype.save = function (name, tags) {
                         })
                             .then(res => {
                                 console.log(res)
-                                console.log('Updated diagram with id ',this.editor.getGraphId());
+                                console.log('Updated diagram with id ', this.editor.getGraphId());
                             })
                             .catch(error => {
+                                if (error.response.status === 405) {
+                                    console.log(error)
+                                    mxUtils.alert("You're not allowed to save this diagram, maybe you only have the 'reader' role ?")
+                                }
                                 if (error.response) {
                                     console.log(error)
                                 }

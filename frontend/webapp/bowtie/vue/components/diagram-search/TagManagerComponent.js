@@ -4,7 +4,7 @@ let TagManagerComponent = {
 
     components: {},
     props: { //Link with parent, parent can send data with 'v-bind'. To go from child to parent $emit("param")
-        isPublic: Boolean,
+        isPublic: Number,
         nameInput: String,
         all_diagrams: Array,
     },

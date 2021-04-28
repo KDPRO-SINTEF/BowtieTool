@@ -1,4 +1,5 @@
 """ Two factor authentication views"""
+import os
 import base64
 import logging
 import qrcode

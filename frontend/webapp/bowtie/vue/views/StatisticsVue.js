@@ -59,7 +59,7 @@ let statistics_vue = new Vue({
         }
     },
     beforeMount() {
-        let token = localStorage.getItem('token');
+        let token = localStorage.getItem('sessionToken');
         if (token !== null) {
             axios.get(window.STATISTICS, {
                 headers: {

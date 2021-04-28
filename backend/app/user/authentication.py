@@ -1,4 +1,6 @@
 ### Module for generating tokens for password reset feature and confirm account via email feature
+import os
+import binascii
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils import six # for compatibility
 from django.conf import settings
@@ -9,6 +11,8 @@ from rest_framework.authentication import TokenAuthentication, get_authorization
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import exceptions
 from datetime import timedelta
+from core.models import NonceToToken
+from django.db.utils import IntegrityError
 import pytz
 
 class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
@@ -47,6 +51,7 @@ class PasswordResetToken(PasswordResetTokenGenerator):
             six.text_type(login_timestamp)  +
             six.text_type(user.password)
         )
+
 
 
 class TOTPValidityToken(PasswordResetTokenGenerator):
@@ -140,3 +145,30 @@ class ExpiringTokenAuthentication(TokenAuthentication):
 
     def __str__(self):
         return "Expiring token class"
+
+
+
+def create_random_user_id(userid, nbytes=64):
+    """Creation of a record nonce-id for activation account and password resset links"""
+        
+    try:
+        nonce = binascii.hexlify(os.urandom(nbytes)).decode('ascii')
+        existing_record = NonceToToken.objects.filter(uid=userid).first()
+        if existing_record:
+            existing_record.delete()
+        obj = NonceToToken(uid=userid, nonce=nonce)
+        obj.save()
+    except IntegrityError: # eventual problem with random generator?
+        return None
+
+    return nonce
+
+def find_user_id_from_nonce(nonce): 
+    """ (create_random_user_id )^-1"""
+
+    existing_record = NonceToToken.objects.filter(nonce=nonce).first()
+    uid = None
+    if existing_record:
+        uid = existing_record.uid
+        existing_record.delete()
+    return uid

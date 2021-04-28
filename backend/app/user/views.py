@@ -12,23 +12,24 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
 from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize, UserInfoSerializer, PasswordResetSerializer
 from user.customPermission import HasConfirmedEmail
-from user.authentication import AccountActivationTokenGenerator, TOTPValidityToken, PasswordResetToken, ExpiringTokenAuthentication
+from user.authentication import AccountActivationTokenGenerator, TOTPValidityToken, PasswordResetToken, ExpiringTokenAuthentication, create_random_user_id, find_user_id_from_nonce
 from django.core import mail
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 import django.contrib.auth.password_validation as validators
-from core.models import Profile, User
+from core.models import Profile, User, NonceToToken
 from django.utils import timezone
 from django.db.utils import IntegrityError
 from django.contrib.auth import authenticate
 
 logger = logging.getLogger(__name__)
 
-CONFIRM_REDIRECT = "http://localhost:8080/app/bowtie/validation.html?for=email_confirm&id=%s&token=%s"
-REDIRECT_LOGIN = "http://localhost:8080/app/bowtie++/common/authentication.html#login"
-PASSWORD_RESET_URL = "http://localhost:8080/app/bowtie/validation.html?for=reset_pwd&id=%s&token=%s"
-PASSWORD_RESET_REQUEST_URL = "http://localhost:8080/app/bowtie/common/authentication.html#password-reset"
+STATIC_SERVER_DOMAIN = "http://localhost:8080"
+CONFIRM_REDIRECT = STATIC_SERVER_DOMAIN + "/register/email-confirm?id=%s&token=%s"
+REDIRECT_LOGIN = STATIC_SERVER_DOMAIN  + "/login"
+PASSWORD_RESET_URL = STATIC_SERVER_DOMAIN + "/password-reset?id=%s&token=%s"
+PASSWORD_RESET_REQUEST_URL = STATIC_SERVER_DOMAIN + "/password-reset"
 
 
 def send_mail(subject, message, email, fromm='no-reply@Bowtie'):
@@ -53,7 +54,7 @@ class CreateUserView(generics.CreateAPIView):
 
         except (ValidationError, AssertionError, IntegrityError) as error_validation:
 
-            if not isinstance(error_validation, IntegrityError):
+            if not isinstance(error_validation, IntegrityError): # counter data privacy leak
                 error_dict = dict()
                 key = list(error_validation.detail.keys())[0]
                 error_dict[key] = "Invalid field"
@@ -71,15 +72,15 @@ class CreateUserView(generics.CreateAPIView):
                 send_mail(subject, message, user.email)
                 return Response(status=status.HTTP_201_CREATED)
 
+
         user = get_user_model().objects.filter(email=request.data['email']).first()
         token = AccountActivationTokenGenerator().make_token(user)
+        nonce = create_random_user_id(user.id)
         message = "To activate your Bowtie++ account, please click on the following link %s" % (
-            CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(user.pk)), token))
+            CONFIRM_REDIRECT % (urlsafe_base64_encode(force_bytes(nonce)), token))
         subject = 'Activate account for no-reply-Bowtieowtie++'
         send_mail(subject, message, user.email)
-
         return Response(status=status.HTTP_201_CREATED)
-
 
 class CreateTokenView(ObtainAuthToken):
     """Create a new authentication token for user"""
@@ -164,7 +165,8 @@ class ActivateAccount(APIView):
         """ Confirm the creation of an user account"""
 
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            nonce = force_text(urlsafe_base64_decode(uidb64))
+            uid = find_user_id_from_nonce(nonce) 
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_valid:
@@ -209,7 +211,8 @@ class ValidatePasswordReset(APIView):
         """Post method for password reset"""
 
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            nonce = force_text(urlsafe_base64_decode(uidb64))
+            uid = find_user_id_from_nonce(nonce) 
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:

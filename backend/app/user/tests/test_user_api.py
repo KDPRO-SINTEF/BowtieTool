@@ -3,7 +3,7 @@ import datetime
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from core.models import Profile
+from core.models import Profile, NonceToToken
 from rest_framework.test import APIClient
 from rest_framework.exceptions import ValidationError
 from rest_framework import status
@@ -253,8 +253,9 @@ class PublicUserApiTests(TestCase):
         user = get_user_model().objects.filter(email=payload['email']).first()
         self.assertFalse(user.profile.email_confirmed)
         token = AccountActivationTokenGenerator().make_token(user)
+        record = NonceToToken.objects.filter(uid=user.id).first()
         url = reverse('user:confirm',
-                    kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
+                    kwargs={'uidb64': urlsafe_base64_encode(force_bytes(record.nonce)),
                     'token': token})
         res = self.client.get(url)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -313,7 +314,7 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_response_time_existing_unexisting_emails(self):
-        """Test the response time for password resset request for existing
+        """Test the response time for password reset request for existing
             and unexisting user """
         payload = {
             'email': 'test@bowtie.com',
@@ -353,8 +354,9 @@ class PublicUserApiTests(TestCase):
         self.client.post(reverse("user:reset"), payload)
         user = get_user_model().objects.filter(email='mkirov@insa-rennes.fr').first()
         token = PasswordResetToken().make_token(user)
+        record = NonceToToken.objects.filter(uid=user.id).first()
         url = reverse('user:validate-reset',
-                    kwargs={'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
+                    kwargs={'uidb64': urlsafe_base64_encode(force_bytes(record.nonce)),
                     'token': token})
         payload = {
             'password': '123456789Aa#1',

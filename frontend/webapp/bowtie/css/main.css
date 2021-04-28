@@ -1,9 +1,52 @@
-.error-message {
-    color: #dc3545;
-    font-size: 0.9em;
+@import "auth.css";
+@import "buttons.css";
+@import "navbar.css";
+
+#app {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-.btn-success {
-    background-color: rgb(40, 167, 69);
-    border-color: rgb(40, 167, 69);
+.container__navbar {
+    position: absolute;
+    z-index: 100;
+    right: 1vw;
+    margin-top: 2px;
+}
+
+.container__home {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 0;
+    background-color: white;
+}
+
+.container__page {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 9;
+    background-color: white;
+}
+
+.spinner-border {
+    max-height: 20px;
+    max-width: 20px;
+}
+
+#diagram-editor {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+}
+
+.error-message {
+    font-size: 0.9em;
+    color: #dc3545;
 }

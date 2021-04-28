@@ -18,7 +18,7 @@ var OpenDialog = function () {
 
     iframe.setAttribute('width', (((Editor.useLocalStorage) ? 640 : 320) + dx) + 'px');
     iframe.setAttribute('height', (((Editor.useLocalStorage) ? 480 : 220) + dx) + 'px');
-    iframe.setAttribute('src', OPEN_FORM);
+    iframe.setAttribute('src', OPEN_DIALOG);
 
     this.container = iframe;
 };
@@ -59,7 +59,7 @@ var RiskDialog = function () {
 
     iframe.setAttribute('width', 1000 + 'px');
     iframe.setAttribute('height', 750 + 'px');
-    iframe.setAttribute('src', RISK_FORM);
+    iframe.setAttribute('src', RISK_DIALOG);
     this.container = iframe;
 }
 /**
@@ -391,7 +391,7 @@ var OpenFromDBDialog = function (width, height) {
 
     iframe.setAttribute('width', width + 'px');
     iframe.setAttribute('height', height + 'px');
-    iframe.setAttribute('src', SEARCH_DIAGRAM);
+    iframe.setAttribute('src', DIAGRAM_SEARCH_DIALOG);
     this.container = iframe;
 
     /*
@@ -417,7 +417,7 @@ var OpenFromDBDialog = function (width, height) {
     select.style = 'width:300px;height:150px';
 
     this.init = function (open_endpoint) {
-        var token = localStorage.getItem('token');
+        var token = localStorage.getItem('sessionToken');
         if (!token) {
             mxUtils.alert(mxResources.get('notLoggedIn'));
             return;
@@ -541,12 +541,12 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
 
     var role = document.createElement('select');
     var owner = document.createElement('option');
-    owner.value = '0';
-    mxUtils.write(owner, 'Owner');
+    owner.value = 'writer';
+    mxUtils.write(owner, 'Writer');
 
     var readonly = document.createElement('option');
-    readonly.value = '1';
-    mxUtils.write(readonly, 'Read only');
+    readonly.value = 'reader';
+    mxUtils.write(readonly, 'Reader');
 
     role.appendChild(owner);
     role.appendChild(readonly);
@@ -583,12 +583,9 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
 
     var genericBtn = mxUtils.button(mxResources.get('save'), mxUtils.bind(this, function () {
         var user = nameInput.value;
-        var r = parseInt(role.value);
-        if (user && r) {
-            editorUi.hideDialog();
-            console.log('user', user, 'role', r);
-            fn(user, r);
-        }
+        editorUi.hideDialog();
+        console.log('user', user, 'role', role.value);
+        fn(user, role.value);
     }));
     genericBtn.className = 'geBtn gePrimaryBtn';
     td.appendChild(genericBtn);
