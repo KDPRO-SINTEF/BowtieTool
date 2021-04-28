@@ -33,6 +33,7 @@ class Matrix{
     }
 
     convertValueToColor(value){
+        console.log(value);
         if (value != ""){
             switch(true){
                 case (value < 1.0):
