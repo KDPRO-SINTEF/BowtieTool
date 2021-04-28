@@ -125,10 +125,8 @@ export const RegistrationPage = {
                 })
                     .then(res => {
                         if (res.status === 201) {
-                            setTimeout(() => {
-                                alert('An email has been sent for confirmation.');
-                                this.$router.push('/login');
-                            }, 10)
+                            alert('An email has been sent for confirmation.');
+                            this.$router.push('/login');
                         }
                     })
                     .catch(err => {

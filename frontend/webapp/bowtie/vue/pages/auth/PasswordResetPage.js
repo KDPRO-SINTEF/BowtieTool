@@ -120,10 +120,8 @@ export const PasswordResetPage = {
                     })
                         .then(res => {
                             if (res.status === 200) {
-                                setTimeout(() => {
-                                    alert('A password reset email has been sent.');
-                                    this.$router.push('/');
-                                }, 10);
+                                alert('A password reset email has been sent.');
+                                this.$router.push('/');
                             }
                         })
                         .catch(err => {
@@ -140,15 +138,13 @@ export const PasswordResetPage = {
                     axios.post(fetchedUrl, requestData)
                         .then(res => {
                             if (res.status === 200) {
-                                setTimeout(() => {
-                                    alert('Your password has been successfully reset.');
-                                    this.$router.push('/');
-                                }, 10);
+                                alert('Your password has been successfully reset.');
+                                this.$router.push('/');
                             }
                         })
                         .catch(err => {
                             this.fetchingError = true;
-                            this.$router.push('/password_reset');
+                            this.$router.push('/password-reset');
                             this.resetData.id = null;
                             this.resetData.token = null;
                             this.emailReceived = false;

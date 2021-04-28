@@ -17,7 +17,7 @@ export const LoginPage = {
                         <label for="password" class="form-label">Password</label>
                         <input type="password" id="password" v-bind:class="['form-control', { 'is-invalid': validators.inError(form.password) }]" v-model="form.password.value" v-bind:disabled="totpLogin.required">
                         <div class="invalid-feedback">{{ validators.getErrorMessage(form.password, 'password') }}</div>
-                        <router-link to="/password_reset" id="forgot-password-link">Forgot your password?</router-link>
+                        <router-link to="/password-reset" id="forgot-password-link">Forgot your password?</router-link>
                         <div class="error-message mt-2" v-show="validators.credentialsInError(form.email, form.password)">{{ validators.IncorrectCredentialsErr }}</div>
                     </div>
                     <div class="mb-3" hidden>

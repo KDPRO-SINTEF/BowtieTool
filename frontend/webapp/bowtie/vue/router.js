@@ -21,12 +21,12 @@ const routes = [
         component: RegistrationPage
     },
     {
-        path: '/register/email_confirm',
+        path: '/register/email-confirm',
         name: 'EmailConfirm',
         component: EmailConfirmationPage
     },
     {
-        path: '/password_reset',
+        path: '/password-reset',
         name: 'PasswordReset',
         component: PasswordResetPage
     },
