@@ -1,7 +1,7 @@
 export const TheNavbarComponent = {
     template: `
         <div id="navbar">
-            <span id="navbar-links">
+            <div id="navbar-links">
             <router-link to="/" class="navbar-link navbar-link__home">Home</router-link>
                 <span v-if="!isUserAuthenticated">
                     <router-link to="/login" class="navbar-link navbar-link__login">Login</router-link>

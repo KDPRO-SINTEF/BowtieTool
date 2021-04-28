@@ -1,4 +1,4 @@
-import * as validators from '/js/modules/validators.js'
+import * as validators from '/js/modules/validators.js';
 import { store } from "../../store.js";
 
 export const RegistrationPage = {
@@ -6,7 +6,7 @@ export const RegistrationPage = {
         <div class="form__auth">
             <img src="/images/logo.png" class="bowtie-logo__auth">
             <h2 class="title__auth mb-4">Register to Bowtie++</h2>
-            <div id="password-policy" class="card text-dark bg-light mb-4">
+            <div class="card text-dark bg-light mb-4 information-msg">
                 <div class="card-body">
                     <p class="card-text">To be valid, a <b>password</b> must:
                         <ul class="m-0">
@@ -17,7 +17,7 @@ export const RegistrationPage = {
                 </div>
             </div>
             <div id="register-form">
-                <form v-on:keyup.enter="submitRegisterForm">
+                <form @submit.prevent="submitRegistrationForm">
                     <div class="mb-3">
                         <label for="username" class="form-label">Username <span class="text-danger">*</span></label>
                         <input id="username" v-bind:class="['form-control', { 'is-invalid': validators.inError(form.username) }]" v-model="form.username.value" placeholder="Username">
@@ -38,9 +38,9 @@ export const RegistrationPage = {
                         <input type="password" id="password-confirm" v-bind:class="['form-control', { 'is-invalid': validators.inError(form.passwordConfirm) }]" v-model="form.passwordConfirm.value">
                         <div class="invalid-feedback">{{ validators.getErrorMessage(form.passwordConfirm, 'passwordConfirm') }}</div>
                     </div>
-                    <button type="button" v-bind:class="['btn', 'btn-full', 'btn-success', { disabled: waitForResponse } ]" v-on:click="submitRegisterForm">
+                    <button type="submit" v-bind:class="['btn', 'btn-full', 'btn-success', { disabled: waitForResponse }]">
                         <span v-if="!waitForResponse">Register</span>
-                        <div v-else class="spinner-border text-light" role="status"></div>
+                        <span v-else class="spinner-border text-light" role="status"></span>
                     </button>
                 </form>
             </div>
@@ -71,7 +71,7 @@ export const RegistrationPage = {
         }
     },
     methods: {
-        checkRegisterForm: function() {
+        checkRegistrationForm: function() {
             let fieldsName = Object.keys(this.form);
             Object.values(this.form).forEach((field, index) => {
                 let fieldType = fieldsName[index];
@@ -114,8 +114,8 @@ export const RegistrationPage = {
             });
             return checkOk;
         },
-        submitRegisterForm: function() {
-            if (this.checkRegisterForm()) {
+        submitRegistrationForm: function() {
+            if (this.checkRegistrationForm()) {
                 this.waitForResponse = true;
                 let requestData = { 'username': this.form.username.value, 'email': this.form.email.value, 'password': this.form.password.value };
                 axios.post(window.REGISTER, requestData, {

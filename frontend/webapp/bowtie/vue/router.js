@@ -3,6 +3,7 @@ import { LoginPage } from "./pages/auth/LoginPage.js";
 import { RegistrationPage } from "./pages/auth/RegistrationPage.js";
 import { EmailConfirmationPage } from "./pages/auth/EmailConfirmationPage.js";
 import { HttpError404Page } from "./pages/HttpError404Page.js";
+import { PasswordResetPage } from "./pages/auth/PasswordResetPage.js";
 
 const routes = [
     {
@@ -23,6 +24,11 @@ const routes = [
         path: '/register/email_confirm',
         name: 'EmailConfirm',
         component: EmailConfirmationPage
+    },
+    {
+        path: '/password_reset',
+        name: 'PasswordReset',
+        component: PasswordResetPage
     },
     {
         path: '/404',

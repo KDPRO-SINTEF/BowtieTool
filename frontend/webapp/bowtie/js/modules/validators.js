@@ -14,7 +14,7 @@ const MissingPasswordConfirmErr = 'Confirm your password.';
 const MissingTotpErr = '6-digit code is required.';
 
 const InvalidUsernameErr = 'Invalid username.';
-const InvalidEmailErr = 'Badly formed email.';
+const InvalidEmailErr = 'Invalid email.';
 const InvalidPasswordErr = 'This password is too weak.';
 const InvalidPasswordConfirmErr = 'Typed passwords don\'t match.';
 const InvalidTotpErr = MissingTotpErr;

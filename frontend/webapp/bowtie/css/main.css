@@ -32,6 +32,11 @@
     background-color: white;
 }
 
+.spinner-border {
+    max-height: 20px;
+    max-width: 20px;
+}
+
 #diagram-editor {
     position: absolute;
     left: 0;
