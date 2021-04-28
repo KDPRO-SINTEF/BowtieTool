@@ -7,12 +7,12 @@ from abc import ABC, abstractmethod
 class Validator(ABC):
     """Abstract class for User model attributes validation"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self):
         super()
 
     @abstractmethod
     def validate(self, data, user=None):
-        pass
+        """Abstract validation method"""
 
     @abstractmethod
     def get_help_text(self):
@@ -93,8 +93,8 @@ class UserNameValidator(Validator):
 
     def validate(self, data, user=None):
         """Validate password"""
-        if not re.findall('[0-9A-Za-z_]', data):
-            raise ValidationError(dict(password="The username must contain only letters, diggits and undescores"),
+        if len(re.findall('[0-9A-Za-z_ ]', data)) != len(data):
+            raise ValidationError(dict(username="The username must contain only letters, diggits and undescores"),
                     code='invalid-username')
 
     def get_help_text(self):

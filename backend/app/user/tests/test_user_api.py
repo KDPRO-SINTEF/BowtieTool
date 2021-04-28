@@ -1,5 +1,4 @@
 import time
-# from pytest import approx
 import datetime
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -59,6 +58,19 @@ class PublicUserApiTests(TestCase):
         self.assertIn("username", res.data["errors"])
 
 
+    def test_user_invalid_username(self):
+
+        payload = {
+            'email': 'mkirov@insa-rennes.fr',
+            'password': '123456789Aa#',
+            'username': '<><>!2#'
+        }
+
+        res = self.client.post(CREATE_USER_URL, payload)
+        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("username", res.data["errors"])
+
+
     def test_create_user_invalid_email(self):
         """Check if correct exception is raised for invalid email(response)"""
         payload = {
@@ -71,7 +83,6 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("email", res.data["errors"])
         self.assertEqual("Invalid field", res.data["errors"]["email"])
-
 
     def test_create_user_invalid_password(self):
         """Check if correct exception is raised for invalid password (response)"""
@@ -135,34 +146,29 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(mail.outbox[0].from_email, 'from@example.com')
         self.assertEqual(mail.outbox[0].to, ['mkirov@insa-rennes.fr'])
 
-    # def test_user_duplicate(self):
+    # def test_create_existing_user(self):
     #     """Test creating user that already exists"""
     #     payload = {
     #         'email': 'test@bowtie.com',
     #         'password': '123456789A#a',
     #         'username': 'username'
     #     }
-    #     create_user(**payload)
-    #     try:
-    #         with transaction.atomic():
-    #             res = self.client.post(CREATE_USER_URL, payload)
-    #         self.fail('Duplicate question allowed.')
-    #     except IntegrityError:
-    #         # self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
-    #         pass
+    #     user = create_user(**payload)
+    #     user.profile.email_confirmed = True
+    #     user.save()
+    #     user.profile.save()
+    #     res = self.client.post(CREATE_USER_URL, payload)
+    #     self.assertEqual(status.HTTP_201_CREATED, res.status_code)
+    #     message = "Someone tried to create an account into Bowtie++ using " + \
+    #         "this email who is already registered." + \
+    #         " If you forgot your password please use the reset link on our login page.\n"+\
+    #         "Sincerly, \n Bowtie++ team"
+    #     subject = 'Account creation with existing email'
 
-    def test_create_token_for_user_fail(self):
-        """Test for unsuccessful creation of authentification token for user"""
-        payload = {
-            'email': 'test@bowtie.com',
-            'password': '123456789A#a'
-        }
-        create_user(**payload)
-
-        res = self.client.post(TOKEN_URL, payload)
-
-        self.assertNotIn('token', res.data)
-        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+    #     self.assertEqual(len(mail.outbox), 1)
+    #     self.assertEqual(mail.outbox[0].subject, subject)
+    #     self.assertEqual(mail.outbox[0].body, message)
+    #     self.assertEqual(mail.outbox[0].to, ['test@bowtie.com'])
 
 
     def test_create_token_for_user_ok(self):
@@ -216,6 +222,23 @@ class PublicUserApiTests(TestCase):
         self.assertNotIn('token', res.data)
         self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
 
+
+    def test_alter_activation_token(self):
+        """Create user and then alter the activation token"""
+
+        payload = {
+            'email': 'mkirov@insa-rennes.fr',
+            'password': '123456789a!',
+            'username': 'Test name'
+        }
+
+        res = self.client.post(CREATE_USER_URL, payload)
+        user = get_user_model().objects.filter(email="mkirov@insa-rennes.fr")
+        token = AccountActivationTokenGenerator().make_token(user)
+        token += "."
+
+
+
     def test_account_activation_token(self):
         """ Test if account activation token is valid and the request
             to the generated url activates user account
@@ -237,12 +260,12 @@ class PublicUserApiTests(TestCase):
         user = get_user_model().objects.filter(email=payload['email']).first()
         self.assertTrue(user.profile.email_confirmed)
 
-        # test that token is invalidated after confirmation
+        # test that the token is invalidated after confirmation
         res = self.client.get(url)
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-    def test_account_password__reset_token(self):
+    def test_account_password_reset_token(self):
         """ Test if account reset password token is valid and the request
             to the generated url changes user password
         """
@@ -596,98 +619,5 @@ class PublicUserApiTests(TestCase):
         self.assertTrue(user.check_password('123456789A#a!'))
 
 
-    def test_enable_two_fa_user_nok(self):
-        """Unauthenticated user can't enable two fa"""
-
-        payload = {
-            'email': 'test@bowtie.com',
-            'password': '123456789A#a'
-        }
-
-        user = create_user(**payload)
-
-        Profile.objects.filter(user=user).update(email_confirmed=True)
-        # res = self.client.post(TOKEN_URL, payload)
-        # token = res.data['token']
-
-        url = reverse("user:totp-create")
-        res = self.client.get(url)
-        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
-    def test_enable_two_fa_user_data_ok(self):
-        """Test if all data returned by two fa activation method is present"""
-
-        payload = {
-            'email': 'test@bowtie.com',
-            'password': '123456789A#a'
-        }
-
-        user = create_user(**payload)
-
-        Profile.objects.filter(user=user).update(email_confirmed=True)
-        res = self.client.post(TOKEN_URL, payload)
-        token = res.data['token']
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-
-        url = reverse("user:totp-create")
-        res = self.client.get(url)
-        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
-
-        # temporary token present
-        self.assertIn('token', res.data)
-        # image present
-        self.assertIn('qrImg', res.data)
-        devices = devices_for_user(user, confirmed=False)
-        self.assertNotEqual(None, devices)
-
-    def test_enable_two_fa_validate_token_validity(self):
-        """Test validity of token for validation of user totp device"""
-        settings.TOTP_CONFIRM_RESET_TIMEOUT=2
-
-        payload = {
-            'email': 'test@bowtie.com',
-            'password': '123456789A#a'
-        }
-
-        user = create_user(**payload)
-
-        Profile.objects.filter(user=user).update(email_confirmed=True)
-        res = self.client.post(TOKEN_URL, payload)
-        token = res.data['token']
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-
-        url = reverse("user:totp-create")
-        res = self.client.get(url)
-        time.sleep(3)
-        token_totp_validate = res.data["token"]
-
-        url2 = reverse("user:totp-activate", kwargs={'token':token_totp_validate})
-        res2 = self.client.post(url2, {})
-        self.assertIn('errors', res2.data)
-        self.assertEqual(res2.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_enable_two_fa_validate_invalid_totp_token(self):
-        """Test validity of token for validation of user totp device"""
-
-        payload = {
-            'email': 'test@bowtie.com',
-            'password': '123456789A#a'
-        }
-
-        user = create_user(**payload)
-
-        Profile.objects.filter(user=user).update(email_confirmed=True)
-        res = self.client.post(TOKEN_URL, payload)
-        token = res.data['token']
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
-
-        url = reverse("user:totp-create")
-        res = self.client.get(url)
-        token_totp_validate = res.data["token"]
-
-        url2 = reverse("user:totp-activate", kwargs={'token':token_totp_validate})
-        res2 = self.client.post(url2, {"token_totp": "1234"})
-        self.assertEqual(res2.status_code, status.HTTP_400_BAD_REQUEST)
 
 # todo enable, disable two fa, new login logic

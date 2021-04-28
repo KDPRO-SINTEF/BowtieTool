@@ -1,9 +1,10 @@
+import reversion
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 from django.conf import settings
 from taggit.managers import TaggableManager
-import reversion
+from user.validators import UserNameValidator
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
 from django.utils import timezone
@@ -23,7 +24,7 @@ class UserManager(BaseUserManager):
             raise ValueError('User email and password is required')
         try:
             validators.validate_password(password=password)
-        
+            UserNameValidator().validate(username)
         except exceptions.ValidationError as e_valid:
             raise ValidationError(e_valid)
 

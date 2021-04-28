@@ -8,7 +8,6 @@ from django.utils import timezone
 from user.validators import  LowercaseValidator, UppercaseValidator, SymbolValidator
 from user.authentication import PasswordResetToken
 from django.core import mail
-from user.validators import UserNameValidator
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
@@ -18,7 +17,7 @@ class UserSerializer(serializers.Serializer):
 
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True,  allow_blank=False, trim_whitespace=True)
-    username = serializers.CharField(validators=[UserNameValidator])
+    username = serializers.CharField()
 
 
     def create(self, validated_data):
@@ -73,7 +72,7 @@ class UserUpdateSerialize(serializers.Serializer):
                         password=old_password):
 
             raise serializers.ValidationError("Wrong password")
-        
+
         if new_password == old_password:
             raise serializers.ValidationError("The two passwords must be different")
 
@@ -94,7 +93,7 @@ class PasswordResetSerializer(serializers.Serializer):
 
     def validate(self, attrs):
         """Validate the password reset form"""
-        
+
         user = get_user_model().objects.filter(email=attrs.get('email')).first()
         if not user is None:
             token = PasswordResetToken().make_token(user)
