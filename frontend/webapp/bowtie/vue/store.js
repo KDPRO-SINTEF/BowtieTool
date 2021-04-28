@@ -41,7 +41,7 @@ const userModule = {
         },
         logout({ commit }, state) {
             localStorage.removeItem('sessionToken');
-           commit('logout');
+            commit('logout');
         }
     }
 }

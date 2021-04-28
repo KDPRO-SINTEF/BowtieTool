@@ -19,6 +19,7 @@ export const TheNavbarComponent = {
     },
     methods: {
         logout: function() {
+            this.$store.commit('setAuthenticationStatus', false);
             this.$store.dispatch('logout');
             window.location.assign(window.ROOT_PAGE);
         }
