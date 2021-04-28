@@ -27,7 +27,7 @@ window.ROOT_PAGE = window.ROOT_PAGE || '/'
 window.EDITOR_PAGE = window.EDITOR_PAGE || window.ROOT_PAGE + 'html/editor.html'
 window.LOGIN_PAGE = window.LOGIN_PAGE || window.ROOT_PAGE + 'login';
 window.REGISTER_PAGE = window.REGISTER_PAGE || window.ROOT_PAGE + 'register';
-window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || window.ROOT_PAGE + 'register/password_reset';
+window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || window.ROOT_PAGE + 'password-reset';
 window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || window.ROOT_PAGE + 'html/my_account.html';
 window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'html/statistics.html';
 
