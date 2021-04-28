@@ -123,11 +123,10 @@ class ExpiringTokenAuthentication(TokenAuthentication):
     def authenticate_credentials(self, key):
         """Check the validity of the token used for authentication"""
         model = self.get_model()
-    
+
         try:
             token = model.objects.get(key=key)
-        except model.DoesNotExist as not_exist_mod:
-           
+        except model.DoesNotExist:
             raise exceptions.AuthenticationFailed('Invalid token')
 
         if not token.user.is_active:
@@ -150,7 +149,7 @@ class ExpiringTokenAuthentication(TokenAuthentication):
 
 def create_random_user_id(userid, nbytes=64):
     """Creation of a record nonce-id for activation account and password resset links"""
-        
+
     try:
         nonce = binascii.hexlify(os.urandom(nbytes)).decode('ascii')
         existing_record = NonceToToken.objects.filter(uid=userid).first()
@@ -163,7 +162,7 @@ def create_random_user_id(userid, nbytes=64):
 
     return nonce
 
-def find_user_id_from_nonce(nonce): 
+def find_user_id_from_nonce(nonce):
     """ (create_random_user_id )^-1"""
 
     existing_record = NonceToToken.objects.filter(nonce=nonce).first()

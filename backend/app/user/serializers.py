@@ -95,7 +95,7 @@ class PasswordResetSerializer(serializers.Serializer):
         """Validate the password reset form"""
 
         user = get_user_model().objects.filter(email=attrs.get('email')).first()
-        if user :
+        if user and user.profile.email_confirmed and user.is_active:
             token = PasswordResetToken().make_token(user)
             nonce = create_random_user_id(user.id)
 
@@ -109,7 +109,7 @@ class PasswordResetSerializer(serializers.Serializer):
 
 
 class AuthTokenSerialize(serializers.Serializer):
-    """Serializer for user authentication object"""
+    """Serializer for user authentication token"""
 
     email = serializers.CharField()
     password = serializers.CharField(
@@ -136,3 +136,36 @@ class AuthTokenSerialize(serializers.Serializer):
 
         msg = _('Authentication failed')
         raise serializers.ValidationError(msg, code='authentication')
+
+
+class DeleteUserSerializer(serializers.Serializer):
+    """Serializer for delete user view"""
+
+    password = serializers.CharField(
+        style={'input_type': 'password'},
+        trim_whitespace=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+
+    def __str__(self):
+        return "required fields: password"
+
+    def validate(self, attrs):
+        """Validate and authenticate the user"""
+
+        password = attrs.get('password')
+        user = authenticate(request=self.context.get('request'),
+                            username=self.user.email,
+                            password=password
+        )
+
+        print(user)
+        if user:
+            user.delete()
+            return attrs
+
+        msg = ('Delete user failed')
+        raise serializers.ValidationError(msg, code='delete')

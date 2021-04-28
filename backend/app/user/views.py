@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.views import APIView
-from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize, UserInfoSerializer, PasswordResetSerializer
+from user.serializers import UserSerializer, AuthTokenSerialize, UserUpdateSerialize, UserInfoSerializer, PasswordResetSerializer, DeleteUserSerializer
 from user.customPermission import HasConfirmedEmail
 from user.authentication import AccountActivationTokenGenerator, TOTPValidityToken, PasswordResetToken, ExpiringTokenAuthentication, create_random_user_id, find_user_id_from_nonce
 from django.core import mail
@@ -84,7 +84,7 @@ class CreateUserView(generics.CreateAPIView):
 
 class CreateTokenView(ObtainAuthToken):
     """Create a new authentication token for user"""
-    serializer_class = AuthTokenSerialize
+
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
     permission_classes = (HasConfirmedEmail,)
 
@@ -98,7 +98,8 @@ class CreateTokenView(ObtainAuthToken):
             # if user has enabled 2 fa redirect the login
             if user.profile.two_factor_enabled:
                 token = TOTPValidityToken().make_token(user)
-                return Response({"uidb64": urlsafe_base64_encode(force_bytes(user.pk)), "token": token},
+                nonce = create_random_user_id(user.id)
+                return Response({"uidb64": urlsafe_base64_encode(force_bytes(nonce)), "token": token},
                     status=status.HTTP_200_OK)
 
 
@@ -135,7 +136,6 @@ class UpdatePassword(APIView):
     authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
-
     def put(self, request):
         user = request.user
         serializer = UserUpdateSerialize(data=request.data, user=user)
@@ -166,7 +166,7 @@ class ActivateAccount(APIView):
 
         try:
             nonce = force_text(urlsafe_base64_decode(uidb64))
-            uid = find_user_id_from_nonce(nonce) 
+            uid = find_user_id_from_nonce(nonce)
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_valid:
@@ -212,14 +212,13 @@ class ValidatePasswordReset(APIView):
 
         try:
             nonce = force_text(urlsafe_base64_decode(uidb64))
-            uid = find_user_id_from_nonce(nonce) 
+            uid = find_user_id_from_nonce(nonce)
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
-            user = None
             logger.warning("Failed resset password for User with id %s. Exception: %s", uid, e_ex)
             return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        data = ""
         if PasswordResetToken().check_token(user, token) and "password" in request.data:
 
             try:
@@ -234,9 +233,8 @@ class ValidatePasswordReset(APIView):
 
             except ValidationError:
                 data = "bad credentials"
-                return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 
 
 class DeleteUserView(APIView):
@@ -244,22 +242,20 @@ class DeleteUserView(APIView):
 
     authentication_classes = (ExpiringTokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = DeleteUserSerializer
 
     def post(self, request):
         """Deletes the user of the request"""
 
-        if not "password" in request.data:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
-
-        user = request.user
-        password = request.data['password']
-        if authenticate(request=request, email=user.email, password=password):
+        try:
+            user = request.user
+            serializer = DeleteUserSerializer(data=request.data, user=user)
+            serializer.is_valid(raise_exception=True)
             logger.info('User with email %s is deleting its account',user.email)
-            user.delete()
             return Response(status=status.HTTP_200_OK)
 
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
+        except ValidationError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
     def __str__(self):
         return "Delete user endpoint"

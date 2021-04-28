@@ -1,4 +1,6 @@
+from user.authentication import find_user_id_from_nonce, create_random_user_id
 from django.test import TestCase
+from core.models import Profile, NonceToToken
 from django.contrib.auth import get_user_model
 from user.authentication import AccountActivationTokenGenerator, PasswordResetToken, TOTPValidityToken
 import time
@@ -65,7 +67,7 @@ class AuthenticationTests(TestCase):
         """Check the validity of the authentication token"""
 
         # setting the token validity for 2 seconds
-        settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS=0 
+        settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS=0
         settings.AUTHENTICATION_TOKEN_EXPIRE_SECONDS=2
 
         payload = {
@@ -78,7 +80,7 @@ class AuthenticationTests(TestCase):
         res = self.client.post(TOKEN_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn('token', res.data)
-        # add the auth token to the header of the APIClient object 
+        # add the auth token to the header of the APIClient object
         token = res.data['token']
         url = reverse('user:totp-create')
         time.sleep(2)
@@ -93,7 +95,7 @@ class AuthenticationTests(TestCase):
 
         # setting the token validity for 2 seconds
         settings.AUTHENTICATION_TOKEN_EXPIRE_SECONDS=10
-        settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS=0 
+        settings.AUTHENTICATION_TOKEN_EXPIRE_HOURS=0
 
         payload = {
             'email': 'test@bowtie.com',
@@ -105,7 +107,7 @@ class AuthenticationTests(TestCase):
         res = self.client.post(TOKEN_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn('token', res.data)
-        # add the auth token to the header of the APIClient object 
+        # add the auth token to the header of the APIClient object
         token = res.data['token']
         url = reverse('user:me')
         time.sleep(2)
@@ -113,3 +115,23 @@ class AuthenticationTests(TestCase):
         res = self.client.get(url)
         # token isn't expired
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+
+    def test_same_id_invalidates_an_existing_previous_one(self):
+        """Test when adding a new record for an existing userid,
+        the old record is deleted
+        """
+
+        nonce = create_random_user_id(1)
+        self.assertTrue(nonce != None)
+        nonce2 = create_random_user_id(1)
+        self.assertTrue(nonce != nonce2)
+        user = NonceToToken.objects.filter(nonce=nonce).first()
+        self.assertTrue(user is None)
+
+    def test_adding_same_id_deletes_previous_record(self):
+
+        nonce = create_random_user_id(1)
+        id1 = find_user_id_from_nonce(nonce)
+        user = NonceToToken.objects.filter(uid=id1).first()
+        self.assertTrue(user is None)

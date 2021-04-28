@@ -11,7 +11,6 @@ from django_otp import devices_for_user
 
 TOKEN_URL = reverse('user:token')
 
-
 class TwoFaAPITests(TestCase):
     """Two FA API tests"""
 
