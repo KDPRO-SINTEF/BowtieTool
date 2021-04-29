@@ -1,4 +1,5 @@
 #  Module docstring
+import json
 import operator
 import os
 from functools import reduce
@@ -20,6 +21,7 @@ from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
 from django.core import mail
 import defusedxml.minidom
+from reversion.models import Version
 
 
 def noScriptTagsInXML(input_xml):
@@ -69,7 +71,8 @@ class DiagramList(APIView):
             except (AttributeError, TypeError):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
             # Checks against XSS
-            serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'], diagram=no_script_xml)
+            with reversion.create_revision():
+                serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'], diagram=no_script_xml)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -240,3 +243,42 @@ class ShareView(APIView):
         all_diags = diags_as_writer.union(diags_as_reader)
         serializer = serializers.DiagramSerializer(all_diags, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class DiagramVersions(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, pk, auth_user_only=False):
+        """Get diagram instance from Primary key"""
+        if auth_user_only:
+            queryset = Diagram.objects.all().filter(owner=self.request.user)
+        else:
+            queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(is_public=True))
+        try:
+            queryset = queryset.get(pk=pk)
+            return queryset
+        except Diagram.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        """Return versions of the diagram of the authenticated user"""
+        diagram = self.get_object(pk, auth_user_only=True)
+        versions = Version.objects.get_for_object(diagram)
+        diagrams = [{key: versions[id].field_dict[key] for key in ['diagram', 'preview']} for id in range(len(versions))]
+        response = HttpResponse(json.dumps(diagrams),
+                                content_type='application/json')
+        return response
+
+    def post(self, request, pk):
+        """Update diagram"""
+        # Checks that the current user as the rights to update specified diagram
+        diagram = self.get_object(pk, auth_user_only=True)
+        versions = Version.objects.get_for_object(diagram)
+        id = int(request.data['id'])
+        if id >= len(versions) or id < 0:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        versions[id].revision.revert()
+        return Response(status=status.HTTP_200_OK)
+
+

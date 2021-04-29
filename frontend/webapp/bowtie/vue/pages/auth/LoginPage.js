@@ -5,7 +5,7 @@ export const LoginPage = {
     template: `
         <div class="form__auth">
             <img src="/images/logo.png" class="bowtie-logo__auth">
-            <h2 class="title__auth mb-4">Login to Bowtie++</h2>
+            <h2 class="title__auth mb-4">Sign in to Bowtie++</h2>
             <div id="login-form">
                 <form @submit.prevent="submitLoginForm">
                     <div class="mb-3">
@@ -30,7 +30,7 @@ export const LoginPage = {
                         <span v-else="!waitForResponse && totpLogin.required">Submit code</span>
                     </button>
                 </form>
-                <p>Don't have an account yet? Please <router-link to="/register">register</router-link>.</p>
+                <p>Don't have an account yet? Please <router-link to="/register">sign up</router-link>.</p>
             </div>
         </div>
     `,

@@ -97,6 +97,7 @@ INSTALLED_APPS = [
     'pydotplus',
     'drf_yasg',
     'app',
+    'reversion'
 ]
 
 MIDDLEWARE = [
@@ -108,6 +109,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'reversion.middleware.RevisionMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
