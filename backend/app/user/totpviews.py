@@ -3,7 +3,7 @@ import os
 import base64
 import logging
 import qrcode
-from user.authentication import  TOTPValidityToken, ExpiringTokenAuthentication
+from user.authentication import  TOTPValidityToken, ExpiringTokenAuthentication, create_random_user_id, find_user_id_from_nonce
 from rest_framework import  permissions
 from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
@@ -79,7 +79,8 @@ class TOTPAuthenticateView(APIView):
         """Verify user one-time password"""
 
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            nonce = force_text(urlsafe_base64_decode(uidb64))
+            uid = find_user_id_from_nonce(nonce)
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:

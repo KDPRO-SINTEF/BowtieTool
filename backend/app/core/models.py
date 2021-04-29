@@ -1,9 +1,10 @@
+import reversion
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, \
     PermissionsMixin
 from django.conf import settings
 from taggit.managers import TaggableManager
-import reversion
+from user.validators import UserNameValidator
 from django.core import exceptions
 import django.contrib.auth.password_validation as validators
 from django.utils import timezone
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager):
             raise ValueError('User email and password is required')
         try:
             validators.validate_password(password=password)
+            UserNameValidator().validate(username)
         except exceptions.ValidationError as e_valid:
             raise ValidationError(e_valid)
 
@@ -57,7 +59,7 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """custom user model that supports email instead of username"""
     email = models.EmailField(max_length=255, unique=True)
-    username = models.CharField(max_length=255)
+    username = models.CharField(max_length=66)
     is_Researcher = models.BooleanField(default=False)
 
     # is_active and is_staff are still there since they are used by the django/contrib/auth/admin.py

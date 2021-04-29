@@ -2611,31 +2611,8 @@ EditorUi.prototype.createStatusContainer = function () {
  * Creates the login button and bind it to the login dialog window
  */
 EditorUi.prototype.getContextualLoginText = function () {
-    var user = {
-        'token': localStorage.getItem('token'),
-        'username': localStorage.getItem('username'),
-        //'isResearcher' : localStorage.getItem('isResearcher')
-        'isResearcher': true
-    };
     var button = document.createElement('button');
-    button.setAttribute('id', 'loginButton');
-    if (user.token === null) {
-        mxUtils.write(button, mxResources.get('login'));
-        button.addEventListener('click', function () {
-            window.location.assign(window.LOGIN_PAGE);
-        })
-    } else {
-        mxUtils.write(button, mxResources.get('logout'));
-        button.style.backgroundColor = '#f44336';
-
-        button.addEventListener('click', function () {
-            localStorage.removeItem('token');
-            localStorage.removeItem('username');
-            alert("You will be disconnected.");
-            window.location.reload();
-        });
-
-    }
+    button.setAttribute('style', 'visibility: hidden;');
     return button;
 };
 
@@ -2644,29 +2621,6 @@ EditorUi.prototype.getContextualLoginText = function () {
  */
 EditorUi.prototype.setLoginText = function (value) {
     this.loginContainer.innerHTML = '';
-    let token = localStorage.getItem('token');
-    let isResearcher = true;
-    if (token !== null) {
-        if (isResearcher) {
-            let statisticsButton = document.createElement('button');
-            statisticsButton.setAttribute('id', 'statistics-button');
-            statisticsButton.innerHTML = 'Statistics';
-            statisticsButton.addEventListener('click', function () {
-                window.open(window.STATISTICS_PAGE);
-            })
-            statisticsButton.setAttribute('target', '_blank');
-            this.loginContainer.appendChild(statisticsButton);
-        }/* My account button */
-        let accountButton = document.createElement('button');
-        accountButton.setAttribute('id', 'account-button');
-        accountButton.innerHTML = 'My account';
-        accountButton.addEventListener('click', function () {
-            window.open(window.ACCOUNT_PAGE);
-        })
-        accountButton.setAttribute('target', '_blank');
-        this.loginContainer.appendChild(accountButton);
-
-    }
     this.loginContainer.appendChild(value);
 };
 
@@ -2921,7 +2875,7 @@ EditorUi.prototype.isCompatibleString = function (data) {
 
 EditorUi.prototype.openFromDb = function (open_endpoint) {
 
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('sessionToken');
     if (!token) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
         return;
@@ -2977,7 +2931,7 @@ EditorUi.prototype.openFromDb = function (open_endpoint) {
 }
 
 EditorUi.prototype.modifyRolesForGraph = function () {
-    var token = localStorage.getItem('token');
+    var token = localStorage.getItem('sessionToken');
     var graphid = this.editor.getGraphId();
     if (!token) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
@@ -3078,7 +3032,7 @@ EditorUi.prototype.save = function (name, tags) {
                 this.editor.setStatus(mxUtils.htmlEntities(mxResources.get('saved')) + ' ' + new Date());
             } else {
                 if (xml.length < MAX_REQUEST_SIZE) {
-                    var token = localStorage.getItem('token');
+                    var token = localStorage.getItem('sessionToken');
                     if (!token) {
                         mxUtils.alert(mxResources.get('notLoggedIn'));
                         return;

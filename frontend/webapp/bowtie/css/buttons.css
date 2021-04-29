@@ -1,0 +1,8 @@
+.btn-full {
+    width: 100%;
+}
+
+.btn-success {
+    background-color: rgb(40, 167, 69);
+    border-color: rgb(40, 167, 69);
+}

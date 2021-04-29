@@ -14,7 +14,7 @@ let diagramSearch_vue = new Vue({
     },
     methods: {
         init: function () {
-            var token = localStorage.getItem('token');
+            var token = localStorage.getItem('sessionToken');
             if (!token) {
                 mxUtils.alert(mxResources.get('notLoggedIn'));
                 return;

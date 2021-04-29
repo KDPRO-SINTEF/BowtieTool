@@ -277,7 +277,7 @@
     <foreground>
 		<rect h="80" w="120" x="0" y="0"/>
 		<fillstroke></fillstroke>
-		<image src="stencils/elements/hazard_128x128.png" x="0" y="0" w="120" h="80" flipH="0"/>
+		<image src="../stencils/elements/hazard_128x128.png" x="0" y="0" w="120" h="80" flipH="0"/>
     </foreground>
   </shape>
 	<shape aspect="fixed" h="20" name="blankrisk" strokewidth="0" w="120">
@@ -287,7 +287,7 @@
 			<rect h="20" w="120" x="0" y="0"/>
 			<strokecolor color="#00000"></strokecolor>
 			<fillstroke/>
-			<image src="stencils/elements/blankrisk.svg" x="0" y="0" w="120" h="20" flipH="0"/>
+			<image src="../stencils/elements/blankrisk.svg" x="0" y="0" w="120" h="20" flipH="0"/>
 		</foreground>
 	</shape>
 	<shape name="likelihood" h="50" w="100" aspect="variable" strokewidth="inherit">
@@ -359,7 +359,7 @@
 				<stroke/>
   	</foreground>
 	</shape>
-	
+
 	<shape name="impact" h="50" w="100" aspect="variable" strokewidth="inherit">
 			<connections>
 				<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>

@@ -18,7 +18,7 @@ var OpenDialog = function () {
 
     iframe.setAttribute('width', (((Editor.useLocalStorage) ? 640 : 320) + dx) + 'px');
     iframe.setAttribute('height', (((Editor.useLocalStorage) ? 480 : 220) + dx) + 'px');
-    iframe.setAttribute('src', OPEN_FORM);
+    iframe.setAttribute('src', OPEN_DIALOG);
 
     this.container = iframe;
 };
@@ -59,7 +59,7 @@ var RiskDialog = function () {
 
     iframe.setAttribute('width', 1000 + 'px');
     iframe.setAttribute('height', 750 + 'px');
-    iframe.setAttribute('src', RISK_FORM);
+    iframe.setAttribute('src', RISK_DIALOG);
     this.container = iframe;
 }
 /**
@@ -379,9 +379,6 @@ var UserControlDialog = function (editorUi) {
  */
 var OpenFromDBDialog = function (width, height) {
 
-    const iframe_holder = document.createElement('div')
-    iframe_holder.setAttribute("style", "background:url(../images/ajax-loading-large.gif) center center no-repeat;")
-
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
     iframe.allowTransparency = 'true';
@@ -394,7 +391,7 @@ var OpenFromDBDialog = function (width, height) {
 
     iframe.setAttribute('width', width + 'px');
     iframe.setAttribute('height', height + 'px');
-    iframe.setAttribute('src', SEARCH_DIAGRAM);
+    iframe.setAttribute('src', DIAGRAM_SEARCH_DIALOG);
     iframe_holder.appendChild(iframe)
     this.container = iframe_holder;
 
@@ -421,7 +418,7 @@ var OpenFromDBDialog = function (width, height) {
     select.style = 'width:300px;height:150px';
 
     this.init = function (open_endpoint) {
-        var token = localStorage.getItem('token');
+        var token = localStorage.getItem('sessionToken');
         if (!token) {
             mxUtils.alert(mxResources.get('notLoggedIn'));
             return;
@@ -633,6 +630,8 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     if (localStorage.getItem('is_public') === null) {
         localStorage.setItem('is_public', 'false')
     }
+
+
     var tags_row = document.createElement('tr')
     var tags_td = document.createElement('td')
     tags_td.style.whiteSpace = 'nowrap';

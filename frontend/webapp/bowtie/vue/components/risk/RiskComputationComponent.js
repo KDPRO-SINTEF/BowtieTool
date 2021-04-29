@@ -42,14 +42,14 @@ let ThreatsComponent = {
                 console.log("Invalid threat actors value");
                 threat.threatActors = "";
                 threat.updateThreatCellColor();
-                this.updateGraphThreats();
+                this.refreshGraph();
                 this.emitThreats();
                 return;
             }
 
             threat.threatActors = parseFloat(event.target.value);
             threat.updateThreatCellColor();
-            this.updateGraphThreats();
+            this.refreshGraph();
             this.emitThreats();
         },
         updateOpportunity: function (threat, event) {
@@ -58,14 +58,14 @@ let ThreatsComponent = {
                 console.log("Invalid opportunity value");
                 threat.opportunity = "";
                 threat.updateThreatCellColor();
-                this.updateGraphThreats();
+                this.refreshGraph();
                 this.emitThreats();
                 return;
             }
 
             threat.opportunity = parseFloat(event.target.value);
             threat.updateThreatCellColor();
-            this.updateGraphThreats();
+            this.refreshGraph();
             this.emitThreats();
         },
         updateMeans: function (threat, event) {
@@ -74,14 +74,14 @@ let ThreatsComponent = {
                 console.log("Invalid means value");
                 threat.means = "";
                 threat.updateThreatCellColor();
-                this.updateGraphThreats();
+                this.refreshGraph();
                 this.emitThreats();
                 return;
             }
 
             threat.means = parseFloat(event.target.value);
             threat.updateThreatCellColor();
-            this.updateGraphThreats();
+            this.refreshGraph();
             this.emitThreats();
         },
         updateMotivation: function (threat, event) {
@@ -90,22 +90,21 @@ let ThreatsComponent = {
                 console.log("Invalid threat actors value");
                 threat.motivation = "";
                 threat.updateThreatCellColor();
-                this.updateGraphThreats();
+                this.refreshGraph();
                 this.emitThreats();
                 return;
             }
 
             threat.motivation = parseFloat(event.target.value);
             threat.updateThreatCellColor();
-            this.updateGraphThreats();
+            this.refreshGraph();
             this.emitThreats();
         },
         emitThreats: function () {
             this.$emit("threats", this.threats);
         },
-        updateGraphThreats: function () {
-            window.parent.currentUI.editor.graph.setThreats(this.threats);
-            window.parent.currentUI.editor.graph.updateAllThreats();
+        refreshGraph: function () {
+            window.parent.currentUI.editor.graph.refresh();
         },
     }
 }
@@ -128,13 +127,11 @@ let ConsequencesComponent = {
             if (isNaN(event.target.value) || event.target.value < 0 || event.target.value === "") {
                 console.log("Invalid impact value");
                 consequence.impactValue = "";
-                this.updateGraphConsequences();
                 this.emitConsequences();
                 return;
             }
 
             consequence.impactValue = parseFloat(event.target.value);
-            this.updateGraphConsequences();
             this.emitConsequences();
         },
         updateProbability: function (consequence, event) {
@@ -142,7 +139,6 @@ let ConsequencesComponent = {
             if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 1 || event.target.value === "") {
                 console.log("Invalid probability value");
                 consequence.probability = "";
-                this.updateGraphConsequences();
                 this.emitConsequences();
                 return;
             }
@@ -152,9 +148,6 @@ let ConsequencesComponent = {
         },
         emitConsequences: function () {
             this.$emit("consequences", this.consequences);
-        },
-        updateGraphConsequences: function () {
-            window.parent.currentUI.editor.graph.setConsequences(this.consequences);
         },
         isHighest: function (consequence) {
             if (!isNaN(this.eventProbability) && !isNaN(this.highestRiskValue)) {

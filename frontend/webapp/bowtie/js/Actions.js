@@ -21,7 +21,7 @@ Actions.prototype.init = function () {
         return Action.prototype.isEnabled.apply(this, arguments) && graph.isEnabled();
     };
     var isLoggedIn = function () {
-        return localStorage.getItem('token') != null;
+        return localStorage.getItem('sessionToken') != null;
     };
     var allEnabled = function () {
         return isLoggedIn() && isGraphEnabled();
@@ -29,10 +29,10 @@ Actions.prototype.init = function () {
 
     // File actions
     this.addAction('new...', function () {
-        window.open(ui.getUrl());
+        window.open(window.ROOT_PAGE);
     });
     this.addAction('openDb...', function () {
-        ui.openFromDb(window.SEARCH_DIAGRAM);
+        ui.openFromDb(window.DIAGRAM_SEARCH_DIALOG);
     }).isEnabled = isLoggedIn;
     this.addAction('openLocal...', function () {
         window.openNew = true;

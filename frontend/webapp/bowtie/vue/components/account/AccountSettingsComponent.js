@@ -249,7 +249,7 @@ let AccountDangerZoneComponent = {
             })
                 .then(res => {
                     localStorage.removeItem('username');
-                    localStorage.removeItem('token');
+                    localStorage.removeItem('sessionToken');
                     alert('Your account has been successfully deleted.');
                     window.location.assign(window.LOGIN_PAGE);
                 })
