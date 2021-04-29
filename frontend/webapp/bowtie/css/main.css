@@ -1,6 +1,7 @@
 @import "auth.css";
 @import "buttons.css";
 @import "navbar.css";
+@import "statistics.css";
 
 #app {
     width: 100%;

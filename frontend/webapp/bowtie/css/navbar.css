@@ -1,5 +1,12 @@
+.navbar-link-simple {
+    margin: 0px 5px 0px 5px;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
 .navbar-link {
     padding: 3px 15px 3px 15px;
+    margin: 3px 15px 3px 15px;
     color: white;
     text-decoration: none;
     font-size: 0.9em;
@@ -29,6 +36,7 @@
 
 .navbar-btn {
     padding: 1px 15px 1px 15px;
+    margin: 0px 5px 0px 5px;
     color: white;
     text-decoration: none;
     font-size: 0.9em;

@@ -2,7 +2,7 @@ let statistics_vue = new Vue({
     //Stocker les données ici
     el : "#statistics-vue",
     components: {
-        'statistics-item' : StatsItemComponent
+        'statistics-item' : StatisticsItemComponent
     },
     data: {
         user: {

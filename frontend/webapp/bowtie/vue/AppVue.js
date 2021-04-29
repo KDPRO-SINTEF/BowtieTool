@@ -19,7 +19,14 @@ export const app = new Vue({
             return (this.$router.currentRoute.path === '/');
         },
         showNavbar: function() {
-            return this.homePage();
+            return (this.onPage('home') || this.onPage('statistics'));
+        },
+        onPage: function(pageName) {
+            let route = '/' + pageName;
+            if (pageName === 'home') {
+                route = '/';
+            }
+            return this.$router.currentRoute.path === route;
         }
     },
     created: function() {

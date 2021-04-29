@@ -31,7 +31,7 @@
     <div class="container__home">
       <home></home>
     </div>
-    <div class="container__page" v-show="!homePage()">
+    <div class="container__page" v-show="!onPage('home')">
       <router-view></router-view>
     </div>
   </div>

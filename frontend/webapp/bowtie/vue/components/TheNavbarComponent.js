@@ -2,7 +2,10 @@ export const TheNavbarComponent = {
     template: `
         <div id="navbar">
             <div id="navbar-links">
-            <router-link to="/" class="navbar-link navbar-link__home">Home</router-link>
+                <router-link to="/" class="navbar-link-simple">Home</router-link>
+                <span v-if="isUserAuthenticated && isUserResearcher">
+                    <router-link to="/statistics" class="navbar-link-simple">Statistics</router-link>
+                </span>
                 <span v-if="!isUserAuthenticated">
                     <router-link to="/login" class="navbar-link navbar-link__login">Login</router-link>
                 </span>
@@ -15,6 +18,9 @@ export const TheNavbarComponent = {
     computed: {
         isUserAuthenticated: function() {
             return this.$store.state.isUserAuthenticated;
+        },
+        isUserResearcher: function() {
+            return this.$store.state.user.researcher;
         }
     },
     methods: {

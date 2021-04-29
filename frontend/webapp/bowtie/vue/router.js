@@ -2,8 +2,10 @@ import { HomePage } from "./pages/HomePage.js";
 import { LoginPage } from "./pages/auth/LoginPage.js";
 import { RegistrationPage } from "./pages/auth/RegistrationPage.js";
 import { EmailConfirmationPage } from "./pages/auth/EmailConfirmationPage.js";
-import { HttpError404Page } from "./pages/HttpError404Page.js";
+import { HttpError404Page } from "./pages/http-errors/HttpError404Page.js";
 import { PasswordResetPage } from "./pages/auth/PasswordResetPage.js";
+import { StatisticsPage } from "./pages/StatisticsPage.js";
+import { HttpError401Page } from "./pages/http-errors/HttpError401Page.js";
 
 const routes = [
     {
@@ -31,9 +33,19 @@ const routes = [
         component: PasswordResetPage
     },
     {
+        path: '/statistics',
+        name: 'Statistics',
+        component: StatisticsPage
+    },
+    {
         path: '/404',
         name: 'NotFound',
         component: HttpError404Page
+    },
+    {
+        path: '/401',
+        name: 'Unauthorized',
+        component: HttpError401Page
     },
     {
         path: '*',
