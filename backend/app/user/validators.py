@@ -93,7 +93,7 @@ class UserNameValidator(Validator):
 
     def validate(self, data, user=None):
         """Validate password"""
-        if len(re.findall('[0-9A-Za-z_ ]', data)) != len(data):
+        if len(re.findall('[0-9A-Za-z_-]', data)) != len(data):
             raise ValidationError(dict(username="The username must contain only letters, diggits and undescores"),
                     code='invalid-username')
 

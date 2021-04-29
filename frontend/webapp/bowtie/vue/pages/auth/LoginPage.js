@@ -56,26 +56,17 @@ export const LoginPage = {
                 required: false
             },
             waitForResponse: false,
-            validators: validators
+            validators: validators,
+            validations: {
+                email: ['required', 'valid'],
+                password: ['required'],
+                totp: ['required', 'valid', 'correct']
+            }
         }
     },
     methods: {
         checkLoginForm: function() {
-            let fieldsName = Object.keys(this.form);
-            Object.values(this.form).forEach((field, index) => {
-                let fieldType = fieldsName[index];
-                field.error = '';
-                if (validators.isEmpty(field)) {
-                    field.error = 'missing';
-                } else {
-                    if (fieldType === 'email') {
-                        if (!validators.validField(fieldType,  field.value)) {
-                            field.error = 'invalid';
-                            field.value = '';
-                        }
-                    }
-                }
-            });
+            validators.checkForm(this.form, this.validations);
             if (this.totpLogin.required) {
                 return (this.form.totp.error === '');
             } else {

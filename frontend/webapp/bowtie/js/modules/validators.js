@@ -61,6 +61,11 @@ const validTotp = function(totp) {
     return (totp.length === 6 && re.test(totp));
 }
 
+const validUsername = function(username) {
+    const re = /^[a-zA-Z0-9-][a-zA-Z0-9- ]*/;
+    return (re.test(username));
+}
+
 const validPasswordConfirm = function(password, passwordConfirm) {
     return (password === passwordConfirm);
 }
@@ -75,7 +80,7 @@ export const validField = function (fieldType, value, value_2 = '') {
     else if (fieldType === 'totp') {
         return validTotp(value);
     } else if (fieldType === 'username') {
-        return true;
+        return validUsername(value);
     }
     return false;
 }
@@ -117,4 +122,30 @@ const chooseErrorMessage = function (field, missingMsg, invalidMsg, incorrectMsg
         return incorrectMsg;
     }
     return '';
+}
+
+export const checkForm = function(form, validations) {
+    let fieldsName = Object.keys(form);
+    Object.values(form).forEach((field, index) => {
+        field.error = '';
+        let fieldType = fieldsName[index];
+        if (isEmpty(field) && validations[fieldType].indexOf('required') !== -1) {
+            field.error = 'missing';
+        } else {
+            if (fieldType === 'passwordConfirm') {
+                if (!validField(fieldType, field.value, form.password.value) && validations[fieldType].indexOf('valid') !== -1) {
+                    field.error = 'invalid';
+                }
+            } else {
+                if (!validField(fieldType, field.value) && validations[fieldType].indexOf('valid') !== -1) {
+                    field.error = 'invalid';
+                }
+            }
+        }
+    })
+    Object.values(form).forEach(field => {
+        if (field.error === 'invalid') {
+            field.value = '';
+        }
+    })
 }

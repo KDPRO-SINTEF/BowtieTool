@@ -67,51 +67,32 @@ export const RegistrationPage = {
                 }
             },
             waitForResponse: false,
-            validators: validators
+            validators: validators,
+            validations: {
+                username: ['required', 'valid'],
+                email: ['required', 'valid'],
+                password: ['required', 'valid'],
+                passwordConfirm: ['required', 'valid']
+            }
         }
     },
     methods: {
         checkRegistrationForm: function() {
-            let fieldsName = Object.keys(this.form);
-            Object.values(this.form).forEach((field, index) => {
-                let fieldType = fieldsName[index];
-                // Erase old errors
-                field.error = '';
-                if (validators.isEmpty(field)) {
-                    field.error = 'missing';
-                    // If password is missing or invalid, cancel missing error for passwordConfirm
-                    if (fieldType === 'passwordConfirm' && (validators.isMissing(this.form.password) || validators.isInvalid(this.form.password))) {
-                        field.error = '';
-                    }
-                } else {
-                    if (fieldType === 'passwordConfirm') {
-                        // If password is invalid, erase passwordConfirm
-                        // Else, check passwordConfirm
-                        if (validators.isInvalid(this.form.password)) {
-                            field.value = '';
-                            this.form.passwordConfirm.value = '';
-                        } else {
-                            if (!validators.validField(fieldType, field.value, this.form.password.value)) {
-                                field.error = 'invalid';
-                                field.value = '';
-                            }
-                        }
-                    } else {
-                        if (!validators.validField(fieldType, field.value)) {
-                            field.error = 'invalid';
-                            field.value = '';
-                        }
-                    }
-                }
-            });
+            validators.checkForm(this.form, this.validations);
+            if (this.form.password.error !== '') {
+                this.form.passwordConfirm.value = '';
+                this.form.passwordConfirm.error = '';
+            }
 
+            let formArray = Object.values(this.form);
             let checkOk = true;
-
-            Object.values(this.form).forEach(field => {
-                if (field.error !== '') {
+            for (let i = 0; i < formArray.length; i++) {
+                if (formArray[i].error !== '') {
                     checkOk = false;
+                    break;
                 }
-            });
+            }
+            console.log(checkOk);
             return checkOk;
         },
         submitRegistrationForm: function() {

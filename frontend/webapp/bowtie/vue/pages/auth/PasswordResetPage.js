@@ -69,38 +69,24 @@ export const PasswordResetPage = {
             emailReceived: false,
             waitForResponse: false,
             fetchingError: false,
-            validators: validators
+            validators: validators,
+            validations: {
+                email: ['required', 'valid'],
+                password: ['required', 'valid'],
+                passwordConfirm: ['required', 'valid']
+            }
         }
     },
     methods: {
         checkPasswordResetForm: function() {
-            let fieldsName = Object.keys(this.form);
-            Object.values(this.form).forEach((field, index) => {
-                let fieldType = fieldsName[index];
-                field.error = '';
-                if (validators.isEmpty(field)) {
-                    field.error = 'missing';
-                } else {
-                    if (fieldType === 'passwordConfirm') {
-                        if (!validators.validField(fieldType, field.value, this.form.password.value)) {
-                            field.error = 'invalid';
-                            field.value = '';
-                        }
-                    } else {
-                        if (!validators.validField(fieldType, field.value)) {
-                            field.error = 'invalid';
-                            field.value = '';
-                        }
-                    }
-                }
-            })
-            if (validators.isMissing(this.form.password) || validators.isInvalid(this.form.password)) {
-                this.form.passwordConfirm.value = '';
-                this.form.passwordConfirm.error = '';
-            }
+            validators.checkForm(this.form, this.validations);
             if (!this.emailReceived) {
                 return (this.form.email.error === '');
             } else {
+                if (this.form.password.error !== '') {
+                    this.form.passwordConfirm.value = '';
+                    this.form.passwordConfirm.error = '';
+                }
                 return (this.form.password.error === '' && this.form.passwordConfirm.error === '');
             }
         },
@@ -121,7 +107,7 @@ export const PasswordResetPage = {
                         .then(res => {
                             if (res.status === 200) {
                                 alert('A password reset email has been sent.');
-                                this.$router.push('/');
+                                this.$router.push('/login');
                             }
                         })
                         .catch(err => {
@@ -139,7 +125,7 @@ export const PasswordResetPage = {
                         .then(res => {
                             if (res.status === 200) {
                                 alert('Your password has been successfully reset.');
-                                this.$router.push('/');
+                                this.$router.push('/login');
                             }
                         })
                         .catch(err => {
