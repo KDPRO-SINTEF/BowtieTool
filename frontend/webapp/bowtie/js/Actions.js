@@ -516,7 +516,7 @@ Actions.prototype.init = function () {
             value = state.style[mxConstants.STYLE_ROTATION] || value;
         }
 
-        var dlg = new FilenameDialog(ui, value, mxResources.get('apply'), function (newValue) {
+        var dlg = new InputDialog(ui, value, mxResources.get('apply'), function (newValue) {
             if (newValue != null && newValue.length > 0) {
                 graph.setCellStyles(mxConstants.STYLE_ROTATION, newValue);
             }
@@ -595,7 +595,7 @@ Actions.prototype.init = function () {
         }
     }));
     this.put('customZoom', new Action(mxResources.get('custom') + '...', mxUtils.bind(this, function () {
-        var dlg = new FilenameDialog(this.editorUi, parseInt(graph.getView().getScale() * 100), mxResources.get('apply'), mxUtils.bind(this, function (newValue) {
+        var dlg = new InputDialog(this.editorUi, parseInt(graph.getView().getScale() * 100), mxResources.get('apply'), mxUtils.bind(this, function (newValue) {
             var val = parseInt(newValue);
 
             if (!isNaN(val) && val > 0) {
@@ -606,7 +606,7 @@ Actions.prototype.init = function () {
         dlg.init();
     }), null, null, Editor.ctrlKey + '+0'));
     this.addAction('pageScale...', mxUtils.bind(this, function () {
-        var dlg = new FilenameDialog(this.editorUi, parseInt(graph.pageScale * 100), mxResources.get('apply'), mxUtils.bind(this, function (newValue) {
+        var dlg = new InputDialog(this.editorUi, parseInt(graph.pageScale * 100), mxResources.get('apply'), mxUtils.bind(this, function (newValue) {
             var val = parseInt(newValue);
 
             if (!isNaN(val) && val > 0) {
