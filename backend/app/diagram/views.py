@@ -19,6 +19,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
 from django.core import mail
+import defusedxml.minidom
 
 
 def noScriptTagsInXML(input_xml):
@@ -59,8 +60,15 @@ class DiagramList(APIView):
         serializer = serializers.DiagramSerializer(data=request.data)
         if serializer.is_valid():
             diagram_xml = request.data['diagram']
-            # Checks against XSS
             no_script_xml = noScriptTagsInXML(diagram_xml)
+            try:
+                # Checks that the diagram sent is properly built
+                diagram = defusedxml.minidom.parseString(no_script_xml)
+                root = diagram.documentElement.firstChild
+                allMxCell = root.getElementsByTagName('mxCell')
+            except (AttributeError, TypeError):
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+            # Checks against XSS
             serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'], diagram=no_script_xml)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -104,6 +112,13 @@ class DiagramDetail(APIView):
             # print(request.user.username)
             diagram_xml = request.data['diagram']
             no_script_xml = noScriptTagsInXML(diagram_xml)
+            try:
+                # Checks that the diagram sent is properly built
+                diagram = defusedxml.minidom.parseString(no_script_xml)
+                root = diagram.documentElement.firstChild
+                allMxCell = root.getElementsByTagName('mxCell')
+            except (AttributeError, TypeError):
+                return Response(status=status.HTTP_400_BAD_REQUEST)
             if diagramModel.owner.email != self.request.user.email:
                 if diagramModel.is_public:
                     # If current user isn't the owner of the diagram,
