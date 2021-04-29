@@ -19,7 +19,7 @@ class Threat {
     }
 
     updateThreatCellColor(){
-        let threatCell = window.parent.currentUI.editor.graph.model.getCell(this._cell);
+        let threatCell = window.currentUI.editor.graph.model.getCell(this._cell);
         if (this.allDefined()) {
             switch (this.getColorIndicator()) {
                 case '#00ff06':

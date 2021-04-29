@@ -85,7 +85,7 @@ class Matrix{
 
     updateMatrixColors(){
         if(this.matrixCell == -1){return;}
-        let matCell = window.parent.currentUI.editor.graph.model.getCell(this.matrixCell);
+        let matCell = window.currentUI.editor.graph.model.getCell(this.matrixCell);
         if (this.convertColorToIndex(this.actColor) == -1){
             this.clearLane(matCell.children[0]);
         }else{
