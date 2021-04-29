@@ -21,6 +21,7 @@ from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
 from django.core import mail
 import defusedxml.minidom
+import reversion
 from reversion.models import Version
 
 

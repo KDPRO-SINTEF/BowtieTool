@@ -72,7 +72,7 @@ class DiagramApiTests(TestCase):
         self.assertEqual(self.test_xml, res.content.decode('utf-8'))
 
     def test_get_non_existant_diag(self):
-        """ Test that the GET diagram/{non-existing-id} deosn't work"""
+        """ Test that the GET diagram/{non-existing-id} doesn't work"""
         # Id chosen bellow (100) is arbitrary
         res = self.client.get(reverse('diagram:my-diagrams', args=(100,)))
         self.assertEqual(404, res.status_code)
