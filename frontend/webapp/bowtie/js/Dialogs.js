@@ -379,6 +379,9 @@ var UserControlDialog = function (editorUi) {
  */
 var OpenFromDBDialog = function (width, height) {
 
+    const iframe_holder = document.createElement('div')
+    iframe_holder.setAttribute("style", "background:url(../images/ajax-loading-large.gif) center center no-repeat;")
+
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
     iframe.allowTransparency = 'true';
