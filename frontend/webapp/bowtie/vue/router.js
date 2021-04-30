@@ -6,6 +6,10 @@ import { HttpError404Page } from "./pages/http-errors/HttpError404Page.js";
 import { PasswordResetPage } from "./pages/auth/PasswordResetPage.js";
 import { StatisticsPage } from "./pages/StatisticsPage.js";
 import { HttpError401Page } from "./pages/http-errors/HttpError401Page.js";
+import { AccountSettingsPage } from "./pages/AccountSettingsPage.js";
+import { UserProfileComponent } from "./components/account/UserProfileComponent.js";
+import { AccountSecurityComponent } from "./components/account/AccountSecurityComponent.js";
+import { AccountDangerZoneComponent } from "./components/account/AccountDangerZoneComponent.js";
 
 const routes = [
     {
@@ -21,6 +25,7 @@ const routes = [
         path: '/register',
         name: 'Register',
         component: RegistrationPage
+
     },
     {
         path: '/register/email-confirm',
@@ -36,6 +41,30 @@ const routes = [
         path: '/statistics',
         name: 'Statistics',
         component: StatisticsPage
+    },
+    {
+        path: '/settings',
+        name: 'UserAccount',
+        component: AccountSettingsPage,
+        children: [
+            {
+                path: '',
+                redirect: 'profile'
+            },
+            {
+                path: 'profile',
+                component: UserProfileComponent
+            },
+            {
+                path: 'security',
+                component: AccountSecurityComponent
+            },
+            {
+                path: 'danger-zone',
+                component: AccountDangerZoneComponent
+            }
+
+        ]
     },
     {
         path: '/404',

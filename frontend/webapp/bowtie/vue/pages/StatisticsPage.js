@@ -214,10 +214,14 @@ export const StatisticsPage = {
         }
     },
     created() {
-        if (!(store.state.isUserAuthenticated && store.state.user.researcher)) {
-            this.$router.push('/401');
+        if (store.state.isUserAuthenticated) {
+            if (store.state.user.researcher) {
+                this.fetchStatisticsData();
+            } else {
+                this.$router.push('/401');
+            }
         } else {
-            this.fetchStatisticsData();
+            this.$router.push('/login');
         }
     }
 }

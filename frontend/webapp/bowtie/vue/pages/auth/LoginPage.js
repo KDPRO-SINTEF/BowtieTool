@@ -127,7 +127,7 @@ export const LoginPage = {
     },
     created() {
         if (store.state.isUserAuthenticated) {
-            this.$router.push('/');
+            this.$router.push('/settings');
         }
     }
 }
