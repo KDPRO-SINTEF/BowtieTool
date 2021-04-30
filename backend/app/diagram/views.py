@@ -21,6 +21,7 @@ from rest_framework.viewsets import ModelViewSet
 from django.db.models import Q, Avg, Count, Min, Sum, F, FloatField, When, Case
 from django.core import mail
 from reversion.models import Version
+import reversion
 
 
 def noScriptTagsInXML(input_xml):
@@ -250,7 +251,10 @@ class DiagramVersions(APIView):
         """Return versions of the diagram of the authenticated user"""
         diagram = self.get_object(pk, auth_user_only=True)
         versions = Version.objects.get_for_object(diagram)
-        diagrams = [{key: versions[id].field_dict[key] for key in ['diagram', 'preview']} for id in range(len(versions))]
+
+        diagrams = [{key: versions[i].field_dict[key] for key in ['name', 'diagram', 'preview']}
+                    for i in range(len(versions))]
+
         response = HttpResponse(json.dumps(diagrams),
                                 content_type='application/json')
         return response
@@ -264,6 +268,7 @@ class DiagramVersions(APIView):
         if id >= len(versions) or id < 0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         versions[id].revision.revert()
+
         return Response(status=status.HTTP_200_OK)
 
 
