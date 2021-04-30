@@ -36,7 +36,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         res = self.client.post(CREATE_USER_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_201_CREATED)
@@ -76,7 +76,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirovinsaa-rennes.fr',
             'password': '123456789a!',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
 
         res = self.client.post(CREATE_USER_URL, payload)
@@ -89,25 +89,25 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insaa-rennes.fr',
             'password': '123456789aa!',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
 
         payload2 = {
             'email': 'mkirov@insaa-rennes.fr',
             'password': '123456789AA!',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
 
         payload3 = {
             'email': 'mkirov@insaa-rennes.fr',
             'password': 'aaaaaaaaAaa!',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
 
         payload4 = {
             'email': 'mkirov@insaa-rennes.fr',
             'password': '123456789AAA',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
 
 
@@ -230,7 +230,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789aA!',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
 
         res = self.client.post(CREATE_USER_URL, payload)
@@ -251,7 +251,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789aA!',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
 
         res = self.client.post(CREATE_USER_URL, payload)
@@ -280,7 +280,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         self.client.post(CREATE_USER_URL, payload)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -306,7 +306,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         self.client.post(CREATE_USER_URL, payload)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -327,7 +327,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         self.client.post(CREATE_USER_URL, payload)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -344,7 +344,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789aA!',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
 
         res = self.client.post(CREATE_USER_URL, payload)
@@ -362,7 +362,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         self.client.post(CREATE_USER_URL, payload)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -411,7 +411,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         self.client.post(CREATE_USER_URL, payload)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -446,7 +446,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         self.client.post(CREATE_USER_URL, payload)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -475,7 +475,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         self.client.post(CREATE_USER_URL, payload)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -510,7 +510,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         self.client.post(CREATE_USER_URL, payload)
         user = get_user_model().objects.filter(email=payload['email']).first()
@@ -525,7 +525,7 @@ class PublicUserApiTests(TestCase):
         payload = {
             'email': 'mkirov@insa-rennes.fr',
             'password': '123456789Aa#',
-            'username': 'Test name'
+            'username': 'Test-name'
         }
         res = self.client.post(TOKEN_URL, payload)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
