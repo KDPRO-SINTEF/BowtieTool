@@ -3,12 +3,22 @@ class Consequence{
         this._cell = cell.id;
         this._impactValue =  "";
         this._probability =  "";
+        this._barriers = [];
         this._name = cell.value;
     }
     allDefined(){
         return (this._impactValue !== "") && (this._probability !== "");
     }
 
+    getProduct(){
+        if(this.allDefined()){
+            let barriersFailureProbability = 1;
+            this.barriers.forEach(barrier => {
+                barriersFailureProbability *= barrier.failureProbability;
+            })
+            return (this.impactValue * this.probability * barriersFailureProbability);
+        }
+    }
     get cell() {
         return this._cell;
     }
@@ -30,7 +40,11 @@ class Consequence{
     }
 
     set impactValue(value) {
-        this._impactValue = value;
+        if (isNaN(value) || value < 0){
+            this._impactValue = "";
+        }else{
+            this._impactValue = value;
+        }
     }
 
     get probability() {
@@ -38,7 +52,18 @@ class Consequence{
     }
 
     set probability(value) {
-        this._probability = value;
+        if (isNaN(value) || value < 0 || value > 1){
+            this._probability = "";
+        }else{
+            this._probability = value;
+        }
     }
 
+    get barriers() {
+        return this._barriers;
+    }
+
+    set barriers(value) {
+        this._barriers = value;
+    }
 }
