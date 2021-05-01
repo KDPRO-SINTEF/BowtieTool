@@ -2,6 +2,7 @@ import { store } from "../store.js";
 
 export const AccountSettingsPage = {
     template: `
+<div id="settings">
         <div id="user-account">
             <div>
                 <div id="account-menu">
@@ -15,10 +16,11 @@ export const AccountSettingsPage = {
             </div>
             <div>
                 <div id="account-settings">
-                    <img src="../../images/bowtie-user.svg" class="mb-5" width="130px">
+                    <img src="../../images/bowtie-user.svg" class="mb-5" width="120px">
                     <router-view></router-view>
                 </div>
             </div>
+        </div>
         </div>
     `,
     methods: {
@@ -27,7 +29,7 @@ export const AccountSettingsPage = {
         },
         onMenu: function(menu) {
             return this.$router.currentRoute.path === '/settings/' + menu;
-        }
+        },
     },
     created() {
         if (!store.state.isUserAuthenticated) {

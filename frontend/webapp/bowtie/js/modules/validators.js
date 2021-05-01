@@ -19,7 +19,7 @@ const InvalidUsernameErr = 'Invalid username.';
 const InvalidEmailErr = 'Invalid email.';
 const InvalidPasswordErr = 'This password is too weak.';
 const InvalidPasswordConfirmErr = 'Typed passwords don\'t match.';
-const InvalidTotpErr = MissingTotpErr;
+const InvalidTotpErr = 'Invalid 6-digit code.';
 const InvalidOldPassword = 'Invalid old password.';
 const InvalidNewPassword = 'Invalid new password.';
 

@@ -20,9 +20,10 @@ export const LoginPage = {
                         <router-link to="/password-reset" id="forgot-password-link">Forgot your password?</router-link>
                         <div class="error-message mt-2" v-show="validators.credentialsInError(form.email, form.password)">{{ validators.IncorrectCredentialsErr }}</div>
                     </div>
-                    <div class="mb-3" hidden>
+                    <div class="mb-3" v-if="totpLogin.required">
                         <label for="totp" class="form-label">6-digit code</label>
-                        <input id="totp" class="form-control">
+                        <input id="totp" v-bind:class="['form-control', { 'is-invalid': validators.inError(form.totp) }]" v-model="form.totp.value" placeholder="123456">
+                        <div class="invalid-feedback">{{ validators.getErrorMessage(form.totp, 'totp') }}</div>
                     </div>
                     <button type="submit" v-bind:class="['btn', 'btn-full', 'btn-success', 'mb-3', { disabled: waitForResponse }]">
                         <span v-if="waitForResponse" class="spinner-border text-light" role="status"></span>
@@ -92,14 +93,25 @@ export const LoginPage = {
                             this.waitForResponse = false;
                         })
                 } else {
-                    //
+                    let fetchedUrl = window.LOGIN_2FA + '/' + this.totpLogin.id + '/' + this.totpLogin.token;
+                    let requestData = { 'token_totp': this.form.totp.value };
+                    axios.post(fetchedUrl, requestData)
+                        .then(res => {
+                            if (res.status === 200) this.saveSessionToken(res.data.token);
+                        })
+                        .catch(err => {
+                            if (err.response) this.filter2faLoginErrors(err.response);
+                        })
+                        .finally(() => {
+                            this.waitForResponse = false;
+                        })
                 }
             }
         },
         setLoginMode: function(data) {
             if (data.uidb64 !== undefined && data.token !== undefined) {
                 this.totpLogin.required = true;
-                this.totpLogin.id = data.id;
+                this.totpLogin.id = data.uidb64;
                 this.totpLogin.token = data.token;
             } else {
                 this.saveSessionToken(data.token);
@@ -121,6 +133,23 @@ export const LoginPage = {
                     this.form.email.error = 'credentials';
                     this.form.password.error = 'credentials';
                     this.form.password.value = '';
+                }
+            }
+        },
+        filter2faLoginErrors: function(error) {
+            if (error.status === 400) {
+                if (error.data.errors !== undefined) {
+                    if (error.data.errors[0] === 'Expired token') {
+                        alert('An error occured, please try again.');
+                        this.totpLogin.required = false;
+                        this.totpLogin.id = null;
+                        this.totpLogin.token = null;
+                        this.form.totp.value = '';
+                        this.form.totp.error = '';
+                    } else {
+                        this.form.totp.error = 'incorrect';
+                        this.form.totp.value = '';
+                    }
                 }
             }
         }

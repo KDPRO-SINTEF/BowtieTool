@@ -59,7 +59,7 @@ export const AccountDangerZoneComponent = {
                         }
                     })
                         .then(res => {
-                            if (res.status === 201) {
+                            if (res.status === 200) {
                                 alert('Your account has been successfully deleted.');
                                 store.commit('setAuthenticationStatus', false);
                                 store.dispatch('logout');

@@ -118,9 +118,13 @@
     cursor: pointer;
     float: right;
 }*/
+#settings {
+    height: 100%;
+    width: 100%;
+}
 
 #user-account {
-    margin: 10vh auto 10vh auto;
+    margin: 5vh auto 5vh auto;
     display: grid;
     grid-template-columns: 50% 50%;
 }
@@ -136,7 +140,5 @@
 
 #user-account #account-settings {
     width: 370px;
-    max-width: 90%;
+    max-width: 90%
 }
-
-

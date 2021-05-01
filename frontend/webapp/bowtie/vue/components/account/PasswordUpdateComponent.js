@@ -12,7 +12,7 @@ export const PasswordUpdateComponent = {
                     </p>
                 </div>
             </div>
-            <form>
+            <form @submit.prevent="submitPasswordUpdateForm">
                 <div class="mb-3">
                     <label for="password-old" class="form-label">Old password</label>
                     <input type="password" id="password-old" v-bind:class="['form-control', { 'is-invalid': validators.inError(form.oldPassword) }]" v-model="form.oldPassword.value">
@@ -28,7 +28,7 @@ export const PasswordUpdateComponent = {
                     <input type="password" id="password-confirm" v-bind:class="['form-control', { 'is-invalid': validators.inError(form.passwordConfirm) }]" v-model="form.passwordConfirm.value">
                     <div class="invalid-feedback">{{ validators.getErrorMessage(form.passwordConfirm, 'passwordConfirm') }}</div>
                 </div>
-                <button type="button" class="btn btn-medium btn-dark" v-on:click="submitPasswordUpdateForm">
+                <button type="submit" class="btn btn-medium btn-dark">
                     <span v-if="waitForResponse" class="spinner-border text-light" role="status"></span>
                     <span v-else>Update my password</span>
                 </button>
@@ -80,7 +80,7 @@ export const PasswordUpdateComponent = {
                 })
                     .then(res => {
                         if (res.status === 200) {
-                            this.$emit('password-updated', 'Your password has been updated.');
+                            this.$emit('show-toast', 'Your password has been updated.');
                             Object.values(this.form).forEach(field => {
                                 field.value = '';
                             })
