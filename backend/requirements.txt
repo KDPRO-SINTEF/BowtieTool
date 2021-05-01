@@ -4,7 +4,7 @@ django-extensions
 psycopg2>=2.7.5,<2.8.0
 django-taggit==1.1.0
 flake8>=3.6.0,<3.7.0
-django-reversion>=3.0.0
+django-reversion>=3.0.0,<3.1
 six
 drf-yasg[validation]
 pydot

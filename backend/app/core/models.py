@@ -12,6 +12,7 @@ import defusedxml.minidom
 import django.forms
 import PIL
 from rest_framework.exceptions import ValidationError
+import reversion
 
 
 class UserManager(BaseUserManager):

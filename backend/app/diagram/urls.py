@@ -11,7 +11,8 @@ urlpatterns = [
     path('<int:pk>', views.DiagramDetail.as_view(), name='my-diagrams'),
     path('private/list', views.PrivateDiagrams.as_view(), name='all-my-private_diagrams'),
     path('stats', views.StatsView.as_view(), name='stats-of-diagrams'),
-    path('share/<int:pk>', views.ShareView.as_view(), name='shared-diagram')
+    path('share/<int:pk>', views.ShareView.as_view(), name='shared-diagram'),
+    path('versions/<int:pk>', views.DiagramVersions.as_view(), name='diagram-versions')
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

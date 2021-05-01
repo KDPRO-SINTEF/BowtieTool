@@ -28,13 +28,13 @@ window.EDITOR_PAGE = window.EDITOR_PAGE || window.ROOT_PAGE + 'html/editor.html'
 window.LOGIN_PAGE = window.LOGIN_PAGE || window.ROOT_PAGE + 'login';
 window.REGISTER_PAGE = window.REGISTER_PAGE || window.ROOT_PAGE + 'register';
 window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || window.ROOT_PAGE + 'password-reset';
-window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || window.ROOT_PAGE + 'html/my_account.html';
+window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || window.ROOT_PAGE + '/settings';
 window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'html/statistics.html';
 
 // Dialogs
 window.OPEN_DIALOG = window.OPEN_DIALOG || window.ROOT_PAGE + 'html/open.html';
-window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk_computation.html';
-window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram_search.html';
+window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk-computation.html';
+window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram-search.html';
 
 // Resources
 // Path is relative to the editor.html page

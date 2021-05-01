@@ -5,7 +5,7 @@ export const RegistrationPage = {
     template: `
         <div class="form__auth">
             <img src="/images/logo.png" class="bowtie-logo__auth">
-            <h2 class="title__auth mb-4">Register to Bowtie++</h2>
+            <h2 class="title__auth mb-4">Sign up to Bowtie++</h2>
             <div class="card text-dark bg-light mb-4 information-msg">
                 <div class="card-body">
                     <p class="card-text">To be valid, a <b>password</b> must:
@@ -139,7 +139,7 @@ export const RegistrationPage = {
     },
     created() {
         if (store.state.isUserAuthenticated) {
-            this.$router.push('/');
+            this.$router.push('/settings');
         }
     }
 }

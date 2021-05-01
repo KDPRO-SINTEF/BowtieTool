@@ -3,7 +3,7 @@ export const HttpError404Page = {
        <div class="error-page">
             <p>404 Page Not Found</p>
             <p>The resource you request is not available.</p>
-            <p>You can go back to <router-link to="/">home page</router-link>.</p>
+            <p>Go back to <router-link to="/">home page</router-link>.</p>
        </div>
     `
 }

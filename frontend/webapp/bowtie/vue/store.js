@@ -16,6 +16,9 @@ const userModule = {
             state.researcher = data.is_Researcher;
             state.twoFactorAuth = data.profile.two_factor_enabled;
         },
+        setAuthenticationMode(state, mode) {
+            state.twoFactorAuth = mode;
+        },
         logout(state) {
             state.sessionToken = null;
             state.username = '';
