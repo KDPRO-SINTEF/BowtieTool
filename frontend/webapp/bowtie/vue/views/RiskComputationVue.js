@@ -57,6 +57,7 @@ let risk_vue = new Vue({
 
             let maxProduct = 0;
             let accumul = 0;
+            let indexMax = -1;
             let oneDefined = false;
             this.missingConsequence = false;
 
@@ -72,9 +73,22 @@ let risk_vue = new Vue({
                 let product =  this.consequences[i].getProduct();
                 if(product > maxProduct){
                     maxProduct = product;
+                    indexMax = i;
                 }
                 accumul += product;
             }
+            // Set the highest consequence "highest" attribute to true
+            for(let i = 0; i < this.consequences.length; i++){
+                if(indexMax == i){
+                    this.consequences[i].isHighest = true;
+                }else{
+                    this.consequences[i].isHighest = false;
+                }
+            }
+
+            /*
+            TODO : Give each consequences an indicator similar to the threat one
+             */
 
             //Check if at least one consequence attributes are defined
             if(!oneDefined){

@@ -44,6 +44,7 @@ class Threat {
         }else{
             threatCell.setStyle('shape=mxgraph.bowtie.threat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
         }
+        window.currentUI.editor.graph.refresh();
     }
 
     convertColorToValue(color){

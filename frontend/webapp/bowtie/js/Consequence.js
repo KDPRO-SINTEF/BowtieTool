@@ -1,10 +1,12 @@
 class Consequence{
+
     constructor(cell){
         this._cell = cell.id;
         this._impactValue =  "";
         this._probability =  "";
         this._barriers = [];
         this._name = cell.value;
+        this._isHighest = false;
     }
     allDefined(){
         return (this._impactValue !== "") && (this._probability !== "");
@@ -19,6 +21,16 @@ class Consequence{
             return (this.impactValue * this.probability * barriersFailureProbability);
         }
     }
+    updateStyle(){
+        let cell = window.currentUI.editor.graph.model.getCell(this.cell);
+        if(this.isHighest){
+            cell.setStyle('shape=mxgraph.bowtie.highestconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+        }else{
+            cell.setStyle('shape=mxgraph.bowtie.consequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+        }
+        window.currentUI.editor.graph.refresh();
+    }
+
     get cell() {
         return this._cell;
     }
@@ -65,5 +77,14 @@ class Consequence{
 
     set barriers(value) {
         this._barriers = value;
+    }
+
+    get isHighest() {
+        return this._isHighest;
+    }
+
+    set isHighest(value) {
+        this._isHighest = value;
+        this.updateStyle();
     }
 }

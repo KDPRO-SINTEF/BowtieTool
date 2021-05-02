@@ -38,20 +38,15 @@ let ThreatsComponent = {
         },
         updateThreat: function (threat) {
             threat.updateThreatCellColor();
-            this.refreshGraph();
             this.emitThreats();
         },
         emitThreats: function () {
             this.$emit("threats", this.threats);
-        },
-        refreshGraph: function () {
-            window.parent.currentUI.editor.graph.refresh();
-        },
+        }
     }
 }
 
 let ConsequencesComponent = {
-    props: ['event-probability', 'highest-risk-value'],
     template: '#consequences',
     data: function() {
         return {
@@ -65,15 +60,6 @@ let ConsequencesComponent = {
     methods: {
         emitConsequences: function () {
             this.$emit("consequences", this.consequences);
-        },
-        isHighest: function (consequence) {
-            if (!isNaN(this.eventProbability) && !isNaN(this.highestRiskValue)) {
-                if ((consequence.impactValue * consequence.probability * this.eventProbability) >= this.highestRiskValue) {
-                    return true;
-                }
-            }
-            return false;
-
         }
     },
     mounted() {
