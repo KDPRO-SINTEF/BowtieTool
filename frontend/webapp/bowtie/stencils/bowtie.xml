@@ -251,6 +251,106 @@
 			<stroke></stroke>
 		</foreground>
 	</shape>
+	<shape name="verylowconsequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#00ff06"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="lowconsequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#a7ec67"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="mediumconsequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#fffe00"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="highconsequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#fe773d"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
+	<shape name="veryhighconsequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
+		<connections>
+			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
+			<constraint x="0.5" y="1" perimeter="0" name="S"></constraint>
+		</connections>
+		<background>
+			<stroke></stroke>
+			<fillcolor color="#ff0000"></fillcolor>
+			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
+			<fillstroke></fillstroke>
+		</background>
+		<foreground>
+			<stroke></stroke>
+			<fillcolor color="#FFFFFF"></fillcolor>
+			<path>
+				<roundrect x="5" y="5" h="70" w="110" arcsize="6"></roundrect></path>
+			<fillstroke></fillstroke>
+			<stroke></stroke>
+		</foreground>
+	</shape>
 	<shape name="highestconsequence" h="80" w="120" aspect="fixed" strokewidth="inherit">
 		<connections>
 			<constraint x="0" y="0.5" perimeter="0" name="W"></constraint>
@@ -258,7 +358,7 @@
 		</connections>
 		<background>
 			<stroke></stroke>
-			<fillcolor color="#000000"></fillcolor>
+			<fillcolor color="#ff0000"></fillcolor>
 			<roundrect x="0" y="0" w="120" h="80" arcsize="6"></roundrect>
 			<fillstroke></fillstroke>
 		</background>

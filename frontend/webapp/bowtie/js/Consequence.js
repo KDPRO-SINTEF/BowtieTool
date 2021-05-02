@@ -4,6 +4,7 @@ class Consequence{
         this._cell = cell.id;
         this._impactValue =  "";
         this._probability =  "";
+        this._indicator = "";
         this._barriers = [];
         this._name = cell.value;
         this._isHighest = false;
@@ -26,7 +27,30 @@ class Consequence{
         if(this.isHighest){
             cell.setStyle('shape=mxgraph.bowtie.highestconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
         }else{
-            cell.setStyle('shape=mxgraph.bowtie.consequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+            if (this.indicator == ""){
+                cell.setStyle('shape=mxgraph.bowtie.consequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+            }else{
+                switch(true){
+                    case this.indicator < 1.0:
+                        cell.setStyle('shape=mxgraph.bowtie.verylowconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+                        break;
+                    case this.indicator < 3.0:
+                        cell.setStyle('shape=mxgraph.bowtie.lowconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+                        break;
+                    case this.indicator < 5.0:
+                        cell.setStyle('shape=mxgraph.bowtie.mediumconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+                        break;
+                    case this.indicator < 7.0:
+                        cell.setStyle('shape=mxgraph.bowtie.highconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+                        break;
+                    case this.indicator <= 10.0:
+                        cell.setStyle('shape=mxgraph.bowtie.highconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+                        break;
+                    default:
+                        cell.setStyle('shape=mxgraph.bowtie.consequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
+                }
+            }
+
         }
         window.currentUI.editor.graph.refresh();
     }
@@ -85,6 +109,14 @@ class Consequence{
 
     set isHighest(value) {
         this._isHighest = value;
+        this.updateStyle();
+    }
+    get indicator() {
+        return this._indicator;
+    }
+
+    set indicator(value) {
+        this._indicator = value;
         this.updateStyle();
     }
 }

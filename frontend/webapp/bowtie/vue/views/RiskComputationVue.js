@@ -77,12 +77,20 @@ let risk_vue = new Vue({
                 }
                 accumul += product;
             }
-            // Set the highest consequence "highest" attribute to true
+            // Set the highest consequence "highest" attribute to true and set the indicator
             for(let i = 0; i < this.consequences.length; i++){
-                if(indexMax == i){
-                    this.consequences[i].isHighest = true;
-                }else{
+                if(this.consequences[i].allDefined()){
+                    if(indexMax == i){
+                        this.consequences[i].isHighest = true;
+                        this.consequences[i].indicator = 10.0;
+                    }else{
+                        this.consequences[i].isHighest = false;
+                        this.consequences[i].indicator = (this.consequences[i].getProduct() * 10) / maxProduct;
+                    }
+                }
+                else{
                     this.consequences[i].isHighest = false;
+                    this.consequences[i].indicator = "";
                 }
             }
 

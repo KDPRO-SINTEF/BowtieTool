@@ -48,6 +48,8 @@ let ThreatsComponent = {
 
 let ConsequencesComponent = {
     template: '#consequences',
+    props:
+        ['event-probability'],
     data: function() {
         return {
             consequences : [],

@@ -33,7 +33,7 @@
         <div id="table_container">
             <keep-alive>
                 <threats-component @threats="processThreats" v-if="currentTab === 'Threats'"></threats-component>
-                <consequences-component @consequences="processConsequences" v-else="currentTab === 'Consequences'"></consequences-component>
+                <consequences-component @consequences="processConsequences" :event-probability="eventProbability" v-else="currentTab === 'Consequences'"></consequences-component>
             </keep-alive>
         </div>
         <div id="result_container">
@@ -79,7 +79,7 @@
                                 <span v-else>{{parseFloat((threat.getProbability()).toFixed(3))}}</span>
                             </md-table-cell>
                             <md-table-cell class="details">
-                                <md-button class="details_button" v-on:click="display_detail(threat)">{{getDetailsButtonText(threat)}}</md-button>
+                                <md-button class ="md-primary details_button" v-on:click="display_detail(threat)">{{getDetailsButtonText(threat)}}</md-button>
                             </md-table-cell>
                         </md-table-row>
                         <md-table-row class="detail_row" v-if="display_threat.includes(threat)">
