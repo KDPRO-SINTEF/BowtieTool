@@ -2876,7 +2876,7 @@ EditorUi.prototype.isCompatibleString = function (data) {
 EditorUi.prototype.openFromDb = function (open_endpoint) {
 
     var token = localStorage.getItem('sessionToken');
-    if (!token) {
+    if (token === null) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
         return;
     }
@@ -2933,7 +2933,7 @@ EditorUi.prototype.openFromDb = function (open_endpoint) {
 EditorUi.prototype.modifyRolesForGraph = function () {
     var token = localStorage.getItem('sessionToken');
     var graphid = this.editor.getGraphId();
-    if (!token) {
+    if (token === null) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
         return;
     }
@@ -3033,7 +3033,7 @@ EditorUi.prototype.save = function (name, tags) {
             } else {
                 if (xml.length < MAX_REQUEST_SIZE) {
                     var token = localStorage.getItem('sessionToken');
-                    if (!token) {
+                    if (token === null) {
                         mxUtils.alert(mxResources.get('notLoggedIn'));
                         return;
                     }
