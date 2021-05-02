@@ -214,7 +214,7 @@ export const StatisticsPage = {
         }
     },
     created() {
-        if (store.state.isUserAuthenticated) {
+        if (store.getters.isUserAuthenticated) {
             if (store.state.user.researcher) {
                 this.fetchStatisticsData();
             } else {

@@ -32,7 +32,7 @@ export const AccountSettingsPage = {
         },
     },
     created() {
-        if (!store.state.isUserAuthenticated) {
+        if (!store.getters.isUserAuthenticated) {
             this.$router.push('/login');
         }
     }

@@ -155,7 +155,7 @@ export const LoginPage = {
         }
     },
     created() {
-        if (store.state.isUserAuthenticated) {
+        if (store.getters.isUserAuthenticated) {
             this.$router.push('/settings');
         }
     }

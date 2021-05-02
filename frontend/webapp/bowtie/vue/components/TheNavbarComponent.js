@@ -18,7 +18,7 @@ export const TheNavbarComponent = {
     `,
     computed: {
         isUserAuthenticated: function() {
-            return this.$store.state.isUserAuthenticated;
+            return this.$store.getters.isUserAuthenticated;
         },
         isUserResearcher: function() {
             return this.$store.state.user.researcher;

@@ -4,7 +4,8 @@ const userModule = {
         username: '',
         email: '',
         researcher: false,
-        twoFactorAuth: false
+        twoFactorAuth: false,
+        authenticated: false
     }),
     mutations: {
         setSessionToken(state, token) {
@@ -19,12 +20,16 @@ const userModule = {
         setAuthenticationMode(state, mode) {
             state.twoFactorAuth = mode;
         },
+        setAuthenticationStatus(state, authStatus) {
+            state.authenticated = authStatus;
+        },
         logout(state) {
             state.sessionToken = null;
             state.username = '';
             state.email = '';
             state.researcher = false;
             state.twoFactorAuth = false;
+            state.authenticated = false;
         }
     },
     actions: {
@@ -42,7 +47,7 @@ const userModule = {
                 }
             })
         },
-        logout({ commit }, state) {
+        logout({ commit }) {
             localStorage.removeItem('sessionToken');
             commit('logout');
         }
@@ -53,12 +58,9 @@ export const store = new Vuex.Store({
     modules: {
         user: userModule
     },
-    state: {
-        isUserAuthenticated: false
-    },
-    mutations: {
-        setAuthenticationStatus(state, authStatus) {
-            state.isUserAuthenticated = authStatus;
+    getters: {
+        isUserAuthenticated(state) {
+            return state.user.authenticated;
         }
     }
 })

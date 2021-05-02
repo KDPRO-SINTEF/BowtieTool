@@ -33,8 +33,8 @@ export const app = new Vue({
     },
     created: function() {
         let sessionToken = localStorage.getItem('sessionToken');
-        this.$store.commit('setSessionToken', sessionToken);
         if (sessionToken !== null) {
+            this.$store.commit('setSessionToken', sessionToken);
             this.$store.dispatch('fetchUserData')
                 .then(res => {
                     if (res.status === 200) {
