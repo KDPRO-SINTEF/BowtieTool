@@ -93,7 +93,7 @@ export const LoginPage = {
                             this.waitForResponse = false;
                         })
                 } else {
-                    let fetchedUrl = window.LOGIN_2FA + '/' + this.totpLogin.id + '/' + this.totpLogin.token;
+                    let fetchedUrl = window.API_LOGIN_2FA + '/' + this.totpLogin.id + '/' + this.totpLogin.token;
                     let requestData = { 'token_totp': this.form.totp.value };
                     axios.post(fetchedUrl, requestData)
                         .then(res => {

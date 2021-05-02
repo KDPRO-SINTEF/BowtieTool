@@ -2946,7 +2946,7 @@ EditorUi.prototype.modifyRolesForGraph = function () {
     var dlg = new RoleDialog(this, mxUtils.bind(this, function (user, role) {
         if (user !== null) {
             const params = {"email": user, "role": role}
-            axios.post(window.SHARE_DIAGRAM + graphid, params, {
+            axios.post(window.API_SHARE_DIAGRAM + graphid, params, {
                 headers: {
                     Authorization: 'Token ' + token
                 }
@@ -3118,7 +3118,7 @@ EditorUi.prototype.save = function (name, tags) {
 
                     if (!this.editor.getGraphId()) { //Meaning it's the first time we save this diagram
 
-                        axios.post(window.SAVE_URL, formData, {
+                        axios.post(window.API_SAVE_DIAGRAM, formData, {
                             headers: {
                                 'Authorization': 'Token ' + token
                             }
@@ -3138,7 +3138,7 @@ EditorUi.prototype.save = function (name, tags) {
                         // In that case the id is already defined meaning the diagram was already stored once in the backend
                         console.log('Existing with id', this.editor.getGraphId());
                         formData.append('id', this.editor.getGraphId())
-                        axios.put(window.UPDATE_URL + this.editor.getGraphId(), formData, {
+                        axios.put(window.API_UPDATE_DIAGRAM + this.editor.getGraphId(), formData, {
                             headers: {
                                 'Authorization': 'Token ' + token
                             }

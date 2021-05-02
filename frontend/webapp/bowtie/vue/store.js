@@ -34,14 +34,14 @@ const userModule = {
     },
     actions: {
         async fetchUserData({ commit, state }) {
-            return await axios.get(window.USER_INFO, {
+            return await axios.get(window.API_USER_DATA, {
                 headers: {
                     Authorization: 'Token ' + state.sessionToken
                 }
             })
         },
         async login({ commit }, formData) {
-            return await axios.post(window.LOGIN, formData, {
+            return await axios.post(window.API_LOGIN, formData, {
                 headers: {
                     'Content-type': 'application/json'
                 }

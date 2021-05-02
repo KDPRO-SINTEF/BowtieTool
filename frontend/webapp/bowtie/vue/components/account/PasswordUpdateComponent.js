@@ -73,7 +73,7 @@ export const PasswordUpdateComponent = {
             if (this.checkPasswordUpdateForm()) {
                 this.waitForResponse = true;
                 let requestData = { 'old_password': this.form.oldPassword.value, 'new_password': this.form.password.value };
-                axios.put(window.UPDATE_PASSWORD, requestData, {
+                axios.put(window.API_UPDATE_PASSWORD, requestData, {
                     headers: {
                         Authorization: 'Token ' + store.state.user.sessionToken
                     }

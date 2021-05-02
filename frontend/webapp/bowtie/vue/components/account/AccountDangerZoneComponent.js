@@ -53,7 +53,7 @@ export const AccountDangerZoneComponent = {
                 let userConfirmation = confirm('Continue by deleting your account?');
                 if (userConfirmation) {
                     let requestData = { 'password': this.form.password.value }
-                    axios.post(window.DELETE_ACCOUNT, requestData, {
+                    axios.post(window.API_DELETE_ACCOUNT, requestData, {
                         headers: {
                             Authorization: 'Token ' + store.state.user.sessionToken
                         }

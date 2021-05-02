@@ -90,7 +90,7 @@ export const Account2FAComponent = {
     methods: {
         request2faActivation: function() {
             this.waitForResponse = true;
-            axios.get(window.CREATE_2FA_CODE, {
+            axios.get(window.API_CREATE_2FA_CODE, {
                 headers: {
                     Authorization: 'Token ' + store.state.user.sessionToken
                 }
@@ -125,7 +125,7 @@ export const Account2FAComponent = {
         submit2faActivationForm: function() {
             if (this.check2faForm()) {
                 this.waitForResponse = true;
-                let fetchedUrl = window.VALIDATE_2FA + '/' + this.validationToken;
+                let fetchedUrl = window.API_VERIFY_2FA_CODE + '/' + this.validationToken;
                 let requestData = { 'token_totp': this.form.totp.value }
                 axios.post(fetchedUrl, requestData, {
                     headers: {
@@ -151,7 +151,7 @@ export const Account2FAComponent = {
             if (this.check2faForm()) {
                 this.waitForResponse = true;
                 let requestData = { 'token_totp': this.form.totp.value };
-                axios.post(window.DISABLE_2FA, requestData, {
+                axios.post(window.API_DISABLE_2FA, requestData, {
                     headers: {
                         Authorization: 'Token ' + store.state.user.sessionToken,
                         'Content-type': 'application/json'

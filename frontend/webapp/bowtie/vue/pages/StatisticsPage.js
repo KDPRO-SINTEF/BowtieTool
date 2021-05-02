@@ -141,7 +141,7 @@ export const StatisticsPage = {
     },
     methods: {
         fetchStatisticsData: function() {
-            axios.get(window.STATISTICS, {
+            axios.get(window.API_STATISTICS, {
                 headers: {
                     Authorization: 'Token ' + store.state.user.sessionToken
                 }

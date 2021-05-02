@@ -44,7 +44,6 @@ const routes = [
     },
     {
         path: '/settings',
-        name: 'UserAccount',
         component: AccountSettingsPage,
         children: [
             {
