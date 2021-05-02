@@ -79,7 +79,7 @@
                                 <span v-else>{{parseFloat((threat.getProbability()).toFixed(3))}}</span>
                             </md-table-cell>
                             <md-table-cell class="details">
-                                <md-button class ="md-primary details_button" v-on:click="display_detail(threat)">{{getDetailsButtonText(threat)}}</md-button>
+                                <md-button class ="details_button" v-on:click="display_detail(threat)">{{getDetailsButtonText(threat)}}</md-button>
                             </md-table-cell>
                         </md-table-row>
                         <md-table-row class="detail_row" v-if="display_threat.includes(threat)">
@@ -131,7 +131,7 @@
                     <md-table-cell class="risk_value" >
                         <span v-if="isNaN(eventProbability)">P(U) not defined</span>
                         <span v-else-if="!consequence.allDefined()">Missing parameter(s)</span>
-                        <span v-else>{{parseFloat((consequence.impactValue * consequence.probability * eventProbability).toFixed(2))}}</span>
+                        <span v-else>{{parseFloat((consequence.getProduct() * eventProbability).toFixed(2))}}</span>
                     </md-table-cell>
                 </md-table-row>
             </md-table>

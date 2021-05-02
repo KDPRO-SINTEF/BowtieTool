@@ -2320,6 +2320,7 @@ Graph.prototype.getMatrix = function(cell) {
  * @returns {barriers}
  */
 Graph.prototype.updateThreatBarriers = function(cell, threat) {
+    let lastBarrier = true;
     if(cell.edges != null && cell.edges.length > 0){
         for (const edge of Object.values(cell.edges)) {
             //delete the case in which the target is the cell itself
@@ -2337,12 +2338,14 @@ Graph.prototype.updateThreatBarriers = function(cell, threat) {
                             .replaceAll(/<\/pre>/g,"");
                     }
                     this.updateThreatBarriers(edge.target, threat);
+                    lastBarrier = false;
                     break;
                 }
             }
 
         }
-    }else{
+    }
+    if(lastBarrier){
         let newBarriersArray = [];
         // only add the barriers that are on the diagram
         threat.barriers.forEach(barrier => {
@@ -2364,6 +2367,7 @@ Graph.prototype.updateThreatBarriers = function(cell, threat) {
  * @returns {barriers}
  */
 Graph.prototype.updateConsequenceBarriers = function(cell, consequence) {
+    let lastBarrier = true;
     if(cell.edges != null && cell.edges.length > 0){
         for (const edge of Object.values(cell.edges)) {
             //delete the case in which the source is the cell itself
@@ -2371,7 +2375,7 @@ Graph.prototype.updateConsequenceBarriers = function(cell, consequence) {
                 //check if a edge is coming from a barrier
                 if (edge.source.customID == 'Security Control' || edge.source.customID == 'Barrier'){
                     let foundBarrier = consequence.barriers.find(barrier => barrier.cell == edge.source.id);
-                    // check if the barrier was not found in the threat to add it
+                    // check if the barrier was not found in the consequence to add it
                     if(foundBarrier == undefined){
                         consequence.barriers.push(new Barrier(edge.source));
                     }else{
@@ -2381,11 +2385,13 @@ Graph.prototype.updateConsequenceBarriers = function(cell, consequence) {
                             .replaceAll(/<\/pre>/g,"");
                     }
                     this.updateConsequenceBarriers(edge.source, consequence);
+                    lastBarrier = false;
                     break;
                 }
             }
         }
-    }else{
+    }
+    if(lastBarrier){
         let newBarriersArray = [];
         // only add the barriers that are on the diagram
         consequence.barriers.forEach(barrier => {
@@ -2394,6 +2400,7 @@ Graph.prototype.updateConsequenceBarriers = function(cell, consequence) {
             }
         });
         consequence.barriers = newBarriersArray;
+        consequence.barriers.reverse();
     }
 }
 
