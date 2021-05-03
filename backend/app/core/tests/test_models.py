@@ -40,7 +40,7 @@ class Modeltests(TestCase):
             user = get_user_model().objects.create_user(
                 email=email,
                 password=password)
-            
+
     def test_create_user_password_not_enough_long(self):
         """ test if the user has respected the required password pattern  (length >= 9)"""
 

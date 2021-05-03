@@ -8,6 +8,7 @@ class Threat {
         this._opportunity = "";
         this._means = "";
         this._motivation = "";
+        this._barriers = [];
         this.setParameters();
     }
 
@@ -43,6 +44,7 @@ class Threat {
         }else{
             threatCell.setStyle('shape=mxgraph.bowtie.threat;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
         }
+        window.currentUI.editor.graph.refresh();
     }
 
     convertColorToValue(color){
@@ -70,7 +72,11 @@ class Threat {
         if (!this.allDefined()){
             return ('Missing parameters');
         }else{
-            return this.getMeanValue()/10;
+            let barriersFailureProbability = 1;
+            this.barriers.forEach(barrier => {
+                barriersFailureProbability *= barrier.failureProbability;
+            })
+            return ((this.getMeanValue()/10) * barriersFailureProbability);
         }
     }
 
@@ -134,7 +140,12 @@ class Threat {
     }
 
     set threatActors(value) {
-        this._threatActors = value;
+        //Check input validity
+        if (isNaN(value) || value < 0 || value > 10){
+            this._threatActors = "";
+        }else{
+            this._threatActors = parseFloat(value);
+        }
         this._matrix.setACT(this._threatActors);
     }
 
@@ -143,7 +154,12 @@ class Threat {
     }
 
     set opportunity(value) {
-        this._opportunity = value;
+        //Check input validity
+        if (isNaN(value) || value < 0 || value > 10){
+            this._opportunity = "";
+        }else{
+            this._opportunity = parseFloat(value);
+        }
         this._matrix.setOPP(this._opportunity);
     }
 
@@ -152,7 +168,12 @@ class Threat {
     }
 
     set means(value) {
-        this._means = value;
+        //Check input validity
+        if (isNaN(value) || value < 0 || value > 10){
+            this._means = "";
+        }else{
+            this._means = parseFloat(value);
+        }
         this._matrix.setMEA(this._means);
     }
 
@@ -161,8 +182,20 @@ class Threat {
     }
 
     set motivation(value) {
-        this._motivation = value;
+        //Check input validity
+        if (isNaN(value) || value < 0 || value > 10){
+            this._motivation = "";
+        }else{
+            this._motivation = parseFloat(value);
+        }
         this._matrix.setMTV(this._motivation);
     }
 
+    get barriers() {
+        return this._barriers;
+    }
+
+    set barriers(value) {
+        this._barriers = value;
+    }
 }

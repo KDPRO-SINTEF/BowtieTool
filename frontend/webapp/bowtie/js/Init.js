@@ -18,7 +18,7 @@ window.OPEN_URL = window.OPEN_URL || '/open';
 // files (the special bundle and the default bundle) is disabled to
 // save a GET request. This requires that all resources be present in
 // each properties file since only one file is loaded.
-window.mxBasePath = window.mxBasePath || '../lib/mxgraph/src';
+window.mxBasePath = window.mxBasePath || '../lib/mxgraph/src'; // Relative to the editor.html page
 window.mxLanguage = window.mxLanguage || urlParams['lang'];
 window.mxLanguages = window.mxLanguages || ['de'];
 
@@ -27,14 +27,14 @@ window.ROOT_PAGE = window.ROOT_PAGE || '/'
 window.EDITOR_PAGE = window.EDITOR_PAGE || window.ROOT_PAGE + 'html/editor.html'
 window.LOGIN_PAGE = window.LOGIN_PAGE || window.ROOT_PAGE + 'login';
 window.REGISTER_PAGE = window.REGISTER_PAGE || window.ROOT_PAGE + 'register';
-window.RESET_PWD_PAGE = window.RESET_PWD_PAGE || window.ROOT_PAGE + 'password-reset';
-window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || window.ROOT_PAGE + 'html/my_account.html';
-window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'html/statistics.html';
+window.RESET_PASSWORD_PAGE = window.RESET_PASSWORD_PAGE || window.ROOT_PAGE + 'password-reset';
+window.ACCOUNT_PAGE = window.ACCOUNT_PAGE || window.ROOT_PAGE + 'settings';
+window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'statistics';
 
 // Dialogs
 window.OPEN_DIALOG = window.OPEN_DIALOG || window.ROOT_PAGE + 'html/open.html';
-window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk_computation.html';
-window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram_search.html';
+window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk-computation.html';
+window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram-search.html';
 
 // Resources
 // Path is relative to the editor.html page
@@ -48,30 +48,26 @@ window.RESOURCE_BASE = window.RESOURCE_BASE || window.RESOURCES_PATH + '/graphed
 // API RELATED
 window.API_DOMAIN = window.API_DOMAIN || 'http://localhost:8000';
 
-// Customer driven project specifics
-window.LOGIN = window.LOGIN || window.API_DOMAIN + '/api/user/token';
-window.USER_INFO = window.USER_INFO || window.API_DOMAIN + '/api/user/me';
-window.REGISTER = window.REGISTER || window.API_DOMAIN + '/api/user/create';
-window.RESET_PASSWORD = window.RESET_PASSWORD || window.API_DOMAIN + '/api/user/password/reset';
-window.DELETE_ACCOUNT = window.DELETE_ACCOUNT || window.API_DOMAIN + '/api/user/delete';
-window.CONFIRM_EMAIL = window.CONFIRM_EMAIL || window.API_DOMAIN + '/api/user/confirm';
-window.CREATE_2FA_CODE = window.CREATE_2FA_CODE || window.API_DOMAIN + '/api/user/totp/create';
-window.VALIDATE_2FA = window.VALIDATE_2FA || window.API_DOMAIN + '/api/user/totp/verify';
-window.CHECK_2FA_STATUS = window.CHECK_2FA_STATUS || window.API_DOMAIN + '/api/user/test/totp';
-window.LOGIN_2FA = window.LOGIN_2FA || window.API_DOMAIN + '/api/user/totp/login';
-window.VERIFY_2FA_ENABLED = window.VERIFY_2FA_ENABLED || window.API_DOMAIN + '/api/user/totp/verify';
-window.DISABLE_2FA = window.DISABLE_2FA || window.API_DOMAIN + '/api/user/totp/disable';
-window.UPDATE_PASSWORD = window.UPDATE_PASSWORD || window.API_DOMAIN + '/api/user/password/update';
+// Authentication
+window.API_LOGIN = window.API_LOGIN || window.API_DOMAIN + '/api/user/token';
+window.API_USER_DATA = window.API_USER_DATA || window.API_DOMAIN + '/api/user/me';
+window.API_REGISTER = window.API_REGISTER || window.API_DOMAIN + '/api/user/create';
+window.API_RESET_PASSWORD = window.API_RESET_PASSWORD || window.API_DOMAIN + '/api/user/password/reset';
+window.API_DELETE_ACCOUNT = window.API_DELETE_ACCOUNT || window.API_DOMAIN + '/api/user/delete';
+window.API_CONFIRM_EMAIL = window.API_CONFIRM_EMAIL || window.API_DOMAIN + '/api/user/confirm';
+window.API_CREATE_2FA_CODE = window.API_CREATE_2FA_CODE || window.API_DOMAIN + '/api/user/totp/create';
+window.API_VERIFY_2FA_CODE = window.API_VERIFY_2FA_CODE || window.API_DOMAIN + '/api/user/totp/verify';
+window.API_LOGIN_2FA = window.API_LOGIN_2FA || window.API_DOMAIN + '/api/user/totp/login';
+window.API_DISABLE_2FA = window.API_DISABLE_2FA || window.API_DOMAIN + '/api/user/totp/disable';
+window.API_UPDATE_PASSWORD = window.API_UPDATE_PASSWORD || window.API_DOMAIN + '/api/user/password/update';
 
-// URL for statistics
-window.STATISTICS = window.STATISTICS || window.API_DOMAIN + '/api/diagram/stats';
+// Statistics
+window.API_STATISTICS = window.API_STATISTICS || window.API_DOMAIN + '/api/diagram/stats';
 
-// URLs for diagram save & get from backend
-window.SAVE_URL = window.SAVE_URL || window.API_DOMAIN + '/api/diagram/private';
-window.UPDATE_URL = window.UPDATE_URL || window.API_DOMAIN + '/api/diagram/'; // {id}
-window.PUBLIC_DIAGS_URL = window.PUBLIC_DIAGS_URL || window.API_DOMAIN + '/api/diagram/public/list';
-window.PRIVATE_DIAGS_URL = window.PRIVATE_DIAGS_URL || window.API_DOMAIN + '/api/diagram/private/list';
-
-//URL to share diagrams
-window.SHARE_DIAGRAM = window.SHARE_DIAGRAM || window.API_DOMAIN + '/api/diagram/share/'; // + {graphid}
-window.ALL_DIAGS_SHARED_WITH_ME_URL = window.ALL_DIAGS_SHARED_WITH_ME_URL || window.API_DOMAIN + '/api/diagram/share/'; // {id} Although the id isn't useful
+// Diagrams
+window.API_SAVE_DIAGRAM = window.API_SAVE_DIAGRAM || window.API_DOMAIN + '/api/diagram/private';
+window.API_UPDATE_DIAGRAM = window.API_UPDATE_DIAGRAM || window.API_DOMAIN + '/api/diagram/'; // {id}
+window.API_PUBLIC_DIAGRAMS = window.API_PUBLIC_DIAGRAMS || window.API_DOMAIN + '/api/diagram/public/list';
+window.API_PRIVATE_DIAGRAMS = window.API_PRIVATE_DIAGRAMS || window.API_DOMAIN + '/api/diagram/private/list';
+window.API_SHARE_DIAGRAM = window.API_SHARE_DIAGRAM || window.API_DOMAIN + '/api/diagram/share/'; // + {graphid}
+window.API_DIAGRAMS_SHARED_WITH_ME = window.API_DIAGRAMS_SHARED_WITH_ME || window.API_DOMAIN + '/api/diagram/share/'; // {id} Although the id isn't useful

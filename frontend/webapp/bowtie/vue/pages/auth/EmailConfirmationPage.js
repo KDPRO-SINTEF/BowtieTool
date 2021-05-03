@@ -32,7 +32,7 @@ export const EmailConfirmationPage = {
     },
     methods: {
         confirmEmail: function() {
-            let url = window.CONFIRM_EMAIL + '/' + this.id + '/' + this.confirmationToken;
+            let url = window.API_CONFIRM_EMAIL + '/' + this.id + '/' + this.confirmationToken;
             axios.get(url)
                 .then(res => {
                     if (res.status === 200) {

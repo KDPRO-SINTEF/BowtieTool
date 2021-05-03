@@ -97,7 +97,7 @@ export const PasswordResetPage = {
                 let fetchedUrl = '';
                 this.waitForResponse = true;
                 if (!this.emailReceived) {
-                    fetchedUrl = window.RESET_PASSWORD;
+                    fetchedUrl = window.API_RESET_PASSWORD;
                     requestData = { 'email': this.form.email.value };
                     axios.post(fetchedUrl, requestData, {
                         headers: {
@@ -119,7 +119,7 @@ export const PasswordResetPage = {
                         })
 
                 } else {
-                    fetchedUrl = window.RESET_PASSWORD + '/' + this.resetData.id + '/' + this.resetData.token;
+                    fetchedUrl = window.API_RESET_PASSWORD + '/' + this.resetData.id + '/' + this.resetData.token;
                     requestData = { 'password': this.form.password.value };
                     axios.post(fetchedUrl, requestData)
                         .then(res => {

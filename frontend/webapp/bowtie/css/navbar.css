@@ -10,7 +10,6 @@
     color: white;
     text-decoration: none;
     font-size: 0.9em;
-    background-color: black;
     border-radius: 5px;
 }
 
@@ -35,12 +34,12 @@
 }
 
 .navbar-btn {
-    padding: 1px 15px 1px 15px;
+    padding: 1px 10px 1px 10px;
     margin: 0px 5px 0px 5px;
     color: white;
     text-decoration: none;
     font-size: 0.9em;
-    background-color: black;
+    background-color: rgb(61, 139, 253);
     border: none;
     border-radius: 5px;
 }

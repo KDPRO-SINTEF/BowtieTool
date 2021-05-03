@@ -19,20 +19,22 @@ export const app = new Vue({
             return (this.$router.currentRoute.path === '/');
         },
         showNavbar: function() {
-            return (this.onPage('home') || this.onPage('statistics'));
+            return (this.onPage('home') || this.onPage('statistics') || this.onPage('settings'));
         },
         onPage: function(pageName) {
             let route = '/' + pageName;
             if (pageName === 'home') {
                 route = '/';
+            } else if (pageName === 'settings') {
+                return (this.$router.currentRoute.path.indexOf(route) !== -1);
             }
             return this.$router.currentRoute.path === route;
         }
     },
     created: function() {
         let sessionToken = localStorage.getItem('sessionToken');
-        this.$store.commit('setSessionToken', sessionToken);
         if (sessionToken !== null) {
+            this.$store.commit('setSessionToken', sessionToken);
             this.$store.dispatch('fetchUserData')
                 .then(res => {
                     if (res.status === 200) {

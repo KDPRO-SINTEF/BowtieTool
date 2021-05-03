@@ -99,7 +99,7 @@ export const RegistrationPage = {
             if (this.checkRegistrationForm()) {
                 this.waitForResponse = true;
                 let requestData = { 'username': this.form.username.value, 'email': this.form.email.value, 'password': this.form.password.value };
-                axios.post(window.REGISTER, requestData, {
+                axios.post(window.API_REGISTER, requestData, {
                     headers: {
                         'Content-type': 'application/json'
                     }
@@ -138,8 +138,8 @@ export const RegistrationPage = {
         }
     },
     created() {
-        if (store.state.isUserAuthenticated) {
-            this.$router.push('/');
+        if (store.getters.isUserAuthenticated) {
+            this.$router.push('/settings');
         }
     }
 }

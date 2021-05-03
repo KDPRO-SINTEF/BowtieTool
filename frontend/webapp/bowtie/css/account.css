@@ -1,6 +1,4 @@
-@import "main.css";
-
-#user-account-vue {
+/*#user-account-vue {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -119,4 +117,28 @@
 .exit-logo {
     cursor: pointer;
     float: right;
+}*/
+#settings {
+    height: 100%;
+    width: 100%;
+}
+
+#user-account {
+    margin: 5vh auto 5vh auto;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
+#user-account #account-menu {
+    float: right;
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 225px;
+    max-width: 90%;
+    margin-top: 185px;
+}
+
+#user-account #account-settings {
+    width: 370px;
+    max-width: 90%
 }

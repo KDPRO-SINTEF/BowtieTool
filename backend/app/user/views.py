@@ -146,7 +146,7 @@ class UpdatePassword(APIView):
         logger.warning("User %s changed password ", user)
         message = "Your Bowtie++ account password has been changed. If you're familiar with this activity, " + \
         "you can discard this email. Otherwise, we suggest you to immediatly change your " + \
-        "password at http://localhost:8080/app/bowtie/common/authentication.html#password-reset.\n\n" + \
+        "password at " + PASSWORD_RESET_REQUEST_URL + ".\n\n" + \
         "Sincerly, \n\n Bowtie++ team"
         subject = 'Changed password for Bowtie++'
         mail.send_mail(subject, message, 'no-reply@Bowtie', [user.email],

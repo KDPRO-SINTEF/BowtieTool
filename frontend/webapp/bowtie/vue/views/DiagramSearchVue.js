@@ -20,7 +20,7 @@ let diagramSearch_vue = new Vue({
                 return;
             }
             // Getting all private diags
-            axios.get(window.PRIVATE_DIAGS_URL, {
+            axios.get(window.API_PRIVATE_DIAGRAMS, {
                 headers: {
                     'Authorization': 'Token ' + token
                 }
@@ -37,7 +37,7 @@ let diagramSearch_vue = new Vue({
                     console.log(error)
                 })
             // Getting all the public diags
-            axios.get(window.PUBLIC_DIAGS_URL, {
+            axios.get(window.API_PUBLIC_DIAGRAMS, {
                 headers: {
                     'Authorization': 'Token ' + token
                 }
@@ -54,7 +54,7 @@ let diagramSearch_vue = new Vue({
                     console.log(error)
                 })
             // Getting all the diagrams shared with me
-            axios.get(window.ALL_DIAGS_SHARED_WITH_ME_URL+'0',{
+            axios.get(window.API_DIAGRAMS_SHARED_WITH_ME+'0',{
                 headers: {
                     'Authorization': 'Token ' + token
                 }

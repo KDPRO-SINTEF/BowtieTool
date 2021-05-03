@@ -12,12 +12,17 @@ const MissingEmailErr = 'Email is required.';
 const MissingPasswordErr = 'Password is required.';
 const MissingPasswordConfirmErr = 'Confirm your password.';
 const MissingTotpErr = '6-digit code is required.';
+const MissingOldPassword = 'Old password is required.';
+const MissingNewPassword = 'New password is required.';
 
 const InvalidUsernameErr = 'Invalid username.';
 const InvalidEmailErr = 'Invalid email.';
 const InvalidPasswordErr = 'This password is too weak.';
 const InvalidPasswordConfirmErr = 'Typed passwords don\'t match.';
-const InvalidTotpErr = MissingTotpErr;
+const InvalidTotpErr = 'Invalid 6-digit code.';
+const InvalidOldPassword = 'Invalid old password.';
+const InvalidNewPassword = 'Invalid new password.';
+
 
 const IncorrectPasswordErr = 'Incorrect password.';
 export const IncorrectCredentialsErr = 'Incorrect credentials provided.';
@@ -109,6 +114,12 @@ export const getErrorMessage = function (field, fieldType) {
             break;
         case 'totp':
             return chooseErrorMessage(field, MissingTotpErr, InvalidTotpErr, IncorrectTotpErr);
+            break;
+        case 'oldPassword':
+            return chooseErrorMessage(field, MissingOldPassword, InvalidOldPassword, IncorrectPasswordErr);
+            break;
+        case 'newPassword':
+            return chooseErrorMessage(field, MissingNewPassword, InvalidNewPassword);
             break;
     }
 }

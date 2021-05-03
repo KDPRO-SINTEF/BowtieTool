@@ -44,22 +44,47 @@
     margin-left: 7.5%;
     margin-right: 7.5%;
 }
-.description {
-     width: 70%;
+.md-table-cell-container {
+    padding: 6px 12px 6px 12px;
+}
+.md-table-head-label {
+    padding-right: 12px;
+    padding-left: 12px;
+}
+.threat_description {
+     width: 35%;
  }
 .indicator{
-    width: 15%;
+    width: 10%;
     text-align: center;
 }
 .indicatorDot{
     margin: 0 auto;
 }
+.barriers{
+    min-width: 230px;
+    text-align: center;
+}
+.barriers_menu{
+    min-width: 230px;
+}
+.barrier_detail_name_div{
+    white-space: normal;
+    display: inline-block;
+    overflow-wrap: break-word;
+    font-size: 13px;
+    max-width: 180px;
+}
 .probability{
-    width: 20%;
-    text-align: right;
+    width: 10%;
+    text-align: center;
+}
+.details{
+    width: 135px;
+    text-align: center;
 }
 .details_button{
-    text-align: center;
+    font-size: 14px;
     margin: 0 0 0 0;
 }
 .detail_row{
@@ -70,7 +95,7 @@
     justify-content: space-between;
 }
 
-.threat_detail_field{
+.threat_detail_field ,.barrier_detail_field{
     display: inline-block;
     padding: 0 0;
     margin-top: 0;
@@ -83,10 +108,19 @@
 .highest_rv_row{
     background-color: #ffd5d5;
 }
+.consequence_description{
+    width: 35%;
+}
+.consequence_probability{
+    text-align: center;
+}
+.impact_value{
+    text-align: center;
+}
 .consequence_field {
     padding-top: 0;
     padding-right: 0;
-    margin: 0 0 0;
+    margin: auto;
     min-height: 32px;
     width: 75px;
 }
@@ -96,7 +130,7 @@
     width: inherit;
 }
 .risk_value{
-    text-align: right;
+    text-align: center;
 }
 
 .result_description{

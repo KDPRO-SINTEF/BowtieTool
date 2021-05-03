@@ -141,7 +141,7 @@ export const StatisticsPage = {
     },
     methods: {
         fetchStatisticsData: function() {
-            axios.get(window.STATISTICS, {
+            axios.get(window.API_STATISTICS, {
                 headers: {
                     Authorization: 'Token ' + store.state.user.sessionToken
                 }
@@ -214,10 +214,14 @@ export const StatisticsPage = {
         }
     },
     created() {
-        if (!(store.state.isUserAuthenticated && store.state.user.researcher)) {
-            this.$router.push('/401');
+        if (store.getters.isUserAuthenticated) {
+            if (store.state.user.researcher) {
+                this.fetchStatisticsData();
+            } else {
+                this.$router.push('/401');
+            }
         } else {
-            this.fetchStatisticsData();
+            this.$router.push('/login');
         }
     }
 }
