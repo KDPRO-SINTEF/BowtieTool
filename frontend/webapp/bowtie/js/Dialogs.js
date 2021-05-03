@@ -516,6 +516,28 @@ var OpenFromDBDialog = function (width, height) {
     */
 };
 
+var OpenVersionningDialog = function (width, height) {
+
+    const iframe_holder = document.createElement('div')
+    iframe_holder.setAttribute("style", "background:url(../images/ajax-loading-large.gif) center center no-repeat;")
+
+    var iframe = document.createElement('iframe');
+    iframe.style.backgroundColor = 'transparent';
+    iframe.allowTransparency = 'true';
+    iframe.style.borderStyle = 'none';
+    iframe.style.borderWidth = '0px';
+    iframe.style.overflow = 'hidden';
+    iframe.frameBorder = '0';
+    // Adds padding as a workaround for box model in older IE versions
+    var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
+
+    iframe.setAttribute('width', width + 'px');
+    iframe.setAttribute('height', height + 'px');
+    iframe.setAttribute('src', window.VERSIONNING_SEARCH);
+    iframe_holder.appendChild(iframe)
+    this.container = iframe_holder;
+};
+
 /**
  * Constructs a new role dialog to share a diagram (role = reader || writer).
  */

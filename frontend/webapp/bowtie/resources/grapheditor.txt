@@ -214,6 +214,7 @@ numberedList=Numbered List
 opacity=Opacity
 open=Open
 openDb=Open from database
+openVers=Open previous version
 openLocal=Open local file
 openTemplate=Open template
 openArrow=Open Arrow

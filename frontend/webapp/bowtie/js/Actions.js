@@ -31,6 +31,9 @@ Actions.prototype.init = function () {
     this.addAction('new...', function () {
         window.open(window.ROOT_PAGE);
     });
+    this.addAction('openVers...', function (){
+        ui.openVersionning(window.VERSIONNING_SEARCH);
+    }).isEnabled = isLoggedIn;
     this.addAction('openDb...', function () {
         ui.openFromDb(window.DIAGRAM_SEARCH_DIALOG);
     }).isEnabled = isLoggedIn;
@@ -627,6 +630,12 @@ Actions.prototype.init = function () {
         const width = 1250;
         const height = 800;
         ui.showDialog(new OpenFromDBDialog(width,height).container,width,height,true,true)
+    });
+
+    this.addAction('showVersionSearch',function (){
+        const width = 1250;
+        const height = 800;
+        ui.showDialog(new OpenVersionningDialog(width,height).container,width,height,true,true)
     });
 
     // Option actions

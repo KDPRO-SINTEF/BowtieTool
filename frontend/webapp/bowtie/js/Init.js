@@ -35,6 +35,7 @@ window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'html/stat
 window.OPEN_DIALOG = window.OPEN_DIALOG || window.ROOT_PAGE + 'html/open.html';
 window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk_computation.html';
 window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram_search.html';
+window.VERSIONNING_SEARCH = window.VERSIONNING_SEARCH || window.ROOT_PAGE + 'html/versionning_search.html';
 
 // Resources
 // Path is relative to the editor.html page
@@ -71,6 +72,7 @@ window.SAVE_URL = window.SAVE_URL || window.API_DOMAIN + '/api/diagram/private';
 window.UPDATE_URL = window.UPDATE_URL || window.API_DOMAIN + '/api/diagram/'; // {id}
 window.PUBLIC_DIAGS_URL = window.PUBLIC_DIAGS_URL || window.API_DOMAIN + '/api/diagram/public/list';
 window.PRIVATE_DIAGS_URL = window.PRIVATE_DIAGS_URL || window.API_DOMAIN + '/api/diagram/private/list';
+window.VERSIONNING_DIAGRAMS_URL = window.VERSIONNING_DIAGRAMS_URL || window.API_DOMAIN + '/api/diagram/versions/'; // + {graphid}
 
 //URL to share diagrams
 window.SHARE_DIAGRAM = window.SHARE_DIAGRAM || window.API_DOMAIN + '/api/diagram/share/'; // + {graphid}
