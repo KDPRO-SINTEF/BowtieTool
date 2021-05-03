@@ -141,7 +141,7 @@ class Threat {
 
     set threatActors(value) {
         //Check input validity
-        if (isNaN(value) || value < 0 || value > 10){
+        if (isNaN(value) || value < 0 || value > 10 || value == ""){
             this._threatActors = "";
         }else{
             this._threatActors = parseFloat(value);
@@ -155,7 +155,7 @@ class Threat {
 
     set opportunity(value) {
         //Check input validity
-        if (isNaN(value) || value < 0 || value > 10){
+        if (isNaN(value) || value < 0 || value > 10 || value == ""){
             this._opportunity = "";
         }else{
             this._opportunity = parseFloat(value);
@@ -169,7 +169,7 @@ class Threat {
 
     set means(value) {
         //Check input validity
-        if (isNaN(value) || value < 0 || value > 10){
+        if (isNaN(value) || value < 0 || value > 10 || value == ""){
             this._means = "";
         }else{
             this._means = parseFloat(value);
@@ -183,7 +183,7 @@ class Threat {
 
     set motivation(value) {
         //Check input validity
-        if (isNaN(value) || value < 0 || value > 10){
+        if (isNaN(value) || value < 0 || value > 10 || value == ""){
             this._motivation = "";
         }else{
             this._motivation = parseFloat(value);
