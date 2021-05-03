@@ -270,7 +270,8 @@ class DiagramVersions(APIView):
 
         diagrams = [{key: versions[i].field_dict[key] for key in ['name', 'diagram', 'preview']}
                     for i in range(len(versions))]
-
+        for i in range(len(diagrams)):
+            diagrams[i]['id'] = i
         response = HttpResponse(json.dumps(diagrams),
                                 content_type='application/json')
         return response
