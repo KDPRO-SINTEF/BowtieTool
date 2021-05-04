@@ -216,6 +216,7 @@ class ShareView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, pk):
+        """Share a specified diagram (pk) with an other user (identified by its email)"""
         queryset = Diagram.objects.all().filter(owner=self.request.user)
         try:
             shared_diagram = queryset.get(pk=pk)
@@ -232,14 +233,59 @@ class ShareView(APIView):
         else:
             shared_diagram.writer.add(user)
         subject = "Someone shared a BowTie diagram with you"
-        message = f"{self.request.user.email} shared his BowTie diagram named: \'{shared_diagram.name}\' with you, "\
-                  " and "\
+        message = f"{self.request.user.email} shared his BowTie diagram named: \'{shared_diagram.name}\' with you, " \
+                  " and " \
                   f"gave you the role of {role}.\nFeel free to visit BowTie++ website to work on this " \
                   f"diagram!\nSincerly,\nBowtie++ team "
         mail.send_mail(subject, message, "no-reply@Bowtie", [user.email], fail_silently=False)
         return Response(status=status.HTTP_200_OK)
 
     def get(self, request, pk):
+        """Return the list of readers and writers for this diagram"""
+        queryset = Diagram.objects.all().filter(owner=self.request.user)
+        try:
+            shared_diagram = queryset.get(pk=pk)
+        except Diagram.DoesNotExist:
+            raise Http404
+        writers = []
+        readers = []
+        for user in list(shared_diagram.writer.all()):
+            writers.append(user.email)
+        for user in list(shared_diagram.reader.all()):
+            readers.append(user.email)
+        data = {
+            'writers': json.dumps(writers),
+            'readers': json.dumps(readers)
+        }
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        """Delete the specified user from the specified role on this diagram"""
+        queryset = Diagram.objects.all().filter(owner=self.request.user)
+        try:
+            shared_diagram = queryset.get(pk=pk)
+        except Diagram.DoesNotExist:
+            raise Http404
+        if request.data['role'] == "writer":
+            for user in shared_diagram.writer.all():
+                if user.email == request.data['email']:
+                    shared_diagram.writer.remove(user)
+                    shared_diagram.save()
+                    return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            for user in shared_diagram.reader.all():
+                if user.email == request.data['email']:
+                    shared_diagram.reader.remove(user)
+                    shared_diagram.save()
+                    return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class SharedWithMe(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
         diags_as_reader = Diagram.objects.all().filter(reader__email__contains=self.request.user.email)
         diags_as_writer = Diagram.objects.all().filter(writer__email__contains=self.request.user.email)
         all_diags = diags_as_writer.union(diags_as_reader)
@@ -287,5 +333,3 @@ class DiagramVersions(APIView):
         versions[id].revision.revert()
 
         return Response(status=status.HTTP_200_OK)
-
-

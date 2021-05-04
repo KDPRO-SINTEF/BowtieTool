@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 STATIC_SERVER_DOMAIN = "http://localhost:8080"
 CONFIRM_REDIRECT = STATIC_SERVER_DOMAIN + "/register/email-confirm?id=%s&token=%s"
-REDIRECT_LOGIN = STATIC_SERVER_DOMAIN  + "/login"
+REDIRECT_LOGIN = STATIC_SERVER_DOMAIN + "/login"
 PASSWORD_RESET_URL = STATIC_SERVER_DOMAIN + "/password-reset?id=%s&token=%s"
 PASSWORD_RESET_REQUEST_URL = STATIC_SERVER_DOMAIN + "/password-reset"
 

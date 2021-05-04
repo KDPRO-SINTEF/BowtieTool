@@ -262,10 +262,10 @@ class DiagramApiTests(TestCase):
         self.assertNotIn(self.user_to_share_with, self.diagram_pub1.writer.all())
 
     def test_get_all_diagrams_shared(self):
-        """ Test GET diagram/share/{whatever_ID} gives all the diagrams shared with the current user """
+        """ Test GET diagram/shared gives all the diagrams shared with the current user """
         self.client.force_authenticate(user=self.user_to_share_with)
         self.diagram_pub1.reader.add(self.user_to_share_with)
-        res = self.client.get(reverse('diagram:shared-diagram', args=(self.diagram_pub1.id,)))
+        res = self.client.get(reverse('diagram:shared-with-me'))
         self.assertEqual(res.status_code, 200)
         serializer = serializers.DiagramSerializer(data=res.data, many=isinstance(res.data, list))
         serializer.is_valid()
