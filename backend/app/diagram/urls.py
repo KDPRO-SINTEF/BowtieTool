@@ -12,6 +12,7 @@ urlpatterns = [
     path('private/list', views.PrivateDiagrams.as_view(), name='all-my-private_diagrams'),
     path('stats', views.StatsView.as_view(), name='stats-of-diagrams'),
     path('share/<int:pk>', views.ShareView.as_view(), name='shared-diagram'),
+    path('shared', views.SharedWithMe.as_view(), name='shared-with-me'),
     path('versions/<int:pk>', views.DiagramVersions.as_view(), name='diagram-versions')
 ]
 if settings.DEBUG:

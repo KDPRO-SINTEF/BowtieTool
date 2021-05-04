@@ -51,13 +51,13 @@
 
 
 <script type="text/x-template" id="search-bar-template">
-    <div id="search_bar" style="display: inline-flex;">
-        <div id="search_entries" class="form-outline" style="width: 22rem">
-            <label for="validationCustom01" class="form-label">Diagram name or description</label>
+    <div id="search_bar" style="display: inline-flex; margin-bottom: 10px;">
+        <div id="search_entries" class="form-outline" style="width: 22rem; margin-left: 10px;">
+            <label for="validationCustom01" class="form-label">Diagram's name or description</label>
             <input type="text" id="validationCustom01" class="form-control" style="background-color: transparent"
                    v-on:input="onInput($event)" v-on:keydown="onKey($event)">
             <span id="ghost"></span>
-            <label class="form-label" for="validationCustom01">Example label</label>
+<!--            <label class="form-label" for="validationCustom01">Example label</label>-->
         </div>
 
         <div class="dropdown" style="margin-top: 32px;margin-left: 5em">
@@ -76,7 +76,7 @@
 </script>
 
 <script type="text/x-template" id="tag_manager-template">
-    <div class="tag_manager">
+    <div class="tag_manager" style="margin-left: 10px;">
         <div class="list-group">
             <div class="card-header" style="text-align: center">Tags</div>
             <div v-for="tag_object in all_tags">
@@ -103,7 +103,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{diagram.name}}</h5>
                             <p class="card-text">id: {{diagram.id}}</p>
-                            <a href="#" class="btn btn-secondary" v-on:click="openDiagram(diagram.name)">
+                            <a href="#" class="btn btn-secondary" v-on:click="openDiagram(diagram.id)">
                                 Open this diagram</a>
                         </div>
                     </div>
