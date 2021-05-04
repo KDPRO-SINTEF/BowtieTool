@@ -1,12 +1,14 @@
-.navbar-link-simple {
+.navbar-item {
     margin: 0px 5px 0px 5px;
+}
+
+.navbar-link-simple {
     text-decoration: none;
     font-size: 0.9em;
 }
 
 .navbar-link {
-    padding: 3px 15px 3px 15px;
-    margin: 3px 15px 3px 15px;
+    padding: 3px 12px 3px 12px;
     color: white;
     text-decoration: none;
     font-size: 0.9em;
@@ -33,9 +35,16 @@
     background-color: rgb(73, 80, 87);
 }
 
+.navbar-link__account {
+    background-color: rgb(61, 139, 253);
+}
+
+.navbar-link__account:hover {
+    background-color: #0d6efd;
+}
+
 .navbar-btn {
     padding: 1px 10px 1px 10px;
-    margin: 0px 5px 0px 5px;
     color: white;
     text-decoration: none;
     font-size: 0.9em;

@@ -18,10 +18,26 @@ let VisualizerComponent = {
     methods: {
         //My functions
         openDiagram: function (diagram_id){
-            chosen_diag = this.all_diagrams.find(d => d.id === diagram_id)
-            var doc = mxUtils.parseXml(chosen_diag.diagram);
+            chosen_diag = this.all_diagrams.find(d => d.id === diagram_id);
+            let doc;
+            let data = undefined;
+            //check for <diagram> tag and set risk values
+            if(chosen_diag.diagram.slice(0,9) == "<diagram>"){
+                diag = chosen_diag.diagram.slice(9,-10);
+                let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
+                doc = mxUtils.parseXml(splittedDiagram[0]);
+                data = mxUtils.parseXml(splittedDiagram[1]);
+
+            }else{
+                doc = mxUtils.parseXml(chosen_diag.diagram);
+            }
             window.parent.currentUI.editor.setGraphXml(doc.documentElement);
-            window.parent.currentUI.editor.setGraphId(chosen_diag.id)
+            window.parent.currentUI.editor.setGraphId(chosen_diag.id);
+            //set graph values if xml contains risk values
+            if(data != undefined){
+                window.parent.currentUI.editor.setGraphValues(data.documentElement);
+            }
+
             if(chosen_diag.is_public){
                 localStorage.setItem('is_public','true')
             }else{
