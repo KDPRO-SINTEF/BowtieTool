@@ -72,4 +72,4 @@ window.API_UPDATE_DIAGRAM = window.API_UPDATE_DIAGRAM || window.API_DOMAIN + '/a
 window.API_PUBLIC_DIAGRAMS = window.API_PUBLIC_DIAGRAMS || window.API_DOMAIN + '/api/diagram/public/list';
 window.API_PRIVATE_DIAGRAMS = window.API_PRIVATE_DIAGRAMS || window.API_DOMAIN + '/api/diagram/private/list';
 window.API_SHARE_DIAGRAM = window.API_SHARE_DIAGRAM || window.API_DOMAIN + '/api/diagram/share/'; // + {graphid}
-window.API_DIAGRAMS_SHARED_WITH_ME = window.API_DIAGRAMS_SHARED_WITH_ME || window.API_DOMAIN + '/api/diagram/share/'; // {id} Although the id isn't useful
+window.API_DIAGRAMS_SHARED_WITH_ME = window.API_DIAGRAMS_SHARED_WITH_ME || window.API_DOMAIN + '/api/diagram/shared';

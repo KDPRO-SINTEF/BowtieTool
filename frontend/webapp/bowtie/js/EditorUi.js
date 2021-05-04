@@ -2984,10 +2984,15 @@ EditorUi.prototype.modifyRolesForGraph = function () {
 };
 
 EditorUi.prototype.manageRoles = function () {
-
     var token = localStorage.getItem('sessionToken');
+    var graphid = this.editor.getGraphId();
     if (token === null) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
+        return;
+    }
+
+    if (!graphid) {
+        mxUtils.alert(mxResources.get('rolesNotAssignable'));
         return;
     }
     let newView = this.actions.get('openRolesVue').funct;

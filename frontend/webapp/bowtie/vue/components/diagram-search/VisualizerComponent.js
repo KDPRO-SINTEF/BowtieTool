@@ -17,8 +17,8 @@ let VisualizerComponent = {
     },
     methods: {
         //My functions
-        openDiagram: function (diagram_name){
-            chosen_diag = this.all_diagrams.find(d => d.name === diagram_name)
+        openDiagram: function (diagram_id){
+            chosen_diag = this.all_diagrams.find(d => d.id === diagram_id)
             var doc = mxUtils.parseXml(chosen_diag.diagram);
             window.parent.currentUI.editor.setGraphXml(doc.documentElement);
             window.parent.currentUI.editor.setGraphId(chosen_diag.id)
@@ -30,8 +30,8 @@ let VisualizerComponent = {
             window.parent.currentUI.editor.setModified(false);
             window.parent.currentUI.editor.undoManager.clear();
 
-            if (diagram_name !== "") {
-                window.parent.currentUI.editor.setFilename(diagram_name);
+            if (chosen_diag) {
+                window.parent.currentUI.editor.setFilename(chosen_diag.name);
                 //window.parent.currentUI.editor.updateDocumentTitle();
                 // this.updateDocumentTitle();
             }

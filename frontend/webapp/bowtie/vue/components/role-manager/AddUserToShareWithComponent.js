@@ -6,45 +6,56 @@ export const AddUserToShareWithComponent = {
 
     components: {},
     props: { //Link with parent, parent can send data with 'v-bind'. To go from child to parent $emit("param")
-
+        token: String,
+        graphid: Number,
     },
     data: function () {
         return {
-            email_input:"",
-            risk_input:false,
-            role:'writer',
-            token:"",
-            graphid:"",
+            email_input: "",
+            risk_input: false,
+            role: 'writer',
+
         }
     },
     methods: {
         onEmailInput(event) {
-            this.email_input=event.target.value
+            this.email_input = event.target.value
         }, onKey(e) {
-            if(e.key === "Enter"){
-
+            if (e.key === "Enter") {
+                this.email_input = e.target.value
+                this.shareWith(this.email_input)
             }
         },
-        inputRisk(){
+        click(){
+            this.shareWith(this.email_input)
+        },
+        inputRisk() {
             this.risk_input = !this.risk_input
         },
-        roleChange(value){
-          if(value===0){
-              this.role = 'reader'
-          }
-          else{
-              this.role = 'writer'
-          }
+        roleChange(value) {
+            if (value === 0) {
+                this.role = 'reader'
+            } else {
+                this.role = 'writer'
+            }
         },
-        shareWith(userEmail){
-            if (userEmail !== null) {
-                const params = {"email": userEmail, "role": this.role}
+        shareWith(userEmail) {
+            if (userEmail !== undefined) {
+                const params = {email: userEmail, role: this.role}
+                if(this.risk_input){
+                    // TODO Add an option to share without the risk computation part
+                }
                 axios.post(window.API_SHARE_DIAGRAM + this.graphid, params, {
                     headers: {
-                        Authorization: 'Token ' + token
+                        Authorization: 'Token ' + this.token
                     }
                 })
                     .then(response => {
+                        if(this.role === 'reader'){
+                            this.$emit("added-reader",this.email_input)
+                        }else{
+                            this.$emit("added-writer",this.email_input)
+                        }
                         console.log(response);
                     })
                     .catch(error => {
@@ -55,13 +66,12 @@ export const AddUserToShareWithComponent = {
     },
     computed: {// Sort of augmented variables. Seen by VueJs as variable but are actually func
         // beforeMount is launched at the creation of the component
-        isValidEmail: function (){
-            return !validField("email",this.email_input)
+        isValidEmail: function () {
+            return !validField("email", this.email_input)
         }
     },
-    mounted(){
-        this.token = localStorage.getItem('sessionToken');
-        this.graphid = window.parent.currentUI.editor.getGraphId();
+    mounted() {
+
     }
 
 }
