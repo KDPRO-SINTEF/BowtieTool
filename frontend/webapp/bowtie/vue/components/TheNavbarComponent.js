@@ -1,7 +1,7 @@
 export const TheNavbarComponent = {
     template: `
-        <div id="navbar">
-            <div id="navbar-links">
+        <div id="navbar" v-bind:class="{ 'shadow-sm navbar__white': !onHomePage }">
+            <div class="navbar-links">
                 <router-link to="/" class="navbar-item navbar-link-simple">Home</router-link>
                 <span v-if="isUserAuthenticated && isUserResearcher">
                     <router-link to="/statistics" class="navbar-item navbar-link-simple">Statistics</router-link>
@@ -22,6 +22,9 @@ export const TheNavbarComponent = {
         },
         isUserResearcher: function() {
             return this.$store.state.user.researcher;
+        },
+        onHomePage: function() {
+            return this.$route.fullPath === '/';
         }
     },
     methods: {
@@ -33,5 +36,5 @@ export const TheNavbarComponent = {
         settings() {
             this.$router.push('/settings');
         }
-    }
+    },
 }

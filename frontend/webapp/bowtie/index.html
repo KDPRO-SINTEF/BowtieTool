@@ -27,7 +27,7 @@
 <body>
 <div id="app">
   <div v-if="isStoreLoaded">
-    <div class="container__navbar" v-if="showNavbar()">
+    <div class="container__navbar" v-if="showNavbar()" v-bind:onHomePage="onPage('home')">
       <navbar></navbar>
     </div>
     <div class="container__home">
