@@ -2983,6 +2983,17 @@ EditorUi.prototype.modifyRolesForGraph = function () {
     //dlg.init();
 };
 
+EditorUi.prototype.manageRoles = function () {
+
+    var token = localStorage.getItem('sessionToken');
+    if (token === null) {
+        mxUtils.alert(mxResources.get('notLoggedIn'));
+        return;
+    }
+    let newView = this.actions.get('openRolesVue').funct;
+    newView()
+}
+
 /**
  * Adds the label menu items to the given menu and parent.
  */

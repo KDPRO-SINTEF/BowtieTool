@@ -35,6 +35,8 @@ window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'statistic
 window.OPEN_DIALOG = window.OPEN_DIALOG || window.ROOT_PAGE + 'html/open.html';
 window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk-computation.html';
 window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram-search.html';
+window.ROLE_MANAGER_DIALOG = window.ROLE_MANAGER_DIALOG || window.ROOT_PAGE + 'html/role-manager.html';
+
 
 // Resources
 // Path is relative to the editor.html page

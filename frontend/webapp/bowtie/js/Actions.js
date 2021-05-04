@@ -50,6 +50,11 @@ Actions.prototype.init = function () {
         ui.modifyRolesForGraph();
 
     }).isEnabled = isLoggedIn;
+    this.addAction('manageRoles', function (){
+        ui.manageRoles();
+        }
+    ).isEnabled = isLoggedIn;
+
     this.addAction('import...', function () {
         window.openNew = false;
         window.openKey = 'import';
@@ -628,7 +633,11 @@ Actions.prototype.init = function () {
         const height = 0.7*window.innerHeight;
         ui.showDialog(new OpenFromDBDialog(width,height).container,width,height,true,true)
     });
-
+    this.addAction('openRolesVue',function (){
+        const width = 1000;
+        const height = 0.6*window.innerHeight;
+        ui.showDialog(new ManageRolesDialog(width,height).container,width,height,true,true)
+    });
     // Option actions
     var action = null;
     action = this.addAction('grid', function () {

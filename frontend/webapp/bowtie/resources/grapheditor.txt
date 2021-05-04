@@ -263,6 +263,7 @@ rightAlign=Right Align
 rightToLeft=Right to Left
 riskComputation=Risk Computation
 roles=Share with
+manageRoles=Manage diagram sharing
 rolesNotAssignable=This graph cannot be shared. Is the graph saved to the database?
 rotate=Rotate
 rotateTooltip=Click and drag to rotate, click to turn by 90 degrees
