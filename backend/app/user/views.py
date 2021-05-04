@@ -22,14 +22,19 @@ from core.models import Profile, User, NonceToToken
 from django.utils import timezone
 from django.db.utils import IntegrityError
 from django.contrib.auth import authenticate
+import environ
 
 logger = logging.getLogger(__name__)
 
-STATIC_SERVER_DOMAIN = "http://localhost:8080"
-CONFIRM_REDIRECT = STATIC_SERVER_DOMAIN + "/register/email-confirm?id=%s&token=%s"
-REDIRECT_LOGIN = STATIC_SERVER_DOMAIN  + "/login"
-PASSWORD_RESET_URL = STATIC_SERVER_DOMAIN + "/password-reset?id=%s&token=%s"
-PASSWORD_RESET_REQUEST_URL = STATIC_SERVER_DOMAIN + "/password-reset"
+env = environ.Env()
+# reading .env file
+environ.Env.read_env()
+
+STATIC_SERVER_URL = env('WEB_PROTOCOL') + "://" + env('STATIC_SERVER_HOST') + ":" + env('STATIC_SERVER_PORT')
+CONFIRM_REDIRECT = STATIC_SERVER_URL + "/register/email-confirm?id=%s&token=%s"
+REDIRECT_LOGIN = STATIC_SERVER_URL + "/login"
+PASSWORD_RESET_URL = STATIC_SERVER_URL + "/password-reset?id=%s&token=%s"
+PASSWORD_RESET_REQUEST_URL = STATIC_SERVER_URL + "/password-reset"
 
 
 def send_mail(subject, message, email, fromm='no-reply@Bowtie'):

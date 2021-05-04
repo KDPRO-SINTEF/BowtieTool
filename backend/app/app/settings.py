@@ -37,7 +37,7 @@ environ.Env.read_env()
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
 SECRET_KEY_RESET = env('SECRET_KEY_RESET') # key for password reset token generation
-SECRET_KEY_CONFIRM =  env('SECRET_KEY_CONFIRM') # key for email confirm token
+SECRET_KEY_CONFIRM = env('SECRET_KEY_CONFIRM') # key for email confirm token
 SECRET_KEY_TOTP = env('SECRET_KEY_TOTP')
 TOTP_CONFIRM_SALT = env('TOTP_CONFIRM_SALT')
 SALT_CONFIRM_MAIL = env('SALT_CONFIRM_MAIL')
@@ -46,11 +46,12 @@ SALT_RESET_PASSWORD = env('SALT_RESET_PASSWORD')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-
+STATIC_SERVER_HOST = env('STATIC_SERVER_HOST')
 
 ALLOWED_HOSTS = [
     'testserver',
     'localhost',
+    STATIC_SERVER_HOST,
 ]
 
 CORS_ORIGIN_WHITELIST = (
