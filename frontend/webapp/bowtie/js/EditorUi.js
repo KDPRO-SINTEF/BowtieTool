@@ -3021,6 +3021,50 @@ EditorUi.prototype.save = function (name, tags) {
 
         var xml = mxUtils.getXml(this.editor.getGraphXml());
 
+        //Convert risk objects (threats and consequences) to xml
+
+        let dataObject = new Object();
+        dataObject.threats = [];
+        dataObject.consequences = [];
+        let encoder = new mxCodec(mxUtils.createXmlDocument());
+        if(this.editor.graph.threats.length > 0){
+            // Convert threats object into generic javascript Object
+            let threatsObjects = [];
+            this.editor.graph.threats.forEach(threat => {
+                threatObject = {...threat};
+                barriersObjects = [];
+                threat.barriers.forEach(barrier => {
+                    barriersObjects.push({...barrier})
+                });
+                threatObject._barriers = barriersObjects;
+                threatObject._matrix = {...threat._matrix};
+                threatsObjects.push(threatObject);
+            });
+            dataObject.threats = threatsObjects;
+        }
+
+        if(this.editor.graph.consequences.length > 0){
+
+            // Convert threats object into generic javascript Object
+            let consequencesObjects = [];
+            this.editor.graph.consequences.forEach(consequence => {
+                consequenceObject = {...consequence};
+                barriersObjects = [];
+                consequence.barriers.forEach(barrier => {
+                    barriersObjects.push({...barrier})
+                });
+                consequenceObject._barriers = barriersObjects;
+                consequencesObjects.push(consequenceObject);
+            });
+            dataObject.consequences = consequencesObjects;
+        }
+
+        let result = encoder.encode(dataObject);
+        let dataXml = mxUtils.getXml(result);
+
+        //Append dataXml to the graph xml and embed it inside a root diagram xml tag
+        xml = "<diagram>" + xml + dataXml + "</diagram>";
+
         try {
             if (Editor.useLocalStorage) {
                 if (localStorage.getItem(name) != null &&

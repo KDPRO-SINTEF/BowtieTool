@@ -547,6 +547,65 @@ Editor.prototype.getGraphXml = function(ignoreSelection)
 };
 
 /**
+ * Bowtie++ feature
+ * Convert the given xml to a javascript Object, build Threat and Consequence with it and set the graph risk values (threats, consequences)
+ */
+Editor.prototype.setGraphValues = function(dataObjectXml){
+	let dec = new mxCodec(dataObjectXml);
+	let dataObject = new Object();
+	dec.decode(dataObjectXml, dataObject);
+
+	let threats = [];
+	let consequences = [];
+	if(dataObject.threats.length > 0){
+		dataObject.threats.forEach(threat => {
+			let matCell = this.graph.model.getCell(threat._matrix.matrixCell);
+			let mat = new Matrix(matCell);
+			let threatCell = this.graph.model.getCell(threat._cell);
+			let thr = new Threat(threatCell, mat);
+			thr.threatActors = threat._threatActors;
+			thr.opportunity = threat._opportunity;
+			thr.means = threat._means;
+			thr.motivation = threat._motivation;
+			let barriers = [];
+			threat._barriers.forEach(barrier =>{
+				let barrierCell = this.graph.model.getCell(barrier._cell);
+				let bar = new Barrier(barrierCell);
+				bar.failureProbability = barrier._failureProbability;
+				barriers.push(bar);
+			})
+			thr.barriers = barriers;
+			threats.push(thr);
+		});
+	}
+
+	if(dataObject.consequences.length > 0){
+		dataObject.consequences.forEach(consequence => {
+			let consequenceCell = this.graph.model.getCell(consequence._cell);
+			let cons = new Consequence(consequenceCell);
+			cons.impactValue = consequence._impactValue;
+			cons.probability = consequence._probability;
+			consequence._isHighest == 0 ? cons.isHighest = false : cons.isHighest = true;
+			cons.indicator = consequence._indicator;
+			let barriers = [];
+			consequence._barriers.forEach(barrier =>{
+				let barrierCell = this.graph.model.getCell(barrier._cell);
+				let bar = new Barrier(barrierCell);
+				bar.failureProbability = barrier._failureProbability;
+				bar.name = barrier._name;
+				barriers.push(bar);
+			})
+			cons.barriers = barriers;
+			consequences.push(cons);
+		});
+	}
+
+	this.graph.setThreats(threats);
+	this.graph.setConsequences(consequences);
+	this.graph.refresh();
+}
+
+/**
  * Keeps the graph container in sync with the persistent graph state
  */
 Editor.prototype.updateGraphComponents = function()
