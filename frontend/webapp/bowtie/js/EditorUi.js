@@ -1792,10 +1792,25 @@ EditorUi.prototype.open = function () {
         if (window.opener != null && window.opener.openFile != null) {
             window.opener.openFile.setConsumer(mxUtils.bind(this, function (xml, filename) {
                 try {
-                    var doc = mxUtils.parseXml(xml);
+                    let doc;
+                    let data = undefined;
+                    //check for <diagram> tag and set risk values
+                    if(xml.slice(0,9) == "<diagram>"){
+                        diag = xml.slice(9,-10);
+                        let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
+                        doc = mxUtils.parseXml(splittedDiagram[0]);
+                        data = mxUtils.parseXml(splittedDiagram[1]);
+
+                    }else{
+                        doc = mxUtils.parseXml(xml);
+                    }
                     this.editor.setGraphXml(doc.documentElement);
                     this.editor.setModified(false);
                     this.editor.undoManager.clear();
+                    //set graph values if xml contains risk values
+                    if(data != undefined){
+                        this.editor.setGraphValues(data.documentElement);
+                    }
 
                     if (filename != null) {
                         this.editor.setFilename(filename);
