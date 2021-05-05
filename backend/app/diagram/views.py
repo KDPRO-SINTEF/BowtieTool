@@ -238,6 +238,7 @@ class ShareView(APIView):
         new_dict_str = json.dumps(is_risk_shared_dict)
         print(new_dict_str)
         shared_diagram.isRiskComputationShared = new_dict_str
+        shared_diagram.save()
         if settings.SHARE_BY_EMAIL_ACTIVATED:
             subject = "Someone shared a BowTie diagram with you"
             message = f"{self.request.user.email} shared his BowTie diagram named: \'{shared_diagram.name}\' with you, " \
@@ -273,18 +274,23 @@ class ShareView(APIView):
             shared_diagram = queryset.get(pk=pk)
         except Diagram.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+        delete_completed = False
         if request.data['role'] == "writer":
             for user in shared_diagram.writer.all():
                 if user.email == request.data['email']:
                     shared_diagram.writer.remove(user)
-                    shared_diagram.save()
-                    return Response(status=status.HTTP_204_NO_CONTENT)
+                    delete_completed = True
         else:
             for user in shared_diagram.reader.all():
                 if user.email == request.data['email']:
                     shared_diagram.reader.remove(user)
-                    shared_diagram.save()
-                    return Response(status=status.HTTP_204_NO_CONTENT)
+                    delete_completed = True
+        if delete_completed:
+            risk_dict = json.loads(shared_diagram.isRiskComputationShared)
+            del risk_dict[request.data['email']]
+            shared_diagram.isRiskComputationShared = json.dumps(risk_dict)
+            shared_diagram.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
@@ -306,15 +312,9 @@ class SharedWithMe(APIView):
             diag_is_risk_shared = diag.isRiskComputationShared
             print(diag_is_risk_shared)
             is_risk_shared_dict = json.loads(diag_is_risk_shared)
-
-            if not is_risk_shared_dict[self.request.user.email]:
-                tmp = resp_datas[diag.id]
-                print(tmp)
-                diagram_object = json.loads(tmp)
-                diagram_object['isRiskShared'] = 'false'
-                print(diagram_object)
-                resp_datas[diag.id] = json.dumps(diagram_object)
-
+            if is_risk_shared_dict != {}:
+                value = is_risk_shared_dict[self.request.user.email]
+                diag_serialized['isRiskShared'] = value
         return Response(data=resp_datas, status=status.HTTP_200_OK)
 
 
