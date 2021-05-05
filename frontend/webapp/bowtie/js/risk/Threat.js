@@ -92,16 +92,16 @@ class Threat {
     getColorIndicator(){
         const mean = this.getMeanValue();
         switch(true){
-            case mean < 1.0:
+            case mean < 1.5:
                 return '#00ff06';
 
-            case mean < 3.0:
+            case mean < 3.5:
                 return '#a7ec67';
 
-            case mean < 5.0:
+            case mean < 5.5:
                 return '#fffe00'
 
-            case mean < 7.0:
+            case mean < 7.5:
                 return '#fe773d';
 
             default:
