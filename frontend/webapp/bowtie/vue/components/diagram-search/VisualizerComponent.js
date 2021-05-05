@@ -24,12 +24,11 @@ let VisualizerComponent = {
                 diag = chosen_diag.diagram.slice(9, -10);
                 let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
                 doc = mxUtils.parseXml(splittedDiagram[0]);
-                data = mxUtils.parseXml(splittedDiagram[1]);
+                if(chosen_diag.isRiskShared) {
+                    data = mxUtils.parseXml(splittedDiagram[1]);
+                }
             } else {
                 doc = mxUtils.parseXml(chosen_diag.diagram);
-            }
-            if(!chosen_diag.isRiskShared){
-                data = undefined
             }
             window.parent.currentUI.editor.setGraphXml(doc.documentElement);
             window.parent.currentUI.editor.setGraphId(chosen_diag.id);
