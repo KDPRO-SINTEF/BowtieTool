@@ -19,3 +19,8 @@
     margin-top: 0.5rem;
     margin-left: 4rem;
 }
+
+.list-group{
+    min-height: 5rem;!important;
+    minheight: 5rem;!important;
+}

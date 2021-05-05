@@ -5,13 +5,15 @@ export const RoleManagerVue = new Vue({
     el: '#role-manager-vue',
     components: {
         'add-user': AddUserToShareWithComponent,
-        'user-visualizer': UserVisualizerComponent
+        'user-visualizer': UserVisualizerComponent,
+
     },
     data: {
         graphid:undefined,
         readers:[],
         writers:[],
         token:"",
+        userToAdd:[],
     },
     methods: {
         init: function () {
@@ -51,6 +53,10 @@ export const RoleManagerVue = new Vue({
         },
         addWriter(email){
             this.writers.push(email)
+        },
+        onNewShareEventParent: function (evt){
+            console.log("Parent saw the event")
+            this.userToAdd = evt
         }
     },
     mounted() {

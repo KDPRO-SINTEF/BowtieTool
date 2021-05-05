@@ -10,7 +10,8 @@
     <script type="module" src="../vue/components/role-manager/AddUserToShareWithComponent.js"></script>
     <script type="module" src="../vue/components/role-manager/UserVisualizerComponent.js"></script>
 
-    <script type="text/javascript" src="../js/Init.js"></script>
+    <script type="text/javascript" src="../js/env.js"></script>
+    <script type="text/javascript" src="../js/editor/Init.js"></script>
 
     <!--    <script type="module" src="../js/modules/validators.js"></script>-->
 
@@ -35,9 +36,11 @@
 <body>
 
 <div id="role-manager-vue">
-    <add-user :token="token" :graphid="graphid" v-on:added-writer="addWriter" v-on:added-reader="addReader"></add-user>
+    <add-user ref="addUser" :token="token" :graphid="graphid" v-on:added-writer="addWriter"
+              v-on:added-reader="addReader" :user-to-add="userToAdd"></add-user>
     <user-visualizer :readers="readers" :writers="writers" :graphid="graphid" :token="token"
-                     v-on:remove-reader="removeReader" v-on:remove-writer="removeWriter">
+                     v-on:remove-reader="removeReader" v-on:remove-writer="removeWriter"
+                     v-on:new-share="onNewShareEventParent($event)">
 
     </user-visualizer>
 </div>
@@ -49,9 +52,10 @@
         <div class="row">
             <div id="grid-container" class="col-sm">
                 <div class="card-header" style="text-align: center">Readers</div>
-                <div class="list-group">
+                <div class="list-group" v-on:dragover="dragover_handler"
+                     v-on:drop="onDropEvent($event,0)" >
                     <div v-for="email in readers">
-                        <label class="list-group-item" style="display: flex">
+                        <label class="list-group-item" style="display: flex" draggable="true" v-on:dragstart="startDrag($event,email,0)">
                             {{email}}
                             <div style="margin-left: 10px" v-on:click="removeReader(email)">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"
@@ -65,9 +69,11 @@
             </div>
             <div id="grid-container2" class="col-sm">
                 <div class="card-header" style="text-align: center">Writers</div>
-                <div class="list-group">
+                <div class="list-group" v-on:dragover="dragover_handler"
+                      v-on:drop="onDropEvent($event,1)">
                     <div v-for="email in writers">
-                        <label class="list-group-item" style="display: flex">
+                        <label class="list-group-item" style="display: flex" draggable="true"
+                               v-on:dragstart="startDrag($event,email,1)">
                             {{email}}
                             <div style="margin-left: 10px" v-on:click="removeWriter(email)">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor"

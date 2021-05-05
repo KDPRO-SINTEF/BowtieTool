@@ -17,7 +17,7 @@ export const UserVisualizerComponent = {
 
             const params = {role: "reader", email: email}
             axios.delete(window.API_SHARE_DIAGRAM + this.graphid, {
-                data:params,
+                data: params,
                 headers: {
                     'Authorization': 'Token ' + this.token
                 }
@@ -31,7 +31,6 @@ export const UserVisualizerComponent = {
                 })
         },
         removeWriter(email) {
-
             const params = {role: "writer", email: email}
             axios.delete(window.API_SHARE_DIAGRAM + this.graphid, {
                 data: params,
@@ -47,6 +46,36 @@ export const UserVisualizerComponent = {
                     console.log(error)
                 })
 
+        },
+        startDrag: function(evt, email, column){
+            console.log("Started a drag")
+            evt.dataTransfer.dropEffect = 'move'
+            evt.dataTransfer.effectAllowed = 'move'
+            evt.dataTransfer.setData('email', email)
+            evt.dataTransfer.setData('from', column)
+            // column: 0 == reader, 1 == writer
+
+        },
+        onDropEvent: function (evt, to){
+            console.log("Ended a drag")
+            // evt.preventDefault();
+            const email = evt.dataTransfer.getData('email')
+            const from = evt.dataTransfer.getData("from")
+            console.log([email,from])
+            if (to !== from) {
+                if(from === '0'){
+                    this.removeReader(email)
+                    this.$emit("new-share", [email, "writer"])
+                }
+                else{
+                    this.removeWriter(email)
+                    this.$emit("new-share", [email, "reader"])
+                }
+            }
+        },
+        dragover_handler: (ev) => {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "move";
         },
 
     },

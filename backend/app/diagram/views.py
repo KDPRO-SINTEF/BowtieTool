@@ -226,7 +226,7 @@ class ShareView(APIView):
         try:
             user = User.objects.get(email=email_to_share_with)
         except User.DoesNotExist:
-            raise Http404
+            return Response(status=status.HTTP_200_OK)
         role = request.data['role']
         if role == "reader":
             shared_diagram.reader.add(user)
