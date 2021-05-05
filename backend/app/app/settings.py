@@ -46,12 +46,12 @@ SALT_RESET_PASSWORD = env('SALT_RESET_PASSWORD')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-STATIC_SERVER_HOST = env('STATIC_SERVER_HOST')
+API_SERVER_HOST = env('API_SERVER_HOST')
 
 ALLOWED_HOSTS = [
     'testserver',
     'localhost',
-    STATIC_SERVER_HOST,
+    API_SERVER_HOST,
 ]
 
 CORS_ORIGIN_WHITELIST = (
