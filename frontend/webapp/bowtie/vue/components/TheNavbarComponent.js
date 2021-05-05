@@ -1,6 +1,6 @@
 export const TheNavbarComponent = {
     template: `
-        <div id="navbar" v-bind:class="{ 'shadow-sm navbar__white': !onHomePage }">
+        <div id="navbar" v-bind:class="{ 'shadow-sm navbar__full': !onHomePage }">
             <div class="navbar-links">
                 <router-link to="/" class="navbar-item navbar-link-simple">Home</router-link>
                 <span v-if="isUserAuthenticated && isUserResearcher">

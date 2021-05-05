@@ -379,7 +379,7 @@ var UserControlDialog = function (editorUi) {
 var OpenFromDBDialog = function (width, height) {
 
     const iframe_holder = document.createElement('div')
-    iframe_holder.setAttribute("style", "background:url(../images/ajax-loading-large.gif) center center no-repeat;")
+    iframe_holder.setAttribute("style", "background:url(../images/loading.gif) center center no-repeat;")
 
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
@@ -404,7 +404,7 @@ var OpenFromDBDialog = function (width, height) {
 var ManageRolesDialog = function (width, height) {
 
     const iframe_holder = document.createElement('div')
-    iframe_holder.setAttribute("style", "background:url(../images/ajax-loading-large.gif) center center no-repeat;")
+    iframe_holder.setAttribute("style", "background:url(../images/loading.gif) center center no-repeat;")
 
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
