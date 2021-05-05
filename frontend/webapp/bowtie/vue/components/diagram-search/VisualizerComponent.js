@@ -36,7 +36,8 @@ let VisualizerComponent = {
             if (data !== undefined) {
                 window.parent.currentUI.editor.setGraphValues(data.documentElement);
             }
-
+            window.parent.currentUI.editor.graph.updateAllThreats();
+            window.parent.currentUI.editor.graph.updateAllConsequences();
             if (chosen_diag.is_public) {
                 localStorage.setItem('is_public', 'true')
             } else {

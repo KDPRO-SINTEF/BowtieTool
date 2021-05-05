@@ -8,6 +8,7 @@ class Consequence{
         this._barriers = [];
         this._name = cell.value;
         this._isHighest = false;
+        this.updateStyle();
     }
     allDefined(){
         return (this._impactValue !== "") && (this._probability !== "");
@@ -69,6 +70,7 @@ class Consequence{
 
     set name(newName) {
         this._name = newName;
+        this.updateStyle();
     }
 
     get impactValue() {

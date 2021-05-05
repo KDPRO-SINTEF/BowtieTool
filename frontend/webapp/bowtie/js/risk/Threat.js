@@ -17,6 +17,7 @@ class Threat {
         this._opportunity == "" ? this._opportunity = this.convertColorToValue(this._matrix.getOPP()) : this._matrix.setOPP(this._opportunity);
         this._means == "" ? this._means = this.convertColorToValue(this._matrix.getMEA()) : this._matrix.setMEA(this._means);
         this._motivation == "" ? this._motivation = this.convertColorToValue(this._matrix.getMTV()) : this._matrix.setMTV(this._motivation);
+        this.updateThreatCellColor();
     }
 
     updateThreatCellColor(){
@@ -120,6 +121,8 @@ class Threat {
 
     set name(newName){
         this._name = newName;
+        //useful to clear style when opening a diagram
+        this.updateThreatCellColor();
     }
 
     get cell(){
