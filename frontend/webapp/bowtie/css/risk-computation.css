@@ -38,12 +38,36 @@
     color:rgba(0,0,0,0.26);
     color:var(--md-theme-default-text-primary-on-background, rgba(0,0,0,0.26))
 }
-#highest_risk-value_image{
-    width: 85%;
-    height: 85%;
-    margin-left: 7.5%;
-    margin-right: 7.5%;
+#equations_button{
+    margin-left: 51.5em;
 }
+#conversion_title{
+    text-align: center;
+}
+#risk_value_image{
+    height: 55px;
+}
+#highest_risk_value_image{
+    height: 79px;
+}
+#threat_image{
+    height: 79px;
+}
+#average_weight_image{
+    height: 85px;
+}
+#threat_barriers_image{
+    height: 89px;
+}
+#consequence_barriers_image{
+    height: 99px;
+}
+#conversion_image{
+    width: 100%;
+    height: min-content;
+    margin: auto;
+}
+
 .md-table-cell-container {
     padding: 6px 12px 6px 12px;
 }
@@ -132,18 +156,25 @@
 .risk_value{
     text-align: center;
 }
-
+.notation_symbol{
+    display: inline-block;
+    width: 35px;
+}
+.formula_image{
+    display: block;
+    margin:auto;
+}
+.image_div{
+    height: 100px;
+}
 .result_description{
     width: 70%;
 }
 .result_value{
+    text-align: right;
     width : 35%;
 }
-img:not(.md-image){
-    margin-left: 17%;
-    margin-right: 17%;
-    height: 69px;
-}
+
 
 
 

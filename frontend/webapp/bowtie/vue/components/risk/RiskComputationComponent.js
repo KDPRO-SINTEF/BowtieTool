@@ -75,24 +75,7 @@ let ResultComponent = {
     template: '#result',
     data: function (){
         return{
-            showEventProbabilityFormula: false,
-            showHighestRiskValueFormula: false,
-            showAccumulatedRiskValueFormula: false
-        }
-    },
-    methods: {
-        getFormulaButtonText(button){
-            switch (button){
-                case "event":
-                    if(this.showEventProbabilityFormula){return "Hide Formula";}
-                    return "Show Formula";
-                case "highest":
-                    if(this.showHighestRiskValueFormula){return "Hide Formula"}
-                    return "Show Formula";
-                case "accumulated":
-                    if(this.showAccumulatedRiskValueFormula){return "Hide Formula"}
-                    return "Show Formula";
-            }
+            showFormulasDialog: false,
         }
     }
 

@@ -65,9 +65,9 @@ window.API_UPDATE_PASSWORD = window.API_UPDATE_PASSWORD || API_SERVER_URL + '/ap
 window.API_STATISTICS = window.API_STATISTICS || API_SERVER_URL + '/api/diagram/stats';
 
 // Diagrams
-window.API_SAVE_DIAGRAM = window.API_SAVE_DIAGRAM || window.API_SERVER_URL + '/api/diagram/private';
-window.API_UPDATE_DIAGRAM = window.API_UPDATE_DIAGRAM || window.API_SERVER_URL + '/api/diagram/'; // {id}
-window.API_PUBLIC_DIAGRAMS = window.API_PUBLIC_DIAGRAMS || window.API_SERVER_URL + '/api/diagram/public/list';
-window.API_PRIVATE_DIAGRAMS = window.API_PRIVATE_DIAGRAMS || window.API_SERVER_URL + '/api/diagram/private/list';
-window.API_SHARE_DIAGRAM = window.API_SHARE_DIAGRAM || window.API_SERVER_URL + '/api/diagram/share/'; // + {graphid}
-window.API_DIAGRAMS_SHARED_WITH_ME = window.API_DIAGRAMS_SHARED_WITH_ME || window.API_SERVER_URL + '/api/diagram/shared';
+window.API_SAVE_DIAGRAM = window.API_SAVE_DIAGRAM || API_SERVER_URL + '/api/diagram/private';
+window.API_UPDATE_DIAGRAM = window.API_UPDATE_DIAGRAM || API_SERVER_URL + '/api/diagram/'; // {id}
+window.API_PUBLIC_DIAGRAMS = window.API_PUBLIC_DIAGRAMS || API_SERVER_URL + '/api/diagram/public/list';
+window.API_PRIVATE_DIAGRAMS = window.API_PRIVATE_DIAGRAMS || API_SERVER_URL + '/api/diagram/private/list';
+window.API_SHARE_DIAGRAM = window.API_SHARE_DIAGRAM || API_SERVER_URL + '/api/diagram/share/'; // + {graphid}
+window.API_DIAGRAMS_SHARED_WITH_ME = window.API_DIAGRAMS_SHARED_WITH_ME || API_SERVER_URL + '/api/diagram/shared';
