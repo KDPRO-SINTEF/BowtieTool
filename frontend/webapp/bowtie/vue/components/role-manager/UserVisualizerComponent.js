@@ -31,7 +31,6 @@ export const UserVisualizerComponent = {
                 })
         },
         removeWriter(email) {
-
             const params = {role: "writer", email: email}
             axios.delete(window.API_SHARE_DIAGRAM + this.graphid, {
                 data: params,
@@ -48,7 +47,7 @@ export const UserVisualizerComponent = {
                 })
 
         },
-        startDrag: (evt, email, column) => {
+        startDrag: function(evt, email, column){
             console.log("Started a drag")
             evt.dataTransfer.dropEffect = 'move'
             evt.dataTransfer.effectAllowed = 'move'
@@ -57,22 +56,20 @@ export const UserVisualizerComponent = {
             // column: 0 == reader, 1 == writer
 
         },
-        onDrop: (evt, to) => {
+        onDropEvent: function (evt, to){
             console.log("Ended a drag")
-            evt.preventDefault();
+            // evt.preventDefault();
             const email = evt.dataTransfer.getData('email')
             const from = evt.dataTransfer.getData("from")
             console.log([email,from])
             if (to !== from) {
-                switch (from) {
-                    case '0':
-                        this.removeReader(email)
-                        this.$emit("new-share", [email, "writer"])
-                        break
-                    case '1':
-                        this.removeWriter(email)
-                        this.$emit("new-share", [email, "reader"])
-                        break
+                if(from === '0'){
+                    this.removeReader(email)
+                    this.$emit("new-share", [email, "writer"])
+                }
+                else{
+                    this.removeWriter(email)
+                    this.$emit("new-share", [email, "reader"])
                 }
             }
         },

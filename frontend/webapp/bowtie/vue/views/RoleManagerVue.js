@@ -13,6 +13,7 @@ export const RoleManagerVue = new Vue({
         readers:[],
         writers:[],
         token:"",
+        userToAdd:[],
     },
     methods: {
         init: function () {
@@ -53,9 +54,9 @@ export const RoleManagerVue = new Vue({
         addWriter(email){
             this.writers.push(email)
         },
-        onNewShareEventParent(evt){
-            console.log(evt)
-            this.$ref.addUser.onNewShareEvent(evt)
+        onNewShareEventParent: function (evt){
+            console.log("Parent saw the event")
+            this.userToAdd = evt
         }
     },
     mounted() {

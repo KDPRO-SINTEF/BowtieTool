@@ -8,6 +8,7 @@ export const AddUserToShareWithComponent = {
     props: { //Link with parent, parent can send data with 'v-bind'. To go from child to parent $emit("param")
         token: String,
         graphid: Number,
+        userToAdd: Array,
     },
     data: function () {
         return {
@@ -73,6 +74,14 @@ export const AddUserToShareWithComponent = {
         // beforeMount is launched at the creation of the component
         isValidEmail: function () {
             return !validField("email", this.email_input)
+        }
+    },
+    watch: {
+        userToAdd: function () {
+            console.log("Child is adding user")
+            const email = this.userToAdd[0]
+            const role = this.userToAdd[1]
+            this.shareWith(email, role)
         }
     },
     mounted() {
