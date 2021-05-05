@@ -452,6 +452,8 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
     nameInput.style.width = '180px';
 
     var role = document.createElement('select');
+    role.style.marginLeft = '4px';
+    role.style.marginTop = '10px';
     var owner = document.createElement('option');
     owner.value = 'writer';
     mxUtils.write(owner, 'Writer');
@@ -460,10 +462,31 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
     readonly.value = 'reader';
     mxUtils.write(readonly, 'Reader');
 
+    let isRiskSharedDiv = document.createElement('div')
+    let isRiskShared = document.createElement('input')
+    // isRiskShared.className = "form-check-input me-1"
+    isRiskShared.type = "checkbox"
+    isRiskShared.checked = true
+    isRiskShared.value = "true"
+    isRiskShared.addEventListener('click', function (e) {
+        if (isRiskShared.value === "true") {
+            isRiskShared.value = "false"
+        } else {
+            isRiskShared.value = "true"
+        }
+    })
+
+    isRiskSharedDiv.innerText = "Share risk computation"
+    isRiskSharedDiv.style.marginLeft = '4px'
+    isRiskSharedDiv.style.marginTop = '10px'
+    isRiskSharedDiv.style.marginBottom = '10px'
+    isRiskSharedDiv.appendChild(isRiskShared)
+
     role.appendChild(owner);
     role.appendChild(readonly);
     row.appendChild(nameInput);
     row.appendChild(role);
+    row.appendChild(isRiskSharedDiv);
     tbody.appendChild(row);
 
     row = document.createElement('tr');
@@ -497,7 +520,7 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
         var user = nameInput.value;
         editorUi.hideDialog();
         console.log('user', user, 'role', role.value);
-        fn(user, role.value);
+        fn(user, role.value, isRiskShared.value);
     }));
     genericBtn.className = 'geBtn gePrimaryBtn';
     td.appendChild(genericBtn);
@@ -552,7 +575,7 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     mxUtils.write(tags_td, "Diagram tags" + ': ');
     let icon = document.createElement("i")
     icon.setAttribute("class", "icon-info-sign")
-    icon.setAttribute("title","Tags are like keywords for diagrams, separated by commas.")
+    icon.setAttribute("title", "Tags are like keywords for diagrams, separated by commas.")
     tags_td.appendChild(icon)
     // var info_div = document.createElement("div")
     // info_div.setAttribute("class", "info")
@@ -1663,7 +1686,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
         dataObject.threats = [];
         dataObject.consequences = [];
         let encoder = new mxCodec(mxUtils.createXmlDocument());
-        if(editorUi.editor.graph.threats.length > 0){
+        if (editorUi.editor.graph.threats.length > 0) {
             // Convert threats object into generic javascript Object
             let threatsObjects = [];
             editorUi.editor.graph.threats.forEach(threat => {
@@ -1679,7 +1702,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
             dataObject.threats = threatsObjects;
         }
 
-        if(editorUi.editor.graph.consequences.length > 0){
+        if (editorUi.editor.graph.consequences.length > 0) {
 
             // Convert threats object into generic javascript Object
             let consequencesObjects = [];

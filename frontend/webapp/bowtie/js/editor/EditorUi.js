@@ -1795,20 +1795,20 @@ EditorUi.prototype.open = function () {
                     let doc;
                     let data = undefined;
                     //check for <diagram> tag and set risk values
-                    if(xml.slice(0,9) == "<diagram>"){
-                        diag = xml.slice(9,-10);
+                    if (xml.slice(0, 9) == "<diagram>") {
+                        diag = xml.slice(9, -10);
                         let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
                         doc = mxUtils.parseXml(splittedDiagram[0]);
                         data = mxUtils.parseXml(splittedDiagram[1]);
 
-                    }else{
+                    } else {
                         doc = mxUtils.parseXml(xml);
                     }
                     this.editor.setGraphXml(doc.documentElement);
                     this.editor.setModified(false);
                     this.editor.undoManager.clear();
                     //set graph values if xml contains risk values
-                    if(data != undefined){
+                    if (data != undefined) {
                         this.editor.setGraphValues(data.documentElement);
                     }
 
@@ -2958,9 +2958,13 @@ EditorUi.prototype.modifyRolesForGraph = function () {
         return;
     }
 
-    var dlg = new RoleDialog(this, mxUtils.bind(this, function (user, role) {
+    var dlg = new RoleDialog(this, mxUtils.bind(this, function (user, role, isRiskShared ) {
         if (user !== null) {
-            const params = {"email": user, "role": role}
+            let risk = true
+            if (isRiskShared === "false"){
+                risk = false
+            }
+                const params = {"email": user, "role": role, "isRiskShared": risk}
             axios.post(window.API_SHARE_DIAGRAM + graphid, params, {
                 headers: {
                     Authorization: 'Token ' + token
@@ -2994,7 +2998,7 @@ EditorUi.prototype.modifyRolesForGraph = function () {
             }
         }));*/
     }), null);
-    this.showDialog(dlg.container, 300, 80, true, true);
+    this.showDialog(dlg.container, 300, 140, true, true);
     //dlg.init();
 };
 
@@ -3058,7 +3062,7 @@ EditorUi.prototype.save = function (name, tags) {
         dataObject.threats = [];
         dataObject.consequences = [];
         let encoder = new mxCodec(mxUtils.createXmlDocument());
-        if(this.editor.graph.threats.length > 0){
+        if (this.editor.graph.threats.length > 0) {
             // Convert threats object into generic javascript Object
             let threatsObjects = [];
             this.editor.graph.threats.forEach(threat => {
@@ -3074,7 +3078,7 @@ EditorUi.prototype.save = function (name, tags) {
             dataObject.threats = threatsObjects;
         }
 
-        if(this.editor.graph.consequences.length > 0){
+        if (this.editor.graph.consequences.length > 0) {
 
             // Convert threats object into generic javascript Object
             let consequencesObjects = [];

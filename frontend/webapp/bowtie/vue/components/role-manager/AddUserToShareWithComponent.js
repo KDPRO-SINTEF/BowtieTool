@@ -13,7 +13,7 @@ export const AddUserToShareWithComponent = {
     data: function () {
         return {
             email_input: "",
-            risk_input: false,
+            risk_input: true,
             role: 'writer',
 
         }
@@ -47,10 +47,7 @@ export const AddUserToShareWithComponent = {
         },
         shareWith(userEmail, role = this.role, risk = this.risk_input) {
             if (userEmail !== undefined) {
-                const params = {email: userEmail, role: role}
-                if (risk) {
-                    // TODO Add an option to share without the risk computation part
-                }
+                const params = {email: userEmail, role: role, isRiskShared: risk}
                 axios.post(window.API_SHARE_DIAGRAM + this.graphid, params, {
                     headers: {
                         Authorization: 'Token ' + this.token
