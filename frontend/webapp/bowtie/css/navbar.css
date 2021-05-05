@@ -12,7 +12,7 @@
 
 .navbar-links {
     position: absolute;
-    right: 0.5vw;
+    right: 12px;
     margin-top: 2px;
 }
 
@@ -77,4 +77,8 @@
 
 .navbar-btn__logout:hover {
     background-color: rgb(176, 42, 55);
+}
+
+#navbar button {
+    margin: 0;
 }
