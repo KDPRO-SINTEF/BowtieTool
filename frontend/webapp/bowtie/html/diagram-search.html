@@ -17,13 +17,14 @@
     <script type="text/javascript">
         mxBasePath = '../../lib/mxgraph/src';
     </script>
-    <script type="text/javascript" src="../js/Init.js"></script>
-    <script type="text/javascript" src="../js/EditorUi.js"></script>
-    <script type="text/javascript" src="../js/Editor.js"></script>
-    <script type="text/javascript" src="../js/Graph.js"></script>
-    <script type="text/javascript" src="../js/Threat.js"></script>
-    <script type="text/javascript" src="../js/Consequence.js"></script>
-    <script type="text/javascript" src="../js/Matrix.js"></script>
+    <script type="text/javascript" src="../js/env.js"></script>
+    <script type="text/javascript" src="../js/editor/Init.js"></script>
+    <script type="text/javascript" src="../js/editor/EditorUi.js"></script>
+    <script type="text/javascript" src="../js/editor/Editor.js"></script>
+    <script type="text/javascript" src="../js/editor/Graph.js"></script>
+    <script type="text/javascript" src="../js/risk/Threat.js"></script>
+    <script type="text/javascript" src="../js/risk/Consequence.js"></script>
+    <script type="text/javascript" src="../js/risk/Matrix.js"></script>
     <script type="text/javascript" src="../lib/mxgraph/src/js/mxClient.js"></script>
 
     <!-- styles -->
@@ -35,28 +36,30 @@
 <body>
 
 <div id="diagram-search-vue">
-    <div class="search-bar-container">
-        <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"
-                    :all_diagrams="all_diagrams" :tags_selected="tags_selected" :name-input="nameInput"></search-bar>
-    </div>
-    <div class="visualizer-and-tags">
-        <tag-manager :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
-                     v-on:tag-change="onTagsChange" v-on:tags-empty="onTagsEmpty"></tag-manager>
-        <visualizer :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
-                    :tags_selected="tags_selected" :show_all_tags="show_all_tags"></visualizer>
+    <div v-if="allDiagramsLoaded">
+        <div class="search-bar-container">
+            <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"
+                        :all_diagrams="all_diagrams" :tags_selected="tags_selected" :name-input="nameInput"></search-bar>
+        </div>
+        <div class="visualizer-and-tags">
+            <tag-manager :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
+                         v-on:tag-change="onTagsChange" v-on:tags-empty="onTagsEmpty"></tag-manager>
+            <visualizer :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
+                        :tags_selected="tags_selected" :show_all_tags="show_all_tags"></visualizer>
+        </div>
     </div>
 </div>
 <div id="fake-div" style="display: inline-block; visibility: hidden"></div>
 
 
 <script type="text/x-template" id="search-bar-template">
-    <div id="search_bar" style="display: inline-flex;">
-        <div id="search_entries" class="form-outline" style="width: 22rem">
-            <label for="validationCustom01" class="form-label">Diagram name or description</label>
+    <div id="search_bar" style="display: inline-flex; margin-bottom: 10px;">
+        <div id="search_entries" class="form-outline" style="width: 22rem; margin-left: 10px;">
+            <label for="validationCustom01" class="form-label">Diagram's name or description</label>
             <input type="text" id="validationCustom01" class="form-control" style="background-color: transparent"
                    v-on:input="onInput($event)" v-on:keydown="onKey($event)">
             <span id="ghost"></span>
-            <label class="form-label" for="validationCustom01">Example label</label>
+<!--            <label class="form-label" for="validationCustom01">Example label</label>-->
         </div>
 
         <div class="dropdown" style="margin-top: 32px;margin-left: 5em">
@@ -66,8 +69,8 @@
             </a>
 
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                <li><a class="dropdown-item" href="#" v-on:click="publicChange(0)">Public</a></li>
-                <li><a class="dropdown-item" href="#" v-on:click="publicChange(1)">Private</a></li>
+                <li><a class="dropdown-item" href="#" v-on:click="publicChange(1)">Public</a></li>
+                <li><a class="dropdown-item" href="#" v-on:click="publicChange(0)">Private</a></li>
                 <li><a class="dropdown-item" href="#" v-on:click="publicChange(2)">Shared with me</a></li>
             </ul>
         </div>
@@ -75,7 +78,7 @@
 </script>
 
 <script type="text/x-template" id="tag_manager-template">
-    <div class="tag_manager">
+    <div class="tag_manager" style="margin-left: 10px;">
         <div class="list-group">
             <div class="card-header" style="text-align: center">Tags</div>
             <div v-for="tag_object in all_tags">
@@ -102,7 +105,7 @@
                         <div class="card-body">
                             <h5 class="card-title">{{diagram.name}}</h5>
                             <p class="card-text">id: {{diagram.id}}</p>
-                            <a href="#" class="btn btn-secondary" v-on:click="openDiagram(diagram.name)">
+                            <a href="#" class="btn btn-secondary" v-on:click="openDiagram(diagram.id)">
                                 Open this diagram</a>
                         </div>
                     </div>

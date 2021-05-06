@@ -1792,10 +1792,25 @@ EditorUi.prototype.open = function () {
         if (window.opener != null && window.opener.openFile != null) {
             window.opener.openFile.setConsumer(mxUtils.bind(this, function (xml, filename) {
                 try {
-                    var doc = mxUtils.parseXml(xml);
+                    let doc;
+                    let data = undefined;
+                    //check for <diagram> tag and set risk values
+                    if (xml.slice(0, 9) == "<diagram>") {
+                        diag = xml.slice(9, -10);
+                        let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
+                        doc = mxUtils.parseXml(splittedDiagram[0]);
+                        data = mxUtils.parseXml(splittedDiagram[1]);
+
+                    } else {
+                        doc = mxUtils.parseXml(xml);
+                    }
                     this.editor.setGraphXml(doc.documentElement);
                     this.editor.setModified(false);
                     this.editor.undoManager.clear();
+                    //set graph values if xml contains risk values
+                    if (data != undefined) {
+                        this.editor.setGraphValues(data.documentElement);
+                    }
 
                     if (filename != null) {
                         this.editor.setFilename(filename);
@@ -2954,9 +2969,13 @@ EditorUi.prototype.modifyRolesForGraph = function () {
         return;
     }
 
-    var dlg = new RoleDialog(this, mxUtils.bind(this, function (user, role) {
+    var dlg = new RoleDialog(this, mxUtils.bind(this, function (user, role, isRiskShared ) {
         if (user !== null) {
-            const params = {"email": user, "role": role}
+            let risk = true
+            if (isRiskShared === "false"){
+                risk = false
+            }
+                const params = {"email": user, "role": role, "isRiskShared": risk}
             axios.post(window.API_SHARE_DIAGRAM + graphid, params, {
                 headers: {
                     Authorization: 'Token ' + token
@@ -2990,9 +3009,25 @@ EditorUi.prototype.modifyRolesForGraph = function () {
             }
         }));*/
     }), null);
-    this.showDialog(dlg.container, 300, 80, true, true);
+    this.showDialog(dlg.container, 300, 140, true, true);
     //dlg.init();
 };
+
+EditorUi.prototype.manageRoles = function () {
+    var token = localStorage.getItem('sessionToken');
+    var graphid = this.editor.getGraphId();
+    if (token === null) {
+        mxUtils.alert(mxResources.get('notLoggedIn'));
+        return;
+    }
+
+    if (!graphid) {
+        mxUtils.alert(mxResources.get('rolesNotAssignable'));
+        return;
+    }
+    let newView = this.actions.get('openRolesVue').funct;
+    newView()
+}
 
 /**
  * Adds the label menu items to the given menu and parent.
@@ -3031,6 +3066,50 @@ EditorUi.prototype.save = function (name, tags) {
         }
 
         var xml = mxUtils.getXml(this.editor.getGraphXml());
+
+        //Convert risk objects (threats and consequences) to xml
+
+        let dataObject = new Object();
+        dataObject.threats = [];
+        dataObject.consequences = [];
+        let encoder = new mxCodec(mxUtils.createXmlDocument());
+        if (this.editor.graph.threats.length > 0) {
+            // Convert threats object into generic javascript Object
+            let threatsObjects = [];
+            this.editor.graph.threats.forEach(threat => {
+                threatObject = {...threat};
+                barriersObjects = [];
+                threat.barriers.forEach(barrier => {
+                    barriersObjects.push({...barrier})
+                });
+                threatObject._barriers = barriersObjects;
+                threatObject._matrix = {...threat._matrix};
+                threatsObjects.push(threatObject);
+            });
+            dataObject.threats = threatsObjects;
+        }
+
+        if (this.editor.graph.consequences.length > 0) {
+
+            // Convert threats object into generic javascript Object
+            let consequencesObjects = [];
+            this.editor.graph.consequences.forEach(consequence => {
+                consequenceObject = {...consequence};
+                barriersObjects = [];
+                consequence.barriers.forEach(barrier => {
+                    barriersObjects.push({...barrier})
+                });
+                consequenceObject._barriers = barriersObjects;
+                consequencesObjects.push(consequenceObject);
+            });
+            dataObject.consequences = consequencesObjects;
+        }
+
+        let result = encoder.encode(dataObject);
+        let dataXml = mxUtils.getXml(result);
+
+        //Append dataXml to the graph xml and embed it inside a root diagram xml tag
+        xml = "<diagram>" + xml + dataXml + "</diagram>";
 
         try {
             if (Editor.useLocalStorage) {

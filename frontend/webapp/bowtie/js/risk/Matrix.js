@@ -35,16 +35,16 @@ class Matrix{
     convertValueToColor(value){
         if (value != ""){
             switch(true){
-                case (value < 1.0):
+                case (value < 1.5):
                     return '#00ff06';
 
-                case (value < 3.0):
+                case (value < 3.5):
                     return '#a7ec67';
 
-                case (value < 5.0):
+                case (value < 5.5):
                     return '#fffe00'
 
-                case (value < 7.0):
+                case (value < 7.5):
                     return '#fe773d';
 
                 default:

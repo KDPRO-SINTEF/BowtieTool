@@ -166,7 +166,6 @@ class PublicDiagrams(APIView):
             )
         else:
             serializer = serializers.DiagramSerializer(Diagram.objects.all().filter(is_public=True), many=True)
-
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
@@ -216,35 +215,107 @@ class ShareView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def post(self, request, pk):
+        """Share a specified diagram (pk) with an other user (identified by its email)"""
+        queryset = Diagram.objects.all().filter(owner=self.request.user)
+        try:
+            shared_diagram = queryset.get(pk=pk)
+        except Diagram.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        email_to_share_with = request.data['email']
+        try:
+            user = User.objects.get(email=email_to_share_with)
+        except User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        role = request.data['role']
+        is_risk_shared = request.data['isRiskShared']
+        if role == "reader":
+            shared_diagram.reader.add(user)
+        else:
+            shared_diagram.writer.add(user)
+        is_risk_shared_dict = json.loads(shared_diagram.isRiskComputationShared)
+        is_risk_shared_dict[user.email] = is_risk_shared
+        print(is_risk_shared_dict)
+        new_dict_str = json.dumps(is_risk_shared_dict)
+        print(new_dict_str)
+        shared_diagram.isRiskComputationShared = new_dict_str
+        shared_diagram.save()
+        if settings.SHARE_BY_EMAIL_ACTIVATED:
+            subject = "Someone shared a BowTie diagram with you"
+            message = f"{self.request.user.email} shared his BowTie diagram named: \'{shared_diagram.name}\' with you, " \
+                      " and " \
+                      f"gave you the role of {role}.\nFeel free to visit BowTie++ website to work on this " \
+                      f"diagram!\nSincerly,\nBowtie++ team "
+            mail.send_mail(subject, message, "no-reply@Bowtie", [user.email], fail_silently=False)
+        return Response(status=status.HTTP_200_OK)
+
+    def get(self, request, pk):
+        """Return the list of readers and writers for this diagram"""
         queryset = Diagram.objects.all().filter(owner=self.request.user)
         try:
             shared_diagram = queryset.get(pk=pk)
         except Diagram.DoesNotExist:
             raise Http404
-        email_to_share_with = request.data['email']
-        try:
-            user = User.objects.get(email=email_to_share_with)
-        except User.DoesNotExist:
-            raise Http404
-        role = request.data['role']
-        if role == "reader":
-            shared_diagram.reader.add(user)
-        else:
-            shared_diagram.writer.add(user)
-        subject = "Someone shared a BowTie diagram with you"
-        message = f"{self.request.user.email} shared his BowTie diagram named: \'{shared_diagram.name}\' with you, "\
-                  " and "\
-                  f"gave you the role of {role}.\nFeel free to visit BowTie++ website to work on this " \
-                  f"diagram!\nSincerly,\nBowtie++ team "
-        mail.send_mail(subject, message, "no-reply@Bowtie", [user.email], fail_silently=False)
-        return Response(status=status.HTTP_200_OK)
+        writers = []
+        readers = []
+        for user in list(shared_diagram.writer.all()):
+            writers.append(user.email)
+        for user in list(shared_diagram.reader.all()):
+            readers.append(user.email)
+        data = {
+            'writers': json.dumps(writers),
+            'readers': json.dumps(readers)
+        }
+        return Response(data=data, status=status.HTTP_200_OK)
 
-    def get(self, request, pk):
+    def delete(self, request, pk):
+        """Delete the specified user from the specified role on this diagram"""
+        queryset = Diagram.objects.all().filter(owner=self.request.user)
+        try:
+            shared_diagram = queryset.get(pk=pk)
+        except Diagram.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        delete_completed = False
+        if request.data['role'] == "writer":
+            for user in shared_diagram.writer.all():
+                if user.email == request.data['email']:
+                    shared_diagram.writer.remove(user)
+                    delete_completed = True
+        else:
+            for user in shared_diagram.reader.all():
+                if user.email == request.data['email']:
+                    shared_diagram.reader.remove(user)
+                    delete_completed = True
+        if delete_completed:
+            risk_dict = json.loads(shared_diagram.isRiskComputationShared)
+            del risk_dict[request.data['email']]
+            shared_diagram.isRiskComputationShared = json.dumps(risk_dict)
+            shared_diagram.save()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class SharedWithMe(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        """Return all the diagrams shared with current authenticated user"""
         diags_as_reader = Diagram.objects.all().filter(reader__email__contains=self.request.user.email)
         diags_as_writer = Diagram.objects.all().filter(writer__email__contains=self.request.user.email)
         all_diags = diags_as_writer.union(diags_as_reader)
         serializer = serializers.DiagramSerializer(all_diags, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        resp_datas = serializer.data
+        print(resp_datas)
+        for diag_serialized in resp_datas:
+            diag = Diagram.objects.get(pk=diag_serialized['id'])
+            print(diag)
+            diag_is_risk_shared = diag.isRiskComputationShared
+            print(diag_is_risk_shared)
+            is_risk_shared_dict = json.loads(diag_is_risk_shared)
+            if is_risk_shared_dict != {}:
+                value = is_risk_shared_dict[self.request.user.email]
+                diag_serialized['isRiskShared'] = value
+        return Response(data=resp_datas, status=status.HTTP_200_OK)
 
 
 class DiagramVersions(APIView):
@@ -267,7 +338,6 @@ class DiagramVersions(APIView):
         """Return versions of the diagram of the authenticated user"""
         diagram = self.get_object(pk, auth_user_only=True)
         versions = Version.objects.get_for_object(diagram)
-
         diagrams = [{key: versions[i].field_dict[key] for key in ['name', 'diagram', 'preview']}
                     for i in range(len(versions))]
         for i in range(len(diagrams)):
@@ -287,5 +357,3 @@ class DiagramVersions(APIView):
         versions[id].revision.revert()
 
         return Response(status=status.HTTP_200_OK)
-
-

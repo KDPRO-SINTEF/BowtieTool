@@ -1,7 +1,7 @@
-FROM httpd:2.4.46-alpine
-MAINTAINER Clement Chavanon
+FROM nginx:stable-alpine
+LABEL maintainer="Clément Chavanon"
+
+COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir app
-WORKDIR /app
-COPY ./apache-httpd.conf /usr/local/apache2/conf/httpd.conf
-RUN ln -s /app /usr/local/apache2/htdocs/app
+RUN ln -s /app/bowtie /usr/share/nginx/html/bowtie
