@@ -83,6 +83,7 @@ export const PasswordUpdateComponent = {
                             this.$emit('show-toast', 'Your password has been updated.');
                             Object.values(this.form).forEach(field => {
                                 field.value = '';
+                                field.error = '';
                             })
                         }
                     })
@@ -101,35 +102,30 @@ export const PasswordUpdateComponent = {
                 if (errorData.new_password !== undefined) {
                     switch(errorData.new_password[0]) {
                         case 'This field is required.':
-                        case 'This field may not be blank.':
                             this.form.password.error = 'missing';
                             break;
-                        default:
-                            this.form.password.error = 'invalid';
-                            this.form.password.value = '';
-                    }
-                    this.form.passwordConfirm.value = '';
-                }
-                if (errorData.old_password !== undefined) {
-                    switch(errorData.old_password[0]) {
-                        case 'This field is required.':
-                        case 'This field may not be blank.':
-                            this.form.oldPassword.error = 'missing';
-                            break;
-                    }
-                }
-                if (errorData.non_field_errors !== undefined) {
-                    switch (errorData.non_field_errors[0]) {
-                        case 'Wrong password':
-                            this.form.oldPassword.value = '';
-                            this.form.oldPassword.error = 'incorrect';
-                            break;
-                        case 'The two passwords must be different':
+                        case 'The two passwords must be different.':
                             this.form.password.value = ''
                             this.form.password.error = 'invalid';
                             this.form.passwordConfirm.value = '';
                             break;
                     }
+                }
+                if (errorData.old_password !== undefined) {
+                    switch(errorData.old_password[0]) {
+                        case 'This field is required.':
+                            this.form.oldPassword.error = 'missing';
+                            break;
+                        case 'Wrong old password.':
+                            this.form.oldPassword.value  = '';
+                            this.form.oldPassword.error = 'incorrect';
+                            break;
+                    }
+                }
+                if (errorData.password !== undefined) {
+                    this.form.password.value = ''
+                    this.form.password.error = 'invalid';
+                    this.form.passwordConfirm.value = '';
                 }
             }
         }
