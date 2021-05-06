@@ -398,10 +398,10 @@ var OpenFromDBDialog = function (width, height) {
     this.container = iframe_holder;
 };
 
-var OpenVersionningDialog = function (width, height) {
+var OpenVersioningDialog = function (width, height) {
 
     const iframe_holder = document.createElement('div')
-    iframe_holder.setAttribute("style", "background:url(../images/ajax-loading-large.gif) center center no-repeat;")
+    iframe_holder.setAttribute("style", "background:url(../images/loading.gif) center center no-repeat;")
 
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
@@ -415,7 +415,7 @@ var OpenVersionningDialog = function (width, height) {
 
     iframe.setAttribute('width', width + 'px');
     iframe.setAttribute('height', height + 'px');
-    iframe.setAttribute('src', window.VERSIONNING_SEARCH);
+    iframe.setAttribute('src', window.VERSIONING_SEARCH);
     iframe_holder.appendChild(iframe)
     this.container = iframe_holder;
 };

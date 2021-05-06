@@ -2945,7 +2945,7 @@ EditorUi.prototype.openFromDb = function (open_endpoint) {
         dlg.init(open_endpoint);*/
 }
 
-EditorUi.prototype.openVersionning = function (open_endpoint) {
+EditorUi.prototype.openVersioning = function (open_endpoint) {
 
     var token = localStorage.getItem('sessionToken');
     if (!token) {

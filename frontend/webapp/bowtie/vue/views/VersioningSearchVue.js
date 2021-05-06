@@ -1,5 +1,5 @@
-let versionningSearch_vue = new Vue({
-    el: '#versionning-search-vue',
+let versioningSearch_vue = new Vue({
+    el: '#versioning-search-vue',
     components: {
     },
     data: {
@@ -17,8 +17,8 @@ let versionningSearch_vue = new Vue({
                 mxUtils.alert(mxResources.get('notLoggedIn'));
                 return;
             }
-            console.log(window.API_VERSIONNING_DIAGRAMS+this.graphID.toString());
-            axios.get(window.API_VERSIONNING_DIAGRAMS+this.graphID.toString(), {
+            console.log(window.API_VERSIONING_DIAGRAMS+this.graphID.toString());
+            axios.get(window.API_VERSIONING_DIAGRAMS+this.graphID.toString(), {
                 headers: {
                     'Authorization': 'Token ' + this.token
                 }
@@ -47,8 +47,11 @@ let versionningSearch_vue = new Vue({
                     console.log(res)
                     this.editor.setGraphId(this.graphID);
                     console.log('Posted new diagram with id', this.graphID, 'and', this.graphID);
-                    var doc = mxUtils.parseXml(diagram);
+                    //console.log(diagram);
+                    let doc = mxUtils.parseXml(diagram);
+                    console.log(doc);
                     window.parent.currentUI.editor.setGraphXml(doc.documentElement);
+                    console.log('test');
                     window.parent.currentUI.hideDialog();
                 })
                 .catch(error => {
@@ -60,5 +63,5 @@ let versionningSearch_vue = new Vue({
     },
     mounted() {
         this.init();
-    }
+    },
 })

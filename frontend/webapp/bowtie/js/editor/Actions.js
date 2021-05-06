@@ -32,7 +32,7 @@ Actions.prototype.init = function () {
         window.open(window.ROOT_PAGE);
     });
     this.addAction('openVers...', function (){
-        ui.openVersionning(window.VERSIONNING_SEARCH);
+        ui.openVersioning(window.VERSIONING_SEARCH);
     }).isEnabled = isLoggedIn;
     this.addAction('openDb...', function () {
         ui.openFromDb(window.DIAGRAM_SEARCH_DIALOG);
@@ -691,7 +691,7 @@ Actions.prototype.init = function () {
     this.addAction('showVersionSearch',function (){
         const width = 1250;
         const height = 0.7*window.innerHeight;
-        ui.showDialog(new OpenVersionningDialog(width,height).container,width,height,true,true)
+        ui.showDialog(new OpenVersioningDialog(width,height).container,width,height,true,true)
     });
 
     this.addAction('openRolesVue',function (){
