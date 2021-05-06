@@ -26,10 +26,6 @@
     text-decoration: none;
 }
 
-.information-msg {
-    font-size: 0.8em;
-}
-
 #email-confirm {
     max-width: 600px;
     width: 100%;

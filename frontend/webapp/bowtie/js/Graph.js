@@ -2270,8 +2270,8 @@ Graph.prototype.getUnwantedEventName = function () {
             const res = name_with_html.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
                 .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
                 .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                .replaceAll(/<\/pre>/g,"")
-            return res
+                .replaceAll(/<\/pre>/g,"");
+            return res;
         }
     }
     return ""
@@ -2295,10 +2295,11 @@ Graph.prototype.getAllThreatsCells = function() {
 /**
  *	Bowtie++ feature
  *	returns the matrix linked to the threat cell given in parameter
+ *  returns default null matrix if no matrix is linked
  */
 Graph.prototype.getMatrix = function(cell) {
     let mat = new Matrix(null);
-    if(cell.edges != null){
+    if(cell.edges != null && cell.edges.length > 0){
         for (const edge of Object.values(cell.edges)) {
             if (edge.target.customID == 'Likelihood'){
                 mat = new Matrix(edge.target);
@@ -2308,18 +2309,118 @@ Graph.prototype.getMatrix = function(cell) {
     }
     return mat;
 }
+
+/**
+ * Bowtie++ feature
+ * Recursive function
+ * Check if a barrier is linked to given cell, and append it to parameter barriers.
+ * Call it with the threat's cell and threat object
+ * @param cell
+ * @param barriers
+ * @returns {barriers}
+ */
+Graph.prototype.updateThreatBarriers = function(cell, threat) {
+    let lastBarrier = true;
+    if(cell.edges != null && cell.edges.length > 0){
+        for (const edge of Object.values(cell.edges)) {
+            //delete the case in which the target is the cell itself
+            if(edge.source.id == cell.id){
+                //check if a edge is toward a barrier
+                if (edge.target.customID == 'Security Control' || edge.target.customID == 'Barrier'){
+                    let foundBarrier = threat.barriers.find(barrier => barrier.cell == edge.target.id);
+                    // check if the barrier was not found in the threat to add it
+                    if(foundBarrier == undefined){
+                        threat.barriers.push(new Barrier(edge.target));
+                    }else{
+                        foundBarrier.name = edge.target.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
+                            .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
+                            .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
+                            .replaceAll(/<\/pre>/g,"");
+                    }
+                    this.updateThreatBarriers(edge.target, threat);
+                    lastBarrier = false;
+                    break;
+                }
+            }
+
+        }
+    }
+    if(lastBarrier){
+        let newBarriersArray = [];
+        // only add the barriers that are on the diagram
+        threat.barriers.forEach(barrier => {
+            if(this.model.getCell(barrier.cell) != null){
+                newBarriersArray.push(barrier);
+            }
+        });
+        threat.barriers = newBarriersArray;
+    }
+}
+
+/**
+ * Bowtie++ feature
+ * Recursive function
+ * Check if a barrier is linked to given cell, and append it to parameter barriers.
+ * Call it with the consequence's cell and consequence object
+ * @param cell
+ * @param barriers
+ * @returns {barriers}
+ */
+Graph.prototype.updateConsequenceBarriers = function(cell, consequence) {
+    let lastBarrier = true;
+    if(cell.edges != null && cell.edges.length > 0){
+        for (const edge of Object.values(cell.edges)) {
+            //delete the case in which the source is the cell itself
+            if (edge.target.id == cell.id){
+                //check if a edge is coming from a barrier
+                if (edge.source.customID == 'Security Control' || edge.source.customID == 'Barrier'){
+                    let foundBarrier = consequence.barriers.find(barrier => barrier.cell == edge.source.id);
+                    // check if the barrier was not found in the consequence to add it
+                    if(foundBarrier == undefined){
+                        consequence.barriers.push(new Barrier(edge.source));
+                    }else{
+                        foundBarrier.name = edge.source.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
+                            .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
+                            .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
+                            .replaceAll(/<\/pre>/g,"");
+                    }
+                    this.updateConsequenceBarriers(edge.source, consequence);
+                    lastBarrier = false;
+                    break;
+                }
+            }
+        }
+    }
+    if(lastBarrier){
+        let newBarriersArray = [];
+        // only add the barriers that are on the diagram
+        consequence.barriers.forEach(barrier => {
+            if(this.model.getCell(barrier.cell) != null){
+                newBarriersArray.push(barrier);
+            }
+        });
+        consequence.barriers = newBarriersArray;
+        consequence.barriers.reverse();
+    }
+}
+
 /**
  *	Bowtie++ feature
  *	Update this.threats with the graph
  */
 Graph.prototype.updateAllThreats = function () {
     threatsCells = this.getAllThreatsCells();
-    //Add new threats from the diagram to this.threats, rename it if it already was in this.threats and update matrix
+    //Add new threats from the diagram to this.threats
     threatsCells.forEach(cell => {
         let threat = this.threats.find(elem => elem.cell === cell.id);
         if (threat !== undefined) {
-            threat.name = cell.value;
+            //update name in case of rename, without taking html tags
+            threat.name = cell.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
+                .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
+                .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
+                .replaceAll(/<\/pre>/g,"");
             let mat = this.getMatrix(cell);
+            // update the matrix if it is not the same one
             if(threat.matrix.getMatrixCell() != mat.getMatrixCell()){
                 threat.matrix = this.getMatrix(cell);
             }
@@ -2337,6 +2438,8 @@ Graph.prototype.updateAllThreats = function () {
             newThreatsArray.push(threat);
         }
     });
+    //update threats barriers
+    newThreatsArray.forEach(threat => this.updateThreatBarriers(this.model.getCell(threat.cell), threat));
     this.setThreats(newThreatsArray);
 
     // Alphabetically sort this.threats
@@ -2388,7 +2491,11 @@ Graph.prototype.updateAllConsequences = function() {
     consCells.forEach(cell => {
         let consequence = this.consequences.find(elem => elem.cell === cell.id);
         if (consequence !== undefined) {
-            consequence.name = cell.value;
+            //update name in case of rename, without taking html tags
+            consequence.name = cell.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
+                .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
+                .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
+                .replaceAll(/<\/pre>/g,"");
         } else {
             this.consequences.push(new Consequence(cell));
         }
@@ -2402,6 +2509,8 @@ Graph.prototype.updateAllConsequences = function() {
             newConsequencesArray.push(consequence);
         }
     });
+    //update consequences barriers
+    newConsequencesArray.forEach(consequence => this.updateConsequenceBarriers(this.model.getCell(consequence.cell), consequence));
     this.setConsequences(newConsequencesArray);
 
     //Alphabetically sort this.consequences
@@ -2425,6 +2534,7 @@ Graph.prototype.getAllConsequences = function () {
  */
 Graph.prototype.setConsequences = function (consequences) {
     this.consequences = consequences;
+    this.refresh();
 }
 /**
  * Hover icons are used for hover, vertex handler and drag from sidebar.

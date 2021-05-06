@@ -21,7 +21,7 @@ Actions.prototype.init = function () {
         return Action.prototype.isEnabled.apply(this, arguments) && graph.isEnabled();
     };
     var isLoggedIn = function () {
-        return localStorage.getItem('sessionToken') != null;
+        return localStorage.getItem('sessionToken') !== null;
     };
     var allEnabled = function () {
         return isLoggedIn() && isGraphEnabled();
@@ -624,17 +624,17 @@ Actions.prototype.init = function () {
         Bowtie++ feature
         add Action to show Risk computation dialog
      */
-    this.addAction('showRisk', function(){ui.showDialog(new RiskDialog().container, 1000, 750, true, true);});
+    this.addAction('showRisk', function(){ui.showDialog(new RiskDialog().container, 1000, (0.7*window.innerHeight), true, true);});
 
     this.addAction('showDiagramSearch',function (){
         const width = 1250;
-        const height = 800;
+        const height = 0.7*window.innerHeight;
         ui.showDialog(new OpenFromDBDialog(width,height).container,width,height,true,true)
     });
 
     this.addAction('showVersionSearch',function (){
         const width = 1250;
-        const height = 800;
+        const height = 0.7*window.innerHeight;
         ui.showDialog(new OpenVersionningDialog(width,height).container,width,height,true,true)
     });
 

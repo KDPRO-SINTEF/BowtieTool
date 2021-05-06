@@ -31,87 +31,25 @@ let ThreatsComponent = {
         },
         getDetailsButtonText(threat){
             if (this.display_threat.includes(threat)){
-                return "Hide Details";
+                return "Hide Parameters";
             }else{
-                return "Show Details";
+                return "Edit Parameters";
             }
         },
-        updateThreatActors: function (threat, event) {
-            //Check input validity
-            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 10 || event.target.value === "") {
-                console.log("Invalid threat actors value");
-                threat.threatActors = "";
-                threat.updateThreatCellColor();
-                this.refreshGraph();
-                this.emitThreats();
-                return;
-            }
-
-            threat.threatActors = parseFloat(event.target.value);
+        updateThreat: function (threat) {
             threat.updateThreatCellColor();
-            this.refreshGraph();
-            this.emitThreats();
-        },
-        updateOpportunity: function (threat, event) {
-            //Check input validity
-            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 10 || event.target.value === "") {
-                console.log("Invalid opportunity value");
-                threat.opportunity = "";
-                threat.updateThreatCellColor();
-                this.refreshGraph();
-                this.emitThreats();
-                return;
-            }
-
-            threat.opportunity = parseFloat(event.target.value);
-            threat.updateThreatCellColor();
-            this.refreshGraph();
-            this.emitThreats();
-        },
-        updateMeans: function (threat, event) {
-            //Check input validity
-            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 10 || event.target.value === "") {
-                console.log("Invalid means value");
-                threat.means = "";
-                threat.updateThreatCellColor();
-                this.refreshGraph();
-                this.emitThreats();
-                return;
-            }
-
-            threat.means = parseFloat(event.target.value);
-            threat.updateThreatCellColor();
-            this.refreshGraph();
-            this.emitThreats();
-        },
-        updateMotivation: function (threat, event) {
-            //Check input validity
-            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 10 || event.target.value === "") {
-                console.log("Invalid threat actors value");
-                threat.motivation = "";
-                threat.updateThreatCellColor();
-                this.refreshGraph();
-                this.emitThreats();
-                return;
-            }
-
-            threat.motivation = parseFloat(event.target.value);
-            threat.updateThreatCellColor();
-            this.refreshGraph();
             this.emitThreats();
         },
         emitThreats: function () {
             this.$emit("threats", this.threats);
-        },
-        refreshGraph: function () {
-            window.parent.currentUI.editor.graph.refresh();
-        },
+        }
     }
 }
 
 let ConsequencesComponent = {
-    props: ['event-probability', 'highest-risk-value'],
     template: '#consequences',
+    props:
+        ['event-probability'],
     data: function() {
         return {
             consequences : [],
@@ -122,42 +60,8 @@ let ConsequencesComponent = {
         this.consequences = window.parent.currentUI.editor.graph.getAllConsequences();
     },
     methods: {
-        updateImpactValue: function (consequence, event) {
-            //Check input validity
-            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value === "") {
-                console.log("Invalid impact value");
-                consequence.impactValue = "";
-                this.emitConsequences();
-                return;
-            }
-
-            consequence.impactValue = parseFloat(event.target.value);
-            this.emitConsequences();
-        },
-        updateProbability: function (consequence, event) {
-            //Check input validity
-            if (isNaN(event.target.value) || event.target.value < 0 || event.target.value > 1 || event.target.value === "") {
-                console.log("Invalid probability value");
-                consequence.probability = "";
-                this.emitConsequences();
-                return;
-            }
-
-            consequence.probability = parseFloat(event.target.value);
-            this.emitConsequences();
-        },
         emitConsequences: function () {
             this.$emit("consequences", this.consequences);
-        },
-        isHighest: function (consequence) {
-            if (!isNaN(this.eventProbability) && !isNaN(this.highestRiskValue)) {
-                if ((consequence.impactValue * consequence.probability * this.eventProbability) >= this.highestRiskValue) {
-                    return true;
-
-                }
-            }
-            return false;
-
         }
     },
     mounted() {
@@ -190,126 +94,7 @@ let ResultComponent = {
                     return "Show Formula";
             }
         }
-        /* Code used to transform objects into xml string
-        getTestXml(){
-            var encoder = new mxCodec(mxUtils.createXmlDocument());
-            let objVer = new Array();
-            window.parent.currentUI.editor.graph.getAllConsequences().forEach(elem => {
-                objVer.push({...elem});
-            });
-            var result = encoder.encode(objVer);
-            var xml = mxUtils.getXml(result);
-            return xml;
-        },
-        getTestDecode(xml){
-            var doc = mxUtils.parseXml(xml);
-            var codec = new mxCodec(doc);
-            let testObject = new Array();
-            codec.decode(doc.documentElement, testObject);
-            return testObject;
-        }
-        */
     }
 
 }
-
-let risk_vue = new Vue({
-    el: '#risk_container',
-    components : {
-        'threats-component': ThreatsComponent,
-        'consequences-component': ConsequencesComponent,
-        'result-component': ResultComponent
-    },
-    data: function(){
-        return {
-            currentTab: 'Threats',
-            tabs: ['Threats', 'Consequences'],
-            threats: [],
-            highestRiskValue: 'none_defined',
-            accumulatedRiskValue: 'none_defined',
-            missingConsequence: false,
-            eventProbability: 'no_threats',
-            consequences : []
-        }
-    },
-    methods: {
-        processThreats: function(input) {
-            this.threats = input;
-
-            //Check if there are threats to process
-            if (this.threats.length === 0){
-                this.eventProbability = 'no_threats';
-                console.log("No threat linked to a likelihood matrix were found on the diagram");
-                return;
-            }
-
-            let inter_res = 1;
-            for(let i = 0; i < this.threats.length; i++){
-
-                //Check if a matrix is linked to the threat
-                if(this.threats[i].matrix == null){
-                    this.eventProbability = 'no_matrix';
-                    console.log("No matrix linked to the threat was found on the diagram");
-                    return;
-                }
-
-                //Check if parameters of the threat are defined
-                if(!this.threats[i].allDefined()){
-                    this.eventProbability = "missing_param";
-                    console.log("Missing parameter(s) on " + this.threats[i].name);
-                    return;
-                }
-
-                inter_res *= (1.0 - this.threats[i].getProbability());
-            }
-            this.eventProbability = 1 - inter_res;
-        },
-
-        processConsequences: function(input){
-            this.consequences = input;
-
-            //Check if there are consequences to process
-            if(this.consequences.length === 0){
-                console.log("No consequences on diagram");
-                this.highestRiskValue = "no_consequences";
-                this.accumulatedRiskValue = "no_consequences";
-                return;
-            }
-
-            let maxIv = 0;
-            let maxProb = 0;
-            let accumul = 0;
-            let oneDefined = false;
-            this.missingConsequence = false;
-
-            for(let i = 0; i < this.consequences.length; i++){
-
-                //Check if one consequence attributes are not defined
-                if (!this.consequences[i].allDefined()){
-                    console.log(this.consequences[i].name + " : Missing consequence parameters")
-                    this.missingConsequence = true;
-                    continue;
-                }
-                oneDefined = true;
-                let product =  this.consequences[i].impactValue * this.consequences[i].probability;
-                if(product > maxIv * maxProb){
-                    maxIv = this.consequences[i].impactValue;
-                    maxProb = this.consequences[i].probability;
-                }
-                accumul += product;
-            }
-
-            //Check if at least one consequence attributes are defined
-            if(!oneDefined){
-                this.highestRiskValue = 'none_defined';
-                this.accumulatedRiskValue = 'none_defined';
-                console.log("No consequence parameters are defined");
-                return;
-            }
-
-            this.highestRiskValue = this.eventProbability * maxIv * maxProb;
-            this.accumulatedRiskValue = this.eventProbability * accumul;
-        }
-    }
-})
 

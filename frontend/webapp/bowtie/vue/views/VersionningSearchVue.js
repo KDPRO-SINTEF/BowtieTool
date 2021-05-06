@@ -4,21 +4,23 @@ let versionningSearch_vue = new Vue({
     },
     data: {
         all_diagrams: [],
-        editor: null
+        editor: undefined,
+        graphID: undefined,
+        token: undefined
     },
     methods: {
         init: function() {
-            var token = localStorage.getItem('sessionToken');
+            this.token = localStorage.getItem('sessionToken');
             this.editor = window.parent.currentUI.editor;
-            var graphID = this.editor.getGraphId();
-            if (!token) {
+            this.graphID = this.editor.getGraphId();
+            if (!this.token) {
                 mxUtils.alert(mxResources.get('notLoggedIn'));
                 return;
             }
-            console.log(window.VERSIONNING_DIAGRAMS_URL+graphID.toString());
-            axios.get(window.VERSIONNING_DIAGRAMS_URL+graphID.toString(), {
+            console.log(window.API_VERSIONNING_DIAGRAMS+this.graphID.toString());
+            axios.get(window.API_VERSIONNING_DIAGRAMS+this.graphID.toString(), {
                 headers: {
-                    'Authorization': 'Token ' + token
+                    'Authorization': 'Token ' + this.token
                 }
             })
                 .then(res => {
@@ -34,6 +36,26 @@ let versionningSearch_vue = new Vue({
                 })
             console.log("Exemple id : ");
             console.log(this.all_diagrams[0])
+        },
+        openOldVersion: function (id_version, diagram){
+            axios.post(window.API_SWITCH_VERSION+this.graphID.toString(),{id: id_version},{
+                headers: {
+                    'Authorization': 'Token ' + this.token
+                }
+            })
+                .then(res => {
+                    console.log(res)
+                    this.editor.setGraphId(this.graphID);
+                    console.log('Posted new diagram with id', this.graphID, 'and', this.graphID);
+                    var doc = mxUtils.parseXml(diagram);
+                    window.parent.currentUI.editor.setGraphXml(doc.documentElement);
+                    window.parent.currentUI.hideDialog();
+                })
+                .catch(error => {
+
+                    console.log(error)
+
+                })
         }
     },
     mounted() {
