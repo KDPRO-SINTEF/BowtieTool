@@ -35,9 +35,46 @@ Actions.prototype.init = function () {
         ui.openFromDb(window.DIAGRAM_SEARCH_DIALOG);
     }).isEnabled = isLoggedIn;
     this.addAction('openLocal...', function () {
-        window.openNew = true;
+        window.openNew = false;
         window.openKey = 'open';
-        ui.openFile();
+
+        // Closes dialog after open
+        window.openFile = new OpenFile(mxUtils.bind(this, function () {
+            ui.hideDialog();
+        }));
+
+        window.openFile.setConsumer(mxUtils.bind(this, function (xml, filename) {
+            try {
+                let doc;
+                let data = undefined;
+                //check for <diagram> tag and set risk values
+                if(xml.slice(0,9) == "<diagram>"){
+                    diag = xml.slice(9,-10);
+                    let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
+                    doc = mxUtils.parseXml(splittedDiagram[0]);
+                    data = mxUtils.parseXml(splittedDiagram[1]);
+
+                }else{
+                    doc = mxUtils.parseXml(xml);
+                }
+                editor.setGraphXml(doc.documentElement);
+                editor.setModified(false);
+                editor.undoManager.clear();
+                //set graph values if xml contains risk values
+                if(data != undefined){
+                    editor.setGraphValues(data.documentElement);
+                }
+
+
+            } catch (e) {
+                mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
+            }
+        }));
+
+        // Removes openFile if dialog is closed
+        ui.showDialog(new OpenDialog(this).container, 320, 220, true, true, function () {
+            window.openFile = null;
+        });
     }).isEnabled = isGraphEnabled;
     this.addAction('openTemplate...', function () {
         ui.openFromDb(window.TEMPLATE_GRAPHS);
@@ -50,6 +87,11 @@ Actions.prototype.init = function () {
         ui.modifyRolesForGraph();
 
     }).isEnabled = isLoggedIn;
+    this.addAction('manageRoles', function (){
+        ui.manageRoles();
+        }
+    ).isEnabled = isLoggedIn;
+
     this.addAction('import...', function () {
         window.openNew = false;
         window.openKey = 'import';
@@ -61,13 +103,27 @@ Actions.prototype.init = function () {
 
         window.openFile.setConsumer(mxUtils.bind(this, function (xml, filename) {
             try {
-                var doc = mxUtils.parseXml(xml);
-                var model = new mxGraphModel();
-                var codec = new mxCodec(doc);
-                codec.decode(doc.documentElement, model);
+                let doc;
+                let data = undefined;
+                //check for <diagram> tag and set risk values
+                if(xml.slice(0,9) == "<diagram>"){
+                    diag = xml.slice(9,-10);
+                    let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
+                    doc = mxUtils.parseXml(splittedDiagram[0]);
+                    data = mxUtils.parseXml(splittedDiagram[1]);
 
-                var children = model.getChildren(model.getChildAt(model.getRoot(), 0));
-                editor.graph.setSelectionCells(editor.graph.importCells(children));
+                }else{
+                    doc = mxUtils.parseXml(xml);
+                }
+                editor.setGraphXml(doc.documentElement);
+                editor.setModified(false);
+                editor.undoManager.clear();
+                //set graph values if xml contains risk values
+                if(data != undefined){
+                    editor.setGraphValues(data.documentElement);
+                }
+
+
             } catch (e) {
                 mxUtils.alert(mxResources.get('invalidOrMissingFile') + ': ' + e.message);
             }
@@ -628,7 +684,11 @@ Actions.prototype.init = function () {
         const height = 0.7*window.innerHeight;
         ui.showDialog(new OpenFromDBDialog(width,height).container,width,height,true,true)
     });
-
+    this.addAction('openRolesVue',function (){
+        const width = 1000;
+        const height = 0.6*window.innerHeight;
+        ui.showDialog(new ManageRolesDialog(width,height).container,width,height,true,true)
+    });
     // Option actions
     var action = null;
     action = this.addAction('grid', function () {

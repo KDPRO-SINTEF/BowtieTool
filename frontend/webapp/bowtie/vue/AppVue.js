@@ -1,7 +1,6 @@
 import { router } from "./router.js";
 import { store } from "./store.js";
 import { HomePage } from "./pages/HomePage.js";
-//import { LoginPage } from "./pages/auth/LoginPage.js";
 import { TheNavbarComponent } from "./components/TheNavbarComponent.js";
 
 export const app = new Vue({
@@ -15,20 +14,19 @@ export const app = new Vue({
         'navbar': TheNavbarComponent
     },
     methods: {
-        homePage: function() {
-            return (this.$router.currentRoute.path === '/');
-        },
         showNavbar: function() {
-            return (this.onPage('home') || this.onPage('statistics') || this.onPage('settings'));
+            return (this.onPage('Home') || this.onPage('Statistics') || this.onPage('Settings'));
         },
         onPage: function(pageName) {
-            let route = '/' + pageName;
-            if (pageName === 'home') {
-                route = '/';
-            } else if (pageName === 'settings') {
-                return (this.$router.currentRoute.path.indexOf(route) !== -1);
+            let currentPage = this.$route.name;
+            if (currentPage !== undefined) {
+                if (pageName === 'Settings') {
+                    return (currentPage === 'UserProfile' || currentPage.indexOf('Account') !== -1);
+                } else {
+                    return this.$route.name === pageName;
+                }
             }
-            return this.$router.currentRoute.path === route;
+            return false;
         }
     },
     created: function() {
@@ -52,5 +50,4 @@ export const app = new Vue({
             this.isStoreLoaded = true;
         }
     }
-
 }).$mount('#app');

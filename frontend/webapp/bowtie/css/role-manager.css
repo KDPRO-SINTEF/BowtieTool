@@ -1,0 +1,26 @@
+.input-fields {
+    display: inline-flex;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+#share-button{
+    height: max-content;
+}
+
+.share-button-div{
+    margin-top: 2rem;
+    margin-left: 5px;
+    height: max-content;
+    display: inline-flex;
+}
+
+.share-risk-checkbox{
+    margin-top: 0.5rem;
+    margin-left: 4rem;
+}
+
+.list-group{
+    min-height: 5rem;!important;
+    minheight: 5rem;!important;
+}

@@ -85,6 +85,7 @@ class NonceToToken(models.Model):
     def __str__(self):
         return "NonceToToken model"
 
+
 class Profile(models.Model):
     """Profile of a user related to authentication features"""
 
@@ -128,6 +129,7 @@ class Diagram(models.Model):
     is_public = models.BooleanField(default=False)
     reader = models.ManyToManyField(User, related_name="readers")
     writer = models.ManyToManyField(User, related_name="writers")
+    isRiskComputationShared = models.TextField(default="{}")
     tags = TaggableManager()
     description = models.TextField(default="")
     lastTimeSpent = models.FloatField(default=0)  # time in minutes between the last two updates
