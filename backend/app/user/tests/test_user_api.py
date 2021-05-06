@@ -146,29 +146,29 @@ class PublicUserApiTests(TestCase):
         self.assertEqual(mail.outbox[0].from_email, 'from@example.com')
         self.assertEqual(mail.outbox[0].to, ['mkirov@insa-rennes.fr'])
 
-    # def test_create_existing_user(self):
-    #     """Test creating user that already exists"""
-    #     payload = {
-    #         'email': 'test@bowtie.com',
-    #         'password': '123456789A#a',
-    #         'username': 'username'
-    #     }
-    #     user = create_user(**payload)
-    #     user.profile.email_confirmed = True
-    #     user.save()
-    #     user.profile.save()
-    #     res = self.client.post(CREATE_USER_URL, payload)
-    #     self.assertEqual(status.HTTP_201_CREATED, res.status_code)
-    #     message = "Someone tried to create an account into Bowtie++ using " + \
-    #         "this email who is already registered." + \
-    #         " If you forgot your password please use the reset link on our login page.\n"+\
-    #         "Sincerly, \n Bowtie++ team"
-    #     subject = 'Account creation with existing email'
+    def test_create_existing_user(self):
+        """Test creating user that already exists"""
+        payload = {
+            'email': 'test@bowtie.com',
+            'password': '123456789A#a',
+            'username': 'username'
+        }
+        user = create_user(**payload)
+        user.profile.email_confirmed = True
+        user.save()
+        user.profile.save()
+        res = self.client.post(CREATE_USER_URL, payload)
+        self.assertEqual(status.HTTP_201_CREATED, res.status_code)
+        message = "Someone tried to create an account into Bowtie++ using " + \
+            "this email who is already registered." + \
+            " If you forgot your password please use the reset link on our login page.\n"+\
+            "Sincerly, \n Bowtie++ team"
+        subject = 'Account creation with existing email'
 
-    #     self.assertEqual(len(mail.outbox), 1)
-    #     self.assertEqual(mail.outbox[0].subject, subject)
-    #     self.assertEqual(mail.outbox[0].body, message)
-    #     self.assertEqual(mail.outbox[0].to, ['test@bowtie.com'])
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].body, message)
+        self.assertEqual(mail.outbox[0].to, ['test@bowtie.com'])
 
 
     def test_create_token_for_user_ok(self):

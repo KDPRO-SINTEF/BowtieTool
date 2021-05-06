@@ -10,6 +10,7 @@ from user.authentication import PasswordResetToken,  create_random_user_id
 from django.core import mail
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.db import transaction
 
 
 class UserSerializer(serializers.Serializer):
@@ -23,10 +24,11 @@ class UserSerializer(serializers.Serializer):
     def create(self, validated_data):
         """Create new user and return it"""
 
-        user = get_user_model().objects.create_user(**validated_data)
-        if user is None:
-            serializers.ValidationError("Validation error", code='authentication')
-        return user
+        with transaction.atomic():
+            user = get_user_model().objects.create_user(**validated_data)
+            if user is None:
+                serializers.ValidationError("Validation error", code='authentication')
+            return user
 
 class ProfileSerializer(serializers.Serializer):
     """Serializer for user role"""
