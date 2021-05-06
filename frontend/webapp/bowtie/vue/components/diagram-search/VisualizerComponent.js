@@ -24,7 +24,7 @@ let VisualizerComponent = {
                 diag = chosen_diag.diagram.slice(9, -10);
                 let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
                 doc = mxUtils.parseXml(splittedDiagram[0]);
-                if(chosen_diag.isRiskShared) {
+                if(chosen_diag.isRiskShared != false) {
                     data = mxUtils.parseXml(splittedDiagram[1]);
                 }
             } else {
@@ -34,6 +34,7 @@ let VisualizerComponent = {
             window.parent.currentUI.editor.setGraphId(chosen_diag.id);
             //set graph values if xml contains risk values
             if (data !== undefined) {
+
                 window.parent.currentUI.editor.setGraphValues(data.documentElement);
             }
             window.parent.currentUI.editor.graph.updateAllThreats();
