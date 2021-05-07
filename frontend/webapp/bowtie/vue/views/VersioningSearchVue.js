@@ -13,6 +13,7 @@ let versioningSearch_vue = new Vue({
             this.token = localStorage.getItem('sessionToken');
             this.editor = window.parent.currentUI.editor;
             this.graphID = this.editor.getGraphId();
+            console.log("ID PARTAGE", this.graphID);
             if (!this.token) {
                 mxUtils.alert(mxResources.get('notLoggedIn'));
                 return;
