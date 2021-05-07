@@ -541,7 +541,7 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
     var genericBtn = mxUtils.button(mxResources.get('save'), mxUtils.bind(this, function () {
         var user = nameInput.value;
         editorUi.hideDialog();
-        console.log('user', user, 'role', role.value);
+        // console.log('user', user, 'role', role.value);
         fn(user, role.value, isRiskShared.value);
     }));
     genericBtn.className = 'geBtn gePrimaryBtn';
@@ -1769,7 +1769,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
         }
 
         function svgUrlToFormat(svgUrl, callback) {
-            console.log(svgUrl)
+            // console.log(svgUrl)
             const svgImage = new Image();
             svgImage.crossOrigin = "*";
             // imgPreview.style.position = 'absolute';
@@ -1790,7 +1790,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
                     const imgData = canvas.toDataURL(type);
                     callback(imgData);
                 } catch (e) {
-                    console.log("Unexpected error occured during export")
+                    alert("Unexpected error occured during export")
                 }
                 svgImage.onerror = function () {
                     console.log("could not load image")

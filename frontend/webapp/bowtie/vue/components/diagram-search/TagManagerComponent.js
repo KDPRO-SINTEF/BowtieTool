@@ -26,7 +26,7 @@ let TagManagerComponent = {
                 this.$emit('tags-empty')
             } else {
                 this.$emit('tag-change', this.selected_tags)
-                console.log(this.selected_tags)
+                // console.log(this.selected_tags)
             }
         }
     },

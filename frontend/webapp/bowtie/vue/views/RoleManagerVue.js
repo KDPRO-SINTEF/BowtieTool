@@ -30,7 +30,7 @@ export const RoleManagerVue = new Vue({
                 }
             })
                 .then((res)=>{
-                    console.log(res)
+                    // console.log(res)
                     this.readers = JSON.parse(res.data['readers'])
                     this.writers = JSON.parse(res.data['writers'])
                 })
@@ -55,7 +55,6 @@ export const RoleManagerVue = new Vue({
             this.writers.push(email)
         },
         onNewShareEventParent: function (evt){
-            console.log("Parent saw the event")
             this.userToAdd = evt
         }
     },
