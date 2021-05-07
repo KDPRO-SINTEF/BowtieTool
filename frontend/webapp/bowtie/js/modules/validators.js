@@ -67,7 +67,7 @@ const validTotp = function(totp) {
 }
 
 const validUsername = function(username) {
-    const re = /^[a-zA-Z0-9-][a-zA-Z0-9- ]*/;
+    const re = /^[a-zA-Z0-9-][a-zA-Z0-9- ]*$/;
     return (re.test(username));
 }
 
@@ -158,5 +158,12 @@ export const checkForm = function(form, validations) {
         if (field.error === 'invalid') {
             field.value = '';
         }
+    })
+}
+
+export const resetForm = function(form) {
+    Object.values(form).forEach(field => {
+        field.error = '';
+        field.value = '';
     })
 }

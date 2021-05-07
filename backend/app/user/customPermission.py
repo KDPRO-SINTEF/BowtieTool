@@ -25,5 +25,5 @@ class HasConfirmedEmail(permissions.BasePermission):
 
 class HasConfirmedEmailException(APIException):
     status_code = status.HTTP_401_UNAUTHORIZED
-    default_detail = dict(errors=["Invalid credentials"])
+    default_detail = dict(errors=["Incorrect credentials."])
     default_code = 'not_authenticated'

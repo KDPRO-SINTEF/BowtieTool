@@ -41,26 +41,32 @@ let versioningSearch_vue = new Vue({
         openOldVersion: function (id_version, diagram){
             let doc;
             let data = undefined;
+            let clearMatrix = false;
             //check for <diagram> tag and that the user has access to the risk computation, then set risk values
             if (diagram.slice(0, 9) === "<diagram>") {
                 diag = diagram.slice(9, -10);
                 let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
                 doc = mxUtils.parseXml(splittedDiagram[0]);
-                if(diagram.isRiskShared != false) {
+                // !== false to avoid getting error when it's undefined
+                if(diagram.isRiskShared !== false) {
                     data = mxUtils.parseXml(splittedDiagram[1]);
+                }else{
+                    clearMatrix = true;
                 }
             } else {
                 doc = mxUtils.parseXml(diagram);
             }
-            console.log(doc);
             window.parent.currentUI.editor.setGraphXml(doc.documentElement);
+            //clear Matrix if needed
+            if(clearMatrix){
+                window.parent.currentUI.editor.graph.clearAllMatrix();
+            }
             //set graph values if xml contains risk values
             if (data !== undefined) {
                 window.parent.currentUI.editor.setGraphValues(data.documentElement);
             }
             window.parent.currentUI.editor.graph.updateAllThreats();
             window.parent.currentUI.editor.graph.updateAllConsequences();
-            console.log('test');
             window.parent.currentUI.hideDialog();
         }
     },

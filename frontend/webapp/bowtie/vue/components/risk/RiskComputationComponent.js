@@ -14,7 +14,7 @@ let ThreatsComponent = {
         }
     },
     beforeMount: function() {
-            //Initialize threats array
+            //get threats array from diagram
             this.threats = window.parent.currentUI.editor.graph.getAllThreats();
     },
     mounted() {
@@ -56,7 +56,7 @@ let ConsequencesComponent = {
         }
     },
     beforeMount: function () {
-        //Initialize consequences array
+        //get consequences array from diagram
         this.consequences = window.parent.currentUI.editor.graph.getAllConsequences();
     },
     methods: {

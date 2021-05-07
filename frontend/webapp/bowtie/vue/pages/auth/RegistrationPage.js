@@ -92,7 +92,6 @@ export const RegistrationPage = {
                     break;
                 }
             }
-            console.log(checkOk);
             return checkOk;
         },
         submitRegistrationForm: function() {
@@ -117,20 +116,19 @@ export const RegistrationPage = {
                         this.waitForResponse = false;
                     })
             }
-            console.log('submitted');
         },
         filterRegistrationErrors: function(error) {
             if (error.status === 400) {
                 let errorData = error.data.errors;
-                if (errorData.username !== undefined) {
+                if (errorData.username === 'Invalid field.') {
                     this.form.username.error = 'invalid';
                     this.form.username.value = '';
                 }
-                if (errorData.email !== undefined) {
+                if (errorData.email === 'Invalid field.') {
                     this.form.email.error = 'invalid';
                     this.form.email.value = '';
                 }
-                if (errorData.password !== undefined) {
+                if (errorData.password === 'Invalid field.') {
                     this.form.password.error = 'invalid';
                     this.form.password.value = '';
                 }

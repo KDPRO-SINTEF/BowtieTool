@@ -14,7 +14,7 @@ export const PasswordResetPage = {
                     </div>
                 </div>
                 <div v-show="fetchingError" class="alert alert-danger alert-dismissible" role="alert">
-                    Sorry, an error occurred. Please, try again.
+                    An error occurred. Please, try again.
                     <button type="button" class="btn-close" v-on:click="fetchingError=false"></button>
                 </div>
                 <form @submit.prevent="submitPasswordResetForm">
@@ -129,11 +129,7 @@ export const PasswordResetPage = {
                             }
                         })
                         .catch(err => {
-                            this.fetchingError = true;
-                            this.$router.push('/password-reset');
-                            this.resetData.id = null;
-                            this.resetData.token = null;
-                            this.emailReceived = false;
+                            if (err.response) this.filterNewPasswordSubmissionErrors(err.response)
                         })
                         .finally(() => {
                             this.waitForResponse = false;
@@ -144,17 +140,46 @@ export const PasswordResetPage = {
         filterEmailSubmissionErrors: function(error) {
             if (error.status === 400) {
                 if (error.data.email !== undefined) {
-                    if (error.data.email[0] === 'Enter a valid email address.') {
-                        this.form.email.error = 'invalid';
-                    } else {
+                    let errorMessage = error.data.email[0];
+                    if (errorMessage === 'This field is required.' || errorMessage === 'This field may not be blank.') {
+                        this.form.email.value = '';
                         this.form.email.error = 'missing';
+                    } else if (errorMessage === 'Enter a valid email address.') {
+                        this.form.email.value = '';
+                        this.form.email.error = 'invalid';
                     }
-                    this.form.email.value = '';
                 }
             } else {
                 this.fetchingError = true;
             }
-        }
+        },
+        filterNewPasswordSubmissionErrors: function(error) {
+            if (error.status === 400) {
+                if (error.data.errors !== undefined) {
+                    if (error.data.errors[0] === "Incorrect credentials.") {
+                        this.fetchingError = true;
+                        this.$router.push('/password-reset');
+                        this.resetData.id = null;
+                        this.resetData.token = null;
+                        this.emailReceived = false;
+                        validators.resetForm(this.form);
+                    }
+                } else if (error.data.password !== undefined) {
+                    switch(error.data.password[0]) {
+                        case "This field is required.":
+                            this.form.password.value = '';
+                            this.form.password.error = 'missing';
+                            break;
+                        case "This password is too weak.":
+                            this.form.password.value = '';
+                            this.form.password.error = 'invalid';
+                            break;
+                    }
+                    this.form.passwordConfirm.value = '';
+                    this.form.passwordConfirm.error = '';
+                }
+            }
+        },
     },
     created: function() {
         let urlData = this.$route.query;

@@ -81,7 +81,7 @@ export const LoginPage = {
                 this.waitForResponse = true;
                 let requestData = {};
                 if (!this.totpLogin.required) {
-                    requestData = { 'email': this.form.email.value, 'password': this.form.password.value }
+                    requestData = { 'email': this.form.email.value, 'password': this.form.password.value };
                     store.dispatch('login', requestData)
                         .then(res => {
                             if (res.status === 200) this.setLoginMode(res.data);
@@ -129,7 +129,16 @@ export const LoginPage = {
         },
         filterLoginErrors: function(error) {
             if (error.status === 401) {
+                let incorrectCredentials = false;
+                if (error.data.detail === 'Authentication credentials were not provided.') {
+                    incorrectCredentials = true;
+                }
                 if (error.data.errors !== undefined) {
+                    if (error.data.errors[0] === 'Incorrect credentials.') {
+                        incorrectCredentials = true;
+                    }
+                }
+                if (incorrectCredentials) {
                     this.form.email.error = 'credentials';
                     this.form.password.error = 'credentials';
                     this.form.password.value = '';

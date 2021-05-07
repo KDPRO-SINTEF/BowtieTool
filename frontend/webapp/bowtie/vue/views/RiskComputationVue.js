@@ -14,7 +14,7 @@ let risk_vue = new Vue({
             accumulatedRiskValue: 'none_defined',
             missingConsequence: false,
             eventProbability: 'no_threats',
-            consequences : []
+            consequences : window.parent.currentUI.editor.graph.getAllConsequences()
         }
     },
     methods: {
@@ -24,7 +24,6 @@ let risk_vue = new Vue({
             //Check if there are threats to process
             if (this.threats.length === 0){
                 this.eventProbability = 'no_threats';
-                console.log("No threat linked to a likelihood matrix were found on the diagram");
                 return;
             }
 
@@ -34,7 +33,6 @@ let risk_vue = new Vue({
                 //Check if parameters of the threat are defined
                 if(!this.threats[i].allDefined()){
                     this.eventProbability = "missing_param";
-                    console.log("Missing parameter(s) on " + this.threats[i].name);
                     return;
                 }
 
@@ -49,7 +47,6 @@ let risk_vue = new Vue({
 
             //Check if there are consequences to process
             if(this.consequences.length === 0){
-                console.log("No consequences on diagram");
                 this.highestRiskValue = "no_consequences";
                 this.accumulatedRiskValue = "no_consequences";
                 return;
@@ -65,7 +62,6 @@ let risk_vue = new Vue({
 
                 //Check if one consequence attributes are not defined
                 if (!this.consequences[i].allDefined()){
-                    console.log(this.consequences[i].name + " : Missing consequence parameters")
                     this.missingConsequence = true;
                     continue;
                 }
@@ -94,15 +90,10 @@ let risk_vue = new Vue({
                 }
             }
 
-            /*
-            TODO : Give each consequences an indicator similar to the threat one
-             */
-
             //Check if at least one consequence attributes are defined
             if(!oneDefined){
                 this.highestRiskValue = 'none_defined';
                 this.accumulatedRiskValue = 'none_defined';
-                console.log("No consequence parameters are defined");
                 return;
             }
 

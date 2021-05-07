@@ -400,6 +400,7 @@ var OpenFromDBDialog = function (width, height) {
 
 var OpenVersioningDialog = function (width, height) {
 
+
     const iframe_holder = document.createElement('div')
     iframe_holder.setAttribute("style", "background:url(../images/loading.gif) center center no-repeat;")
 
@@ -595,10 +596,13 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     tags_td.style.width = '120px';
 
     mxUtils.write(tags_td, "Diagram tags" + ': ');
-    let icon = document.createElement("i")
-    icon.setAttribute("class", "icon-info-sign")
+    let icon = document.createElement("img")
+    icon.setAttribute("src", "/images/question-circle-solid.svg")
     icon.setAttribute("title", "Tags are like keywords for diagrams, separated by commas.")
+    icon.setAttribute("style", "width:15px;margin-top:2px;")
     tags_td.appendChild(icon)
+
+
     // var info_div = document.createElement("div")
     // info_div.setAttribute("class", "info")
 
@@ -619,7 +623,6 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     ctx.fillText(String.fromCharCode('\uF047'), 10, 50);
     tags_td.appendChild(info_canvas)*/
     tags_row.appendChild(tags_td);
-    // TODO Add a info img and when you hover over it, it gives info on why and how to use tags
     var tags_td_input = document.createElement('td')
     var tags_input = document.createElement('input')
     tags_input.setAttribute('value', '');
