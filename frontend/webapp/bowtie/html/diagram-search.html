@@ -36,15 +36,17 @@
 <body>
 
 <div id="diagram-search-vue">
-    <div class="search-bar-container">
-        <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"
-                    :all_diagrams="all_diagrams" :tags_selected="tags_selected" :name-input="nameInput"></search-bar>
-    </div>
-    <div class="visualizer-and-tags">
-        <tag-manager :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
-                     v-on:tag-change="onTagsChange" v-on:tags-empty="onTagsEmpty"></tag-manager>
-        <visualizer :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
-                    :tags_selected="tags_selected" :show_all_tags="show_all_tags"></visualizer>
+    <div v-if="allDiagramsLoaded">
+        <div class="search-bar-container">
+            <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"
+                        :all_diagrams="all_diagrams" :tags_selected="tags_selected" :name-input="nameInput"></search-bar>
+        </div>
+        <div class="visualizer-and-tags">
+            <tag-manager :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
+                         v-on:tag-change="onTagsChange" v-on:tags-empty="onTagsEmpty"></tag-manager>
+            <visualizer :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
+                        :tags_selected="tags_selected" :show_all_tags="show_all_tags"></visualizer>
+        </div>
     </div>
 </div>
 <div id="fake-div" style="display: inline-block; visibility: hidden"></div>
@@ -103,8 +105,8 @@
                         <div class="card-body">
                             <h5 class="card-title">{{diagram.name}}</h5>
                             <p class="card-text">id: {{diagram.id}}</p>
-                            <a href="#" class="btn btn-secondary" v-on:click="openDiagram(diagram.id)">
-                                Open this diagram</a>
+                            <button class="btn btn-secondary" v-on:click="openDiagram(diagram.id)">
+                                Open this diagram</button>
                         </div>
                     </div>
                 </div>

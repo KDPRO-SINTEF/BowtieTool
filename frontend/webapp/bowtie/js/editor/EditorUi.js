@@ -2945,6 +2945,17 @@ EditorUi.prototype.openFromDb = function (open_endpoint) {
         dlg.init(open_endpoint);*/
 }
 
+EditorUi.prototype.openVersioning = function (open_endpoint) {
+
+    var token = localStorage.getItem('sessionToken');
+    if (!token) {
+        mxUtils.alert(mxResources.get('notLoggedIn'));
+        return;
+    }
+    let showVersionSearch = this.actions.get('showVersionSearch').funct;
+    showVersionSearch()
+}
+
 EditorUi.prototype.modifyRolesForGraph = function () {
     var token = localStorage.getItem('sessionToken');
     var graphid = this.editor.getGraphId();

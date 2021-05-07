@@ -27,13 +27,13 @@
 <body>
 <div id="app">
   <div v-if="isStoreLoaded">
-    <div class="container__navbar" v-if="showNavbar()" v-bind:onHomePage="onPage('home')">
+    <div class="container__navbar" v-if="showNavbar()">
       <navbar></navbar>
     </div>
     <div class="container__home">
       <home></home>
     </div>
-    <div class="container__page" v-show="!onPage('home')">
+    <div class="container__page" v-show="!onPage('Home')">
       <router-view></router-view>
     </div>
   </div>

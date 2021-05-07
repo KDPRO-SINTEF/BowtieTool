@@ -94,7 +94,7 @@ class UserNameValidator(Validator):
     def validate(self, data, user=None):
         """Validate password"""
         if len(re.findall('[0-9A-Za-z_-]', data)) != len(data):
-            raise ValidationError(dict(username="The username must contain only letters, diggits and undescores"),
+            raise ValidationError(dict(username="The username must contain only letters, digits and undescores"),
                     code='invalid-username')
 
     def get_help_text(self):

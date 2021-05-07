@@ -64,7 +64,7 @@
 			// Extends EditorUi to update I/O action states based on availability of backend
 			(function()
 			{
-				var editorUiInit = EditorUi.prototype.init;
+				/*var editorUiInit = EditorUi.prototype.init;
 
 				EditorUi.prototype.init = function()
 				{
@@ -85,8 +85,8 @@
 							this.actions.get('save').setEnabled(true); // Save the diagram online but ask for name only first time
 							this.actions.get('saveAs').setEnabled(enabled); // Like save but always ask for name of diagram
 						}));
-					}
-				};
+
+				};*/
 
 				// Adds required resources (disables loading of fallback properties, this can only
 				// be used if we know that all keys are defined in the language specific file)

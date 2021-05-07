@@ -11,6 +11,16 @@ let diagramSearch_vue = new Vue({
         all_diagrams: [],
         tags_selected: [],
         show_all_tags: true,
+        loaded: {
+            public: false,
+            private: false,
+            sharedWithMe: false
+        }
+    },
+    computed: {
+        allDiagramsLoaded: function() {
+            return this.loaded.public && this.loaded.private && this.loaded.sharedWithMe;
+        }
     },
     methods: {
         init: function () {
@@ -27,6 +37,7 @@ let diagramSearch_vue = new Vue({
             })
                 .then(res => {
                     console.log(res)
+                    this.loaded.private = true;
                     for (const diag of res.data) {
                         diag.isSharedWithMe = false
                         this.all_diagrams.push(diag)
@@ -44,6 +55,8 @@ let diagramSearch_vue = new Vue({
             })
                 .then(res => {
                     console.log(res)
+                    this.loaded.sharedWithMe = true;
+                    this.loaded.public = true;
                     for (const diag of res.data) {
                         diag.isSharedWithMe = false
                         this.all_diagrams.push(diag)
@@ -86,7 +99,7 @@ let diagramSearch_vue = new Vue({
             this.show_all_tags = true
         }
     },
-    mounted() {
+    created() {
         this.init()
     }
 })

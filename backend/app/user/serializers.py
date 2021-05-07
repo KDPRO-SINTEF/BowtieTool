@@ -10,6 +10,7 @@ from user.authentication import PasswordResetToken,  create_random_user_id
 from django.core import mail
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.db import transaction
 
 
 class UserSerializer(serializers.Serializer):
@@ -23,10 +24,11 @@ class UserSerializer(serializers.Serializer):
     def create(self, validated_data):
         """Create new user and return it"""
 
-        user = get_user_model().objects.create_user(**validated_data)
-        if user is None:
-            serializers.ValidationError("Validation error", code='authentication')
-        return user
+        with transaction.atomic():
+            user = get_user_model().objects.create_user(**validated_data)
+            if user is None:
+                serializers.ValidationError("Validation error", code='authentication')
+            return user
 
 class ProfileSerializer(serializers.Serializer):
     """Serializer for user role"""
@@ -54,8 +56,8 @@ class UserUpdateSerialize(serializers.Serializer):
     """ Serializer for update password """
 
 
-    new_password = serializers.CharField(allow_blank=False, trim_whitespace=True)
-    old_password = serializers.CharField(allow_blank=False, trim_whitespace=True)
+    new_password = serializers.CharField(required=True, allow_blank=True, trim_whitespace=True)
+    old_password = serializers.CharField(required=True, allow_blank=True, trim_whitespace=True)
 
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
@@ -67,14 +69,19 @@ class UserUpdateSerialize(serializers.Serializer):
         new_password = attrs.get("new_password")
         old_password = attrs.get("old_password")
 
+        if not new_password:
+            raise serializers.ValidationError(dict(new_password=["This field is required."]))
+        
+        elif not old_password:
+            raise serializers.ValidationError(dict(old_password=["This field is required."]))
+        
         if not authenticate(request=self.context.get('request'),
                         username=self.user.email,
                         password=old_password):
-
-            raise serializers.ValidationError("Wrong password")
+            raise serializers.ValidationError(dict(old_password="Wrong old password."))
 
         if new_password == old_password:
-            raise serializers.ValidationError("The two passwords must be different")
+            raise serializers.ValidationError(dict(new_password=["The two passwords must be different."]))
 
         validators.validate_password(new_password)
 
