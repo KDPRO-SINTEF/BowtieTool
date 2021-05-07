@@ -45,8 +45,9 @@
                             </div>
                             <div class="card-body">
                                 <p class="card-title">Version n° {{all_diagrams.length-1-diagram.id}}</p>
+                                <p class="card-text">Creation date : {{diagram.date.slice(0,19)}}</p>
                                 <a href="#" class="btn btn-secondary" v-on:click="openOldVersion(diagram.id, diagram.diagram)">
-                                    Open this diagram</a>
+                                    Revert to this version</a>
                             </div>
                         </div>
                     </div>
