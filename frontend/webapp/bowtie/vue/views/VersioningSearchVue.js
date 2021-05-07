@@ -26,7 +26,6 @@ let versioningSearch_vue = new Vue({
                 .then(res => {
                     console.log(res)
                     for (const diag of res.data) {
-                        diag.isSharedWithMe = false
                         this.all_diagrams.push(diag)
                     }
 
@@ -66,6 +65,8 @@ let versioningSearch_vue = new Vue({
             }
             window.parent.currentUI.editor.graph.updateAllThreats();
             window.parent.currentUI.editor.graph.updateAllConsequences();
+            window.parent.currentUI.editor.setModified(false);
+            window.parent.currentUI.editor.undoManager.clear();
             window.parent.currentUI.hideDialog();
         }
     },

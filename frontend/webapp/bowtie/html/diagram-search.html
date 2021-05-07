@@ -96,7 +96,7 @@
 <script type="text/x-template" id="visualizer-template">
     <div class="all_visuals">
         <div id="grid-container" class="row row-cols-auto">
-            <div v-for="diagram in diagram_to_show" v-bind:key="diagram.id">
+            <div v-for="diagram in diagram_to_show" v-bind:key="(diagram.id + diagram.isSharedWithMe).toString()">
                 <div class="col">
                     <div class="card">
                         <div class="ratio ratio-1x1">
@@ -104,7 +104,7 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{diagram.name}}</h5>
-                            <p class="card-text">id: {{diagram.id}}</p>
+                            <p class="card-text"> Id: {{diagram.id}}<span v-if="diagram.isSharedWithMe" class="card-text"> (shared)</span></p>
                             <button class="btn btn-secondary" v-on:click="openDiagram(diagram.id)">
                                 Open this diagram</button>
                         </div>
