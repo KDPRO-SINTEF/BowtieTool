@@ -59,9 +59,10 @@ export const AddUserToShareWithComponent = {
                         } else {
                             this.$emit("added-writer", userEmail)
                         }
-                        console.log(response);
+                        // console.log(response);
                     })
                     .catch(error => {
+                        alert("An unexpected error happened when you tried to share this diagram. Maybe the user you shared it with doesn't exist?")
                         console.log(error);
                     })
             }
@@ -75,7 +76,7 @@ export const AddUserToShareWithComponent = {
     },
     watch: {
         userToAdd: function () {
-            console.log("Child is adding user")
+            // console.log("Child is adding user")
             const email = this.userToAdd[0]
             const role = this.userToAdd[1]
             this.shareWith(email, role)

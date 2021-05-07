@@ -24,7 +24,7 @@ export const UserVisualizerComponent = {
             })
                 .then((res) => {
                     this.$emit("remove-reader", email)
-                    console.log(res)
+                    // console.log(res)
                 })
                 .catch((error) => {
                     console.log(error)
@@ -40,7 +40,7 @@ export const UserVisualizerComponent = {
             })
                 .then((res) => {
                     this.$emit("remove-writer", email)
-                    console.log(res)
+                    // console.log(res)
                 })
                 .catch((error) => {
                     console.log(error)
@@ -48,7 +48,6 @@ export const UserVisualizerComponent = {
 
         },
         startDrag: function(evt, email, column){
-            console.log("Started a drag")
             evt.dataTransfer.dropEffect = 'move'
             evt.dataTransfer.effectAllowed = 'move'
             evt.dataTransfer.setData('email', email)
@@ -57,11 +56,9 @@ export const UserVisualizerComponent = {
 
         },
         onDropEvent: function (evt, to){
-            console.log("Ended a drag")
             // evt.preventDefault();
             const email = evt.dataTransfer.getData('email')
             const from = evt.dataTransfer.getData("from")
-            console.log([email,from])
             if (to !== from) {
                 if(from === '0'){
                     this.removeReader(email)

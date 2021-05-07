@@ -239,9 +239,9 @@ class ShareView(APIView):
             shared_diagram.writer.add(user)
         is_risk_shared_dict = json.loads(shared_diagram.isRiskComputationShared)
         is_risk_shared_dict[user.email] = is_risk_shared
-        print(is_risk_shared_dict)
+        # print(is_risk_shared_dict)
         new_dict_str = json.dumps(is_risk_shared_dict)
-        print(new_dict_str)
+        # print(new_dict_str)
         shared_diagram.isRiskComputationShared = new_dict_str
         shared_diagram.save()
         if settings.SHARE_BY_EMAIL_ACTIVATED:
@@ -310,12 +310,12 @@ class SharedWithMe(APIView):
         all_diags = diags_as_writer.union(diags_as_reader)
         serializer = serializers.DiagramSerializer(all_diags, many=True)
         resp_datas = serializer.data
-        print(resp_datas)
+        # print(resp_datas)
         for diag_serialized in resp_datas:
             diag = Diagram.objects.get(pk=diag_serialized['id'])
-            print(diag)
+            # print(diag)
             diag_is_risk_shared = diag.isRiskComputationShared
-            print(diag_is_risk_shared)
+            # print(diag_is_risk_shared)
             is_risk_shared_dict = json.loads(diag_is_risk_shared)
             if is_risk_shared_dict != {}:
                 value = is_risk_shared_dict[self.request.user.email]
