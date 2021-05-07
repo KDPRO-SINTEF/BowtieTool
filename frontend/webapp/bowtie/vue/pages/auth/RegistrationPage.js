@@ -92,7 +92,6 @@ export const RegistrationPage = {
                     break;
                 }
             }
-            console.log(checkOk);
             return checkOk;
         },
         submitRegistrationForm: function() {
@@ -117,7 +116,6 @@ export const RegistrationPage = {
                         this.waitForResponse = false;
                     })
             }
-            console.log('submitted');
         },
         filterRegistrationErrors: function(error) {
             if (error.status === 400) {

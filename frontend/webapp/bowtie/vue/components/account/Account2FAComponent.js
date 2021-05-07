@@ -97,7 +97,6 @@ export const Account2FAComponent = {
             })
                 .then(res => {
                     if (res.status === 201) {
-                        console.log('hello');
                         this.qrImage = res.data.qrImg;
                         this.validationToken = res.data.token;
                         this.$emit('activate-2fa');
@@ -187,7 +186,6 @@ export const Account2FAComponent = {
         filter2faDisablingErrors: function(error) {
             if (error.status === 400) {
                 if (error.data.errors !== undefined) {
-                    console.log(error.data.errors[0]);
                     if (error.data.errors[0] === 'Invalid code') {
                         this.form.totp.error = 'incorrect';
                         this.form.totp.value = '';
