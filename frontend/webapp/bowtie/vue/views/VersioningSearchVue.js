@@ -61,7 +61,6 @@ let versioningSearch_vue = new Vue({
                     } else {
                         doc = mxUtils.parseXml(diagram);
                     }
-                    console.log(doc);
                     window.parent.currentUI.editor.setGraphXml(doc.documentElement);
                     //set graph values if xml contains risk values
                     if (data !== undefined) {
@@ -69,7 +68,6 @@ let versioningSearch_vue = new Vue({
                     }
                     window.parent.currentUI.editor.graph.updateAllThreats();
                     window.parent.currentUI.editor.graph.updateAllConsequences();
-                    console.log('test');
                     window.parent.currentUI.hideDialog();
                 })
                 .catch(error => {
