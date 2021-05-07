@@ -2301,7 +2301,7 @@ Graph.prototype.getMatrix = function(cell) {
     let mat = new Matrix(null);
     if(cell.edges != null && cell.edges.length > 0){
         for (const edge of Object.values(cell.edges)) {
-            if (edge.target.customID == 'Likelihood'){
+            if (edge.target.customID === 'Likelihood'){
                 mat = new Matrix(edge.target);
                 break;
             }
@@ -2309,7 +2309,22 @@ Graph.prototype.getMatrix = function(cell) {
     }
     return mat;
 }
-
+/**
+ *	Bowtie++ feature
+ *	clear all matrix filled ellipses
+ */
+Graph.prototype.clearAllMatrix = function() {
+    let allCells = this.model.cells;
+    Object.values(allCells).forEach(cell => {
+        if (cell.customID === 'Likelihood' || cell.customID === 'Impact'){
+            cell.children.forEach(lane => {
+                lane.children.forEach(ellipse => {
+                    ellipse.setStyle("ellipse;fillColor=#cafefd");
+                })
+            })
+        }
+    });
+}
 /**
  * Bowtie++ feature
  * Recursive function
@@ -2324,18 +2339,15 @@ Graph.prototype.updateThreatBarriers = function(cell, threat) {
     if(cell.edges != null && cell.edges.length > 0){
         for (const edge of Object.values(cell.edges)) {
             //delete the case in which the target is the cell itself
-            if(edge.source.id == cell.id){
+            if(edge.source.id === cell.id){
                 //check if a edge is toward a barrier
-                if (edge.target.customID == 'Security Control' || edge.target.customID == 'Barrier'){
-                    let foundBarrier = threat.barriers.find(barrier => barrier.cell == edge.target.id);
+                if (edge.target.customID === 'Security Control' || edge.target.customID === 'Barrier'){
+                    let foundBarrier = threat.barriers.find(barrier => barrier.cell === edge.target.id);
                     // check if the barrier was not found in the threat to add it
-                    if(foundBarrier == undefined){
+                    if(foundBarrier === undefined){
                         threat.barriers.push(new Barrier(edge.target));
                     }else{
-                        foundBarrier.name = edge.target.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
-                            .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
-                            .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                            .replaceAll(/<\/pre>/g,"");
+                        foundBarrier.name = edge.target.value;
                     }
                     this.updateThreatBarriers(edge.target, threat);
                     lastBarrier = false;
@@ -2371,18 +2383,15 @@ Graph.prototype.updateConsequenceBarriers = function(cell, consequence) {
     if(cell.edges != null && cell.edges.length > 0){
         for (const edge of Object.values(cell.edges)) {
             //delete the case in which the source is the cell itself
-            if (edge.target.id == cell.id){
+            if (edge.target.id === cell.id){
                 //check if a edge is coming from a barrier
-                if (edge.source.customID == 'Security Control' || edge.source.customID == 'Barrier'){
-                    let foundBarrier = consequence.barriers.find(barrier => barrier.cell == edge.source.id);
+                if (edge.source.customID === 'Security Control' || edge.source.customID === 'Barrier'){
+                    let foundBarrier = consequence.barriers.find(barrier => barrier.cell === edge.source.id);
                     // check if the barrier was not found in the consequence to add it
-                    if(foundBarrier == undefined){
+                    if(foundBarrier === undefined){
                         consequence.barriers.push(new Barrier(edge.source));
                     }else{
-                        foundBarrier.name = edge.source.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
-                            .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
-                            .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                            .replaceAll(/<\/pre>/g,"");
+                        foundBarrier.name = edge.source.value;
                     }
                     this.updateConsequenceBarriers(edge.source, consequence);
                     lastBarrier = false;
@@ -2415,13 +2424,10 @@ Graph.prototype.updateAllThreats = function () {
         let threat = this.threats.find(elem => elem.cell === cell.id);
         if (threat !== undefined) {
             //update name in case of rename, without taking html tags
-            threat.name = cell.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
-                .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
-                .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                .replaceAll(/<\/pre>/g,"");
+            threat.name = cell.value;
             let mat = this.getMatrix(cell);
             // update the matrix if it is not the same one
-            if(threat.matrix.getMatrixCell() != mat.getMatrixCell()){
+            if(threat.matrix.getMatrixCell() !== mat.getMatrixCell()){
                 threat.matrix = this.getMatrix(cell);
             }
         } else {
@@ -2473,7 +2479,7 @@ Graph.prototype.getAllConsequencesCells = function () {
     let allCells = this.model.cells;
     let consequences = new Array();
     for (const cell of Object.values(allCells)) {
-        if (cell.customID == 'Consequence') {
+        if (cell.customID === 'Consequence') {
             consequences.push(cell);
         }
     }
@@ -2492,10 +2498,7 @@ Graph.prototype.updateAllConsequences = function() {
         let consequence = this.consequences.find(elem => elem.cell === cell.id);
         if (consequence !== undefined) {
             //update name in case of rename, without taking html tags
-            consequence.name = cell.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
-                .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
-                .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                .replaceAll(/<\/pre>/g,"");
+            consequence.name = cell.value;
         } else {
             this.consequences.push(new Consequence(cell));
         }
