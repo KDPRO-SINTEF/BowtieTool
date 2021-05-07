@@ -62,7 +62,7 @@ class CreateUserView(generics.CreateAPIView):
             if not isinstance(error_validation, IntegrityError): # counter data privacy leak
                 error_dict = dict()
                 key = list(error_validation.detail.keys())[0]
-                error_dict[key] = "Invalid field"
+                error_dict[key] = "Invalid field."
                 return Response(dict(errors=error_dict),
                     status=status.HTTP_400_BAD_REQUEST)
 
@@ -118,7 +118,7 @@ class CreateTokenView(ObtainAuthToken):
 
             return Response({'token': token.key}, status=status.HTTP_200_OK)
         except ValidationError:
-            return Response(dict(errors=["Invalid credentials"]),
+            return Response(dict(errors=["Incorrect credentials."]),
                 status=status.HTTP_401_UNAUTHORIZED)
 
 
@@ -221,23 +221,28 @@ class ValidatePasswordReset(APIView):
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
-            logger.warning("Failed resset password for User with id %s. Exception: %s", uid, e_ex)
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            logger.warning("Failed resset password for User with id %s. Exception: %s", uidb64, e_ex)
+            return Response(status=status.HTTP_400_BAD_REQUEST,data=dict(errors=["Incorrect credentials."]))
+
         data = ""
-        if PasswordResetToken().check_token(user, token) and "password" in request.data:
+        if PasswordResetToken().check_token(user, token):
+            if "password" in request.data:
 
-            try:
-                user.is_active = False # User needs to be inactive for the reset password duration
-                password = request.data['password']
-                validators.validate_password(password)
-                user.set_password(password)
-                user.is_active = True
-                user.save()
-                user.profile.save()
-                return Response(status=status.HTTP_200_OK)
+                try:
+                    user.is_active = False # User needs to be inactive for the reset password duration
+                    password = request.data['password']
+                    validators.validate_password(password)
+                    user.set_password(password)
+                    user.is_active = True
+                    user.save()
+                    user.profile.save()
+                    return Response(status=status.HTTP_200_OK)
 
-            except ValidationError:
-                data = "bad credentials"
+                except ValidationError:
+                    data = dict(password=["This password is too weak."])
+
+            else:
+                data = dict(password=["This field is required."])
 
         return Response(status=status.HTTP_400_BAD_REQUEST, data=data)
 

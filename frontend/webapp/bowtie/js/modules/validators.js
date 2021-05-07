@@ -160,3 +160,10 @@ export const checkForm = function(form, validations) {
         }
     })
 }
+
+export const resetForm = function(form) {
+    Object.values(form).forEach(field => {
+        field.error = '';
+        field.value = '';
+    })
+}

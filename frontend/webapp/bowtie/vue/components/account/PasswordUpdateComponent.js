@@ -81,10 +81,7 @@ export const PasswordUpdateComponent = {
                     .then(res => {
                         if (res.status === 200) {
                             this.$emit('show-toast', 'Your password has been updated.');
-                            Object.values(this.form).forEach(field => {
-                                field.value = '';
-                                field.error = '';
-                            })
+                            validators.resetForm(this.form);
                         }
                     })
                     .catch(err => {
