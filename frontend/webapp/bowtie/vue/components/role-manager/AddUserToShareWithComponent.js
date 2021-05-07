@@ -62,6 +62,7 @@ export const AddUserToShareWithComponent = {
                         console.log(response);
                     })
                     .catch(error => {
+                        alert("An unexpected error happened when you tried to share this diagram. Maybe the user you shared it with doesn't exist?")
                         console.log(error);
                     })
             }

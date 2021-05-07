@@ -338,7 +338,6 @@ Actions.prototype.init = function () {
             var info1 = '';
 
 
-            console.log("WAT");
 
             var tmp = graph.convertValueToString(cell);
 
