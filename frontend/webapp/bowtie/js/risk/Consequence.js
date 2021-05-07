@@ -8,6 +8,7 @@ class Consequence{
         this._barriers = [];
         this._name = cell.value;
         this._isHighest = false;
+        this.updateStyle();
     }
     allDefined(){
         return (this._impactValue !== "") && (this._probability !== "");
@@ -31,16 +32,16 @@ class Consequence{
                 cell.setStyle('shape=mxgraph.bowtie.consequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
             }else{
                 switch(true){
-                    case this.indicator < 1.0:
+                    case this.indicator < 1.5:
                         cell.setStyle('shape=mxgraph.bowtie.verylowconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
                         break;
-                    case this.indicator < 3.0:
+                    case this.indicator < 3.5:
                         cell.setStyle('shape=mxgraph.bowtie.lowconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
                         break;
-                    case this.indicator < 5.0:
+                    case this.indicator < 5.5:
                         cell.setStyle('shape=mxgraph.bowtie.mediumconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
                         break;
-                    case this.indicator < 7.0:
+                    case this.indicator < 7.5:
                         cell.setStyle('shape=mxgraph.bowtie.highconsequence;whiteSpace=wrap;html=1;fontSize=16;aspect=fixed');
                         break;
                     case this.indicator <= 10.0:
@@ -69,6 +70,7 @@ class Consequence{
 
     set name(newName) {
         this._name = newName;
+        this.updateStyle();
     }
 
     get impactValue() {

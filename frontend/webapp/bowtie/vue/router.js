@@ -1,4 +1,3 @@
-import { HomePage } from "./pages/HomePage.js";
 import { LoginPage } from "./pages/auth/LoginPage.js";
 import { RegistrationPage } from "./pages/auth/RegistrationPage.js";
 import { EmailConfirmationPage } from "./pages/auth/EmailConfirmationPage.js";
@@ -45,6 +44,7 @@ const routes = [
     {
         path: '/settings',
         component: AccountSettingsPage,
+        name: 'Settings',
         children: [
             {
                 path: '',
@@ -52,15 +52,18 @@ const routes = [
             },
             {
                 path: 'profile',
-                component: UserProfileComponent
+                component: UserProfileComponent,
+                name: 'UserProfile'
             },
             {
                 path: 'security',
-                component: AccountSecurityComponent
+                component: AccountSecurityComponent,
+                name: 'AccountSecurity'
             },
             {
                 path: 'danger-zone',
-                component: AccountDangerZoneComponent
+                component: AccountDangerZoneComponent,
+                name: 'AccountDangerZone'
             }
 
         ]

@@ -1,6 +1,5 @@
 // urlParams is null when used for embedding
 window.urlParams = window.urlParams || {};
-window.STATIC_SERVER_DOMAIN = window.STATIC_SERVER_DOMAIN || 'http://localhost:8080'
 
 // Public global variables
 window.MAX_REQUEST_SIZE = window.MAX_REQUEST_SIZE  || 10485760;
@@ -35,6 +34,9 @@ window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'statistic
 window.OPEN_DIALOG = window.OPEN_DIALOG || window.ROOT_PAGE + 'html/open.html';
 window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk-computation.html';
 window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram-search.html';
+window.VERSIONING_SEARCH = window.VERSIONING_SEARCH || window.ROOT_PAGE + 'html/versioning-search.html';
+window.ROLE_MANAGER_DIALOG = window.ROLE_MANAGER_DIALOG || window.ROOT_PAGE + 'html/role-manager.html';
+
 
 // Resources
 // Path is relative to the editor.html page
@@ -45,29 +47,30 @@ window.STYLE_PATH = window.STYLE_PATH || '../styles';
 window.CSS_PATH = window.CSS_PATH || '../styles';
 window.RESOURCE_BASE = window.RESOURCE_BASE || window.RESOURCES_PATH + '/grapheditor';
 
-// API RELATED
-window.API_DOMAIN = window.API_DOMAIN || 'http://localhost:8000';
+// -------------------- API RELATED --------------------
 
 // Authentication
-window.API_LOGIN = window.API_LOGIN || window.API_DOMAIN + '/api/user/token';
-window.API_USER_DATA = window.API_USER_DATA || window.API_DOMAIN + '/api/user/me';
-window.API_REGISTER = window.API_REGISTER || window.API_DOMAIN + '/api/user/create';
-window.API_RESET_PASSWORD = window.API_RESET_PASSWORD || window.API_DOMAIN + '/api/user/password/reset';
-window.API_DELETE_ACCOUNT = window.API_DELETE_ACCOUNT || window.API_DOMAIN + '/api/user/delete';
-window.API_CONFIRM_EMAIL = window.API_CONFIRM_EMAIL || window.API_DOMAIN + '/api/user/confirm';
-window.API_CREATE_2FA_CODE = window.API_CREATE_2FA_CODE || window.API_DOMAIN + '/api/user/totp/create';
-window.API_VERIFY_2FA_CODE = window.API_VERIFY_2FA_CODE || window.API_DOMAIN + '/api/user/totp/verify';
-window.API_LOGIN_2FA = window.API_LOGIN_2FA || window.API_DOMAIN + '/api/user/totp/login';
-window.API_DISABLE_2FA = window.API_DISABLE_2FA || window.API_DOMAIN + '/api/user/totp/disable';
-window.API_UPDATE_PASSWORD = window.API_UPDATE_PASSWORD || window.API_DOMAIN + '/api/user/password/update';
+window.API_LOGIN = window.API_LOGIN || API_SERVER_URL + '/api/user/token';
+window.API_USER_DATA = window.API_USER_DATA || API_SERVER_URL + '/api/user/me';
+window.API_REGISTER = window.API_REGISTER || API_SERVER_URL + '/api/user/create';
+window.API_RESET_PASSWORD = window.API_RESET_PASSWORD || API_SERVER_URL + '/api/user/password/reset';
+window.API_DELETE_ACCOUNT = window.API_DELETE_ACCOUNT || API_SERVER_URL + '/api/user/delete';
+window.API_CONFIRM_EMAIL = window.API_CONFIRM_EMAIL || API_SERVER_URL + '/api/user/confirm';
+window.API_CREATE_2FA_CODE = window.API_CREATE_2FA_CODE || API_SERVER_URL + '/api/user/totp/create';
+window.API_VERIFY_2FA_CODE = window.API_VERIFY_2FA_CODE || API_SERVER_URL + '/api/user/totp/verify';
+window.API_LOGIN_2FA = window.API_LOGIN_2FA || API_SERVER_URL + '/api/user/totp/login';
+window.API_DISABLE_2FA = window.API_DISABLE_2FA || API_SERVER_URL + '/api/user/totp/disable';
+window.API_UPDATE_PASSWORD = window.API_UPDATE_PASSWORD || API_SERVER_URL + '/api/user/password/update';
 
 // Statistics
-window.API_STATISTICS = window.API_STATISTICS || window.API_DOMAIN + '/api/diagram/stats';
+window.API_STATISTICS = window.API_STATISTICS || API_SERVER_URL + '/api/diagram/stats';
 
 // Diagrams
-window.API_SAVE_DIAGRAM = window.API_SAVE_DIAGRAM || window.API_DOMAIN + '/api/diagram/private';
-window.API_UPDATE_DIAGRAM = window.API_UPDATE_DIAGRAM || window.API_DOMAIN + '/api/diagram/'; // {id}
-window.API_PUBLIC_DIAGRAMS = window.API_PUBLIC_DIAGRAMS || window.API_DOMAIN + '/api/diagram/public/list';
-window.API_PRIVATE_DIAGRAMS = window.API_PRIVATE_DIAGRAMS || window.API_DOMAIN + '/api/diagram/private/list';
-window.API_SHARE_DIAGRAM = window.API_SHARE_DIAGRAM || window.API_DOMAIN + '/api/diagram/share/'; // + {graphid}
-window.API_DIAGRAMS_SHARED_WITH_ME = window.API_DIAGRAMS_SHARED_WITH_ME || window.API_DOMAIN + '/api/diagram/share/'; // {id} Although the id isn't useful
+window.API_SAVE_DIAGRAM = window.API_SAVE_DIAGRAM || API_SERVER_URL + '/api/diagram/private';
+window.API_UPDATE_DIAGRAM = window.API_UPDATE_DIAGRAM || API_SERVER_URL + '/api/diagram/'; // {id}
+window.API_PUBLIC_DIAGRAMS = window.API_PUBLIC_DIAGRAMS || API_SERVER_URL + '/api/diagram/public/list';
+window.API_PRIVATE_DIAGRAMS = window.API_PRIVATE_DIAGRAMS || API_SERVER_URL + '/api/diagram/private/list';
+window.API_SHARE_DIAGRAM = window.API_SHARE_DIAGRAM || API_SERVER_URL + '/api/diagram/share/'; // + {graphid}
+window.API_DIAGRAMS_SHARED_WITH_ME = window.API_DIAGRAMS_SHARED_WITH_ME || API_SERVER_URL + '/api/diagram/shared';
+window.API_VERSIONING_DIAGRAMS = window.API_VERSIONING_DIAGRAMS || API_SERVER_URL + '/api/diagram/versions/'; // + {graphid}
+window.API_SWITCH_VERSION = window.API_SWITCH_VERSION || API_SERVER_URL + '/api/diagram/versions/';

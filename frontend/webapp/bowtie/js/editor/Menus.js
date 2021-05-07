@@ -459,13 +459,13 @@ Menus.prototype.init = function()
 	})));
     this.put('open', new Menu(mxUtils.bind(this, function(menu, parent)
     {
-        this.addMenuItems(menu, ['openDb', 'openTemplate', 'openLocal'], parent);
+        this.addMenuItems(menu, ['openDb', 'openTemplate', 'openLocal', 'openVers'], parent);
     })));
 	this.put('file', new Menu(mxUtils.bind(this, function(menu, parent)
 	{
 		this.addMenuItems(menu, ['new'], parent);
 		this.addSubmenu('open', menu, parent);
-		this.addMenuItems(menu, ['-', 'save', 'saveAs', 'roles', '-', 'import', 'export', '-', 'pageSetup', 'print'], parent);
+		this.addMenuItems(menu, ['-', 'save', 'saveAs', 'roles', 'manageRoles', '-', 'import', 'export', '-', 'pageSetup', 'print'], parent);
 	})));
 	this.put('edit', new Menu(mxUtils.bind(this, function(menu, parent)
 	{

@@ -9,15 +9,22 @@ export const EmailConfirmationPage = {
                     </div>
                 </div>
                 <div class="card-body">
-                    <div v-if="success">
-                        <h5 class="card-title text-success">Successful email confirmation</h5>
-                        <p class="card-text">Your email is now confirmed. You can login to your account with the link below and start creating bowtie diagrams.</p>
-                        <router-link to="/login">Login page</router-link>
+                    <div v-if="waitForResponse">
+                        <div class="text-center">
+                            <span class="spinner-border text-secondary" role="status"></span>
+                        </div>
                     </div>
                     <div v-else>
-                        <h5 class="card-title text-danger">Unsuccessful email confirmation</h5>
-                        <p class="card-text">An error occurred. If you're trying to confirm your email, check your mailbox and use the link we sent after your registration.</p>
-                        <router-link to="/">Home page</router-link>
+                        <div v-if="success">
+                            <h5 class="card-title text-success">Successful email confirmation</h5>
+                            <p class="card-text">Your email is now confirmed. You can login to your account with the link below and start creating bowtie diagrams.</p>
+                            <router-link to="/login">Login page</router-link>
+                        </div>
+                        <div v-else>
+                            <h5 class="card-title text-danger">Unsuccessful email confirmation</h5>
+                            <p class="card-text">An error occurred. If you're trying to confirm your email, check your mailbox and use the link we sent after your registration.</p>
+                            <router-link to="/">Home page</router-link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -27,7 +34,8 @@ export const EmailConfirmationPage = {
         return {
             id: null,
             confirmationToken: null,
-            success: false
+            success: false,
+            waitForResponse: true
         }
     },
     methods: {
@@ -41,6 +49,9 @@ export const EmailConfirmationPage = {
                 })
                 .catch(err => {
                     this.success = false;
+                })
+                .finally(() => {
+                    this.waitForResponse = false;
                 })
         }
     },

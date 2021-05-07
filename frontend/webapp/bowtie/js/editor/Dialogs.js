@@ -374,13 +374,12 @@ var UserControlDialog = function (editorUi) {
 };
 
 /**
- * New Bowtie++ OpenFromDbDialog which launch new VueJs Diagram_searchVue
- * Constructs a new filename dialog.
+ * New Bowtie++ OpenFromDbDialog which launch new VueJs DiagramSearchVue
  */
 var OpenFromDBDialog = function (width, height) {
 
     const iframe_holder = document.createElement('div')
-    iframe_holder.setAttribute("style", "background:url(../images/ajax-loading-large.gif) center center no-repeat;")
+    iframe_holder.setAttribute("style", "background:url(../images/loading.gif) center center no-repeat;")
 
     var iframe = document.createElement('iframe');
     iframe.style.backgroundColor = 'transparent';
@@ -398,6 +397,54 @@ var OpenFromDBDialog = function (width, height) {
     iframe_holder.appendChild(iframe)
     this.container = iframe_holder;
 };
+
+var OpenVersioningDialog = function (width, height) {
+
+    const iframe_holder = document.createElement('div')
+    iframe_holder.setAttribute("style", "background:url(../images/loading.gif) center center no-repeat;")
+
+    var iframe = document.createElement('iframe');
+    iframe.style.backgroundColor = 'transparent';
+    iframe.allowTransparency = 'true';
+    iframe.style.borderStyle = 'none';
+    iframe.style.borderWidth = '0px';
+    iframe.style.overflow = 'hidden';
+    iframe.frameBorder = '0';
+    // Adds padding as a workaround for box model in older IE versions
+    var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
+
+    iframe.setAttribute('width', width + 'px');
+    iframe.setAttribute('height', height + 'px');
+    iframe.setAttribute('src', window.VERSIONING_SEARCH);
+    iframe_holder.appendChild(iframe)
+    this.container = iframe_holder;
+};
+
+/**
+ * New Bowtie++ ManageRolesDialog which launch new VueJs RoleManagerVue
+ */
+var ManageRolesDialog = function (width, height) {
+
+    const iframe_holder = document.createElement('div')
+    iframe_holder.setAttribute("style", "background:url(../images/loading.gif) center center no-repeat;")
+
+    var iframe = document.createElement('iframe');
+    iframe.style.backgroundColor = 'transparent';
+    iframe.allowTransparency = 'true';
+    iframe.style.borderStyle = 'none';
+    iframe.style.borderWidth = '0px';
+    iframe.style.overflow = 'hidden';
+    iframe.frameBorder = '0';
+    // Adds padding as a workaround for box model in older IE versions
+    var dx = (mxClient.IS_VML && (document.documentMode == null || document.documentMode < 8)) ? 20 : 0;
+
+    iframe.setAttribute('width', width + 'px');
+    iframe.setAttribute('height', height + 'px');
+    iframe.setAttribute('src', ROLE_MANAGER_DIALOG);
+    iframe_holder.appendChild(iframe)
+    this.container = iframe_holder;
+};
+
 
 /**
  * Constructs a new role dialog to share a diagram (role = reader || writer).
@@ -427,6 +474,8 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
     nameInput.style.width = '180px';
 
     var role = document.createElement('select');
+    role.style.marginLeft = '4px';
+    role.style.marginTop = '10px';
     var owner = document.createElement('option');
     owner.value = 'writer';
     mxUtils.write(owner, 'Writer');
@@ -435,10 +484,31 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
     readonly.value = 'reader';
     mxUtils.write(readonly, 'Reader');
 
+    let isRiskSharedDiv = document.createElement('div')
+    let isRiskShared = document.createElement('input')
+    // isRiskShared.className = "form-check-input me-1"
+    isRiskShared.type = "checkbox"
+    isRiskShared.checked = true
+    isRiskShared.value = "true"
+    isRiskShared.addEventListener('click', function (e) {
+        if (isRiskShared.value === "true") {
+            isRiskShared.value = "false"
+        } else {
+            isRiskShared.value = "true"
+        }
+    })
+
+    isRiskSharedDiv.innerText = "Share risk computation"
+    isRiskSharedDiv.style.marginLeft = '4px'
+    isRiskSharedDiv.style.marginTop = '10px'
+    isRiskSharedDiv.style.marginBottom = '10px'
+    isRiskSharedDiv.appendChild(isRiskShared)
+
     role.appendChild(owner);
     role.appendChild(readonly);
     row.appendChild(nameInput);
     row.appendChild(role);
+    row.appendChild(isRiskSharedDiv);
     tbody.appendChild(row);
 
     row = document.createElement('tr');
@@ -472,7 +542,7 @@ var RoleDialog = function (editorUi, fn, cancelFn) {
         var user = nameInput.value;
         editorUi.hideDialog();
         console.log('user', user, 'role', role.value);
-        fn(user, role.value);
+        fn(user, role.value, isRiskShared.value);
     }));
     genericBtn.className = 'geBtn gePrimaryBtn';
     td.appendChild(genericBtn);
@@ -527,7 +597,7 @@ var FilenameDialog = function (editorUi, filename, buttonText, fn, label, valida
     mxUtils.write(tags_td, "Diagram tags" + ': ');
     let icon = document.createElement("i")
     icon.setAttribute("class", "icon-info-sign")
-    icon.setAttribute("title","Tags are like keywords for diagrams, separated by commas.")
+    icon.setAttribute("title", "Tags are like keywords for diagrams, separated by commas.")
     tags_td.appendChild(icon)
     // var info_div = document.createElement("div")
     // info_div.setAttribute("class", "info")
@@ -1630,8 +1700,52 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
     }
 
     if (format === 'xml') {
-        xml = mxUtils.getXml(editorUi.editor.getGraphXml())
-        download(xml)
+        xml = mxUtils.getXml(editorUi.editor.getGraphXml());
+
+        //Convert risk objects (threats and consequences) to xml
+
+        let dataObject = new Object();
+        dataObject.threats = [];
+        dataObject.consequences = [];
+        let encoder = new mxCodec(mxUtils.createXmlDocument());
+        if (editorUi.editor.graph.threats.length > 0) {
+            // Convert threats object into generic javascript Object
+            let threatsObjects = [];
+            editorUi.editor.graph.threats.forEach(threat => {
+                threatObject = {...threat};
+                barriersObjects = [];
+                threat.barriers.forEach(barrier => {
+                    barriersObjects.push({...barrier})
+                });
+                threatObject._barriers = barriersObjects;
+                threatObject._matrix = {...threat._matrix};
+                threatsObjects.push(threatObject);
+            });
+            dataObject.threats = threatsObjects;
+        }
+
+        if (editorUi.editor.graph.consequences.length > 0) {
+
+            // Convert threats object into generic javascript Object
+            let consequencesObjects = [];
+            editorUi.editor.graph.consequences.forEach(consequence => {
+                consequenceObject = {...consequence};
+                barriersObjects = [];
+                consequence.barriers.forEach(barrier => {
+                    barriersObjects.push({...barrier})
+                });
+                consequenceObject._barriers = barriersObjects;
+                consequencesObjects.push(consequenceObject);
+            });
+            dataObject.consequences = consequencesObjects;
+        }
+
+        let result = encoder.encode(dataObject);
+        let dataXml = mxUtils.getXml(result);
+
+        //Append dataXml to the graph xml and embed it inside a root diagram xml tag
+        xml = "<diagram>" + xml + dataXml + "</diagram>";
+        download(xml);
         //ExportDialog.saveLocalFile(editorUi, mxUtils.getXml(editorUi.editor.getGraphXml()), name, format);
     } else if (format === 'svg') {
         svg = mxUtils.getXml(graph.getSvg(bg, s, b));
