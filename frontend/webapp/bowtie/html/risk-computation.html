@@ -30,8 +30,8 @@
 <body id="body">
     <div id="risk_container">
         <div id="buttons_container">
-            <md-button id="threats_button" class="side_selection_button" v-on:click="currentTab = 'Threats'" :disabled="currentTab === 'Threats'">Threats</md-button>
-            <md-button id="consequences_button" class="side_selection_button" v-on:click="currentTab = 'Consequences'" :disabled="currentTab === 'Consequences'">Consequences</md-button>
+            <md-button id="threats_button" class="side_selection_button md-raised" v-on:click="currentTab = 'Threats'" :disabled="currentTab === 'Threats'">Threats</md-button>
+            <md-button id="consequences_button" class="side_selection_button md-raised" v-on:click="currentTab = 'Consequences'" :disabled="currentTab === 'Consequences'">Consequences</md-button>
         </div>
         <div id="table_container">
             <keep-alive>
