@@ -2347,10 +2347,7 @@ Graph.prototype.updateThreatBarriers = function(cell, threat) {
                     if(foundBarrier === undefined){
                         threat.barriers.push(new Barrier(edge.target));
                     }else{
-                        foundBarrier.name = edge.target.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
-                            .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
-                            .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                            .replaceAll(/<\/pre>/g,"");
+                        foundBarrier.name = edge.target.value;
                     }
                     this.updateThreatBarriers(edge.target, threat);
                     lastBarrier = false;
@@ -2394,10 +2391,7 @@ Graph.prototype.updateConsequenceBarriers = function(cell, consequence) {
                     if(foundBarrier === undefined){
                         consequence.barriers.push(new Barrier(edge.source));
                     }else{
-                        foundBarrier.name = edge.source.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
-                            .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
-                            .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                            .replaceAll(/<\/pre>/g,"");
+                        foundBarrier.name = edge.source.value;
                     }
                     this.updateConsequenceBarriers(edge.source, consequence);
                     lastBarrier = false;
@@ -2430,10 +2424,7 @@ Graph.prototype.updateAllThreats = function () {
         let threat = this.threats.find(elem => elem.cell === cell.id);
         if (threat !== undefined) {
             //update name in case of rename, without taking html tags
-            threat.name = cell.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
-                .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
-                .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                .replaceAll(/<\/pre>/g,"");
+            threat.name = cell.value;
             let mat = this.getMatrix(cell);
             // update the matrix if it is not the same one
             if(threat.matrix.getMatrixCell() !== mat.getMatrixCell()){
@@ -2507,10 +2498,7 @@ Graph.prototype.updateAllConsequences = function() {
         let consequence = this.consequences.find(elem => elem.cell === cell.id);
         if (consequence !== undefined) {
             //update name in case of rename, without taking html tags
-            consequence.name = cell.value.replaceAll(/<div>/g, "").replaceAll(/<\/div>/g, "")
-                .replaceAll(/<br>/g, "").replaceAll(/<h[0-9]>/g, "")
-                .replaceAll(/<\/h[0-9]>/g,"").replaceAll(/<pre>/g,"")
-                .replaceAll(/<\/pre>/g,"");
+            consequence.name = cell.value;
         } else {
             this.consequences.push(new Consequence(cell));
         }
