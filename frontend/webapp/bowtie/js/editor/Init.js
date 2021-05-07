@@ -34,6 +34,7 @@ window.STATISTICS_PAGE = window.STATISTICS_PAGE || window.ROOT_PAGE + 'statistic
 window.OPEN_DIALOG = window.OPEN_DIALOG || window.ROOT_PAGE + 'html/open.html';
 window.RISK_DIALOG = window.RISK_DIALOG || window.ROOT_PAGE + 'html/risk-computation.html';
 window.DIAGRAM_SEARCH_DIALOG = window.DIAGRAM_SEARCH_DIALOG || window.ROOT_PAGE + 'html/diagram-search.html';
+window.VERSIONING_SEARCH = window.VERSIONING_SEARCH || window.ROOT_PAGE + 'html/versioning-search.html';
 window.ROLE_MANAGER_DIALOG = window.ROLE_MANAGER_DIALOG || window.ROOT_PAGE + 'html/role-manager.html';
 
 
@@ -71,3 +72,5 @@ window.API_PUBLIC_DIAGRAMS = window.API_PUBLIC_DIAGRAMS || API_SERVER_URL + '/ap
 window.API_PRIVATE_DIAGRAMS = window.API_PRIVATE_DIAGRAMS || API_SERVER_URL + '/api/diagram/private/list';
 window.API_SHARE_DIAGRAM = window.API_SHARE_DIAGRAM || API_SERVER_URL + '/api/diagram/share/'; // + {graphid}
 window.API_DIAGRAMS_SHARED_WITH_ME = window.API_DIAGRAMS_SHARED_WITH_ME || API_SERVER_URL + '/api/diagram/shared';
+window.API_VERSIONING_DIAGRAMS = window.API_VERSIONING_DIAGRAMS || API_SERVER_URL + '/api/diagram/versions/'; // + {graphid}
+window.API_SWITCH_VERSION = window.API_SWITCH_VERSION || API_SERVER_URL + '/api/diagram/versions/';

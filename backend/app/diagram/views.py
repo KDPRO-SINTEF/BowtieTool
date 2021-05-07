@@ -24,7 +24,8 @@ import defusedxml.minidom
 import reversion
 from reversion.models import Version
 import reversion
-
+from django.utils import timezone
+import pytz
 
 def noScriptTagsInXML(input_xml):
     pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'
@@ -75,6 +76,7 @@ class DiagramList(APIView):
             # Checks against XSS
             with reversion.create_revision():
                 serializer.save(owner=request.user, lastTimeSpent=request.data['lastTimeSpent'], diagram=no_script_xml)
+                reversion.set_date_created(timezone.now())
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -135,13 +137,16 @@ class DiagramDetail(APIView):
                     return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
             # In bellow case we either are the owner, or we have writer rights over the diagram
             # Hence we can modify it
-            diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
-            diagramModel.name = str(request.data['name'])
-            diagramModel.diagram = no_script_xml
-            diagramModel.is_public = request.data['is_public']
-            diagramModel.tags = request.data['tags']
-            diagramModel.preview = request.data['preview']
-            diagramModel.save()
+            with reversion.create_revision():
+                diagramModel.lastTimeSpent = float(request.data['lastTimeSpent'])
+                diagramModel.name = str(request.data['name'])
+                diagramModel.diagram = no_script_xml
+                diagramModel.is_public = request.data['is_public']
+                diagramModel.tags = request.data['tags']
+                diagramModel.preview = request.data['preview']
+                diagramModel.save()
+                reversion.set_date_created(timezone.now())
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -234,9 +239,9 @@ class ShareView(APIView):
             shared_diagram.writer.add(user)
         is_risk_shared_dict = json.loads(shared_diagram.isRiskComputationShared)
         is_risk_shared_dict[user.email] = is_risk_shared
-        print(is_risk_shared_dict)
+        # print(is_risk_shared_dict)
         new_dict_str = json.dumps(is_risk_shared_dict)
-        print(new_dict_str)
+        # print(new_dict_str)
         shared_diagram.isRiskComputationShared = new_dict_str
         shared_diagram.save()
         if settings.SHARE_BY_EMAIL_ACTIVATED:
@@ -305,12 +310,12 @@ class SharedWithMe(APIView):
         all_diags = diags_as_writer.union(diags_as_reader)
         serializer = serializers.DiagramSerializer(all_diags, many=True)
         resp_datas = serializer.data
-        print(resp_datas)
+        # print(resp_datas)
         for diag_serialized in resp_datas:
             diag = Diagram.objects.get(pk=diag_serialized['id'])
-            print(diag)
+            # print(diag)
             diag_is_risk_shared = diag.isRiskComputationShared
-            print(diag_is_risk_shared)
+            # print(diag_is_risk_shared)
             is_risk_shared_dict = json.loads(diag_is_risk_shared)
             if is_risk_shared_dict != {}:
                 value = is_risk_shared_dict[self.request.user.email]
@@ -342,7 +347,8 @@ class DiagramVersions(APIView):
                     for i in range(len(versions))]
         for i in range(len(diagrams)):
             diagrams[i]['id'] = i
-        response = HttpResponse(json.dumps(diagrams),
+            diagrams[i]['date'] = versions[i].revision.date_created
+        response = HttpResponse(json.dumps(diagrams, indent=4, sort_keys=True, default=str),
                                 content_type='application/json')
         return response
 

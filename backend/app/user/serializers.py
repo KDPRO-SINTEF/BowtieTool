@@ -70,18 +70,18 @@ class UserUpdateSerialize(serializers.Serializer):
         old_password = attrs.get("old_password")
 
         if not new_password:
-            raise serializers.ValidationError(dict(new_password=["This field is required"]))
+            raise serializers.ValidationError(dict(new_password=["This field is required."]))
         
         elif not old_password:
-            raise serializers.ValidationError(dict(old_password=["This field is required"]))
+            raise serializers.ValidationError(dict(old_password=["This field is required."]))
         
         if not authenticate(request=self.context.get('request'),
                         username=self.user.email,
                         password=old_password):
-            raise serializers.ValidationError(dict(old_password="Wrong password"))
+            raise serializers.ValidationError(dict(old_password="Wrong old password."))
 
         if new_password == old_password:
-            raise serializers.ValidationError(dict(new_password=["The two passwords must be different"]))
+            raise serializers.ValidationError(dict(new_password=["The two passwords must be different."]))
 
         validators.validate_password(new_password)
 

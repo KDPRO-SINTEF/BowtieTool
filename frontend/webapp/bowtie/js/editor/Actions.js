@@ -31,6 +31,9 @@ Actions.prototype.init = function () {
     this.addAction('new...', function () {
         window.open(window.ROOT_PAGE);
     });
+    this.addAction('openVers...', function (){
+        ui.openVersioning(window.VERSIONING_SEARCH);
+    }).isEnabled = isLoggedIn;
     this.addAction('openDb...', function () {
         ui.openFromDb(window.DIAGRAM_SEARCH_DIALOG);
     }).isEnabled = isLoggedIn;
@@ -338,7 +341,6 @@ Actions.prototype.init = function () {
             var info1 = '';
 
 
-            console.log("WAT");
 
             var tmp = graph.convertValueToString(cell);
 
@@ -684,6 +686,13 @@ Actions.prototype.init = function () {
         const height = 0.7*window.innerHeight;
         ui.showDialog(new OpenFromDBDialog(width,height).container,width,height,true,true)
     });
+
+    this.addAction('showVersionSearch',function (){
+        const width = 1250;
+        const height = 0.7*window.innerHeight;
+        ui.showDialog(new OpenVersioningDialog(width,height).container,width,height,true,true)
+    });
+
     this.addAction('openRolesVue',function (){
         const width = 1000;
         const height = 0.6*window.innerHeight;

@@ -36,7 +36,7 @@ let diagramSearch_vue = new Vue({
                 }
             })
                 .then(res => {
-                    console.log(res)
+                    // console.log(res)
                     this.loaded.private = true;
                     for (const diag of res.data) {
                         diag.isSharedWithMe = false
@@ -54,7 +54,7 @@ let diagramSearch_vue = new Vue({
                 }
             })
                 .then(res => {
-                    console.log(res)
+                    // console.log(res)
                     this.loaded.sharedWithMe = true;
                     this.loaded.public = true;
                     for (const diag of res.data) {
@@ -73,7 +73,7 @@ let diagramSearch_vue = new Vue({
                 }
             }).then(
                 res => {
-                    console.log(res)
+                    // console.log(res)
                     for (const diag of res.data) {
                         diag.isSharedWithMe = true
                         this.all_diagrams.push(diag)

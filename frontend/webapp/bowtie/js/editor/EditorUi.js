@@ -2945,6 +2945,17 @@ EditorUi.prototype.openFromDb = function (open_endpoint) {
         dlg.init(open_endpoint);*/
 }
 
+EditorUi.prototype.openVersioning = function (open_endpoint) {
+
+    var token = localStorage.getItem('sessionToken');
+    if (!token) {
+        mxUtils.alert(mxResources.get('notLoggedIn'));
+        return;
+    }
+    let showVersionSearch = this.actions.get('showVersionSearch').funct;
+    showVersionSearch()
+}
+
 EditorUi.prototype.modifyRolesForGraph = function () {
     var token = localStorage.getItem('sessionToken');
     var graphid = this.editor.getGraphId();
@@ -2971,7 +2982,7 @@ EditorUi.prototype.modifyRolesForGraph = function () {
                 }
             })
                 .then(response => {
-                    console.log(response);
+                    // console.log(response);
                 })
                 .catch(error => {
                     console.log(error);
@@ -3203,10 +3214,10 @@ EditorUi.prototype.save = function (name, tags) {
                             }
                         })
                             .then(res => {
-                                console.log(res)
+                                // console.log(res)
                                 var id = res.data['id']
                                 this.editor.setGraphId(id);
-                                console.log('Posted new diagram with id', id, 'and', this.editor.getGraphId());
+                                // console.log('Posted new diagram with id', id, 'and', this.editor.getGraphId());
                             })
                             .catch(error => {
 
@@ -3215,7 +3226,7 @@ EditorUi.prototype.save = function (name, tags) {
                             })
                     } else {
                         // In that case the id is already defined meaning the diagram was already stored once in the backend
-                        console.log('Existing with id', this.editor.getGraphId());
+                        // console.log('Existing with id', this.editor.getGraphId());
                         formData.append('id', this.editor.getGraphId())
                         axios.put(window.API_UPDATE_DIAGRAM + this.editor.getGraphId(), formData, {
                             headers: {
@@ -3224,7 +3235,7 @@ EditorUi.prototype.save = function (name, tags) {
                         })
                             .then(res => {
                                 console.log(res)
-                                console.log('Updated diagram with id ', this.editor.getGraphId());
+                                // console.log('Updated diagram with id ', this.editor.getGraphId());
                             })
                             .catch(error => {
                                 if (error.response.status === 405) {
