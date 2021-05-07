@@ -2952,8 +2952,14 @@ EditorUi.prototype.openVersioning = function (open_endpoint) {
         mxUtils.alert(mxResources.get('notLoggedIn'));
         return;
     }
-    let showVersionSearch = this.actions.get('showVersionSearch').funct;
-    showVersionSearch()
+    if(!this.editor.getGraphId()){
+        mxUtils.alert("This diagram isn't stored in the database yet.")
+    }
+    else{
+        let showVersionSearch = this.actions.get('showVersionSearch').funct;
+        showVersionSearch()
+    }
+
 }
 
 EditorUi.prototype.modifyRolesForGraph = function () {
@@ -3042,7 +3048,7 @@ EditorUi.prototype.saveFile = function (forceDialog) {
         }
         var dlg = new FilenameDialog(this, filename, mxResources.get('save'), mxUtils.bind(this, function (name, tags) {
             this.save(name, tags);
-        }), null, mxUtils.bind(this, function (name) {
+        }), "Diagram name", mxUtils.bind(this, function (name) {
             if (name != null && name.length > 0) {
                 return true;
             }
