@@ -2,6 +2,7 @@
 import datetime
 import time
 import logging
+import environ
 from rest_framework import generics, permissions
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.settings import api_settings
@@ -22,7 +23,7 @@ from core.models import Profile, User, NonceToToken
 from django.utils import timezone
 from django.db.utils import IntegrityError
 from django.contrib.auth import authenticate
-import environ
+
 
 logger = logging.getLogger(__name__)
 
@@ -216,12 +217,13 @@ class ValidatePasswordReset(APIView):
         """Post method for password reset"""
 
         try:
+
             nonce = force_text(urlsafe_base64_decode(uidb64))
             uid = find_user_id_from_nonce(nonce)
             user = get_user_model().objects.get(pk=uid)
 
         except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist) as e_ex:
-            logger.warning("Failed resset password for User with id %s. Exception: %s", uid, e_ex)
+            logger.warning("Failed resset password for User with id %s. Exception: %s", uidb64, e_ex)
             return Response(status=status.HTTP_400_BAD_REQUEST)
         data = ""
         if PasswordResetToken().check_token(user, token) and "password" in request.data:

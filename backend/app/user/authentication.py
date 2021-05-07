@@ -165,6 +165,7 @@ def create_random_user_id(userid, nbytes=64):
 def find_user_id_from_nonce(nonce):
     """ (create_random_user_id )^-1"""
 
+    print(nonce)
     existing_record = NonceToToken.objects.filter(nonce=nonce).first()
     uid = None
     if existing_record:
