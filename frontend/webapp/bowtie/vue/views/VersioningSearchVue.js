@@ -38,45 +38,29 @@ let versioningSearch_vue = new Vue({
             console.log(this.all_diagrams[0])
         },
         openOldVersion: function (id_version, diagram){
-            axios.post(window.API_SWITCH_VERSION+this.graphID.toString(),{id: id_version},{
-                headers: {
-                    'Authorization': 'Token ' + this.token
+            let doc;
+            let data = undefined;
+            //check for <diagram> tag and that the user has access to the risk computation, then set risk values
+            if (diagram.slice(0, 9) === "<diagram>") {
+                diag = diagram.slice(9, -10);
+                let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
+                doc = mxUtils.parseXml(splittedDiagram[0]);
+                if(diagram.isRiskShared != false) {
+                    data = mxUtils.parseXml(splittedDiagram[1]);
                 }
-            })
-                .then(res => {
-                    console.log(res)
-                    this.editor.setGraphId(this.graphID);
-                    console.log('Posted new diagram with id', this.graphID, 'and', this.graphID);
-                    //console.log(diagram);
-                    let doc;
-                    let data = undefined;
-                    //check for <diagram> tag and that the user has access to the risk computation, then set risk values
-                    if (diagram.slice(0, 9) === "<diagram>") {
-                        diag = diagram.slice(9, -10);
-                        let splittedDiagram = diag.split(/(?<=<\/mxGraphModel>)/);
-                        doc = mxUtils.parseXml(splittedDiagram[0]);
-                        if(diagram.isRiskShared != false) {
-                            data = mxUtils.parseXml(splittedDiagram[1]);
-                        }
-                    } else {
-                        doc = mxUtils.parseXml(diagram);
-                    }
-                    console.log(doc);
-                    window.parent.currentUI.editor.setGraphXml(doc.documentElement);
-                    //set graph values if xml contains risk values
-                    if (data !== undefined) {
-                        window.parent.currentUI.editor.setGraphValues(data.documentElement);
-                    }
-                    window.parent.currentUI.editor.graph.updateAllThreats();
-                    window.parent.currentUI.editor.graph.updateAllConsequences();
-                    console.log('test');
-                    window.parent.currentUI.hideDialog();
-                })
-                .catch(error => {
-
-                    console.log(error)
-
-                })
+            } else {
+                doc = mxUtils.parseXml(diagram);
+            }
+            console.log(doc);
+            window.parent.currentUI.editor.setGraphXml(doc.documentElement);
+            //set graph values if xml contains risk values
+            if (data !== undefined) {
+                window.parent.currentUI.editor.setGraphValues(data.documentElement);
+            }
+            window.parent.currentUI.editor.graph.updateAllThreats();
+            window.parent.currentUI.editor.graph.updateAllConsequences();
+            console.log('test');
+            window.parent.currentUI.hideDialog();
         }
     },
     mounted() {
