@@ -14,7 +14,7 @@ let risk_vue = new Vue({
             accumulatedRiskValue: 'none_defined',
             missingConsequence: false,
             eventProbability: 'no_threats',
-            consequences : []
+            consequences : window.parent.currentUI.editor.graph.getAllConsequences()
         }
     },
     methods: {
