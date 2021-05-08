@@ -33,7 +33,6 @@ let versioningSearch_vue = new Vue({
                 })
         },
         openOldVersion: function (id_version, diagram){
-            console.log("DIAGRAM AFFICHAGE", diagram);
             let doc;
             let data = undefined;
             let clearMatrix = false;
@@ -62,8 +61,6 @@ let versioningSearch_vue = new Vue({
             }
             window.parent.currentUI.editor.graph.updateAllThreats();
             window.parent.currentUI.editor.graph.updateAllConsequences();
-            window.parent.currentUI.editor.setModified(false);
-            window.parent.currentUI.editor.undoManager.clear();
             window.parent.currentUI.hideDialog();
         }
     },
