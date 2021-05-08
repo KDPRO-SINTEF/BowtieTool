@@ -1,5 +1,5 @@
 services:
-  app:
+  api:
     build:
       context: .
     ports:
@@ -8,14 +8,17 @@ services:
       - ./app:/app
     command: >
       sh -c "python manage.py wait_for_db &&
+             python manage.py makemigrations &&
              python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - db
-
+    image: django-bowtie-api
+    container_name: bowtie_back_api
   db:
     image: postgres:10-alpine
     environment:
       - POSTGRES_DB=app
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=789456123
+    container_name: bowtie_back_db

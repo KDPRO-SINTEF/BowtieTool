@@ -1,7 +1,8 @@
 FROM python:3.7-alpine
-MAINTAINER Moulkaf Badreddine
+LABEL maintainer="Moulkaf Badreddine"
 
 RUN apk update
+
 ENV PYTHONUNBUFFERED 1
 RUN apk add python3 py3-pip && \
 	pip install --upgrade pip
@@ -16,9 +17,10 @@ RUN apk add --update --no-cache \
 RUN pip3 install -r /requirements.txt
 RUN apk del .tmp-build-deps
 
-RUN mkdir /app
+RUN mkdir -p /app/app && mkdir /app/user
+RUN ln -s /app/app/.env /app/user/.env
+
 WORKDIR /app
-COPY ./app /app
 
 RUN adduser -D user
 USER user
