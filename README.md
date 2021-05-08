@@ -8,10 +8,10 @@ Bowtie++ is a **Web application** made for creating and editing bowtie risk anal
 
 ```
 /
-|-- app						# The application itself
-|-- website				# Website that presents Bowtie++ features
-|-- docs					# Documentation
-|-- screenshots   # Screenshots of the app
+|-- app             # The application itself
+|-- website         # Website that presents Bowtie++ features
+|-- docs            # Documentation
+|-- screenshots     # Screenshots of the app
 `README.md
 ```
 
