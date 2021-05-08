@@ -152,10 +152,37 @@ class DiagramDetail(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        """Delete selected diagram of authenticated user"""
-        diagram = self.get_object(pk, auth_user_only=True)
-        diagram.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        """Delete selected diagram if it's owned by authenticated user, of it's shared with him. In that last case the
+        user only deletes his link to the diagram and not the whole diagram. """
+        queryset = Diagram.objects.all().filter(owner=self.request.user)
+        try:
+            diagram = queryset.get(pk=pk)
+            diagram.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Diagram.DoesNotExist:
+            # In that case the diagram isn't owned by the current user
+            # So it might be public, in that case he cannot delete it
+            # It might also be shared with him, in that case he can delete his link to the shared diagram
+            shared_diagram = Diagram.objects.get(pk=pk)
+            is_shared = False
+            if self.request.user in shared_diagram.writer.all():
+                is_shared = True
+                shared_diagram.writer.remove(self.request.user)
+                risk_dict = json.loads(shared_diagram.isRiskComputationShared)
+                del risk_dict[self.request.user.email]
+                shared_diagram.isRiskComputationShared = json.dumps(risk_dict)
+                shared_diagram.save()
+            if self.request.user in shared_diagram.reader.all():
+                is_shared = True
+                shared_diagram.reader.remove(self.request.user)
+                if self.request.user.email in shared_diagram.isRiskComputationShared:
+                    risk_dict = json.loads(shared_diagram.isRiskComputationShared)
+                    del risk_dict[self.request.user.email]
+                    shared_diagram.isRiskComputationShared = json.dumps(risk_dict)
+                shared_diagram.save()
+            if is_shared:
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            return Http404
 
 
 class PublicDiagrams(APIView):
@@ -333,11 +360,7 @@ class DiagramVersions(APIView):
         if auth_user_only:
             queryset = Diagram.objects.all().filter(owner=self.request.user)
         else:
-            owner_queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(is_public=True))
-            diags_as_reader = Diagram.objects.all().filter(reader__email__contains=self.request.user.email)
-            diags_as_writer = Diagram.objects.all().filter(writer__email__contains=self.request.user.email)
-            all_shared_diags = diags_as_writer.union(diags_as_reader)
-            queryset = all_shared_diags.union(owner_queryset)
+            queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(is_public=True))
         try:
             queryset = queryset.get(pk=pk)
             return queryset
@@ -354,8 +377,9 @@ class DiagramVersions(APIView):
         except Diagram.DoesNotExist:
             pass
         if diagram is None:
-            shared_diags = Diagram.objects.all().filter(Q(pk=pk) & (Q(reader__email__contains=self.request.user.email) | Q(
-                writer__email__contains=self.request.user.email)))
+            shared_diags = Diagram.objects.all().filter(
+                Q(pk=pk) & (Q(reader__email__contains=self.request.user.email) | Q(
+                    writer__email__contains=self.request.user.email)))
             diagram = shared_diags.get(pk=pk)
         versions = Version.objects.get_for_object(diagram)
         diagrams = [{key: versions[i].field_dict[key] for key in ['name', 'diagram', 'preview']}
