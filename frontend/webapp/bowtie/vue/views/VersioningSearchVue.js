@@ -13,21 +13,17 @@ let versioningSearch_vue = new Vue({
             this.token = localStorage.getItem('sessionToken');
             this.editor = window.parent.currentUI.editor;
             this.graphID = this.editor.getGraphId();
-            console.log("ID PARTAGE", this.graphID);
             if (!this.token) {
                 mxUtils.alert(mxResources.get('notLoggedIn'));
                 return;
             }
-            console.log(window.API_VERSIONING_DIAGRAMS+this.graphID.toString());
             axios.get(window.API_VERSIONING_DIAGRAMS+this.graphID.toString(), {
                 headers: {
                     'Authorization': 'Token ' + this.token
                 }
             })
                 .then(res => {
-                    console.log(res)
                     for (const diag of res.data) {
-                        diag.isSharedWithMe = false
                         this.all_diagrams.push(diag)
                     }
 
@@ -35,10 +31,9 @@ let versioningSearch_vue = new Vue({
                 .catch(error => {
                     console.log(error)
                 })
-            console.log("Exemple id : ");
-            console.log(this.all_diagrams[0])
         },
         openOldVersion: function (id_version, diagram){
+            console.log("DIAGRAM AFFICHAGE", diagram);
             let doc;
             let data = undefined;
             let clearMatrix = false;
