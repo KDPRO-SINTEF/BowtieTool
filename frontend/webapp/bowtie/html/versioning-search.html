@@ -35,28 +35,23 @@
 <div id="versioning-search-vue">
     <h4>Current diagram versions</h4>
     <div class="all_visuals">
-        <template v-if="all_diagrams.length>0">
-            <div id="grid-container" class="row row-cols-auto">
-                <div v-for="diagram in all_diagrams" v-bind:key="diagram.id">
-                    <div class="col">
-                        <div class="card">
-                            <div class="ratio ratio-1x1">
-                                <img :src=diagram.preview class="card-img-top" alt="Preview of diagram">
-                            </div>
-                            <div class="card-body">
-                                <p class="card-title">Version n° {{all_diagrams.length-1-diagram.id}}</p>
-                                <p class="card-text">Creation date : {{diagram.date.slice(0,19)}}</p>
-                                <a href="#" class="btn btn-secondary" v-on:click="openOldVersion(diagram.id, diagram.diagram)">
-                                    Revert to this version</a>
-                            </div>
+        <div id="grid-container" class="row row-cols-auto">
+            <div v-for="diagram in all_diagrams" v-bind:key="diagram.id">
+                <div class="col">
+                    <div class="card">
+                        <div class="ratio ratio-1x1">
+                            <img :src=diagram.preview class="card-img-top" alt="Preview of diagram">
+                        </div>
+                        <div class="card-body">
+                            <p class="card-title">Version n° {{all_diagrams.length-1-diagram.id}}</p>
+                            <p class="card-text">Creation date : {{diagram.date.slice(0,19)}}</p>
+                            <a href="#" class="btn btn-secondary" v-on:click="openOldVersion(diagram.id, diagram.diagram)">
+                                Revert to this version</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </template>
-        <template v-else>
-            <h5>No diagram selected</h5>
-        </template>
+        </div>
     </div>
 </div>
 <div id="fake-div" style="display: inline-block; visibility: hidden"></div>

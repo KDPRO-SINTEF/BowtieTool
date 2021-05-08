@@ -17,14 +17,12 @@ let versioningSearch_vue = new Vue({
                 mxUtils.alert(mxResources.get('notLoggedIn'));
                 return;
             }
-            console.log(window.API_VERSIONING_DIAGRAMS+this.graphID.toString());
             axios.get(window.API_VERSIONING_DIAGRAMS+this.graphID.toString(), {
                 headers: {
                     'Authorization': 'Token ' + this.token
                 }
             })
                 .then(res => {
-                    console.log(res)
                     for (const diag of res.data) {
                         this.all_diagrams.push(diag)
                     }
@@ -33,8 +31,6 @@ let versioningSearch_vue = new Vue({
                 .catch(error => {
                     console.log(error)
                 })
-            console.log("Exemple id : ");
-            console.log(this.all_diagrams[0])
         },
         openOldVersion: function (id_version, diagram){
             let doc;
@@ -65,8 +61,6 @@ let versioningSearch_vue = new Vue({
             }
             window.parent.currentUI.editor.graph.updateAllThreats();
             window.parent.currentUI.editor.graph.updateAllConsequences();
-            window.parent.currentUI.editor.setModified(false);
-            window.parent.currentUI.editor.undoManager.clear();
             window.parent.currentUI.hideDialog();
         }
     },

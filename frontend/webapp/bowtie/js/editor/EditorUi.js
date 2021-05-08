@@ -3224,6 +3224,7 @@ EditorUi.prototype.save = function (name, tags) {
                                 var id = res.data['id']
                                 this.editor.setGraphId(id);
                                 // console.log('Posted new diagram with id', id, 'and', this.editor.getGraphId());
+                                alert("Diagram successfully saved in the database.")
                             })
                             .catch(error => {
 

@@ -39,13 +39,15 @@
     <div v-if="allDiagramsLoaded">
         <div class="search-bar-container">
             <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"
-                        :all_diagrams="all_diagrams" :tags_selected="tags_selected" :name-input="nameInput"></search-bar>
+                        :all_diagrams="all_diagrams" :tags_selected="tags_selected"
+                        :name-input="nameInput"></search-bar>
         </div>
         <div class="visualizer-and-tags">
             <tag-manager :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
                          v-on:tag-change="onTagsChange" v-on:tags-empty="onTagsEmpty"></tag-manager>
             <visualizer :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
-                        :tags_selected="tags_selected" :show_all_tags="show_all_tags"></visualizer>
+                        :tags_selected="tags_selected" :show_all_tags="show_all_tags"
+                        v-on:diagram-delete="UpdateAfterDelete"></visualizer>
         </div>
     </div>
 </div>
@@ -59,7 +61,7 @@
             <input type="text" id="validationCustom01" class="form-control" style="background-color: transparent"
                    v-on:input="onInput($event)" v-on:keydown="onKey($event)">
             <span id="ghost"></span>
-<!--            <label class="form-label" for="validationCustom01">Example label</label>-->
+            <!--            <label class="form-label" for="validationCustom01">Example label</label>-->
         </div>
 
         <div class="dropdown" style="margin-top: 32px;margin-left: 5em">
@@ -104,9 +106,18 @@
                         </div>
                         <div class="card-body">
                             <h5 class="card-title">{{diagram.name}}</h5>
-                            <p class="card-text"> Id: {{diagram.id}}<span v-if="diagram.isSharedWithMe" class="card-text"> (shared)</span></p>
+                            <p class="card-text"> Id: {{diagram.id}}
+                                <span v-if="diagram.isSharedWithMe" class="card-text"> (shared)</span>
+                                <img src="../images/trash-solid.svg"
+                                     alt="deleteButton"
+                                     title="Delete diagram"
+                                     style="width: 1.5rem; object-position: right"
+                                     v-on:click="deleteDiagram(diagram.id)"
+                                >
+                            </p>
                             <button class="btn btn-secondary" v-on:click="openDiagram(diagram.id)">
-                                Open this diagram</button>
+                                Open this diagram
+                            </button>
                         </div>
                     </div>
                 </div>

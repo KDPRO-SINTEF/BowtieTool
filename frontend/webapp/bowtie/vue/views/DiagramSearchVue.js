@@ -97,6 +97,12 @@ let diagramSearch_vue = new Vue({
         },
         onTagsEmpty: function () {
             this.show_all_tags = true
+        },
+        UpdateAfterDelete: function (diagram_id){
+            const idx = this.all_diagrams.findIndex((d)=>{
+                return d.id === diagram_id
+            })
+            this.all_diagrams.splice(idx,1);
         }
     },
     created() {

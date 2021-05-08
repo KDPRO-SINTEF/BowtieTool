@@ -61,8 +61,32 @@ let VisualizerComponent = {
             }
             window.parent.currentUI.hideDialog()
             //window.parent.close()
-
         },
+        deleteDiagram(diagram_id){
+            if(confirm("Are you sure you want to delete this diagram")){
+                const token = localStorage.getItem('sessionToken');
+                if (!token) {
+                    mxUtils.alert(mxResources.get('notLoggedIn'));
+                    return;
+                }
+                axios.delete(window.API_UPDATE_DIAGRAM + diagram_id,{
+                    headers:{
+                        'Authorization': 'Token ' + token
+                    }
+                })
+                    .then((res)=>{
+                        const current_graphId = window.parent.currentUI.editor.getGraphId()
+                        if(current_graphId === diagram_id){
+                            window.parent.currentUI.editor.setGraphId(undefined);
+                        }
+                        // console.log("diagram successfully deleted")
+                        this.$emit("diagram-delete",diagram_id)
+                    })
+                    .catch((error)=>{
+                        console.log(error)
+                    })
+            }
+        }
     },
     computed: {// Sort of augmented variables. Seen by VueJs as variable but are actually func
         // beforeMount is launched at the creation of the component
