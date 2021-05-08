@@ -54,9 +54,11 @@ ALLOWED_HOSTS = [
     API_SERVER_HOST,
 ]
 
-CORS_ORIGIN_WHITELIST = (
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
-)
+]
 # CORS_ORIGIN_WHITELIST = (
 #     '.localhost', '127.0.0.1', '[::1]',
 # )
@@ -103,6 +105,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -110,7 +113,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'reversion.middleware.RevisionMiddleware',
 ]
 
