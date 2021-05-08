@@ -75,6 +75,10 @@ let VisualizerComponent = {
                     }
                 })
                     .then((res)=>{
+                        const current_graphId = window.parent.currentUI.editor.getGraphId()
+                        if(current_graphId === diagram_id){
+                            window.parent.currentUI.editor.setGraphId(undefined);
+                        }
                         // console.log("diagram successfully deleted")
                         this.$emit("diagram-delete",diagram_id)
                     })
