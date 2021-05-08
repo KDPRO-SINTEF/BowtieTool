@@ -116,7 +116,6 @@ class DiagramStat(models.Model):
         return res
 
 
-@reversion.register()
 class Diagram(models.Model):
     """Diagram created by user"""
     diagram = models.TextField(default="")
@@ -193,3 +192,6 @@ class Diagram(models.Model):
 
     def __str__(self):
         return self.name
+
+
+reversion.register(Diagram)

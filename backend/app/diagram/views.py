@@ -143,7 +143,7 @@ class DiagramDetail(APIView):
                 diagramModel.name = str(request.data['name'])
                 diagramModel.diagram = no_script_xml
                 diagramModel.is_public = request.data['is_public']
-                diagramModel.tags = request.data['tags']
+                diagramModel.tags.set(request.data['tags'])
                 diagramModel.preview = request.data['preview']
                 diagramModel.save()
                 reversion.set_date_created(timezone.now())
