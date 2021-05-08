@@ -62,6 +62,8 @@ let versioningSearch_vue = new Vue({
             }
             window.parent.currentUI.editor.graph.updateAllThreats();
             window.parent.currentUI.editor.graph.updateAllConsequences();
+            window.parent.currentUI.editor.setModified(false);
+            window.parent.currentUI.editor.undoManager.clear();
             window.parent.currentUI.hideDialog();
         }
     },

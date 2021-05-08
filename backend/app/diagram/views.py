@@ -27,6 +27,7 @@ import reversion
 from django.utils import timezone
 import pytz
 
+
 def noScriptTagsInXML(input_xml):
     pattern = r'<[ ]*script.*?\/[ ]*script[ ]*>'
     no_script_xml = re.sub(pattern, '', input_xml, flags=(re.IGNORECASE | re.MULTILINE | re.DOTALL))
@@ -332,7 +333,11 @@ class DiagramVersions(APIView):
         if auth_user_only:
             queryset = Diagram.objects.all().filter(owner=self.request.user)
         else:
-            queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(is_public=True))
+            owner_queryset = Diagram.objects.all().filter(Q(owner=self.request.user) | Q(is_public=True))
+            diags_as_reader = Diagram.objects.all().filter(reader__email__contains=self.request.user.email)
+            diags_as_writer = Diagram.objects.all().filter(writer__email__contains=self.request.user.email)
+            all_shared_diags = diags_as_writer.union(diags_as_reader)
+            queryset = all_shared_diags.union(owner_queryset)
         try:
             queryset = queryset.get(pk=pk)
             return queryset
@@ -341,7 +346,17 @@ class DiagramVersions(APIView):
 
     def get(self, request, pk):
         """Return versions of the diagram of the authenticated user"""
-        diagram = self.get_object(pk, auth_user_only=True)
+        diagram = None
+        try:
+            possible_diagrams = Diagram.objects.all().filter(
+                Q(owner=self.request.user) | Q(is_public=True))
+            diagram = possible_diagrams.get(pk=pk)
+        except Diagram.DoesNotExist:
+            pass
+        if diagram is None:
+            shared_diags = Diagram.objects.all().filter(Q(pk=pk) & (Q(reader__email__contains=self.request.user.email) | Q(
+                writer__email__contains=self.request.user.email)))
+            diagram = shared_diags.get(pk=pk)
         versions = Version.objects.get_for_object(diagram)
         diagrams = [{key: versions[i].field_dict[key] for key in ['name', 'diagram', 'preview']}
                     for i in range(len(versions))]

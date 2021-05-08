@@ -1,0 +1,13 @@
+language: python
+python:
+  - "3.7"
+
+services:
+  - docker
+
+before_script: pip install docker-compose
+
+script:
+  - docker-compose run --rm app sh -c "python3 manage.py test"
+  # - docker-compose run --rm app sh -c "coverage run manage.py test"
+  
