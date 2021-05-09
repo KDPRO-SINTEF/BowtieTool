@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext as _
+from django_otp import user_has_device
+from django_otp.plugins.otp_totp.models import TOTPDevice
 from xml.dom import minidom
 from core import models
 
@@ -32,6 +34,13 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
 
+    def save_model(self, request, obj, form, change):
+           if not obj.profile.two_factor_enabled and user_has_device(obj, confirmed=True):
+                TOTPDevice.objects.filter(user=obj).delete()
+
+           super().save_model(request, obj, form, change)
+
+    
     def get_inline_instances(self, request, obj=None):
         if not obj:
             return list()

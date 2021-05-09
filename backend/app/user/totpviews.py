@@ -1,6 +1,7 @@
 """ Two factor authentication views"""
 import os
 import base64
+import io
 import logging
 import qrcode
 from user.authentication import  TOTPValidityToken, ExpiringTokenAuthentication, create_random_user_id, find_user_id_from_nonce
@@ -53,15 +54,17 @@ class TOTPCreateAPIView(APIView):
             device = user.totpdevice_set.create(confirmed=False)
             user.save()
 
-        img = qrcode.make(device.config_url)
-        img.save(IMAGE_PATH) # save for further byte reading
-
-        token =  TOTPValidityToken().make_token(user)
-        with open(IMAGE_PATH, "rb") as image_file:
-            image_data = base64.b64encode(image_file.read()).decode('utf-8')
-
-        return Response({"qrImg": image_data, "token": token}, status=status.HTTP_201_CREATED)
-
+        try:
+            img = qrcode.make(device.config_url)
+            bytes_image = io.BytesIO()
+            img.save(bytes_image, format='PNG')
+            bytes_image.seek(0)
+            img = base64.b64encode(bytes_image.read()).decode('utf-8')
+            token =  TOTPValidityToken().make_token(user)
+            return Response({"qrImg": img, "token": token}, status=status.HTTP_201_CREATED)
+        
+        except Exception as e:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 
