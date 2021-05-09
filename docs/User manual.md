@@ -123,10 +123,13 @@ Once a diagram is saved on your computer or in the database you can open it agai
 You can open a diagram stored on your computer in two ways.
 
 Firstly, you can click on the 'Import' button like shown bellow:
+
 ![](https://i.imgur.com/RXFkvEU.png)
+
 Then choose the XML file with your diagram.
 
 Secondly, you can use the 'Open' menu (shown bellow) then choose 'Open local file...' and choose the XML file with your diagram.
+
 ![](https://i.imgur.com/wvcrlzk.png)
 
 ### Open online diagrams
@@ -149,6 +152,7 @@ By pressing the red trash can you can delete a diagram from the database, you ca
 ## Share diagrams
 
 To share a diagram, you must first save it in the database, then just click on the 'Share with' button shown bellow:
+
 ![](https://i.imgur.com/QxV4tdV.png)
 
 It will prompt you to enter the email of the user you wish to share the diagram with, and to choose its role, the following are available:
@@ -174,6 +178,7 @@ Bowtie++ offers this functionnality through the 'Manage diagram sharing' button 
 ![](https://i.imgur.com/HjpFMTE.png)
 
 It will then open the management interface shown bellow:
+
 ![](https://i.imgur.com/MA5ePaB.png)
 
 Through this management interface, you can:
