@@ -27,7 +27,7 @@ export const LoginPage = {
                     </div>
                     <button type="submit" v-bind:class="['btn', 'btn-full', 'btn-success', 'mb-3', { disabled: waitForResponse }]">
                         <span v-if="waitForResponse" class="spinner-border text-light" role="status"></span>
-                        <span v-else-if="!totpLogin.required">Login</span>
+                        <span v-else-if="!totpLogin.required">Sign in</span>
                         <span v-else="!waitForResponse && totpLogin.required">Submit code</span>
                     </button>
                 </form>

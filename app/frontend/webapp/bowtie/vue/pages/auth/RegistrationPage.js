@@ -39,7 +39,7 @@ export const RegistrationPage = {
                         <div class="invalid-feedback">{{ validators.getErrorMessage(form.passwordConfirm, 'passwordConfirm') }}</div>
                     </div>
                     <button type="submit" v-bind:class="['btn', 'btn-full', 'btn-success', { disabled: waitForResponse }]">
-                        <span v-if="!waitForResponse">Register</span>
+                        <span v-if="!waitForResponse">Sign up</span>
                         <span v-else class="spinner-border text-light" role="status"></span>
                     </button>
                 </form>

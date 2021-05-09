@@ -7,11 +7,11 @@ export const TheNavbarComponent = {
                     <router-link to="/statistics" class="navbar-item navbar-link-simple">Statistics</router-link>
                 </span>
                 <span v-if="!isUserAuthenticated">
-                    <router-link to="/login" class="navbar-link navbar-link__login">Login</router-link>
+                    <router-link to="/login" class="navbar-link navbar-link__login">Sign in</router-link>
                 </span>
                 <span v-else>
                     <router-link to="/settings" class="navbar-item navbar-link navbar-link__account">My account</router-link>
-                    <button class="navbar-item navbar-btn navbar-btn__logout" v-on:click="logout">Logout</button>
+                    <button class="navbar-item navbar-btn navbar-btn__logout" v-on:click="logout">Sign out</button>
                 </span>
             </div>
         </div>

@@ -84,9 +84,7 @@ export const StatisticsPage = {
                 </div>
             </div>
             <button class="btn btn-primary" id="btn-download-csv" v-on:click="downloadCSVFile">Download data as CSV</button>
-            <transition name="fade">
-                <toast v-bind:show="toast.show" v-bind:message="toast.message"></toast>
-            </transition>
+            <toast v-bind:show="toast.show" v-bind:message="toast.message"></toast>
         </div>
     `,
     components: {

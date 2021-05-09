@@ -57,10 +57,14 @@
 }
 
 .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
+    transition: opacity .8s;
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter, .fade-leave-active {
     opacity: 0;
+}
+
+#toast {
+    z-index: 500;
 }
 

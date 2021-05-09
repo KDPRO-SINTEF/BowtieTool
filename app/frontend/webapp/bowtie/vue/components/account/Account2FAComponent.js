@@ -21,7 +21,7 @@ export const Account2FAComponent = {
                         </span>
                     </p>
                     <p class="card-text" v-else>
-                        Scan the following qrCode with an app such as Google Authenticator and enter the code it give to you.
+                        Scan the following qrCode with an app such as Google Authenticator and enter the code it gives to you.
                     </p>
                 </div>
             </div>
