@@ -2,26 +2,44 @@
 
 This manual describes how to use the Bowtie++ application.
 
-[TOC]
+- [User manual](#user-manual)
+  * [Create diagrams](#create-diagrams)
+  * [Authentification](#authentification)
+    + [Create an account](#create-an-account)
+    + [Manage your account](#manage-your-account)
+    + [Enable two-factor authentication](#enable-two-factor-authentication)
+  * [Accessing the statistics](#accessing-the-statistics)
+  * [Save diagrams](#save-diagrams)
+    + [Save locally](#save-locally)
+    + [Save online (in database)](#save-online--in-database-)
+  * [Open diagrams](#open-diagrams)
+    + [Open local diagrams](#open-local-diagrams)
+    + [Open online diagrams](#open-online-diagrams)
+  * [Share diagrams](#share-diagrams)
+    + [Access diagrams people shared with you](#access-diagrams-people-shared-with-you)
+    + [Managing users whom you shared the diagram with](#managing-users-whom-you-shared-the-diagram-with)
+  * [Versioning](#versioning)
+  * [Risk Computation](#risk-computation)
 
 ## Create diagrams
 The Bowtie++ application starting page looks like this: 
 
 ![](https://i.imgur.com/8Cm0tyV.png)
 
-- The **<span style="color: #3f48cc">blue</span>** area contains the elements you can add to your Bowtie diagram.
-- The **<span style="color: #ec1c24">red</span>** area is where you can edit the elements of your Bowtie diagram.
-- The **<span style="color: #0ed145">green</span>** area allows you to edit the font and text style of a selected element in the diagram. To select an element, click on it. If nothing is selected, you can edit the display settings of the diagram (Grid, Page views, etc.) by checking the corresponding box.
-- The **<span style="color: #ffca18">yellow</span>** bar allows you to:
+- The **<span style="color: #3f48cc">blue</span>** 🔵 area contains the elements you can add to your Bowtie diagram.
+- The **<span style="color: #ec1c24">red</span>** 🔴 area is where you can edit the elements of your Bowtie diagram.
+- The **<span style="color: #0ed145">green</span>** 🟢 area allows you to edit the font and text style of a selected element in the diagram. To select an element, click on it. If nothing is selected, you can edit the display settings of the diagram (Grid, Page views, etc.) by checking the corresponding box.
+- The **<span style="color: #ffca18">yellow</span>** 🟡 bar allows you to:
   - Change the zoom. 
   - Undo or redo actions. 
   - Delete a selected element.
   - Move the selected element to foreground or background. 
   - Edit the style of the links of a selected element.
 
-To add an element to your Bowtie diagram, you can either click on the element in the **<span style="color: #3f48cc">blue</span>** area or drag and drop the element from the **<span style="color: #3f48cc">blue</span>** area to the diagram in the **<span style="color: #ec1c24">red</span>** area.
+To add an element to your Bowtie diagram, you can either click on the element in the **<span style="color: #3f48cc">blue</span>** 🔵 area or drag and drop the element from the **<span style="color: #3f48cc">blue</span>** 🔵 area to the diagram in the **<span style="color: #ec1c24">red</span>** 🔴 area.
 
 To link elements on the diagram, left-click on the border of the first element and **hold** down the mouse button to the border of the second element: 
+
 ![](https://i.imgur.com/sFxPoLb.png)
 
 ## Authentification
@@ -77,6 +95,7 @@ You can download the data in a csv file at the bottom of the page:
 After modifying a diagram you might want to save it. 
 ### Save locally
 To save a diagram locally, use the 'Export' button and chose XML (for now XML is the only supported format to re-open a diagram in Bowtie++).
+
 ![](https://i.imgur.com/3PiFIFc.png)
 
 ### Save online (in database)
@@ -106,10 +125,13 @@ Once a diagram is saved on your computer or in the database you can open it agai
 You can open a diagram stored on your computer in two ways.
 
 Firstly, you can click on the 'Import' button like shown bellow:
+
 ![](https://i.imgur.com/RXFkvEU.png)
+
 Then choose the XML file with your diagram.
 
 Secondly, you can use the 'Open' menu (shown bellow) then choose 'Open local file...' and choose the XML file with your diagram.
+
 ![](https://i.imgur.com/wvcrlzk.png)
 
 ### Open online diagrams
@@ -132,6 +154,7 @@ By pressing the red trash can you can delete a diagram from the database, you ca
 ## Share diagrams
 
 To share a diagram, you must first save it in the database, then just click on the 'Share with' button shown bellow:
+
 ![](https://i.imgur.com/QxV4tdV.png)
 
 It will prompt you to enter the email of the user you wish to share the diagram with, and to choose its role, the following are available:
@@ -157,6 +180,7 @@ Bowtie++ offers this functionnality through the 'Manage diagram sharing' button 
 ![](https://i.imgur.com/HjpFMTE.png)
 
 It will then open the management interface shown bellow:
+
 ![](https://i.imgur.com/MA5ePaB.png)
 
 Through this management interface, you can:
