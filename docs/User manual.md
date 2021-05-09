@@ -191,6 +191,8 @@ Through this management interface, you can:
 
 ## Versioning
 
+🔴 WARNING: Currently this feature is occasionning a nasty bug with VueJS that may result in you browser crashing (because of an infinite recursion in the reactive declaration of a new Object through VueJS). Hence, it is strongly recommanded to avoid using Versioning.
+
 You may want to go back to a previous version of the diagram you're working on (created each time you save it). To do so, in the same way as for online diagrams, use the 'Open' menu and choose 'Open previous version...', as shown bellow:
 
 ![](https://i.imgur.com/lGS0iNk.png)
