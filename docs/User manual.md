@@ -26,17 +26,17 @@ The Bowtie++ application starting page looks like this:
 
 ![](https://i.imgur.com/8Cm0tyV.png)
 
-- The **<span style="color: #3f48cc">blue</span>** area contains the elements you can add to your Bowtie diagram.
-- The **<span style="color: #ec1c24">red</span>** area is where you can edit the elements of your Bowtie diagram.
-- The **<span style="color: #0ed145">green</span>** area allows you to edit the font and text style of a selected element in the diagram. To select an element, click on it. If nothing is selected, you can edit the display settings of the diagram (Grid, Page views, etc.) by checking the corresponding box.
-- The **<span style="color: #ffca18">yellow</span>** bar allows you to:
+- The **<span style="color: #3f48cc">blue</span>** 🔵 area contains the elements you can add to your Bowtie diagram.
+- The **<span style="color: #ec1c24">red</span>** 🔴 area is where you can edit the elements of your Bowtie diagram.
+- The **<span style="color: #0ed145">green</span>** 🟢 area allows you to edit the font and text style of a selected element in the diagram. To select an element, click on it. If nothing is selected, you can edit the display settings of the diagram (Grid, Page views, etc.) by checking the corresponding box.
+- The **<span style="color: #ffca18">yellow</span>** 🟡 bar allows you to:
   - Change the zoom. 
   - Undo or redo actions. 
   - Delete a selected element.
   - Move the selected element to foreground or background. 
   - Edit the style of the links of a selected element.
 
-To add an element to your Bowtie diagram, you can either click on the element in the **<span style="color: #3f48cc">blue</span>** area or drag and drop the element from the **<span style="color: #3f48cc">blue</span>** area to the diagram in the **<span style="color: #ec1c24">red</span>** area.
+To add an element to your Bowtie diagram, you can either click on the element in the **<span style="color: #3f48cc">blue</span>** 🔵 area or drag and drop the element from the **<span style="color: #3f48cc">blue</span>** 🔵 area to the diagram in the **<span style="color: #ec1c24">red</span>** 🔴 area.
 
 To link elements on the diagram, left-click on the border of the first element and **hold** down the mouse button to the border of the second element: 
 
