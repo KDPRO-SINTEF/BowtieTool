@@ -13,7 +13,7 @@ class Command(BaseCommand):
             try:
                 db_connection = connections['default']
             except OperationalError:
-                self.stdout.write('failed connecting to Database, retrying in 1s')
-                time.sleep(1)
+                self.stdout.write('failed connecting to Database, retrying in 5s')
+                time.sleep(5)
 
         self.stdout.write(self.style.SUCCESS('Database connection established'))
