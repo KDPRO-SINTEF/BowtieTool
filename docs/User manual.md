@@ -24,7 +24,7 @@ This manual describes how to use the Bowtie++ application.
 ## Create diagrams
 The Bowtie++ application starting page looks like this: 
 
-![](https://i.imgur.com/8Cm0tyV.png)
+![](https://camo.githubusercontent.com/ff18a44be66f49599cc512c7f4814e00d520682cfc8fee3463a8cd555c7cfec0/68747470733a2f2f692e696d6775722e636f6d2f38436d307479562e706e67)
 
 - The **<span style="color: #3f48cc">blue</span>** area contains the elements you can add to your Bowtie diagram.
 - The **<span style="color: #ec1c24">red</span>** area is where you can edit the elements of your Bowtie diagram.
@@ -39,6 +39,7 @@ The Bowtie++ application starting page looks like this:
 To add an element to your Bowtie diagram, you can either click on the element in the **<span style="color: #3f48cc">blue</span>** area or drag and drop the element from the **<span style="color: #3f48cc">blue</span>** area to the diagram in the **<span style="color: #ec1c24">red</span>** area.
 
 To link elements on the diagram, left-click on the border of the first element and **hold** down the mouse button to the border of the second element: 
+
 ![](https://i.imgur.com/sFxPoLb.png)
 
 ## Authentification
