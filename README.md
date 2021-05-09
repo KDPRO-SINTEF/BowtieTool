@@ -1,19 +1,22 @@
 # BowtieTool
 
-Docker engine and docker compose are required to run this application. Please refer to the official website at https://www.docker.com/.
+Bowtie++ is a **Web application** made for creating and editing bowtie risk analysis diagrams.
+
+![alt text](screenshots/bowtie_home.png)
+
+## Project file structure
+
+```
+/
+ |-- app             # The application itself
+ |-- website         # Website that presents Bowtie++ features
+ |-- docs            # Documentation
+ |-- screenshots     # Screenshots of the app
+ `-- README.md
+```
+
+A **user manual** and a **technical documentation** can be found inside the `docs` directory.
 
 ## Installation
 
-Just clone the repository on your machine.
-
-## Launch the app
-
-1. Create a file named .env in *backend/app/app* that follows the *backend/app/app/.env.example* given example.
-
-2. Use the "start.sh" script.
-- **./start.sh** -> launch the entire app
-- **./start.sh frontend** -> launch the frontend part
-- **./start.sh backend** -> launch the backend part
-
-3. Visit your favorite web browser at http://localhost:8080/app/bowtie.
-
+Please, refer to `docs/wiki.md`.

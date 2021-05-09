@@ -1,0 +1,12 @@
+.venv
+venv
+.idea
+.media
+__pycache__
+*.log
+.env
+app/logs/*
+app/media/QR/*
+.coverage
+app/core/migrations/*
+!app/core/migrations/__init__.py

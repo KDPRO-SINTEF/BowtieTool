@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="../vue/components/diagram-search/SearchBarComponent.js"></script>
+    <script type="text/javascript" src="../vue/components/diagram-search/VisualizerComponent.js"></script>
+    <script type="text/javascript" src="../vue/components/diagram-search/TagManagerComponent.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+            crossorigin="anonymous"></script>
+
+
+    <script type="text/javascript">
+        mxBasePath = '../../lib/mxgraph/src';
+    </script>
+    <script type="text/javascript" src="../js/env.js"></script>
+    <script type="text/javascript" src="../js/editor/Init.js"></script>
+    <script type="text/javascript" src="../js/editor/EditorUi.js"></script>
+    <script type="text/javascript" src="../js/editor/Editor.js"></script>
+    <script type="text/javascript" src="../js/editor/Graph.js"></script>
+    <script type="text/javascript" src="../js/risk/Threat.js"></script>
+    <script type="text/javascript" src="../js/risk/Consequence.js"></script>
+    <script type="text/javascript" src="../js/risk/Matrix.js"></script>
+    <script type="text/javascript" src="../lib/mxgraph/src/js/mxClient.js"></script>
+
+    <!-- styles -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link href="../css/diagram-search.css" rel="stylesheet">
+
+</head>
+<body>
+
+<div id="diagram-search-vue">
+    <div v-if="allDiagramsLoaded">
+        <div class="search-bar-container">
+            <search-bar v-on:update_diagrams="onUpdateFromSearchBar" v-on:change-name="nameInput=$event"
+                        :all_diagrams="all_diagrams" :tags_selected="tags_selected"
+                        :name-input="nameInput"></search-bar>
+        </div>
+        <div class="visualizer-and-tags">
+            <tag-manager :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
+                         v-on:tag-change="onTagsChange" v-on:tags-empty="onTagsEmpty"></tag-manager>
+            <visualizer :is-public="isPublic" :name-input="nameInput" :all_diagrams="all_diagrams"
+                        :tags_selected="tags_selected" :show_all_tags="show_all_tags"
+                        v-on:diagram-delete="UpdateAfterDelete"></visualizer>
+        </div>
+    </div>
+    <div v-else class="m-4">
+        Sorry, something went wrong...
+    </div>
+</div>
+<div id="fake-div" style="display: inline-block; visibility: hidden"></div>
+
+
+<script type="text/x-template" id="search-bar-template">
+    <div id="search_bar" style="display: inline-flex; margin-bottom: 10px;">
+        <div id="search_entries" class="form-outline" style="width: 22rem; margin-left: 10px;">
+            <label for="validationCustom01" class="form-label">Diagram's name or description</label>
+            <input type="text" id="validationCustom01" class="form-control" style="background-color: transparent"
+                   v-on:input="onInput($event)" v-on:keydown="onKey($event)">
+            <span id="ghost"></span>
+            <!--            <label class="form-label" for="validationCustom01">Example label</label>-->
+        </div>
+
+        <div class="dropdown" style="margin-top: 32px;margin-left: 5em">
+            <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+               data-bs-toggle="dropdown" aria-expanded="false">
+                Sharing mode
+            </a>
+
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" href="#" v-on:click="publicChange(1)">Public</a></li>
+                <li><a class="dropdown-item" href="#" v-on:click="publicChange(0)">Private</a></li>
+                <li><a class="dropdown-item" href="#" v-on:click="publicChange(2)">Shared with me</a></li>
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="tag_manager-template">
+    <div class="tag_manager" style="margin-left: 10px;">
+        <div class="list-group">
+            <div class="card-header" style="text-align: center">Tags</div>
+            <div v-for="tag_object in all_tags">
+                <label class="list-group-item">
+                    <input class="form-check-input me-1" type="checkbox" value=""
+                           v-on:input="onTagCheck(tag_object.name)">
+                    {{tag_object.name}}
+                    <span class="badge bg-primary rounded-pill">{{tag_object.occurences}}</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-template" id="visualizer-template">
+    <div class="all_visuals">
+        <div id="grid-container" class="row row-cols-auto">
+            <div v-for="diagram in diagram_to_show" v-bind:key="(diagram.id + diagram.isSharedWithMe).toString()">
+                <div class="col">
+                    <div class="card">
+                        <div class="ratio ratio-1x1">
+                            <img :src=diagram.preview class="card-img-top" alt="Preview of diagram">
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{diagram.name}}</h5>
+                            <p class="card-text"> Id: {{diagram.id}}
+                                <span v-if="diagram.isSharedWithMe" class="card-text"> (shared)</span>
+                                <img src="../images/trash-solid.svg"
+                                     alt="deleteButton"
+                                     title="Delete diagram"
+                                     style="width: 1.5rem; object-position: right"
+                                     v-on:click="deleteDiagram(diagram.id)"
+                                >
+                            </p>
+                            <button class="btn btn-secondary" v-on:click="openDiagram(diagram.id)">
+                                Open this diagram
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+
+<script src="../vue/views/DiagramSearchVue.js"></script>
+
+</body>
+</html>

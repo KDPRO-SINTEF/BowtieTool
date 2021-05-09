@@ -1,0 +1,62 @@
+#statistics {
+    margin-top: 8vh;
+    margin-bottom: 8vh;
+    width: 90%;
+    max-width: 1100px;
+}
+
+#statistics h1 {
+    text-align: center;
+    margin-bottom: 8vh;
+}
+
+#statistics #btn-download-csv {
+    display: block;
+    margin: auto auto auto auto;
+}
+
+#statistics .alert {
+    font-size: 0.9em;
+}
+
+#statistics-item .card {
+    transition: transform 0.3s ease;
+}
+
+#statistics-item .card:hover {
+    transform: scale(1.05);
+}
+
+#statistics-item .card-title {
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+#statistics-item .card-content {
+    display: flex;
+}
+
+#statistics-item .input-group-text {
+    border: rgb(33, 37, 41);
+    background: rgb(33, 37, 41);
+}
+
+#statistics-item .input-group-text:hover {
+    background: rgba(33, 37, 41, 0.8);
+}
+
+#statistics-item .btn {
+    padding: 0 5px 4px 5px;
+    border: none;
+}
+
+#statistics-item .copy-logo {
+    width: 20px;
+}
+
+#statistics-item .stats-item-logo {
+    margin-top: 22px;
+    margin-bottom: 22px;
+    margin-right: 1em;
+    width: 6em;
+    float: right;
+}

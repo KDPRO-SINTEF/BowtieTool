@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+    <title>Risk computation</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script type="text/javascript">
+        mxBasePath = '../../lib/mxgraph/src';
+    </script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script type="text/javascript" src="../js/env.js"></script>
+    <script type="text/javascript" src="../js/editor/Init.js"></script>
+    <script type="text/javascript" src="../js/editor/EditorUi.js"></script>
+    <script type="text/javascript" src="../js/editor/Editor.js"></script>
+    <script type="text/javascript" src="../js/editor/Graph.js"></script>
+    <script type="text/javascript" src="../js/risk/Threat.js"></script>
+    <script type="text/javascript" src="../js/risk/Consequence.js"></script>
+    <script type="text/javascript" src="../js/risk/Matrix.js"></script>
+    <script type="text/javascript" src="../js/risk/Barrier.js"></script>
+    <script type="text/javascript" src="../lib/mxgraph/src/js/mxClient.js"></script>
+    <link rel="stylesheet" href="../css/risk-computation.css">
+</head>
+<body id="body">
+    <div id="risk_container">
+        <div id="buttons_container">
+            <md-button id="threats_button" class="side_selection_button md-raised" v-on:click="currentTab = 'Threats'" :disabled="currentTab === 'Threats'">Threats</md-button>
+            <md-button id="consequences_button" class="side_selection_button md-raised" v-on:click="currentTab = 'Consequences'" :disabled="currentTab === 'Consequences'">Consequences</md-button>
+        </div>
+        <div id="table_container">
+            <keep-alive>
+                <threats-component @threats="processThreats" v-if="currentTab === 'Threats'"></threats-component>
+                <consequences-component @consequences="processConsequences" :event-probability="eventProbability" v-else="currentTab === 'Consequences'"></consequences-component>
+            </keep-alive>
+        </div>
+        <div id="result_container">
+            <result-component :highest-risk-value="highestRiskValue" :accumulated-risk-value="accumulatedRiskValue" :event-probability="eventProbability" :missing-consequence="missingConsequence"></result-component>
+        </div>
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vue-material"></script>
+    <script>Vue.use(VueMaterial.default)</script>
+
+    <!-- Component templates -->
+
+    <script type="text/x-template" id="threats">
+            <div>
+                <md-toolbar :md-elevation="5">
+                    <span class="md-title">Threats</span>
+                </md-toolbar>
+                <md-table>
+                    <md-table-row>
+                        <md-table-head class="threat_description">Threat T<sub>i</sub></md-table-head>
+                        <md-table-head class="indicator">Indicator</md-table-head>
+                        <md-table-head class="barriers">Barriers</md-table-head>
+                        <md-table-head class="probability" >Probability p(T<sub>i</sub>)</md-table-head>
+                        <md-table-head class="details">Parameters</md-table-head>
+                    </md-table-row >
+                    <template v-for="threat in threats">
+                        <md-table-row>
+                            <md-table-cell class="threat_description"> {{threat.name}}</md-table-cell>
+                            <md-table-cell class="indicator" ><div class="indicatorDot" v-if="threat.allDefined()" style="width: 25px; height: 25px; border-radius: 20px;" :style="{background: threat.getColorIndicator()}"></div></md-table-cell>
+                            <md-table-cell class="barriers" v-if="threat.barriers.length == 0">No barriers linked to this threat</md-table-cell>
+                            <md-table-cell class="barriers" v-else>
+                                <md-menu md-size="auto">
+                                    <md-button md-menu-trigger>Edit Barriers' failure probability</md-button>
+                                    <md-menu-content class="barriers_menu">
+                                        <md-menu-item v-for="barrier in threat.barriers" v-bind:key="barrier.cell">
+                                            <div class="barrier_detail_name_div">{{barrier.name}} : </div><span class="barrier_detail_field_span"><md-field class="barrier_detail_field"><md-input class="numeric_input" v-model="barrier.failureProbability" v-on:change="emitThreats()" type="number" min ="0" max="1" step="0.01"></md-input></md-field></span>
+                                        </md-menu-item>
+                                    </md-menu-content>
+                                </md-menu>
+                            </md-table-cell>
+                            <md-table-cell class="probability" >
+                                <span v-if="!threat.allDefined()">Missing parameter(s)</span>
+                                <span v-else>{{parseFloat((threat.getProbability()).toFixed(3))}}</span>
+                            </md-table-cell>
+                            <md-table-cell class="details">
+                                <md-button class ="details_button" v-on:click="display_detail(threat)">{{getDetailsButtonText(threat)}}</md-button>
+                            </md-table-cell>
+                        </md-table-row>
+                        <md-table-row class="detail_row" v-if="display_threat.includes(threat)">
+                            <md-table-cell colspan="5">
+                                <span class="threat_detail_span">
+                                    <span class="threat_detail_cell">Threat Actors (ACT) :<md-field class="threat_detail_field"><md-input class="numeric_input" v-model="threat.threatActors" v-on:change="updateThreat(threat)" type="number" min ="0" max="10" step="0.01"></md-input></md-field></span>
+                                    <span class="threat_detail_cell">Opportunity (OPP) :<md-field class="threat_detail_field"><md-input class="numeric_input" v-model="threat.opportunity" v-on:change="updateThreat(threat)" type="number" min ="0" max="10" step="0.01"></md-input></md-field></span>
+                                    <span class="threat_detail_cell">Means (MEA) :<md-field class="threat_detail_field"><md-input class="numeric_input" v-model="threat.means" v-on:change="updateThreat(threat)" type="number" min ="0" max="10" step="0.01"></md-input></md-field></span>
+                                    <span class="threat_detail_cell">Motivations (MTV) :<md-field class="threat_detail_field"><md-input class="numeric_input" v-model="threat.motivation" v-on:change="updateThreat(threat)" type="number" min ="0" max="10" step="0.01"></md-input></md-field></span>
+                                </span>
+                            </md-table-cell>
+                        </md-table-row>
+
+
+                    </template>
+                </md-table>
+            </div>
+    </script>
+
+    <script type="text/x-template" id="consequences">
+
+        <div>
+            <md-toolbar :md-elevation="5">
+                <span class="md-title">Consequences</span>
+            </md-toolbar>
+            <md-table>
+                <md-table-row>
+                    <md-table-head class="consequence_description">Consequence C<sub>j</sub></md-table-head>
+                    <md-table-head class="barriers">Barriers</md-table-head>
+                    <md-table-head class="impact_value" md-numeric>Impact Value L<sub>C<sub>j</sub></sub></md-table-head>
+                    <md-table-head class="consequence_probability" md-numeric>Probability p(C<sub>j</sub>)'</md-table-head>
+                    <md-table-head class="risk_value" >Risk Value R(U)<sub>j</sub></md-table-head>
+                </md-table-row >
+                <md-table-row v-for="consequence in consequences" v-bind:key="consequence.cell" v-bind:class='{"highest_rv_row" : consequence.isHighest}'>
+                    <md-table-cell class="consequence_description"> {{consequence.name}}</md-table-cell>
+                    <md-table-cell class="barriers" v-if="consequence.barriers.length == 0">No barriers linked to this consequence</md-table-cell>
+                    <md-table-cell class="barriers" v-else>
+                        <md-menu md-size="auto">
+                            <md-button md-menu-trigger>Edit Barriers' failure probability</md-button>
+                            <md-menu-content class="barriers_menu">
+                                <md-menu-item v-for="barrier in consequence.barriers" v-bind:key="barrier.cell">
+                                    <div class="barrier_detail_name_div">{{barrier.name}} : </div><span class="barrier_detail_field_span"><md-field class="barrier_detail_field"><md-input class="numeric_input" v-model="barrier.failureProbability" v-on:change="emitConsequences()" type="number" min ="0" max="1" step="0.01"></md-input></md-field></span>
+                                </md-menu-item>
+                            </md-menu-content>
+                        </md-menu>
+                    </md-table-cell>
+                    <md-table-cell class="impact_value" md-numeric><md-field class="consequence_field"><md-input class="numeric_input" v-model="consequence.impactValue" v-on:change="emitConsequences()" type="number" min ="0" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="consequence_probability" md-numeric><md-field class="consequence_field"><md-input class="numeric_input" v-model="consequence.probability" v-on:change="emitConsequences()" type="number" min ="0" max="1" step="0.01"></md-input></md-field></md-table-cell>
+                    <md-table-cell class="risk_value" >
+                        <span v-if="isNaN(eventProbability)">P(U) not defined</span>
+                        <span v-else-if="!consequence.allDefined()">Missing parameter(s)</span>
+                        <span v-else>{{parseFloat((consequence.getProduct() * eventProbability).toFixed(2))}}</span>
+                    </md-table-cell>
+                </md-table-row>
+            </md-table>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="result">
+        <div>
+            <md-toolbar :md-elevation="5">
+                <span class="md-title">Results</span>
+                <md-button id="equations_button" class="md-raised" @click="showFormulasDialog = true">Formulas details</md-button>
+            </md-toolbar>
+            <md-dialog :md-active.sync="showFormulasDialog">
+                <md-dialog-title>Formulas detail</md-dialog-title>
+                <md-dialog-content>
+                <md-tabs md-dynamic-height>
+                    <md-tab md-label="Risk Value formulas">
+                        <p><b>Notation :</b></p>
+                        <p>
+                            <ul>
+                                <li><span class="notation_symbol">U </span> : &nbsp The unwanted event</li>
+                                <li><span class="notation_symbol">p(U) </span> : &nbsp The probability that the unwanted event U occurs</li>
+                                <li><span class="notation_symbol">m </span> : &nbsp The number of consequences</li>
+                                <li><span class="notation_symbol">C<sub>j</sub> </span> : &nbsp The consequence j</li>
+                                <li><span class="notation_symbol">p(C<sub>j</sub>) </span> : &nbsp The probability that the consequence j occurs</li>
+                                <li><span class="notation_symbol">L<sub>C<sub>j</sub></sub> </span> : &nbsp The impact value of the consequence j</li>
+                                <li><span class="notation_symbol">R(U)<sub>j</sub> </span> : &nbsp Risk value for a consequence j</li>
+                            </ul>
+                        </p>
+                        <p><b>Formulas :</b></p>
+                        <div class="image_div"><img id="risk_value_image" class="formula_image" src="../images/risk/risk_value.png"></div>
+                        <div class="image_div"><img id="highest_risk_value_image" class="formula_image" src="../images/risk/highest_risk_value.png"></div>
+                        <div class="image_div"><img id="accumulated_risk_value_image" class="formula_image" src="../images/risk/accumulated_risk_value.png"></div>
+                    </md-tab>
+                    <md-tab md-label="Threats formulas">
+                        <p><b> A threat's parameters must be between 0 and 10.</b></p>
+                        <p><b>Notation :</b></p>
+                        <p>
+                        <ul>
+                            <li><span class="notation_symbol">p(U) </span> : &nbsp The probability that the unwanted event U occurs</li>
+                            <li><span class="notation_symbol">n </span> : &nbsp The number of threats</li>
+                            <li><span class="notation_symbol">T<sub>i</sub> </span> : &nbsp The threat i</li>
+                            <li><span class="notation_symbol">p(T<sub>i</sub>) </span> : &nbsp The probability that the threat i occurs</li>
+                            <li><span class="notation_symbol">p(T<sub>i</sub>)' </span> : &nbsp The probability that the threat i occurs without security controls</li>
+                            <li><span class="notation_symbol">P<sub>SC<sub>k</sub></sub> </span> : &nbsp The probability that the security control k fails</li>
+                            <li><span class="notation_symbol">nb<sub>SC</sub> </span> : &nbsp The number of security controls</li>
+                            <li><span class="notation_symbol">w<sub>i</sub> </span> : &nbsp Average weight of the threat i</li>
+                        </ul>
+                        </p>
+                        <p><b>Formulas :</b></p>
+                        <div class="image_div"><img id="event_probability_image" class="formula_image" src="../images/risk/event_probability_image.png"></div>
+                        <div class="image_div"><img id="threat_barriers_image" class="formula_image" src="../images/risk/threat_with_barriers.png"></div>
+                        <div class="image_div"><img id="threat_image" class="formula_image" src="../images/risk/threat.png"></div>
+                        <div class="image_div"><img id="average_weight_image" class="formula_image" src="../images/risk/average_weight.png"></div>
+                    </md-tab>
+                    <md-tab md-label="Consequences formulas">
+                        <p><b>Notation :</b></p>
+                        <p>
+                        <ul>
+                            <li><span class="notation_symbol">p(U) </span> : &nbsp The probability that the unwanted event U occurs</li>
+                            <li><span class="notation_symbol">m </span> : &nbsp The number of consequences</li>
+                            <li><span class="notation_symbol">C<sub>j</sub> </span> : &nbsp The consequence j</li>
+                            <li><span class="notation_symbol">p(C<sub>j</sub>) </span> : &nbsp The probability that the consequence j occurs</li>
+                            <li><span class="notation_symbol">p(C<sub>j</sub>)' </span> : &nbsp The probability that the consequence j occurs without barriers</li>
+                            <li><span class="notation_symbol">P<sub>B<sub>l</sub></sub> </span> : &nbsp The probability that the barrier l fails</li>
+                            <li><span class="notation_symbol">nb<sub>B</sub> </span> : &nbsp The number of barriers</li>
+                        </ul>
+                        </p>
+                        <p><b>Formulas :</b></p>
+                        <div class="image_div"><img id="consequence_barriers_image" class="formula_image" src="../images/risk/consequence_with_barriers.png"></div>
+                    </md-tab>
+                    <md-tab md-label="Color indicators">
+                        <p id="conversion_title"><b>Conversion table for color indicators</b></p>
+                        <img id="conversion_image" src="../images/risk/color_conversion.png">
+                    </md-tab>
+                </md-tabs>
+                </md-dialog-content>
+                <md-dialog-actions>
+                    <md-button class="md-primary" @click="showFormulasDialog = false">Close</md-button>
+                </md-dialog-actions>
+            </md-dialog>
+            <md-table>
+                <md-table-row>
+                    <md-table-cell class="result_description"><b> Probability that the unwanted event occurs : </b></md-table-cell>
+                    <md-table-cell class="result_value">
+                        <span v-if="eventProbability === 'missing_param'">Missing parameter(s) on at least one threat</span>
+                        <span v-else-if="eventProbability === 'no_threats'"> No threats were found on the diagram</span>
+                        <span v-else>{{parseFloat((eventProbability).toFixed(3))}}</span>
+                    </md-table-cell>
+                </md-table-row>
+                <md-table-row>
+                    <md-table-cell class="result_description">
+                        <b> Highest risk value for one consequence occuring : </b>
+                        <span v-if="missingConsequence" class="warning_missing_consequence"> <br>(Warning : One or multiples consequences parameters are missing)</span>
+                    </md-table-cell>
+                    <md-table-cell class="result_value">
+                        <span v-if="isNaN(eventProbability)">P(U) not defined</span>
+                        <span v-else-if="highestRiskValue === 'no_consequences'"> No consequences defined on the diagram</span>
+                        <span v-else-if="highestRiskValue === 'none_defined'"> No consequences parameters defined</span>
+                        <span v-else>{{parseFloat((highestRiskValue).toFixed(3))}}</span>
+                    </md-table-cell>
+                </md-table-row>
+                <md-table-row>
+                    <md-table-cell class="result_description">
+                        <b> The accumulated risk value for all consequences occurring : </b>
+                        <span v-if="missingConsequence" class="warning_missing_consequence"> <br>(Warning : One or multiples consequences parameters are missing)</span>
+                    </md-table-cell>
+                    <md-table-cell class="result_value">
+                        <span v-if="isNaN(eventProbability)">P(U) not defined</span>
+                        <span v-else-if="accumulatedRiskValue === 'no_consequences'"> No consequences defined on the diagram</span>
+                        <span v-else-if="accumulatedRiskValue === 'none_defined'"> No consequences parameters defined</span>
+                        <span v-else>{{parseFloat((accumulatedRiskValue).toFixed(3))}}</span>
+                    </md-table-cell>
+                </md-table-row>
+            </md-table>
+        </div>
+    </script>
+    <script src="../vue/components/risk/RiskComputationComponent.js"></script>
+    <script src="../vue/views/RiskComputationVue.js"></script>
+</body>
+</html>
