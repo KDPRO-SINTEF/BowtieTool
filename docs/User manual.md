@@ -2,7 +2,24 @@
 
 This manual describes how to use the Bowtie++ application.
 
-[TOC]
+- [User manual](#user-manual)
+  * [Create diagrams](#create-diagrams)
+  * [Authentification](#authentification)
+    + [Create an account](#create-an-account)
+    + [Manage your account](#manage-your-account)
+    + [Enable two-factor authentication](#enable-two-factor-authentication)
+  * [Accessing the statistics](#accessing-the-statistics)
+  * [Save diagrams](#save-diagrams)
+    + [Save locally](#save-locally)
+    + [Save online (in database)](#save-online--in-database-)
+  * [Open diagrams](#open-diagrams)
+    + [Open local diagrams](#open-local-diagrams)
+    + [Open online diagrams](#open-online-diagrams)
+  * [Share diagrams](#share-diagrams)
+    + [Access diagrams people shared with you](#access-diagrams-people-shared-with-you)
+    + [Managing users whom you shared the diagram with](#managing-users-whom-you-shared-the-diagram-with)
+  * [Versioning](#versioning)
+  * [Risk Computation](#risk-computation)
 
 ## Create diagrams
 The Bowtie++ application starting page looks like this: 
