@@ -2,7 +2,7 @@
 
 Bowtie++ is a **Web application** supporting security and safety risk analysis using bowtie diagrams.
 
-- [Bowtie++ wiki](/x9gwhaB4SzORveu81KiDuA)
+- [Bowtie++ wiki](#Bowtie++-wiki)
     - [Project's background](#Project%E2%80%99s-background)
     - [Requirements](#Requirements)
     - [Installation](#Installation)
