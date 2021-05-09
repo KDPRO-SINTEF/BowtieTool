@@ -4,7 +4,7 @@ This manual describes how to use the Bowtie++ application.
 
 - [User manual](#user-manual)
   * [Create diagrams](#create-diagrams)
-  * [Authentification](#authentification)
+  * [Authentication](#authentication)
     + [Create an account](#create-an-account)
     + [Manage your account](#manage-your-account)
     + [Enable two-factor authentication](#enable-two-factor-authentication)
@@ -42,7 +42,7 @@ To link elements on the diagram, left-click on the border of the first element a
 
 ![](https://i.imgur.com/sFxPoLb.png)
 
-## Authentification
+## Authentication
 
 Bowtie++ offers an authentication service so you can save your work and share it with other users. 
 
