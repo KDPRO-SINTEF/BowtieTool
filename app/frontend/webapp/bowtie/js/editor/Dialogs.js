@@ -1798,7 +1798,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
                 svgImage.onerror = function () {
                     console.log("could not load image")
                 }
-                // document.body.removeChild(imgPreview);
+                document.body.removeChild(svgImage);
             };
             svgImage.src = svgUrl;
         }
