@@ -94,6 +94,7 @@ You can download the data in a csv file at the bottom of the page:
 After modifying a diagram you might want to save it. 
 ### Save locally
 To save a diagram locally, use the 'Export' button and chose XML (for now XML is the only supported format to re-open a diagram in Bowtie++).
+
 ![](https://i.imgur.com/3PiFIFc.png)
 
 ### Save online (in database)
