@@ -19,7 +19,7 @@ let diagramSearch_vue = new Vue({
     },
     computed: {
         allDiagramsLoaded: function() {
-            return this.loaded.public && this.loaded.private && this.loaded.sharedWithMe;
+            return (this.loaded.public && this.loaded.private && this.loaded.sharedWithMe);
         }
     },
     methods: {
@@ -45,7 +45,7 @@ let diagramSearch_vue = new Vue({
 
                 })
                 .catch(error => {
-                    console.log(error)
+                    //console.log(error)
                 })
             // Getting all the public diags
             axios.get(window.API_PUBLIC_DIAGRAMS, {
@@ -55,7 +55,6 @@ let diagramSearch_vue = new Vue({
             })
                 .then(res => {
                     // console.log(res)
-                    this.loaded.sharedWithMe = true;
                     this.loaded.public = true;
                     for (const diag of res.data) {
                         diag.isSharedWithMe = false
@@ -64,7 +63,7 @@ let diagramSearch_vue = new Vue({
 
                 })
                 .catch(error => {
-                    console.log(error)
+                    //console.log(error)
                 })
             // Getting all the diagrams shared with me
             axios.get(window.API_DIAGRAMS_SHARED_WITH_ME,{
@@ -74,6 +73,7 @@ let diagramSearch_vue = new Vue({
             }).then(
                 res => {
                     // console.log(res)
+                    this.loaded.sharedWithMe = true;
                     for (const diag of res.data) {
                         diag.isSharedWithMe = true
                         this.all_diagrams.push(diag)
@@ -81,7 +81,7 @@ let diagramSearch_vue = new Vue({
                 }
             ).catch(
                 error => {
-                    console.log(error)
+                    //console.log(error)
                 }
             )
         },

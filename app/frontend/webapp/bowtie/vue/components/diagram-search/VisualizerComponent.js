@@ -83,7 +83,7 @@ let VisualizerComponent = {
                         this.$emit("diagram-delete",diagram_id)
                     })
                     .catch((error)=>{
-                        console.log(error)
+                        //console.log(error)
                     })
             }
         }

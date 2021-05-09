@@ -29,7 +29,7 @@ let versioningSearch_vue = new Vue({
 
                 })
                 .catch(error => {
-                    console.log(error)
+                    //console.log(error)
                 })
         },
         openOldVersion: function (id_version, diagram){

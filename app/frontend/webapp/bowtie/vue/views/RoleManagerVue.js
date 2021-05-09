@@ -35,7 +35,7 @@ export const RoleManagerVue = new Vue({
                     this.writers = JSON.parse(res.data['writers'])
                 })
                 .catch((error)=>{
-                    console.log(error)
+                    //console.log(error)
                 })
         },
         removeReader(email){

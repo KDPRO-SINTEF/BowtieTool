@@ -27,7 +27,7 @@ export const UserVisualizerComponent = {
                     // console.log(res)
                 })
                 .catch((error) => {
-                    console.log(error)
+                    //console.log(error)
                 })
         },
         removeWriter(email) {
@@ -43,7 +43,7 @@ export const UserVisualizerComponent = {
                     // console.log(res)
                 })
                 .catch((error) => {
-                    console.log(error)
+                    //console.log(error)
                 })
 
         },
