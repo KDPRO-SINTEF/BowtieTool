@@ -228,7 +228,7 @@ class StatsView(APIView):
                 output_field=FloatField(),
             ),
             barriers_per_threats=Case(
-                When(sec_con=0, then=0),
+                When(cons=0, then=0),
                 default=(F('security_control') / F('consequences')),
                 output_field=FloatField(),
             ),
