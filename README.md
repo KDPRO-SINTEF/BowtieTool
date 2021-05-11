@@ -2,8 +2,6 @@
 
 Bowtie++ is a **Web application** made for creating and editing bowtie risk analysis diagrams.
 
-![bowtie_home](/Users/clemultics/Pictures/bowtie_home.png)
-
 ## Project file structure
 
 ```
