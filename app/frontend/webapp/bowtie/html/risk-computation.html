@@ -2,19 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
-    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
     <title>Risk computation</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
+    <!-- Remote scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 
+    <!-- Bowtie++ scripts -->
     <script type="text/javascript">
         mxBasePath = '../../lib/mxgraph/src';
     </script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script type="text/javascript" src="../js/env.js"></script>
     <script type="text/javascript" src="../js/editor/Init.js"></script>
     <script type="text/javascript" src="../js/editor/EditorUi.js"></script>
@@ -25,6 +24,13 @@
     <script type="text/javascript" src="../js/risk/Matrix.js"></script>
     <script type="text/javascript" src="../js/risk/Barrier.js"></script>
     <script type="text/javascript" src="../lib/mxgraph/src/js/mxClient.js"></script>
+
+    <!-- Remote styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/vue-material.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/vue-material/dist/theme/default.css">
+
+    <!-- Bowtie++ styles -->
     <link rel="stylesheet" href="../css/risk-computation.css">
 </head>
 <body id="body">
