@@ -24,7 +24,7 @@ This manual describes how to use the Bowtie++ application.
 ## Create diagrams
 The Bowtie++ application starting page looks like this: 
 
-![](https://i.imgur.com/8Cm0tyV.png)
+![]()
 
 - The **<span style="color: #3f48cc">blue</span>** 🔵 area contains the elements you can add to your Bowtie diagram.
 - The **<span style="color: #ec1c24">red</span>** 🔴 area is where you can edit the elements of your Bowtie diagram.
