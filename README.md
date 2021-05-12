@@ -18,4 +18,6 @@ A **user manual** and a **technical documentation** can be found inside the `doc
 
 ## Installation
 
-Please, refer to `docs/wiki.md`.
+For development purposes, use the `master` or `dev` branch.
+A deployment example is given on the `deploy` branch.
+Documentation for both the installation and deployment is located at `docs/wiki.md`.
