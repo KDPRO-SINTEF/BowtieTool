@@ -2,20 +2,20 @@
 
 Bowtie++ is a **Web application** supporting security and safety risk analysis using bowtie diagrams.
 
-- [Bowtie++ wiki](#Bowtie++-wiki)
-    - [Project's background](#Project's-background)
-    - [Requirements](#Requirements)
-    - [Installation](#Installation)
-    - [Deployment](#Deployment)
-    - [Installation on other types of processors](#Installation-on-other-types-of-processors)
-        - [Example for the raspberry PI (AMR32)](#Example-for-the-raspberry-PI-(ARM32))
-    - [Technical documentation](#Technical-documentation)
-        - [Software architecture](#Software-architecture)
-        - [Front-end](#Front-end)
-        - [Back-end](#Back-end)
+- [Bowtie++ wiki](#bowtie++-wiki)
+    - [Project's background](#projects-background)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+    - [Deployment](#deployment)
+    - [Installation on other types of processors](#installation-on-other-types-of-processors)
+        - [Example for the raspberry PI (AMR32)](#example-for-the-raspberry-PI-(ARM32))
+    - [Technical documentation](#technical-documentation)
+        - [Software architecture](#software-architecture)
+        - [Front-end](#front-end)
+        - [Back-end](#back-end)
     - [Licenses](#Licenses)
-        - [Front-end](#Front-end)
-        - [Back-end](#Back-end)
+        - [Front-end](#front-end-2)
+        - [Back-end](#back-end-2)
 
 ## Project's background
 
