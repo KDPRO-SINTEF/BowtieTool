@@ -1,3 +1,8 @@
+/**
+ * Email confirmation page
+ * Related route: /register/email-confirm?id=xxx&token=xxx
+ * Confirms the account creation request given the id and token in the url
+ */
 export const EmailConfirmationPage = {
     template: `
         <div id="email-confirm">

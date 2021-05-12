@@ -1,3 +1,7 @@
+/**
+ * HTTP error 404 Page
+ * Related route: /404
+ */
 export const HttpError404Page = {
     template: `
        <div class="error-page">

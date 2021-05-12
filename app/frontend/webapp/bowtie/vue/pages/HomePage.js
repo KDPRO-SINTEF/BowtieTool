@@ -1,3 +1,8 @@
+/**
+ * Home Page
+ * Related route: /
+ * Contains the diagram editor
+ */
 export const HomePage = {
     template: `
         <div id="diagram-editor">

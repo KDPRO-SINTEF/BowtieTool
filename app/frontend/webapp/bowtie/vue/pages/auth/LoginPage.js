@@ -1,6 +1,10 @@
 import * as validators from '/js/modules/validators.js';
 import { store } from "../../store.js";
 
+/**
+ * Login page
+ * Related route: /login
+ */
 export const LoginPage = {
     template: `
         <div class="form__auth">
@@ -108,6 +112,7 @@ export const LoginPage = {
                 }
             }
         },
+        // Set the login mode (classic or two-factor authentication)
         setLoginMode: function(data) {
             if (data.uidb64 !== undefined && data.token !== undefined) {
                 this.totpLogin.required = true;
@@ -117,6 +122,7 @@ export const LoginPage = {
                 this.saveSessionToken(data.token);
             }
         },
+        // Saves the session token in the localStorage and update the user data in the store object
         saveSessionToken(token) {
             localStorage.setItem('sessionToken', token);
             store.commit('setSessionToken', token);

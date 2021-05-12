@@ -2,6 +2,11 @@ import { store } from "../store.js";
 import { StatisticsItemComponent } from "../components/stats/StatisticsItemComponent.js";
 import { BaseToastComponent } from "../components/BaseToastComponent.js";
 
+/**
+ * Statistics page
+ * Related route: /statistics
+ * Composed of multiple statistics-item
+ */
 export const StatisticsPage = {
     template: `
         <div id="statistics" class="container">

@@ -1,5 +1,10 @@
 import { store } from "../store.js";
 
+/**
+ * User account settings page
+ * Related route: /settings
+ * Composed of 3 different tabs: user profile, account security and the danger zone
+ */
 export const AccountSettingsPage = {
     template: `
         <div id="settings">

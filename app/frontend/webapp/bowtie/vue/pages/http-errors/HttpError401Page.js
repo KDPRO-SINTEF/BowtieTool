@@ -1,3 +1,7 @@
+/**
+ * HTTP error 401 Page
+ * Related route: /401
+ */
 export const HttpError401Page = {
     template: `
        <div class="error-page">

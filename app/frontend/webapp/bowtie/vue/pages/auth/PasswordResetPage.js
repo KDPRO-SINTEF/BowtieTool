@@ -1,5 +1,12 @@
 import * as validators from '/js/modules/validators.js';
 
+/**
+ * Password reset page
+ * Related route: /password-reset (and /password-reset?id=xxx&token=xxx)
+ * Handles the password reset process with an "email" "or "new password" "form depending on the url
+ * 1 -> User enters his email and a link is sent to him
+ * 2 -> User uses this link (in which the id and token params are defined) and chooses his new password
+ */
 export const PasswordResetPage = {
     template:`
         <div class="form__auth">
@@ -92,6 +99,7 @@ export const PasswordResetPage = {
         },
         submitPasswordResetForm: function() {
             this.fetchingError = false;
+            // If id and token are defined in the url, checks and sends the new password. If not, checks and sends the email
             if (this.checkPasswordResetForm()) {
                 let requestData = {};
                 let fetchedUrl = '';

@@ -1,6 +1,10 @@
 import * as validators from '/js/modules/validators.js';
 import { store } from "../../store.js";
 
+/**
+ * Registration page
+ * Related route: /register
+ */
 export const RegistrationPage = {
     template: `
         <div class="form__auth">

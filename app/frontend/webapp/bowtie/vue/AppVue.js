@@ -3,11 +3,15 @@ import { store } from "./store.js";
 import { HomePage } from "./pages/HomePage.js";
 import { TheNavbarComponent } from "./components/TheNavbarComponent.js";
 
+/**
+ * Main Vue instance, mounted on index.html
+ * Contains the router (router.js) and the store (store.js) objects
+ */
 export const app = new Vue({
     router,
     store,
     data: {
-        isStoreLoaded: false
+        isStoreLoaded: false // Describes if the store objet is correctly filled
     },
     components: {
         'home': HomePage,
@@ -30,6 +34,9 @@ export const app = new Vue({
         }
     },
     created: function() {
+        // If the session token in the localStorage, fetch the API to get the user information linked to that token
+        // The child components of AppVue are mounted only if the store is well filled ...
+        // ... this means waiting for the API response
         let sessionToken = localStorage.getItem('sessionToken');
         if (sessionToken !== null) {
             this.$store.commit('setSessionToken', sessionToken);
