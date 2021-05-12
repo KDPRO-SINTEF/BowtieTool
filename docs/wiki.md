@@ -15,7 +15,7 @@ Bowtie++ is a **Web application** supporting security and safety risk analysis u
         - [Back-end](#back-end)
     - [Licenses](#Licenses)
         - [Front-end](#front-end-2)
-        - [Back-end](#back-end-2)
+        - [Back-end](#back-end-1)
 
 ## Project's background
 
