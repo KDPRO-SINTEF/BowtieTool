@@ -201,7 +201,7 @@ Base docker images used for Bowtie++ have their equivalent for other types of pr
 **Update the Dockerfiles**
 
 All given path are relative to the `app` directory in the project root folder of the `dev` or `master` branches.<br>
-For the `deploy` branch, there is only one main `docker-compose.yml` and 2 Dockerfiles (for the front-end and the back-end) : update these.
+For the `deploy` branch, there is only one main `docker-compose.yml` and 2 Dockerfiles (for the front-end and the back-end): update these.
 
 `frontend/Dockerfile`
 ```dockerfile
