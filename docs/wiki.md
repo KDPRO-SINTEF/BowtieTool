@@ -30,7 +30,7 @@ Bowtie++ is an evolution of Bowtie+ which was mainly based on [grapheditor](#Lic
 
 ## Installation
 
-### Development mode
+**branches**: `master` or `dev`.
 
 <span style="color: #dc3545">WARNING:</span> only for development puposes, DO NOT use this configuration as a deployment model.
 
@@ -43,7 +43,7 @@ cd BowtieTool
 
 The Django REST API requires an environment file located at `backend/app/app/.env`. This file contains sentivive data, such as secret keys. **Be sure to make it accessible only to authorized persons**. An example of a typical `.env` file is given at `backend/app/app/.env.example`.
 
-If you need more information about how to fill in this file, check the [technical documentaion](#app-module).
+If you need more information about how to fill in this file, check the [technical documentation](#app-module).
 
 **Configuring server ip addresses**
 
@@ -69,7 +69,7 @@ CORS_ORIGIN_WHITELIST = [
 
 In `frontend/webapp/bowtie/js/env.js`, update the following variables to match the server ip on which the backend is installed and the port it listens to.
 
-```javascript
+```javascript=2
 const API_SERVER_HOST = 'localhost';
 const API_SERVER_PORT = '8000';
 ```
@@ -100,9 +100,88 @@ You can stop the app with the `stop.sh` script. At the root of the project:
 
 The script simply uses `docker container kill` to stop the containers.
 
-### Deployment mode
+
+## Deployment 
+
+**branch**: `deploy`.
+
+An example of deployment for Bowtie++ can be found on the branch `deploy` of this repository. This deployment uses 4 servers, each one encapsulated in a Docker container. Here is a picture of the deployment infrastructure: 
+
+![](images/q7xnIFr.png)
+
+These 4 servers have been created to make the different components of the application independent. In a real deployment scenario, it's suggested to use the nginx reverse proxy server to deliver the static content from the front-end part ("static resources" in the picture) for better performance. It's also recommended to make the database run directly on a virtual machine other than a container in order to preserve the integrity of the data.
+
+The reverse proxy communicates to the user using HTTPS protocol, and the other servers aren't directly connected to the external network. In order to establish a secure connection between all of the components of the application we suggest developing a separate public key infrastructure or using additional SSL/TLS certificates.
+
+### Back-end (REST API)
+**Gunicorn** is used as a CGI HTTP server. However Gunicorn can't serve the static content used by Django's admin panel. In order to serve the static files related to it, a volume shared by the reverse proxy container and the API server container has been created. The volume name is `static_volume` and can be found in the `docker-compos.yml` file. It's important  to add in the *nginx.conf* of the nginx-reverse proxy container the directory *staticfiles* as the location from where the server serves the HTML, CSS and JS files. In this directory are copied all the static files used by the django administration console when the containers are started from the docker-compose file. Without this volume and the configuration of the reverse proxy, the static files of the Django administration console could not be served to admin users.
+
+### Environment file specifics
+
+<span style="color: #dc3545">-- WARNING --</span>
+
+The `.env` file **must** be placed under the two following directories:
+
+- `PROJECT_ROOT/app/backend/app/app`
+- `PROJECT_ROOT/app/backend/app/user`
+
+Some of the environment variables contained in the `.env` file must be set differently compared to the installation for development purposes. 
+```
+DEBUG=False
+STATIC_SERVER_HOST=localhost
+STATIC_SERVER_PORT=443
+API_SERVER_HOST=localhost
+API_SERVER_PORT=8000
+WEB_PROTOCOL=https
+```
+The debug mode for Django is set to false. The port for the static server must be 443 (default https port).
+
+### Front-end
+
+#### Js environment variables
+
+The javascript environment file located at `PROJECT_ROOT/app/frontend/webapp/bowtie/js/env.js` now looks like this:
+```javascript=const
+PROTOCOL = 'https';
+const API_SERVER_HOST = 'localhost';
+const API_SERVER_PORT = '';
+const API_SERVER_URL = PROTOCOL + '://' + API_SERVER_HOST + ':' + API_SERVER_PORT;
+```
+The protocol is set to *https* and the API_SERVER_PORT is an empty string because the port 443 will be automatically used by axios when fetching the REST API.
+
+#### Js libraries
+
+**All external libraries have been downloaded locally**. This may help people who need to deploy Bowtie++ on an infrastructure that does not have internet access.
+
+### Nginx reverse-proxy
+Nginx is used as a reverse proxy in order to navigate traffic to the WEB container (frontend) and the API container (backend). The server is encapsulated in a container as shown in the picture of the architecture above. In the configuration file `nginx.conf` installed in the container  have to be defined the servers (**docker service names and ports defined in the main docker-compose-file**) to which the Nginx container is going to proxy the incoming requests. All additional configuration has to be added in the configuration file of the nginx server. You can find more information on how to set up this file on the nginx official documentation page.
+
+#### SSL configuration for the reverse-proxy server
+SSL/TLS certificate is set and used by the reverse proxy in order to establish a secure connexion via https. You can find more information on how to generate SSL/TLS certificates in the link from *DigitalOcean* below. Certificates, keys and Diffie-Hellman parameters have to be generated and placed in the directories ***certs, dh, keys*** which can be found in the nginx folder. The folders contents are mounted to **etc/nginx/snippets*** directory in the docker container. We suggest copying them into the container when creating it. In this way a change inside of the container or on the host machine will not affect the files in the other location. The necessary instructions are placed in the Docker file of the reverse-proxy server (situated in the nginx folder). We strongly recommend generating new SSL/TLS parameters before making the application public as the ones used now can be found in the github repository.
+
+### Launch the deployment configuration
 
 
+```bash
+git clone https://github.com/bmoulkaf/BowtieTool
+cd BowtieTool
+git checkout deploy
+```
+
+Create the `.env` file and move it to the right locations as mentioned [here](#Environment-file-specifics). Then, run:
+
+
+```bash
+cd app
+docker-compose up
+```
+
+Useful information:
+- https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
+- https://gunicorn.org/
+- https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-in-ubuntu-18-04
+- https://faun.pub/setting-up-ssl-certificates-for-nginx-in-docker-environ-e7eec5ebb418
+- https://www.nginx.com/resources/library/nginx-cookbook-2019-edition/
 
 ## Installation on other types of processors
 
