@@ -69,7 +69,7 @@ CORS_ORIGIN_WHITELIST = [
 
 In `frontend/webapp/bowtie/js/env.js`, update the following variables to match the server ip on which the backend is installed and the port it listens to.
 
-```javascript=2
+```javascript
 const API_SERVER_HOST = 'localhost';
 const API_SERVER_PORT = '8000';
 ```
@@ -123,20 +123,20 @@ FROM arm32v7/nginx:stable-alpine
 ```
 
 `backend/Dockerfile`
-```dockerfile=
+```dockerfile
 FROM arm32v7/python:3.7-alpine
 ```
 
 **Update the docker-compose.yml files**
 
 `backend/docker-compose.yml`
-```yaml=16
+```yaml
   db:
     image: arm32v7/postgres:10-alpine
 ```
 
 `docker-compose.yml`
-```yaml=30
+```yaml
   db:
     image: arm32v7/postgres:10-alpine
 ```
