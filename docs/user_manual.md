@@ -24,7 +24,7 @@ This manual describes how to use the Bowtie++ application.
 ## Create diagrams
 The Bowtie++ application starting page looks like this: 
 
-![](https://i.imgur.com/8Cm0tyV.png)
+![](images/8Cm0tyV.png)
 
 - The **<span style="color: #3f48cc">blue</span>** 🔵 area contains the elements you can add to your Bowtie diagram.
 - The **<span style="color: #ec1c24">red</span>** 🔴 area is where you can edit the elements of your Bowtie diagram.
@@ -40,7 +40,7 @@ To add an element to your Bowtie diagram, you can either click on the element in
 
 To link elements on the diagram, left-click on the border of the first element and **hold** down the mouse button to the border of the second element: 
 
-![](https://i.imgur.com/sFxPoLb.png)
+![](images/sFxPoLb.png)
 
 ## Authentication
 
@@ -55,11 +55,11 @@ To create your account, use the "Sign in" button at the top right of the home pa
 
 The email you give must be an existing email since it will be used by several key functionnalities in Bowtie++. After clicking on the "sign up" button, an email will be sent to you and you must use the link to confirm that it's one of yours. If the confirmation is successful, you'll see a message like the following one after clicking the link:
 
-![](https://i.imgur.com/4SzfoeB.png)
+![](images/4SzfoeB.png)
 
 When your account has been successfully created, go back to the login page and enter your credentials. Once your logged in, you should see that the navigation bar has changed and looks like this:
 
-![](https://i.imgur.com/W8w3ajD.png)
+![](images/W8w3ajD.png)
 
 ### Manage your account
 
@@ -72,11 +72,11 @@ To access your account settings, click on "My account". This page is composed of
 
 On the account settings page, go to the "Security" tab and click on "Enable 2FA".
 
-![](https://i.imgur.com/SlbNior.png)
+![](images/SlbNior.png)
 
 A QR that you need to scan with the appropriate application (Google Authenticator or FreeOTP form Redhat, for example) will appear, like showed on the following picture.
 
-![](https://i.imgur.com/OdL1D9D.png)
+![](images/OdL1D9D.png)
 
 Type the code the authentication app gives to you and submit it in the corresponding field below the QR code. Two-factor authentication is now enabled. Every time you'll try to sign in to Bowtie++, you will be asked to provide a 6-digits code. This code is the one given by the authentication app. You can disable two-factor authentication at any time.
 
@@ -85,28 +85,28 @@ Type the code the authentication app gives to you and submit it in the correspon
 ## Accessing the statistics
 Statistics are provided to users who have the **Researcher** status. This status can only be given by an administrator. If you have a researcher status, a link to the statistics page will be added to your navigation bar. When you click on this link, the following page will be open:
 
-![](https://i.imgur.com/pD5Cyif.png)
+![](images/pD5Cyif.png)
 
 You can download the data in a csv file at the bottom of the page:
 
-![](https://i.imgur.com/VeVpHo5.png)
+![](images/VeVpHo5.png)
 
 ## Save diagrams
 After modifying a diagram you might want to save it. 
 ### Save locally
 To save a diagram locally, use the 'Export' button and chose XML (for now XML is the only supported format to re-open a diagram in Bowtie++).
 
-![](https://i.imgur.com/3PiFIFc.png)
+![](images/3PiFIFc.png)
 
 ### Save online (in database)
 
 Instead of having to store the diagram on your computer you may want to save it in the database. To do so, click on 'Save' button, as shown bellow:
 
-![](https://i.imgur.com/FsTo7fU.png)
+![](images/FsTo7fU.png)
 
 The saving interface will then open: 
 
-![](https://i.imgur.com/gT9dRYL.png) 
+![](images/gT9dRYL.png) 
 
 There, you can input the following parameters:
 - The name of the diagram (by default it's the name of the unwanted event).
@@ -117,7 +117,7 @@ Once the diagram has been saved once, you can modify it and save it again withou
 
 If you want to input existing parameters again (for instance, chose a new name for the diagram) you can do so by pressing the 'Save as...' button, like bellow:
 
-![](https://i.imgur.com/4VCg62t.png)
+![](images/4VCg62t.png)
 
 ## Open diagrams
 Once a diagram is saved on your computer or in the database you can open it again.
@@ -126,26 +126,26 @@ You can open a diagram stored on your computer in two ways.
 
 Firstly, you can click on the 'Import' button like shown bellow:
 
-![](https://i.imgur.com/RXFkvEU.png)
+![](images/RXFkvEU.png)
 
 Then choose the XML file with your diagram.
 
 Secondly, you can use the 'Open' menu (shown bellow) then choose 'Open local file...' and choose the XML file with your diagram.
 
-![](https://i.imgur.com/wvcrlzk.png)
+![](images/wvcrlzk.png)
 
 ### Open online diagrams
 To open the diagram from the database, you can click on the 'Open' button, then choose 'Open from database...' or 'Open template...' (like shown bellow), for now there is no difference between those two buttons: 
 
-![](https://i.imgur.com/R9MBtbT.png)
+![](images/R9MBtbT.png)
 
 When clicked, it will load a new interface where you'll be able to see all the diagrams stored in the database that you have access to (either they are yours, or public, or someone shared them with you).
 
-![](https://i.imgur.com/oG5XfVW.png)
+![](images/oG5XfVW.png)
 
 By default, this interface will show you all the diagrams that you own (private diagrams), or that someone shared with you (shared). But you can also select all the public diagrams by selecting 'Public' in the 'Sharing mode' bellow:
 
-![](https://i.imgur.com/aoRLIgH.png)
+![](images/aoRLIgH.png)
 
 You can select which diagram you want to be displayed by typing its name or its description (node values, like 'Unwanted Event' or 'Hazard' for the diagram with id:2). You can also use tags to select which group of diagrams you want to display.
 
@@ -155,13 +155,13 @@ By pressing the red trash can you can delete a diagram from the database, you ca
 
 To share a diagram, you must first save it in the database, then just click on the 'Share with' button shown bellow:
 
-![](https://i.imgur.com/QxV4tdV.png)
+![](images/QxV4tdV.png)
 
 It will prompt you to enter the email of the user you wish to share the diagram with, and to choose its role, the following are available:
 - **reader**, meaning the user will only be able to see the diagram.
 - **writer**, the user will be able to modify the diagram.
 
-![](https://i.imgur.com/ZgAVk1F.png)
+![](images/ZgAVk1F.png)
 
 Moreover, there is a checkbox allowing to share the risk computation. This box is checked by default. More details about the risk computation [here](#-Risk-Computation).
 
@@ -169,7 +169,7 @@ Moreover, there is a checkbox allowing to share the risk computation. This box i
 
 Once someone shared a diagram with you, you can find it by clicking on the 'File'>'Open'>'Open from database' button. Then, select the 'Sharing mode' : 'Shared with me'. There, you can easily access diagrams that people shared with you.
 
-![](https://i.imgur.com/EGrkOhL.png)
+![](images/EGrkOhL.png)
 
 
 ### Managing users whom you shared the diagram with
@@ -177,11 +177,11 @@ Once someone shared a diagram with you, you can find it by clicking on the 'File
 Once you shared a diagram with other users, you might want to manage the roles and maybe remove access to the diagram from a certain user. 
 Bowtie++ offers this functionnality through the 'Manage diagram sharing' button shown bellow:
 
-![](https://i.imgur.com/HjpFMTE.png)
+![](images/HjpFMTE.png)
 
 It will then open the management interface shown bellow:
 
-![](https://i.imgur.com/MA5ePaB.png)
+![](images/MA5ePaB.png)
 
 Through this management interface, you can:
 - **Share with a new user**, by typing their email, choosing their role and selecting whether you share the risk computation or not. 
@@ -195,7 +195,7 @@ Through this management interface, you can:
 
 You may want to go back to a previous version of the diagram you're working on (created each time you save it). To do so, in the same way as for online diagrams, use the 'Open' menu and choose 'Open previous version...', as shown bellow:
 
-![](https://i.imgur.com/lGS0iNk.png)
+![](images/lGS0iNk.png)
 
 You will have access to a new interface with all the existing versions of your diagram, with the number corresponding to the version and its date of creation. Select the one you want by pressing the 'Revert to this diagram' button. The version you were working on so far will remain in the list of versions but all the modifications made to the diagram which were not saved will disapear.
 
@@ -203,15 +203,15 @@ You will have access to a new interface with all the existing versions of your d
 
 If you want to quickly edit a threat's parameters, you can directly click on the likelihood matrix linked to the threat.
 
-![](https://i.imgur.com/zrVzhgd.png)
+![](images/zrVzhgd.png)
 
 To open the risk computation window and check or edit threats', consequences' and barriers' parameters, click on the "Risk computation" button: 
 
-![](https://i.imgur.com/Rg3NxK7.png)
+![](images/Rg3NxK7.png)
 
 The following window will show up: 
 
-![](https://i.imgur.com/YihfDgu.png)
+![](images/YihfDgu.png)
 
 The first table allows you to see and edit the threats' and consequences' parameters. To switch between threats or consequences, click on the corresponding button in the top-left or top-right corner.
 
@@ -219,17 +219,17 @@ The first table allows you to see and edit the threats' and consequences' parame
 
 Threat's parameters can be edited by clicking on the "Edit parameters" Button, which will display the following line: 
 
-![](https://i.imgur.com/guxASNt.png)
+![](images/guxASNt.png)
 
 You can edit barriers' failure probability by clicking on the "Edit Barriers' failure probability" button, which will display a small menu showing barriers linked to the threat and their failure probability.
 
-![](https://i.imgur.com/8NTOmLB.png)
+![](images/8NTOmLB.png)
 
 **Consequences table**
 
 Clicking on the "Consequences" button in the top-right corner will display the consequences parameters in the first table.
 
-![](https://i.imgur.com/5s6c3no.png)
+![](images/5s6c3no.png)
 
 Consequences' parameters can be directly edited. The barriers' failure probability can be edited just like the threats' one, by clicking on the "Edit barriers' failure probability" button.
 The consequence's line with the highest risk value is highlighted in red.
@@ -238,10 +238,10 @@ The consequence's line with the highest risk value is highlighted in red.
 
 This table allows to see different results. To check which formulas are used to compute these results, click on the "Formulas Details" button: 
 
-![](https://i.imgur.com/zabSOpm.png)
+![](images/zabSOpm.png)
 
 This window will show up: 
 
-![](https://i.imgur.com/jjntaWL.png)
+![](images/jjntaWL.png)
 
 You can navigate through formulas by clicking on the different tabs. The last tab "Color indicators" shows the table used to convert values to colors and vice versa.

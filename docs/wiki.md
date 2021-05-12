@@ -152,7 +152,7 @@ Bowtie++ is composed of two main parts:
 
 The following image represents the software architecture of the application.
 
-![](https://camo.githubusercontent.com/00e36dbfb01538198f7d61fb94d6e3931a94858c13eec94dc5f531c423b77f44/68747470733a2f2f692e696d6775722e636f6d2f4373544f6855442e706e67)
+![](images/CsTOhUD.png)
 
 
 ### Frontend
@@ -167,7 +167,7 @@ Bowtie++ wrap the diagram editor into an SPA (*Single Page Application*)  to spe
 
 A Vue component defines the home page and contains the diagram editor thanks to an `<iframe>` html tag. This component is always displayed so that the state of the editor is saved and never reloaded while the user is navigating though the application. Components managed by Vue-router that represents independant pages (login, register, etc.) are displayed at the top of the home one. The same applies to the navigation bar. You can think of the display layout as being composed of 3 main layers:
 
-![](https://camo.githubusercontent.com/c94e6966d5a4855ccd26ec3230c050e826221ef51ab26056f858a5c607a6b037/68747470733a2f2f692e696d6775722e636f6d2f494359797233512e706e67)
+![](images/ICYyr3Q.png)
 
 **Layer 1** : home page that integrates the diagram editor in an `<iframe>` html tag.
 **Layer 2** : Pages managed by Vue-router.
@@ -202,7 +202,7 @@ A part of the frontend file structure is describes by the following image.
 
 As the main Vue instance, AppVue is mounted on the `index.html` and manages the app logic with the router and the Vuex store object.
 
-![](https://camo.githubusercontent.com/158c2c9a02bb0ea0e964eac4f5b6dc4ba65a36e5861a654fbc232b112b3a50ea/68747470733a2f2f692e696d6775722e636f6d2f66454565636f4c2e706e67)
+![](images/fEEecoL.png)
 
 ### Backend
 
@@ -211,7 +211,7 @@ For the backend of BowTie++, we opted for a REST API for a maximum of flexibilit
 Django and Django REST framework (DRF) were chosen for backend frameworks, as they are "Hard to learn, easy to use". They provide many handful tools that make the developer's life a lot easier.
 One of the main features of this choice is the easy  serialization: when Django and DRF are coupled with Django's ORM, serialization becomes the matter of just a few lines of code.
 
-![](https://camo.githubusercontent.com/1489701f1eeb9832894bd1603ac1f8c25477a8879f739ea69427a86dd8bfc858/68747470733a2f2f696d6775722e636f6d2f563330313158362e706e67)
+![](images/V3011X6.png)
 
 The 3 main features of the application are separated in different modules also known as "applications" in Django. Each of these applications have a directory containing the tests of the implementation logic. The configuration for the project was also encapsulated in an application. 
 
