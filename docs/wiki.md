@@ -6,8 +6,7 @@ Bowtie++ is a **Web application** supporting security and safety risk analysis u
     - [Project's background](#Project%E2%80%99s-background)
     - [Requirements](#Requirements)
     - [Installation](#Installation)
-        - [Development mode](#Development-mode)
-        - [Deployment mode](#Deployment-mode)
+    - [Deployment](#Deployment)
     - [Installation on other types of processors](/uYcJUkHTRL2xvk34Hb4m9w)
         - [Example for the raspberry PI (AMR32)](#Example-for-the-raspberry-PI-(ARM32))
     - [Technical documentation](#Technical-documentation)
@@ -150,7 +149,12 @@ The protocol is set to *https* and the API_SERVER_PORT is an empty string becaus
 
 #### Js libraries
 
-**All external libraries have been downloaded locally**. This may help people who need to deploy Bowtie++ on an infrastructure that does not have internet access.
+**All external libraries have been downloaded locally**. This may help people who need to deploy Bowtie++ on an infrastructure that does not have internet access. In addition to mxgraph which was already present locally, the downloaded libraries are:
+- Axios
+- Vue (+ Vuex and Vue-router)
+- Vue-material
+- Boostrap
+- Some fonts from fonts.googleapi
 
 ### Nginx reverse-proxy
 Nginx is used as a reverse proxy in order to navigate traffic to the WEB container (frontend) and the API container (backend). The server is encapsulated in a container as shown in the picture of the architecture above. In the configuration file `nginx.conf` installed in the container  have to be defined the servers (**docker service names and ports defined in the main docker-compose-file**) to which the Nginx container is going to proxy the incoming requests. All additional configuration has to be added in the configuration file of the nginx server. You can find more information on how to set up this file on the nginx official documentation page.
