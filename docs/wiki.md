@@ -163,8 +163,8 @@ The protocol is set to *https* and the API_SERVER_PORT is an empty string becaus
 - Axios
 - Vue (+ Vuex and Vue-router)
 - Vue-material
-- Boostrap
-- Some fonts from fonts.googleapi
+- Bootstrap
+- Some fonts from fonts.googleapis.com
 
 ### Nginx reverse-proxy
 Nginx is used as a reverse proxy in order to navigate traffic to the WEB container (frontend) and the API container (backend). The server is encapsulated in a container as shown in the picture of the architecture above. In the configuration file `nginx.conf` installed in the container  have to be defined the servers (**docker service names and ports defined in the main docker-compose-file**) to which the Nginx container is going to proxy the incoming requests. All additional configuration has to be added in the configuration file of the nginx server. You can find more information on how to set up this file on the nginx official documentation page.
