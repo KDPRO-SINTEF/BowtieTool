@@ -67,7 +67,7 @@ CORS_ORIGIN_WHITELIST = [
 
 In `frontend/webapp/bowtie/js/env.js`, update the following variables to match the server ip on which the backend is installed and the port it listens to.
 
-```javascript=2
+```javascript
 const API_SERVER_HOST = 'localhost';
 const API_SERVER_PORT = '8000';
 ```
@@ -139,8 +139,8 @@ The debug mode for Django is set to false. The port for the static server must b
 #### Js environment variables
 
 The javascript environment file located at `PROJECT_ROOT/app/frontend/webapp/bowtie/js/env.js` now looks like this:
-```javascript=const
-PROTOCOL = 'https';
+```javascript
+const PROTOCOL = 'https';
 const API_SERVER_HOST = 'localhost';
 const API_SERVER_PORT = '';
 const API_SERVER_URL = PROTOCOL + '://' + API_SERVER_HOST + ':' + API_SERVER_PORT;
