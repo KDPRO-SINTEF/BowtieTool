@@ -3,11 +3,11 @@
 Bowtie++ is a **Web application** supporting security and safety risk analysis using bowtie diagrams.
 
 - [Bowtie++ wiki](#Bowtie++-wiki)
-    - [Project's background](#Project%E2%80%99s-background)
+    - [Project's background](#Project's-background)
     - [Requirements](#Requirements)
     - [Installation](#Installation)
     - [Deployment](#Deployment)
-    - [Installation on other types of processors](/uYcJUkHTRL2xvk34Hb4m9w)
+    - [Installation on other types of processors](#Installation-on-other-types-of-processors)
         - [Example for the raspberry PI (AMR32)](#Example-for-the-raspberry-PI-(ARM32))
     - [Technical documentation](#Technical-documentation)
         - [Software architecture](#Software-architecture)
@@ -237,7 +237,7 @@ The following image represents the software architecture of the application.
 ![](images/CsTOhUD.png)
 
 
-### Frontend
+### Front-end
 
 As mentionned previoulsy, [grapheditor](#Licenses) is the foundation of Bowtie++. Grapheditor is a complex application mainly made with javascript to build the diagram editor (no real HTML file that describes the UI), which makes it hard to get into, maintain and upgrade.
 
@@ -286,7 +286,7 @@ As the main Vue instance, AppVue is mounted on the `index.html` and manages the 
 
 ![](images/fEEecoL.png)
 
-### Backend
+### Back-end
 
 For the backend of BowTie++, we opted for a REST API for a maximum of flexibility and reusability. In the REST API, data is not tied to resources or methods, so REST can handle multiple types of calls, return different data formats. This allows us to meet the needs of our primary client, but also the needs of all potential users of the open-source project. It also eases the remake of the Frontend service, or the addition of a new one on top of our web application, such as a Desktop or mobile applications.
 
@@ -417,7 +417,7 @@ Two librairies are used for this module:
 
 ## Licenses
 
-### Frontend
+### Front-end
 
 - axios: https://github.com/axios/axios
 - Vuejs: https://vuejs.org/
@@ -425,7 +425,7 @@ Two librairies are used for this module:
 - Vue Material: https://vuematerial.io/
 - mxGraph (and grapheditor): https://github.com/jgraph/mxgraph
 
-### Backend 
+### Back-end 
 
 - Django REST: https://www.django-rest-framework.org/
 - PostreSQL: https://www.postgresql.org/
