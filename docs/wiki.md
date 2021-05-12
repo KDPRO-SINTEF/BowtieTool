@@ -11,8 +11,11 @@ Bowtie++ is a **Web application** supporting security and safety risk analysis u
         - [Example for the raspberry PI (AMR32)](#Example-for-the-raspberry-PI-(ARM32))
     - [Technical documentation](#Technical-documentation)
         - [Software architecture](#Software-architecture)
-        - [Frontend](#Frontend)
-        - [Backend](#Backend)
+        - [Front-end](#Front-end)
+        - [Back-end](#Back-end)
+    - [Licenses](#Licenses)
+        - [Front-end](#Front-end)
+        - [Back-end](#Back-end)
 
 ## Project's background
 
