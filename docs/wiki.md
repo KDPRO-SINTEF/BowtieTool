@@ -98,9 +98,16 @@ You can stop the app with the `stop.sh` script. At the root of the project:
 ./stop.sh frontend       # Stop the frontend launched with ./start.sh frontend
 ./stop.sh backend        # Stop the backend launched with ./start.backend
 ```
-
 The script simply uses `docker container kill` to stop the containers.
 
+By default:
+- The frontend is served at `http://localhost:8080`.
+- The REST API can be fetched at `http://localhost:8000`.
+- The admin page is accessible at `http://localhost:8000/admin`.
+
+### Create an admin user
+1. Connect to the **API container** with `docker exec -it CONTAINER_NAME /bin/sh`. It should open a shell inside the container at `/app`.
+2. Run `python manage.py createsuperuser` and follow the instructions.
 
 ## Deployment 
 
@@ -181,6 +188,14 @@ Create the `.env` file and move it to the right locations as mentioned [here](#E
 cd app
 docker-compose up
 ```
+
+By default:
+- The frontend is served at `https://localhost`.
+- The REST API can be fetched at `https://localhost`.
+- The admin page is accessible at `https://localhost/admin`.
+
+### Create an admin user
+Run the script at `PROJECT_ROOT/app/createAdmin.sh` and follow the instructions.
 
 Useful information:
 - https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
