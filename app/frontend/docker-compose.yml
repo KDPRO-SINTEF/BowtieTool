@@ -1,0 +1,17 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+        - ./nginx/templates:/etc/nginx/templates
+        - ./webapp:/app
+    ports:
+      - "8080:80"
+    image: nginx-bowtie-web
+    environment: 
+      - NGINX_HOST=localhost
+      - NGINX_PORT=80
+    container_name: bowtie_front_web
+    
+    

@@ -1,0 +1,20 @@
+<svg width="124" height="168" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient4512">
+   <stop stop-color="#000000" id="stop4510" offset="0"/>
+  </linearGradient>
+  <linearGradient y2="0.5" x2="1" y1="0.5" x1="0" id="linearGradient4522" xlink:href="#linearGradient4512"/>
+ </defs>
+ <metadata id="metadata5">image/svg+xml</metadata>
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <rect fill="#ffffff" stroke="url(#linearGradient4522)" stroke-width="2.365" stroke-linecap="round" stroke-miterlimit="4" y="29.973213" x="0.660011" height="136.878674" width="123.019958" id="rect3703"/>
+   <rect fill="#343338" stroke="#000000" stroke-width="2.54" stroke-linecap="round" stroke-miterlimit="4" y="0.31619" x="10.718253" height="53.230592" width="30.174707" id="rect5997"/>
+  </g>
+ </g>
+</svg>

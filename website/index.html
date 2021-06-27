@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <title>Bowtie++</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.6/css/all.css">
+    <!-- Nucleo Icons-->
+    <link rel="stylesheet" href="css/nucleo-icons.css">
+    <link rel="stylesheet" href="css/nucleo-svg.css">
+    <!-- Font Awesome Icons-->
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/argon-design-system.css">
+    <link rel="icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon.png">
+  </head>
+  <body>
+    <div class="wrapper smooth">
+      <html>
+        <body>
+          <header class="header-2 skew-separator">
+            <nav class="navbar navbar-expand-lg bg-white navbar-absolute">
+              <div class="container">
+                <div class="navbar-translate"><a class="navbar-brand" href="javascript:;">Bowtie++</a>        
+                  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#example-header-2" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                </div>      
+                <div class="collapse navbar-collapse" id="example-header-2"></div>      
+                <ul class="navbar-nav mx-auto">
+                  <li class="nav-item"><a class="nav-link" href="#home">Accueil</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#presentation">Présentation</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#objectif">Objectif</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#fonctionnalites">Fonctionnalités</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#equipe">Equipe</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#en-savoir-plus">En savoir plus</a></li>
+                  <li class="nav-item"><a class="nav-link" href="index_en.html">English</a></li>
+                </ul>
+              </div>
+            </nav>  
+            <div id="home" class="page-header">
+              <div class="page-header-image" style="background-image: url('image/fond.png')"></div>
+              <div class="container pt-300">
+                <div class="row">
+                  <div class="col-md-9 mx-auto text-center">
+                    <h2 class="display-2">Bowtie++</h2>
+                    <h3 class="display-3">Application web de modélisation de risques.</h3>
+                  </div>
+                </div>      
+                <div class="floating-box bg-default pb-5">
+                  <div class="row justify-content-center">
+                    <div class="box">
+                      <div class="icon icon-shape bg-success icon-xl rounded-circle text-white"><i class="ni ni-tie-bow"></i></div>
+                    </div>
+                    <h2 class="lead text-white text-justify pt-5 px-5">
+                      Bowtie++ est une application dont le but est de créer facilement et rapidement des diagrammes
+                      d'analyse de risques. Ces diagrammes sont utilisés pour évaluer au mieux le risque que peut entraîner
+                      un événement redouté : on représente ses causes et conséquences afin de pouvoir élaborer une stratégie
+                      pour s'en prémunir ou en limiter les potentiels dégâts.
+                    </h2>
+                  </div>
+                  <div class="row justify-content-center mt-4">
+                    <a href="#diag_bowtie" class="btn btn-success" role="button">En savoir plus sur les diagrammes Bowtie </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+          <section id="presentation" class="section swap-color">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-10 ml-auto mr-auto text-center">
+                  <h3 class="display-3 swap-color-text">Contexte du projet</h3>
+                    <p class="lead text-justify swap-color-text">
+                        L’analyse de risques est une phase importante dans le cycle de vie d’un projet. Elle permet
+                        d’identifier les potentiels actes de malveillances, constituant des menaces, et de mettre en
+                        perspective les risques liés à des causes accidentelles. L’absence d’outils open-source de
+                        modélisation de tels risques et couvrant ces aspects de <b>safety</b> et <b>security</b> a été la
+                        motivation première pour la réalisation du projet Bowtie++.
+                    </p>
+                    <div class="row justify-content-center mt-4">
+                        <a href="#safety_security" class="btn btn-success" role="button">En savoir plus sur la dualité safety/security </a>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 ml-auto mr-auto text-center my-5">
+                            <div class="p-4">
+                                <img class="rounded shadow transform-perspective-left" width="80%" src="image/bowite++_example.png">
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="text-center"><hr class="line-white"/></p>
+
+                    <h3 id="safety_security" class="display-3 swap-color-text">Dualité safety/security</h3>
+                    <p class="lead text-justify text-white">
+                        La <b>safety</b> désigne les risques liés à une cause accidentelle et la <b>security</b>, les risques liés à
+                        une menace malveillante.
+                    </p>
+                    <div class="row justify-content-center m-5">
+                        <div class="col-md-5 mr-3">
+                            <img class="rounded shadow" width="100%" src="image/safety_example.jpg">
+                            <h3 class="display-4 mt-3 text-white">Safety</h3>
+                        </div>
+
+                        <div class="col-md-5 ml-3">
+                            <img class="rounded shadow" width="100%" src="image/security_example.jpg">
+                            <h3 class="display-4 mt-3 text-white">Security</h3>
+                        </div>
+                        </div>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- OBJECTIF DU PROJET -->
+          <section id="objectif" class="seection">
+            <div class="container">
+              <div class="row mt-5 align-items-center justify-content-center">
+                <div class="col-md-10 ">
+                  <h3 class="display-3 text-center">Objectif du projet</h3>
+                  <p class="lead text-justify">
+                    L'objectif est de développer une application de modélisation de diagrammes d'analyse de risques, déployable facilement sur de nombreux supports.
+                      Bowtie++ apporte une solution moderne et sécurisée. Pour cela, nous nous sommes basés sur
+                      3 technologies.
+                  </p>
+                  <div class="row align-items-center">
+                    <div class="col-md-4 ml-auto mr-auto text-center my-5">
+                      <div class="p-2">
+                        <img class="rounded" height="100rem" src="image/logo/logo_Docker.png">
+                        <h5 class="mt-3 text-center">Conteneurisation Docker</h5>
+                      </div>
+                    </div>
+                    <div class="col-md-4 ml-auto mr-auto text-center my-5">
+                      <div class="p-4">
+                        <img class="rounded" height="100rem" src="image/logo/logo_VUEJS.png">
+                        <h5 class="mt-3 text-center">Composants Vue.js</h5>
+                      </div>
+                    </div>
+                    <div class="col-md-4 ml-auto mr-auto text-center my-5">
+                      <div class="p-4">
+                        <img class="rounded" height="100rem" src="image/logo/logo_Django.png">
+                        <h5 class="mt-3 text-center">API REST Django</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+
+          <p class="text-center"><hr class="line-deafult"/></p>
+
+          <!-- FONCTIONNALITES -->
+          <!-- CYAN/ROUGE NOIR/ORANGE VERT/INDIGO -->
+
+          <section id="fonctionnalites" class="section features-2">
+            <div class="container">
+              <div class="row align-items-center">
+                <div class="col-md-12 pl-md-0">
+                    <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                        Launch demo modal
+                    </button> -->
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    ...
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  <h3 class="display-3 text-center">Fonctionnalités</h3>
+                  <div class="row">
+
+                    <!-- CREATION DE DIAGRAMMES -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-info shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-paint-brush text-info"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Création de diagrammes</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/bowite++_example.png">
+                                  <a href="#demo" type="button" class="btn btn-danger mt-5 mb-0">
+                                      Voir la démo
+                                  </a>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                      <!-- PARTAGE DE DIAGRAMMES -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-warning shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-share-alt text-warning"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Partage de diagrammes</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_partage.jpg">
+                                  <button type="button" class="btn btn-default mt-5 mb-0" data-toggle="modal" data-target="#modal_partage">
+                                      Voir en détails
+                                  </button>
+
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- BIBLIOTHEQUE DE DIAGRAMMES -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-primary shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-download text-primary"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Bibliothèque de diagrammes</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_bibli.png">
+                                  <button type="button" class="btn btn-success mt-5 mb-0" data-toggle="modal" data-target="#modal_bibli">
+                                      Voir en détails
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+
+                    <!-- CALCUL DE RISQUES -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-danger shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-calculator text-danger"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Calcul de risques</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_calcul.jpg">
+                                  <button type="button" class="btn btn-info mt-5 mb-0" data-toggle="modal" data-target="#modal_calcul">
+                                      Voir en détails
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- ANALYSE STATISTIQUE -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-default shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-bar-chart text-default"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Analyse statistique</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_stats.jpg">
+                                  <button type="button" class="btn btn-warning mt-5 mb-0" data-toggle="modal" data-target="#modal_stats">
+                                      Voir en détails
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+
+                    <!-- APPLICATION SECURISEE -->
+                    <div class="col-lg-4 col-md-4">
+                      <div class="info text-left bg-success shadow">
+                          <div class="row align-items-center">
+                              <div class="col-md-2">
+                                  <div class="icon icon-shape bg-gradient-white shadow rounded-circle">
+                                      <i class="fa fa-shield text-success"></i>
+                                  </div>
+                              </div>
+                              <div class="col-md-10">
+                                  <h5 class="info-title text-white text-center">Application sécurisée</h5>
+                              </div>
+                          </div>
+                          <div class="row">
+                              <div class="col-md-12 ml-auto mr-auto text-center mt-5">
+                                  <img class="rounded shadow transform-perspective-left" height="140rem" src="image/fonctionnalites/fonc_secure.jpg">
+                                  <button type="button" class="btn btn-primary mt-5 mb-0" data-toggle="modal" data-target="#modal_secure">
+                                      Voir en détails
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <p class="text-center"><hr class="line-deafult"/></p>
+
+          <!-- DEMO -->
+          <section id="demo" class="section">
+              <div class="container">
+                  <div class="row justify-content-center">
+                      <div class="col-md-10">
+                          <h3 class="display-3 text-center">Démonstration</h3>
+                          <video class="rounded shadow my-5" controls width="100%" autoplay="true" muted="true">
+                              <source src="video/diagram-creation-demo.mov">
+                          </video>
+                      </div>
+                  </div>
+              </div>
+          </section>
+
+          <!-- THE EXECUTIVE TEAM-->
+          <section id="equipe" class="section swap-color">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-10 mx-auto text-center mb-5">
+                  <h3 class="display-3 swap-color-text">L'équipe</h3>
+                </div>
+              </div>    
+              <div class="row">
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-maxime.png"></a>
+                      </div>
+                    </div>          
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Maxime Durand</h4>
+                      <p class="lead">Maitre Scrum</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>                    
+                              <div>
+                                <h6 class="mb-1">Equipe Back-end </h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>      
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-mikhail.png"></a>
+                      </div>
+                    </div>          
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Mihail Kirov</h4>
+                      <p class="lead">Responsable produit</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>                    
+                              <div>
+                                <h6 class="mb-1">Equipe Back-end</h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>      
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-eddine.png"></a>
+                      </div>
+                    </div>          
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Eddine Moulkaf</h4>
+                      <p class="lead">Chef d'équipe</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>                    
+                              <div>
+                                <h6 class="mb-1">Equipe Back-end</h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-nathan.png"></a>
+                      </div>
+                    </div>
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Nathan Gérard</h4>
+                      <p class="lead">Responsable rapport</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>
+                              <div>
+                                <h6 class="mb-1">Equipe Front-end </h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-yugo.png"></a>
+                      </div>
+                    </div>
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Yugo Cartron</h4>
+                      <p class="lead">Responsable communication</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>
+                              <div>
+                                <h6 class="mb-1">Equipe Front-end</h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-clement.png"></a>
+                      </div>
+                    </div>
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Clément Chavanon</h4>
+                      <p class="lead">Responsable Qualité</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>
+                              <div>
+                                <h6 class="mb-1">Equipe Front-end</h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-aminata.png"></a>
+                      </div>
+                    </div>
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Aminata Sissokho</h4>
+                      <p class="lead">Happiness Manager</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>
+                              <div>
+                                <h6 class="mb-1">Equipe Front-end </h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-barbara.png"></a>
+                      </div>
+                    </div>
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Barbara Fila</h4>
+                      <p class="lead">Encadrante du projet</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>
+                              <div>
+                                <h6 class="mb-1">Chercheuse à l'IRISA</h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                  <div class="card card-profile" data-image="profile-image">
+                    <div class="card-header">
+                      <div class="card-image">
+                        <a href="javascript:;"><img class="img rounded ml-3" src="image/avatar-phm.png"></a>
+                      </div>
+                    </div>
+                    <div class="card-body pt-0">
+                      <h4 class="display-4 mb-0">Per Håkon Meland</h4>
+                      <p class="lead">Initiateur du projet</p>
+                      <div class="table-responsive">
+                        <ul class="list-unstyled">
+                          <li class="py-1">
+                            <div class="d-flex align-items-center">
+                              <div>
+                                <div class="badge badge-circle badge-info mr-3"><i class="ni ni-atom"></i></div>
+                              </div>
+                              <div>
+                                <h6 class="mb-1">Chercheur à SINTEF Digital</h6>
+                              </div>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </div>
+          </section>
+
+          <!-- EN SAVOIR PLUS -->
+          <section id="en-savoir-plus" class="section">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-10 ml-auto mr-auto text-center">
+                  <h3 class="display-3 mb-3">En savoir plus</h3>
+
+                  <!-- DIAGRAMME BOWTIE -->
+                  <h4 id="diag_bowtie" class="text-left mt-3">Diagramme Bowtie</h4>
+                  <img class="p-5" width="100%" src="image/bowtie_element/fr/bowtie_schema.png">
+                  <p class="lead text-justify">
+                      Un diagramme BowTie tire son nom de son apparence en forme de nœud papillon (BowTie en anglais),
+                      le nœud central représente un évènement indésirable, à sa gauche se trouvent les causes menant à
+                      l’évènement indésirable, tandis qu'à sa droite se trouvent les conséquences. L’une des forces du
+                      diagramme BowTie vient du fait qu’il montre simplement la différence entre la prévention des
+                      risques et la minimisation des conséquences, tout en permettant la modélisation de scénarios complexes.
+                  </p>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_hazard.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Danger</b>, vecteur de risque inhérent à l'activité.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_unwanted-event.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Événement redouté</b>, situation analysée.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_asset.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Ressource</b>, infrastructure liée à l'événement.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_threat.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Menace</b>, risque lié à la security.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_cause.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Cause</b>, risque lié à la safety.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_barrier_prev.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Barrière de prévention</b>, prévient contre les causes et les menaces.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_escal_factor.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Facteur d'aggravement</b>, facteur pouvant neutraliser une barrière.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_consequence.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Conséquence</b>, répercussion de l'événement redouté.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center align-items-center">
+                    <div class="col-md-3 my-4">
+                      <img width="100%" src="image/bowtie_element/fr/bowtie_barr_mitig.png">
+                    </div>
+                    <div class="col-md-7">
+                      <p class="lead text-left">
+                        <b>Barrière d'atténuation</b>, atténue les conséquences.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Footer -->
+          <section class="">
+            <footer class="swap-color text-center text-lg-start align-items-center">
+              <div class="container p-4">
+                <div class="row justify-content-center">
+                  <div class="col-md-7 mb-4 mb-md-0 ">
+                    <h5 class="text-uppercase text-white mb-3">Essayez Bowtie++</h5>
+                    <p class="text-white text-center">
+                      Cliquez sur le lien pour accéder à l'application Bowtie++ !
+                    </p>
+                    <a class="btn btn-secondary btn-round" href="https://github.com/bmoulkaf/BowtieTool.git" target="_blank">
+                      <i class="fa fa-github"></i> Accéder au GitHub
+                    </a>
+                  </div>
+                  <div class="col-md-5 mb-4 mb-md-0">
+                    <h5 class="text-white" >Navigate</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-0">
+                                <li>
+                                    <a href="#home" class="text-white">Accueil</a>
+                                </li>
+                                <li>
+                                    <a href="#presentation" class="text-white">Projet</a>
+                                </li>
+                                <li>
+                                    <a href="#objectif" class="text-white">Objectif</a>
+                                </li>
+                                <li>
+                                    <a href="#fonctionnalites" class="text-white">Fonctionnalités</a>
+                                </li>
+
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled mb-0">
+                                <li>
+                                    <a href="#equipe" class="text-white">Equipe</a>
+                                </li>
+                                <li>
+                                    <a href="#en-savoir-plus" class="text-white">En savoir plus</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="text-white">English</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--<div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+                © 2021 Copyright:
+                <a class="text-white" href="https://mdbootstrap.com/">INSA Rennes</a>
+              </div> -->
+            </footer>
+          </section>
+
+
+          <!-- MODAL Components -->
+          <div class="modal fade" id="modal_partage" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="">Partage de diagrammes</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <p class="lead text-justify">
+                              Bowtie++ permet à ses utilisateurs de partager leurs diagrammes avec
+                              leurs collaborateurs selon deux modes d'accès : l'accès en lecture
+                              seule et l'accès en écriture.
+                          </p>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal fade" id="modal_bibli" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title">Bibliothèque de diagrammes</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body ">
+                          <p class="lead text-justify">
+                              Bowtie++ permet à ses utilisateurs de rendre leurs diagrammes publics.
+                              Ces derniers peuvent alors servir de modèle à tous les autres utilisateurs
+                              de l'application.
+                          </p>
+                          <img class="rounded shadow" width="100%" src="image/fonctionnalites/fonc_bibli.png">
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal fade" id="modal_calcul" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title">Calcul de risques</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <p class="lead text-justify">
+                              Bowtie++ permet à ses utilisateurs de calculer la valeur de risques d'un diagramme.
+                              Pour cela, il leur suffit de rentrer les caractéristiques (probabilité d'occurence,
+                              dangerosité, etc.) des <b>causes</b> et <b>conséquences</b> de l’<b>événement indésirable</b>. Cette valeur
+                              n'est pas absolue mais permet aux utilisateurs de comparer des diagrammes Bowtie.
+                          </p>
+                          <div class="row justify-content-center mt-4">
+                              <a href="#diag_bowtie" class="btn btn-warning" role="button">En savoir plus sur les diagrammes Bowtie </a>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal fade" id="modal_stats" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title">Analyse statistique</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <p class="lead text-justify">
+                              A des fins de recherche, le statut de chercheur peut être accordé à un
+                              utilisateur via un admin. Ce statut confère l'accès à l'analyse statistique
+                              de la base de données de Bowtie++. On y retrouve des informations comme le
+                              nombre de diagrammes, le nombre moyen de <b>causes</b>, le nombre de <b>barrières</b> par <b>conséquences</b>.
+                          </p>
+                          <div class="row justify-content-center mt-4">
+                              <a href="#diag_bowtie" class="btn btn-warning" role="button">En savoir plus sur les diagrammes Bowtie </a>
+                          </div>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="modal fade" id="modal_secure" tabindex="-1" role="dialog" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title">Application sécurisée</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                          </button>
+                      </div>
+                      <div class="modal-body">
+                          <p class="lead text-justify">
+                              Bowtie++ implémente des standards de sécurité. Premièrement, l'ensemble des
+                              communications sont chiffrées et authentifiées via le protocole TLS. Deuxièmement, les utilisateurs ont la possibilité
+                              d'activer l'authentification par double facteurs.
+                          </p>
+                      </div>
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+        </body>
+      </html>
+    </div>
+
+    <!-- Core JS Files-->
+    <script src="js/core/jquery.min.js" type="text/javascript"></script>
+    <script src="js/core/popper.min.js" type="text/javascript"></script>
+    <script src="js/core/bootstrap.min.js" type="text/javascript"></script>
+    <script src="js/argon-design-system.min.js?v=1.0.2" type="text/javascript"></script>
+    <script>
+      function argonScripts() {
+          if (document.querySelectorAll('.glide').length) {
+              // Carousel
+              new Glide('.glide', {
+                  type: 'carousel',
+                  startAt: 0,
+                  focusAt: 2,
+                  perTouch: 1,
+                  perView: 4
+              }).mount();
+          }
+      
+          if (document.querySelectorAll('.testimonial-glide').length) {
+              // Testimonial Carousel
+              new Glide('.testimonial-glide', {
+                  type: 'carousel',
+                  startAt: 0,
+                  focusAt: 2,
+                  perTouch: 1,
+                  perView: 4
+              }).mount();
+          }
+      
+          if (document.querySelectorAll('.map').length) {
+              ArgonKit.initGoogleMaps();
+              ArgonKit.initGoogleMaps2();
+          }
+      }
+      argonScripts();
+    </script>
+  </body>
+</html>

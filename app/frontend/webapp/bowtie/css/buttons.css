@@ -1,0 +1,16 @@
+.btn-full {
+    width: 100%;
+}
+
+.btn-medium {
+    width: 60%;
+}
+
+.btn-small {
+    width: 40%;
+}
+
+.btn-success {
+    background-color: rgb(40, 167, 69);
+    border-color: rgb(40, 167, 69);
+}
